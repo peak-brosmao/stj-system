@@ -94,13 +94,13 @@ export default function SystemSessionsPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <CalendarDays className="w-4 h-4" />
-              <span>Teaching Sessions Hub</span>
+              <span>STJ Teaching Schedule • វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
               ការគ្រប់គ្រងវគ្គបង្រៀន (Teaching Sessions)
             </h1>
             <p className="text-xs text-muted-foreground">
-              កាលវិភាគ ទីតាំងបន្ទប់ និងស្ថានភាពវគ្គសិក្សាទាំងអស់
+              កាលវិភាគ ទីតាំងបន្ទប់ និងការស្រង់វត្តមានសមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ (សម្រាប់សមាជិក STJ តែប៉ុណ្ណោះ មិនសម្រាប់សិស្សប្អូនឡើយ)
             </p>
           </div>
 
