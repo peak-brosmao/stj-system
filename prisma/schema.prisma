@@ -1,0 +1,453 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  passwordHash      String
+  fullNameKh        String
+  fullNameEn        String
+  displayName       String?
+  gender            String?
+  dateOfBirth       DateTime?
+  bio               String?            @db.Text
+  studentId         String?
+  phone             String?
+  telegram          String?
+  address           String?            @db.Text
+  profileImage      String?            @db.Text
+  preferredLanguage String             @default("km")
+  status            String             @default("ACTIVE") // ACTIVE, SUSPENDED, PENDING
+  isSuspended       Boolean            @default(false)
+  emailVerified     Boolean            @default(false)
+  twoFactorEnabled  Boolean            @default(false)
+  lastLoginAt       DateTime?
+  memberRecordId    String?            @unique
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  member            Member?            @relation(fields: [memberRecordId], references: [id])
+  userRoles         UserRole[]
+  courseLeaders     CourseLeader[]
+  createdSessions   TeachingSession[]  @relation("CreatedSessions")
+  markedAttendances AttendanceRecord[] @relation("MarkedAttendances")
+  updatedAttendances AttendanceRecord[] @relation("UpdatedAttendances")
+  requestedCorrections AttendanceCorrection[] @relation("RequestedCorrections")
+  reviewedCorrections AttendanceCorrection[] @relation("ReviewedCorrections")
+  createdShareLinks ShareLink[]        @relation("CreatedShareLinks")
+  auditLogs         AuditLog[]
+  announcements     Announcement[]
+  notifications     Notification[]
+  userSessions      UserSession[]
+  sentInvitations   Invitation[]
+  profileChangeRequests ProfileChangeRequest[] @relation("UserChangeRequests")
+  reviewedProfileRequests ProfileChangeRequest[] @relation("AdminReviewedProfileRequests")
+  notificationPreferences NotificationPreference?
+  loginHistories    LoginHistory[]
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique // SUPER_ADMIN, STJ_ADMIN, COURSE_LEADER, MEMBER
+  description String?          @db.Text
+  isSystem    Boolean          @default(true)
+  userRoles   UserRole[]
+  permissions RolePermission[]
+  invitations Invitation[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  code        String           @unique // e.g., attendance:mark, attendance:read, members:manage
+  module      String
+  description String?          @db.Text
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique @db.VarChar(500)
+  userAgent String?  @db.Text
+  ipAddress String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  code        String   @unique // GIC, AMS, GIM, etc.
+  nameKh      String
+  nameEn      String
+  nameFr      String
+  description String?  @db.Text
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  members     Member[]
+}
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  code      String   @unique // I1, I2, I3, I4, I5
+  label     String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   Member[]
+}
+
+model Member {
+  id               String                 @id @default(cuid())
+  memberId         String                 @unique // STJ001, STJ002...
+  studentId        String?
+  fullNameKh       String
+  fullNameEn       String
+  email            String?
+  phone            String?
+  gender           String?                // M, F
+  departmentId     String
+  academicYearId   String
+  status           String                 @default("ACTIVE") // ACTIVE, ARCHIVED, SUSPENDED
+  notes            String?                @db.Text
+  registrationDate DateTime               @default(now())
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  department       Department             @relation(fields: [departmentId], references: [id])
+  academicYear     AcademicYear           @relation(fields: [academicYearId], references: [id])
+  enrollments      CourseEnrollment[]
+  attendanceRecords AttendanceRecord[]
+  activityParticipations ActivityParticipation[]
+  user             User?
+}
+
+model Course {
+  id            String             @id @default(cuid())
+  code          String             @unique // PROG101, MATH101
+  slug          String             @unique // programming, mathematics
+  titleKh       String
+  titleEn       String
+  titleFr       String
+  descriptionKh String             @db.Text
+  descriptionEn String             @db.Text
+  descriptionFr String             @db.Text
+  category      String             // Engineering Foundation, Advanced Computing
+  icon          String             @default("BookOpen") // Lucide icon identifier
+  coverImage    String?            @db.Text
+  status        String             @default("ACTIVE") // ACTIVE, ARCHIVED, DRAFT
+  academicTerm  String?            // 2026-2027 Semester 1
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  leaders       CourseLeader[]
+  enrollments   CourseEnrollment[]
+  sessions      TeachingSession[]
+  shareLinks    ShareLink[]
+  announcements Announcement[]
+}
+
+model CourseLeader {
+  id         String   @id @default(cuid())
+  courseId   String
+  userId     String
+  assignedAt DateTime @default(now())
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId])
+}
+
+model CourseEnrollment {
+  id         String   @id @default(cuid())
+  courseId   String
+  memberId   String
+  enrolledAt DateTime @default(now())
+  status     String   @default("ACTIVE") // ACTIVE, COMPLETED, DROPPED
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, memberId])
+}
+
+model TeachingSession {
+  id          String             @id @default(cuid())
+  courseId    String
+  title       String
+  sessionDate DateTime
+  startTime   String             // 08:00
+  endTime     String             // 10:00
+  room        String             // Campus 1, Building A, Room 204
+  status      String             @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
+  notes       String?            @db.Text
+  createdById String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  course      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdBy   User               @relation("CreatedSessions", fields: [createdById], references: [id])
+  attendance  AttendanceRecord[]
+  shareLinks  ShareLink[]
+}
+
+model AttendanceRecord {
+  id              String                 @id @default(cuid())
+  sessionId       String
+  memberId        String
+  status          String                 // PRESENT, LATE, ABSENT, EXCUSED
+  remarks         String?                @db.Text
+  markedById      String
+  markedAt        DateTime               @default(now())
+  lastUpdatedById String?
+  updatedAt       DateTime               @updatedAt
+
+  session         TeachingSession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  member          Member                 @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  markedBy        User                   @relation("MarkedAttendances", fields: [markedById], references: [id])
+  lastUpdatedBy   User?                  @relation("UpdatedAttendances", fields: [lastUpdatedById], references: [id])
+  corrections     AttendanceCorrection[]
+
+  @@unique([sessionId, memberId])
+}
+
+model AttendanceCorrection {
+  id              String           @id @default(cuid())
+  recordId        String
+  requestedById   String
+  previousStatus  String
+  requestedStatus String
+  reason          String           @db.Text
+  attachmentUrl   String?          @db.Text
+  reviewStatus    String           @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedById    String?
+  reviewNotes     String?          @db.Text
+  reviewedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  record          AttendanceRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  requestedBy     User             @relation("RequestedCorrections", fields: [requestedById], references: [id])
+  reviewedBy      User?            @relation("ReviewedCorrections", fields: [reviewedById], references: [id])
+}
+
+model ShareLink {
+  id           String            @id @default(cuid())
+  token        String            @unique @db.VarChar(191)
+  tokenHash    String            @db.VarChar(191)
+  courseId     String
+  sessionId    String?
+  title        String
+  passwordHash String?
+  expiresAt    DateTime?
+  isRevoked    Boolean           @default(false)
+  accessCount  Int               @default(0)
+  showStats    Boolean           @default(true)
+  fieldsConfig String            @default("{}") @db.Text // JSON string of displayed columns
+  createdById  String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  course       Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  session      TeachingSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  createdBy    User              @relation("CreatedShareLinks", fields: [createdById], references: [id])
+  accessLogs   ShareLinkAccess[]
+}
+
+model ShareLinkAccess {
+  id          String    @id @default(cuid())
+  shareLinkId String
+  ipAddress   String?
+  userAgent   String?   @db.Text
+  accessedAt  DateTime  @default(now())
+
+  shareLink   ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+}
+
+model Announcement {
+  id           String    @id @default(cuid())
+  titleKh      String
+  titleEn      String
+  titleFr      String
+  contentKh    String    @db.Text
+  contentEn    String    @db.Text
+  contentFr    String    @db.Text
+  scope        String    @default("GLOBAL") // GLOBAL, COURSE, DEPARTMENT
+  courseId     String?
+  isPublished  Boolean   @default(true)
+  publishedAt  DateTime  @default(now())
+  createdById  String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  course       Course?   @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  createdBy    User      @relation(fields: [createdById], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String   @db.Text
+  category  String   @default("ANNOUNCEMENT") // ANNOUNCEMENT, COURSE, SESSION, CORRECTION, SECURITY
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id            String                  @id @default(cuid())
+  titleKh       String
+  titleEn       String
+  titleFr       String
+  descriptionKh String                  @db.Text
+  descriptionEn String                  @db.Text
+  descriptionFr String                  @db.Text
+  location      String
+  category      String                  // WORKSHOP, SEMINAR, TUTORING, COMPETITION
+  status        String                  @default("UPCOMING") // UPCOMING, ONGOING, COMPLETED
+  startDate     DateTime
+  endDate       DateTime
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  participants  ActivityParticipation[]
+}
+
+model ActivityParticipation {
+  id           String   @id @default(cuid())
+  activityId   String
+  memberId     String
+  role         String   @default("PARTICIPANT") // PARTICIPANT, ORGANIZER, VOLUNTEER
+  registeredAt DateTime @default(now())
+
+  activity     Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  member       Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, memberId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String   // LOGIN, ATTENDANCE_MARKED, RECORD_CORRECTED, SHARE_LINK_REVOKED
+  entityType String   // ATTENDANCE, MEMBER, USER, COURSE, SYSTEM
+  entityId   String?
+  details    String   @db.Text // JSON payload string
+  ipAddress  String?
+  userAgent  String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Translation {
+  id        String   @id @default(cuid())
+  locale    String   // km, fr, en
+  namespace String   // common, navigation, attendance, etc.
+  key       String
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, namespace, key])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  roleId      String
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  role        Role      @relation(fields: [roleId], references: [id])
+  createdBy   User      @relation(fields: [createdById], references: [id])
+}
+
+model ProfileChangeRequest {
+  id             String    @id @default(cuid())
+  userId         String
+  field          String    // fullNameKh, fullNameEn, studentId, department, academicYear
+  oldValue       String?   @db.Text
+  requestedValue String    @db.Text
+  reason         String    @db.Text
+  status         String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedById   String?
+  reviewNotes    String?   @db.Text
+  reviewedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user           User      @relation("UserChangeRequests", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy     User?     @relation("AdminReviewedProfileRequests", fields: [reviewedById], references: [id])
+}
+
+model NotificationPreference {
+  id                         String   @id @default(cuid())
+  userId                     String   @unique
+  stjAnnouncements           Boolean  @default(true)
+  courseAnnouncements        Boolean  @default(true)
+  newSessions                Boolean  @default(true)
+  scheduleChanges            Boolean  @default(true)
+  attendanceCorrectionUpdates Boolean @default(true)
+  profileCorrectionUpdates   Boolean  @default(true)
+  emailNotifications         Boolean  @default(false)
+  updatedAt                  DateTime @updatedAt
+
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LoginHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  ipAddress String?
+  userAgent String?  @db.Text
+  status    String   @default("SUCCESS") // SUCCESS, FAILED
+  loginAt   DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

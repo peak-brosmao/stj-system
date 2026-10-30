@@ -1,0 +1,391 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  passwordHash      String
+  fullNameKh        String
+  fullNameEn        String
+  studentId         String?
+  phone             String?
+  status            String             @default("ACTIVE")
+  twoFactorEnabled  Boolean            @default(false)
+  lastLoginAt       DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  userRoles         UserRole[]
+  courseLeaders     CourseLeader[]
+  createdSessions   TeachingSession[]  @relation("CreatedSessions")
+  markedAttendances AttendanceRecord[] @relation("MarkedAttendances")
+  updatedAttendances AttendanceRecord[] @relation("UpdatedAttendances")
+  requestedCorrections AttendanceCorrection[] @relation("RequestedCorrections")
+  reviewedCorrections AttendanceCorrection[] @relation("ReviewedCorrections")
+  createdShareLinks ShareLink[]        @relation("CreatedShareLinks")
+  auditLogs         AuditLog[]
+  announcements     Announcement[]
+  notifications     Notification[]
+  userSessions      UserSession[]
+  sentInvitations   Invitation[]
+}
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  description String?
+  isSystem    Boolean          @default(true)
+  userRoles   UserRole[]
+  permissions RolePermission[]
+  invitations Invitation[]
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  code        String           @unique
+  module      String
+  description String?
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  roleId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  userAgent String?
+  ipAddress String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  nameKh      String
+  nameEn      String
+  nameFr      String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  members     Member[]
+}
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  label     String
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  members   Member[]
+}
+
+model Member {
+  id               String                 @id @default(cuid())
+  memberId         String                 @unique
+  studentId        String?
+  fullNameKh       String
+  fullNameEn       String
+  email            String?
+  phone            String?
+  gender           String?
+  departmentId     String
+  academicYearId   String
+  status           String                 @default("ACTIVE")
+  notes            String?
+  registrationDate DateTime               @default(now())
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  department       Department             @relation(fields: [departmentId], references: [id])
+  academicYear     AcademicYear           @relation(fields: [academicYearId], references: [id])
+  enrollments      CourseEnrollment[]
+  attendanceRecords AttendanceRecord[]
+  activityParticipations ActivityParticipation[]
+}
+
+model Course {
+  id            String             @id @default(cuid())
+  code          String             @unique
+  slug          String             @unique
+  titleKh       String
+  titleEn       String
+  titleFr       String
+  descriptionKh String
+  descriptionEn String
+  descriptionFr String
+  category      String
+  icon          String             @default("BookOpen")
+  coverImage    String?
+  status        String             @default("ACTIVE")
+  academicTerm  String?
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  leaders       CourseLeader[]
+  enrollments   CourseEnrollment[]
+  sessions      TeachingSession[]
+  shareLinks    ShareLink[]
+  announcements Announcement[]
+}
+
+model CourseLeader {
+  id         String   @id @default(cuid())
+  courseId   String
+  userId     String
+  assignedAt DateTime @default(now())
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId])
+}
+
+model CourseEnrollment {
+  id         String   @id @default(cuid())
+  courseId   String
+  memberId   String
+  enrolledAt DateTime @default(now())
+  status     String   @default("ACTIVE")
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, memberId])
+}
+
+model TeachingSession {
+  id          String             @id @default(cuid())
+  courseId    String
+  title       String
+  sessionDate DateTime
+  startTime   String
+  endTime     String
+  room        String
+  status      String             @default("SCHEDULED")
+  notes       String?
+  createdById String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  course      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdBy   User               @relation("CreatedSessions", fields: [createdById], references: [id])
+  attendance  AttendanceRecord[]
+  shareLinks  ShareLink[]
+}
+
+model AttendanceRecord {
+  id              String                 @id @default(cuid())
+  sessionId       String
+  memberId        String
+  status          String
+  remarks         String?
+  markedById      String
+  markedAt        DateTime               @default(now())
+  lastUpdatedById String?
+  updatedAt       DateTime               @updatedAt
+
+  session         TeachingSession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  member          Member                 @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  markedBy        User                   @relation("MarkedAttendances", fields: [markedById], references: [id])
+  lastUpdatedBy   User?                  @relation("UpdatedAttendances", fields: [lastUpdatedById], references: [id])
+  corrections     AttendanceCorrection[]
+
+  @@unique([sessionId, memberId])
+}
+
+model AttendanceCorrection {
+  id              String           @id @default(cuid())
+  recordId        String
+  requestedById   String
+  previousStatus  String
+  requestedStatus String
+  reason          String
+  reviewStatus    String           @default("PENDING")
+  reviewedById    String?
+  reviewNotes     String?
+  reviewedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  record          AttendanceRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  requestedBy     User             @relation("RequestedCorrections", fields: [requestedById], references: [id])
+  reviewedBy      User?            @relation("ReviewedCorrections", fields: [reviewedById], references: [id])
+}
+
+model ShareLink {
+  id           String            @id @default(cuid())
+  token        String            @unique
+  tokenHash    String
+  courseId     String
+  sessionId    String?
+  title        String
+  passwordHash String?
+  expiresAt    DateTime?
+  isRevoked    Boolean           @default(false)
+  accessCount  Int               @default(0)
+  showStats    Boolean           @default(true)
+  fieldsConfig String            @default("{}")
+  createdById  String
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  course       Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  session      TeachingSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  createdBy    User              @relation("CreatedShareLinks", fields: [createdById], references: [id])
+  accessLogs   ShareLinkAccess[]
+}
+
+model ShareLinkAccess {
+  id          String    @id @default(cuid())
+  shareLinkId String
+  ipAddress   String?
+  userAgent   String?
+  accessedAt  DateTime  @default(now())
+
+  shareLink   ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+}
+
+model Announcement {
+  id           String    @id @default(cuid())
+  titleKh      String
+  titleEn      String
+  titleFr      String
+  contentKh    String
+  contentEn    String
+  contentFr    String
+  scope        String    @default("GLOBAL")
+  courseId     String?
+  isPublished  Boolean   @default(true)
+  publishedAt  DateTime  @default(now())
+  createdById  String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  course       Course?   @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  createdBy    User      @relation(fields: [createdById], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id            String                  @id @default(cuid())
+  titleKh       String
+  titleEn       String
+  titleFr       String
+  descriptionKh String
+  descriptionEn String
+  descriptionFr String
+  location      String
+  category      String
+  status        String                  @default("UPCOMING")
+  startDate     DateTime
+  endDate       DateTime
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  participants  ActivityParticipation[]
+}
+
+model ActivityParticipation {
+  id           String   @id @default(cuid())
+  activityId   String
+  memberId     String
+  role         String   @default("PARTICIPANT")
+  registeredAt DateTime @default(now())
+
+  activity     Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  member       Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, memberId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  details    String
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Translation {
+  id        String   @id @default(cuid())
+  locale    String
+  namespace String
+  key       String
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, namespace, key])
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  roleId      String
+  token       String    @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  role        Role      @relation(fields: [roleId], references: [id])
+  createdBy   User      @relation(fields: [createdById], references: [id])
+}
+

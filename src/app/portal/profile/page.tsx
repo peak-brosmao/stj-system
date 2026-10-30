@@ -1,0 +1,326 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  User,
+  Mail,
+  Phone,
+  Send,
+  MapPin,
+  GraduationCap,
+  Calendar,
+  Shield,
+  Edit2,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  Lock,
+  Building2,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
+import { PortalLayout } from "@/components/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+
+export default function MyProfilePage() {
+  const [profile, setProfile] = useState<any>(null);
+  const [completeness, setCompleteness] = useState(85);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.profile) {
+          setProfile(data.profile);
+          setCompleteness(data.completeness || 85);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const nameKh = profile?.fullNameKh || "ពាក់ ប្រុសម៉ៅ";
+  const nameEn = profile?.fullNameEn || "PEAK BROSMAO";
+  const displayName = profile?.displayName || "Brosmao";
+  const memberId = profile?.member?.memberId || "STJ033";
+  const studentId = profile?.member?.studentId || "e20251455";
+  const department = profile?.member?.department?.nameKh || "ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង (GIC)";
+  const deptCode = profile?.member?.department?.code || "GIC";
+  const year = profile?.member?.academicYear?.label || "Ingénieur 2ème Année (Year I2)";
+  const phone = profile?.phone || "099661460";
+  const email = profile?.email || "peak.brosmao@itc.edu.kh";
+  const telegram = profile?.telegram || "@brosmao_peak";
+  const address = profile?.address || "Russian Federation Blvd, Toul Kork, Phnom Penh";
+  const bio = profile?.bio || "និស្សិតវិស្វកម្មព័ត៌មានវិទ្យា (GIC) ជំនាន់ I2 នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។ មានចំណាប់អារម្មណ៍លើ Software Engineering, Systems Architecture និង Peer Mentorship។";
+
+  return (
+    <PortalLayout
+      portalType="portal"
+      userRole="STJ Member"
+      userName={nameKh}
+      userMemberId={memberId}
+      userEmail={email}
+    >
+      <div className="space-y-6 max-w-5xl mx-auto">
+        {/* Profile Header Hero Card */}
+        <Card className="overflow-hidden border-border">
+          <div className="h-32 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/5" />
+          <CardContent className="relative px-6 pb-6 pt-0">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-4 -mt-16 sm:-mt-12">
+              <div className="flex flex-col sm:flex-row items-center sm:items-end space-y-3 sm:space-y-0 sm:space-x-4">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-card border-4 border-card shadow-md overflow-hidden flex items-center justify-center text-primary font-bold text-3xl">
+                  {profile?.profileImage ? (
+                    <Image
+                      src={profile.profileImage}
+                      alt={nameEn}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary">
+                      {nameEn.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <div className="text-center sm:text-left space-y-1">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">{nameKh}</h1>
+                    <span className="text-sm font-semibold text-muted-foreground font-sans">({nameEn})</span>
+                    <Badge variant="success">សកម្ម (Active)</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    ឈ្មោះហៅក្រៅ: <strong className="text-foreground">{displayName}</strong> • អត្តសញ្ញាណនិស្សិត: <strong className="text-foreground font-mono">{studentId}</strong>
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary font-bold border border-primary/20">
+                      STJ Member: {memberId}
+                    </span>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium">
+                      ដេប៉ាតឺម៉ង់: {deptCode} ({year})
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Link href="/portal/profile/edit">
+                  <Button size="sm" className="space-x-1.5 text-xs">
+                    <Edit2 className="w-3.5 h-3.5" />
+                    <span>កែសម្រួលព័ត៌មាន</span>
+                  </Button>
+                </Link>
+                <Link href="/portal/security">
+                  <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>សុវត្ថិភាព</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Profile Completeness Card */}
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-xs font-bold text-foreground">កម្រិតនៃការបំពេញព័ត៌មាន (Profile Completeness): {completeness}%</span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                ព័ត៌មានផ្ទាល់ខ្លួនត្រូវបានបំពេញយ៉ាងល្អប្រសើរ។ ព័ត៌មានស្រេចចិត្តមិនត្រូវបានទាមទារជាកាតព្វកិច្ចឡើយ។
+              </p>
+            </div>
+            <div className="w-full sm:w-48 bg-muted rounded-full h-2.5 overflow-hidden">
+              <div
+                className="bg-primary h-2.5 rounded-full transition-all duration-500"
+                style={{ width: `${completeness}%` }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section Grid: Personal & Contact */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Section A: Personal Information */}
+          <Card>
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                <User className="w-4 h-4 text-primary" />
+                <span>ព័ត៌មានផ្ទាល់ខ្លួន (Personal Information)</span>
+              </CardTitle>
+              <Link href="/portal/profile/edit" className="text-xs text-primary hover:underline flex items-center space-x-1">
+                <Edit2 className="w-3 h-3" />
+                <span>កែប្រែ</span>
+              </Link>
+            </CardHeader>
+            <CardContent className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
+                <div>
+                  <span className="text-muted-foreground text-[11px]">គោត្តនាម-នាម (ខ្មែរ):</span>
+                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameKh}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-[11px]">FullName (English):</span>
+                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameEn}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
+                <div>
+                  <span className="text-muted-foreground text-[11px]">ឈ្មោះបង្ហាញ (Preferred Name):</span>
+                  <p className="font-medium text-foreground mt-0.5">{displayName}</p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground text-[11px]">ភេទ (Gender):</span>
+                  <p className="font-medium text-foreground mt-0.5">ប្រុស (Male)</p>
+                </div>
+              </div>
+              <div>
+                <span className="text-muted-foreground text-[11px]">ជីវប្រវត្តិសង្ខេប (Personal Biography):</span>
+                <p className="text-muted-foreground leading-relaxed mt-1 p-2.5 rounded-lg bg-muted/40 text-[11px]">
+                  {bio}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Section B: Contact Information */}
+          <Card>
+            <CardHeader className="pb-3 flex flex-row items-center justify-between">
+              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                <Mail className="w-4 h-4 text-primary" />
+                <span>ព័ត៌មានទំនាក់ទំនង (Contact Information)</span>
+              </CardTitle>
+              <Link href="/portal/profile/edit" className="text-xs text-primary hover:underline flex items-center space-x-1">
+                <Edit2 className="w-3 h-3" />
+                <span>កែប្រែ</span>
+              </Link>
+            </CardHeader>
+            <CardContent className="space-y-3.5 text-xs">
+              <div className="flex items-center justify-between pb-2.5 border-b border-border">
+                <div className="flex items-center space-x-2.5">
+                  <Mail className="w-4 h-4 text-primary" />
+                  <div>
+                    <span className="text-[11px] text-muted-foreground">អ៊ីមែលស្ថាប័ន (Institutional Email):</span>
+                    <p className="font-medium text-foreground">{email}</p>
+                  </div>
+                </div>
+                <Badge variant="success" className="text-[10px]">ផ្ទៀងផ្ទាត់រួច</Badge>
+              </div>
+              <div className="flex items-center justify-between pb-2.5 border-b border-border">
+                <div className="flex items-center space-x-2.5">
+                  <Phone className="w-4 h-4 text-primary" />
+                  <div>
+                    <span className="text-[11px] text-muted-foreground">លេខទូរស័ព្ទ (Phone Number):</span>
+                    <p className="font-medium text-foreground font-mono">{phone}</p>
+                  </div>
+                </div>
+                <span className="text-[10px] text-muted-foreground">អាចទាក់ទងបាន</span>
+              </div>
+              <div className="flex items-center space-x-2.5 pb-2.5 border-b border-border">
+                <Send className="w-4 h-4 text-primary" />
+                <div>
+                  <span className="text-[11px] text-muted-foreground">Telegram Username:</span>
+                  <p className="font-medium text-primary font-mono">{telegram}</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-2.5">
+                <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-[11px] text-muted-foreground">អាសយដ្ឋានបច្ចុប្បន្ន (Current Address):</span>
+                  <p className="font-medium text-foreground mt-0.5">{address}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Section C: Official Academic Information (Read-only with Correction Desk) */}
+        <Card className="border-border">
+          <CardHeader className="pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                <GraduationCap className="w-4 h-4 text-primary" />
+                <span>ព័ត៌មានសិក្សាផ្លូវការ (Official Academic Records)</span>
+              </CardTitle>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                កំណត់ត្រាផ្លូវការរបស់វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។ ការកែប្រែទាមទារការអនុម័តពីគណៈគ្រប់គ្រង STJ។
+              </p>
+            </div>
+            <Link href="/portal/profile/edit#correction-request">
+              <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
+                <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <span>ស្នើសុំកែប្រែទិន្នន័យផ្លូវការ</span>
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border border-border">
+              <div>
+                <span className="text-[11px] text-muted-foreground">លេខកូដសមាជិក STJ:</span>
+                <p className="font-bold text-primary font-mono text-sm mt-0.5">{memberId}</p>
+              </div>
+              <div>
+                <span className="text-[11px] text-muted-foreground">លេខអត្តសញ្ញាណនិស្សិត:</span>
+                <p className="font-bold text-foreground font-mono text-sm mt-0.5">{studentId}</p>
+              </div>
+              <div>
+                <span className="text-[11px] text-muted-foreground">ដេប៉ាតឺម៉ង់ (Department):</span>
+                <p className="font-semibold text-foreground text-xs mt-0.5">{deptCode}</p>
+              </div>
+              <div>
+                <span className="text-[11px] text-muted-foreground">កម្រិតសិក្សា (Year):</span>
+                <p className="font-semibold text-foreground text-xs mt-0.5">{year}</p>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+              <div className="space-y-1">
+                <span className="font-semibold text-foreground">មុខវិជ្ជាបានចុះឈ្មោះក្នុងប្រព័ន្ធ (Enrolled Courses):</span>
+                <p className="text-muted-foreground">PROG101 - Programming & Algorithmic Thinking, MATH101 - Mathematics</p>
+              </div>
+              <span className="text-[11px] text-muted-foreground shrink-0">កាលបរិច្ឆេទចុះឈ្មោះ៖ ១៥ កញ្ញា ២០២៦</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Section D: Account & Security Overview */}
+        <Card>
+          <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+              <Shield className="w-4 h-4 text-primary" />
+              <span>ព័ត៌មានគណនី និងសុវត្ថិភាព (Account Information)</span>
+            </CardTitle>
+            <Link href="/portal/security" className="text-xs text-primary hover:underline">
+              ការកំណត់សុវត្ថិភាព
+            </Link>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span className="text-[11px] text-muted-foreground">ស្ថានភាពគណនី:</span>
+              <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">សកម្ម (Active)</p>
+            </div>
+            <div>
+              <span className="text-[11px] text-muted-foreground">ភាសាដែលពេញចិត្ត:</span>
+              <p className="font-medium text-foreground mt-0.5">ភាសាខ្មែរ (km)</p>
+            </div>
+            <div>
+              <span className="text-[11px] text-muted-foreground">ចូលប្រើប្រាស់ចុងក្រោយ:</span>
+              <p className="font-medium text-muted-foreground mt-0.5">ទើបតែពេលនេះ</p>
+            </div>
+            <div>
+              <span className="text-[11px] text-muted-foreground">ការការពារ ២ ជាន់ (2FA):</span>
+              <p className="font-medium text-muted-foreground mt-0.5">មិនទាន់បើក (Optional)</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </PortalLayout>
+  );
+}
