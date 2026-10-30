@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
           room: "បន្ទប់ A-204, ITC Campus 1",
           status: "COMPLETED",
           course: { id: "c-prog", code: "PROG101", titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)" },
-          _count: { attendance: 39 },
+          _count: { attendance: 9 },
         },
         {
           id: "session-prog-2",
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
           room: "បន្ទប់ A-204, ITC Campus 1",
           status: "COMPLETED",
           course: { id: "c-prog", code: "PROG101", titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)" },
-          _count: { attendance: 39 },
+          _count: { attendance: 9 },
         },
         {
           id: "session-math-1",
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
           room: "បន្ទប់ B-102, ITC Campus 1",
           status: "COMPLETED",
           course: { id: "c-math", code: "MATH101", titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)" },
-          _count: { attendance: 39 },
+          _count: { attendance: 7 },
         },
         {
           id: "session-phys-1",
@@ -68,7 +68,7 @@ export async function GET(req: NextRequest) {
           room: "បន្ទប់ A-301, ITC Campus 1",
           status: "COMPLETED",
           course: { id: "c-phys", code: "PHYS101", titleKh: "រូបវិទ្យាវិស្វកម្ម (Physics)" },
-          _count: { attendance: 39 },
+          _count: { attendance: 10 },
         },
         {
           id: "session-chem-1",
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
           room: "បន្ទប់ C-205, ITC Campus 1",
           status: "COMPLETED",
           course: { id: "c-chem", code: "CHEM101", titleKh: "គីមីវិទ្យាទូទៅ (Chemistry)" },
-          _count: { attendance: 39 },
+          _count: { attendance: 11 },
         },
       ];
     }

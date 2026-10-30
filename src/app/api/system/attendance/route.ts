@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAttendanceAdmin, getSession } from "@/lib/auth";
 import { AttendanceStatus } from "@/types";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+import { OFFICIAL_STJ_ROSTER, getMembersByCourse } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
             },
           });
 
-          if (targetSession && targetSession.course.enrollments.length >= 39) {
+          if (targetSession && targetSession.course.enrollments.length > 0) {
             enrolledMembers = targetSession.course.enrollments.map((e) => e.member);
             attendanceRecords = targetSession.attendance.map((a) => ({
               id: a.id,
@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
       // Offline / fallback to official STJ dataset
     }
 
-    // Ensure official 39-member roster is always available if database has fewer
+    // Ensure official course-specific roster is served
     if (enrolledMembers.length === 0) {
       courses = [
         {
@@ -148,7 +148,19 @@ export async function GET(req: NextRequest) {
         },
       ];
 
-      enrolledMembers = OFFICIAL_STJ_ROSTER.map((m) => ({
+      // Determine the active course code from sessionId or courseId
+      let activeCourseCode = "PROG101";
+      if (sessionId?.includes("math") || courseId === "c-math" || courseId === "MATH101") {
+        activeCourseCode = "MATH101";
+      } else if (sessionId?.includes("phys") || courseId === "c-phys" || courseId === "PHYS101") {
+        activeCourseCode = "PHYS101";
+      } else if (sessionId?.includes("chem") || courseId === "c-chem" || courseId === "CHEM101") {
+        activeCourseCode = "CHEM101";
+      }
+
+      const assignedCourseMembers = getMembersByCourse(activeCourseCode);
+
+      enrolledMembers = assignedCourseMembers.map((m) => ({
         id: `m-${m.memberId.toLowerCase()}`,
         memberId: m.memberId,
         fullNameKh: m.nameKh,

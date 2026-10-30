@@ -139,14 +139,20 @@ async function main() {
     assert(!emojiRegex.test(kmRaw), "km.json must not contain any emoji characters");
   });
 
-  // Test 6: Hostinger Compatibility (MySQL schema check & no Redis/Docker dependencies)
-  runTest("Hostinger Node.js & MySQL Compatibility: Schema uses provider = 'mysql' and zero Redis/Docker dependencies", () => {
+  // Test 6: Database & Hostinger Compatibility (.db file / SQLite & MySQL compatible)
+  runTest("Database Compatibility: SQLite .db file / MySQL compatible with zero Redis/Docker dependencies", () => {
     const schemaPath = path.join(__dirname, "..", "prisma", "schema.prisma");
     assert(fs.existsSync(schemaPath), "prisma/schema.prisma must exist");
     const schema = fs.readFileSync(schemaPath, "utf-8");
 
-    assert(schema.includes('provider = "mysql"'), "Prisma schema must use provider = 'mysql' for Hostinger");
+    assert(
+      schema.includes('provider = "sqlite"') || schema.includes('provider = "mysql"'),
+      "Prisma schema must use SQLite .db file or MySQL"
+    );
     assert(!schema.includes("postgresql"), "Production schema must not reference postgresql");
+
+    const dbPath = path.join(__dirname, "..", "prisma", "stj.db");
+    assert(fs.existsSync(dbPath), "prisma/stj.db file must exist and contain database records");
 
     const packageJsonPath = path.join(__dirname, "..", "package.json");
     const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
@@ -154,7 +160,7 @@ async function main() {
     assert(!pkg.dependencies["ioredis"], "Must not have Redis dependency");
     assert(!pkg.dependencies["redis"], "Must not have Redis dependency");
     assert(!pkg.dependencies["socket.io"], "Must not have Socket.IO dependency (incompatible with Hostinger Web App)");
-    assert(pkg.scripts["postinstall"].includes("prisma generate"), "postinstall must generate Prisma Client for Hostinger");
+    assert(pkg.scripts["postinstall"].includes("prisma generate"), "postinstall must generate Prisma Client");
   });
 
   console.log("\n-------------------------------------------------------------------------------");

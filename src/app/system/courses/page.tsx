@@ -18,7 +18,7 @@ export default function SystemCoursesPage() {
       term: "2026-2027 Semester 1",
       status: "ACTIVE",
       leaders: "លាង ជីងហេង (I3-GTI)",
-      enrolled: 39,
+      enrolled: 9,
     },
     {
       id: "c2",
@@ -29,7 +29,7 @@ export default function SystemCoursesPage() {
       term: "2026-2027 Semester 1",
       status: "ACTIVE",
       leaders: "គឹម រតនៈ (I5-GIM)",
-      enrolled: 39,
+      enrolled: 7,
     },
     {
       id: "c3",
@@ -40,7 +40,7 @@ export default function SystemCoursesPage() {
       term: "2026-2027 Semester 1",
       status: "ACTIVE",
       leaders: "គ្រុយ អីុខាង (I3-GIM)",
-      enrolled: 39,
+      enrolled: 10,
     },
     {
       id: "c4",
@@ -51,7 +51,7 @@ export default function SystemCoursesPage() {
       term: "2026-2027 Semester 1",
       status: "ACTIVE",
       leaders: "ខេង លីឧស្សាហ៍ (I3-GCI)",
-      enrolled: 39,
+      enrolled: 11,
     },
   ]);
 

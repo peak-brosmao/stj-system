@@ -60,8 +60,7 @@ export default function SystemDashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`/api/system/stats?academicYear=${selectedAcademicYear}`)
+    fetch("/api/system/stats")
       .then((res) => res.json())
       .then((resData) => {
         setData(resData);

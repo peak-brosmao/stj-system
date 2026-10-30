@@ -73,6 +73,7 @@ export async function GET(req: NextRequest) {
     const dept = searchParams.get("dept");
     const year = searchParams.get("year");
     const status = searchParams.get("status");
+    const course = searchParams.get("course");
 
     let members;
     let departments;
@@ -91,6 +92,15 @@ export async function GET(req: NextRequest) {
       }
       if (year && year !== "ALL") {
         whereClause.academicYear = { code: year };
+      }
+      if (course && course !== "ALL") {
+        whereClause.enrollments = {
+          some: {
+            course: {
+              code: course,
+            },
+          },
+        };
       }
       if (search) {
         whereClause.OR = [
@@ -114,7 +124,7 @@ export async function GET(req: NextRequest) {
         },
         orderBy: { memberId: "asc" },
       });
-      if (!members || members.length < 39) {
+      if (!members || (!course && !dept && !year && !search && members.length < 39)) {
         throw new Error("Database roster incomplete, falling back to official 39-member list");
       }
     } catch {

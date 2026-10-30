@@ -19,7 +19,6 @@ import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -175,3 +174,4 @@ export default function CourseDetailPage() {
     </PortalLayout>
   );
 }
+

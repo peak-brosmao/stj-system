@@ -15,145 +15,92 @@ export async function GET(req: NextRequest) {
     const courseId = searchParams.get("id");
 
     if (courseId) {
-      // Return single course detail
-      const course = {
-        id: courseId,
-        code: "PROG101",
-        titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
-        titleEn: "Programming & Algorithmic Thinking",
-        titleFr: "Programmation et Algorithmique",
-        category: "Engineering Foundation",
-        academicTerm: "2026-2027 Semester 1",
-        descriptionKh: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Memory Management, Algorithms និងការដោះស្រាយបញ្ហាជាក់ស្តែងសម្រាប់និស្សិតវិស្វកម្ម។",
-        descriptionEn: "Mastering C/C++, pointer memory architectures and advanced data structures.",
-        room: "Campus 1, Building A, Room 204",
-        schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 10:00 ព្រឹក",
-        leaders: [
-          {
-            fullNameKh: "លាង ជីងហេង",
-            fullNameEn: "LEANG JINGHENG",
-            email: "leang.jingheng@itc.edu.kh",
-            department: "GTI (Year I3)",
-            phone: "0976355500",
+      const dbCourse = await prisma.course.findFirst({
+        where: {
+          OR: [{ id: courseId }, { code: courseId }, { slug: courseId }],
+        },
+        include: {
+          leaders: { include: { user: true } },
+          sessions: { orderBy: { sessionDate: "desc" } },
+          enrollments: { include: { member: true } },
+        },
+      });
+
+      if (dbCourse) {
+        return NextResponse.json({
+          success: true,
+          course: {
+            id: dbCourse.id,
+            code: dbCourse.code,
+            slug: dbCourse.slug,
+            titleKh: dbCourse.titleKh,
+            titleEn: dbCourse.titleEn,
+            titleFr: dbCourse.titleFr,
+            category: dbCourse.category,
+            academicTerm: dbCourse.academicTerm || "2026-2027 Semester 1",
+            descriptionKh: dbCourse.descriptionKh,
+            descriptionEn: dbCourse.descriptionEn,
+            leaders: dbCourse.leaders.map((l) => ({
+              fullNameKh: l.user.fullNameKh,
+              fullNameEn: l.user.fullNameEn,
+              email: l.user.email,
+              phone: l.user.phone || "-",
+            })),
+            sessions: dbCourse.sessions.map((s) => ({
+              id: s.id,
+              title: s.title,
+              date: s.sessionDate.toISOString().split("T")[0],
+              time: `${s.startTime} - ${s.endTime}`,
+              room: s.room,
+              status: s.status,
+            })),
+            enrolledMembers: dbCourse.enrollments.map((e) => ({
+              memberId: e.member.memberId,
+              fullNameKh: e.member.fullNameKh,
+              fullNameEn: e.member.fullNameEn,
+            })),
           },
-        ],
-        announcements: [
-          {
-            id: "ann-c1",
-            title: "កាលវិភាគពិនិត្យកូដ និងការដំឡើង GCC Compiler",
-            date: "2026-10-15",
-            content: "សូមនិស្សិតទាំងអស់ដំឡើង MinGW-w64 ឬ Clang លើកុំព្យូទ័រយួរដៃឱ្យបានរួចរាល់មុនថ្ងៃសិក្សា។",
-          },
-        ],
-        sessions: [
-          {
-            id: "s1",
-            title: "វគ្គទី១៖ Pointers, Structs and Dynamic Memory",
-            date: "2026-10-10",
-            time: "08:00 - 10:00",
-            room: "Room 204",
-            status: "COMPLETED",
-          },
-          {
-            id: "s2",
-            title: "វគ្គទី២៖ Big-O Analysis & Sorting Algorithms",
-            date: "2026-10-17",
-            time: "08:00 - 10:00",
-            room: "Room 204",
-            status: "COMPLETED",
-          },
-          {
-            id: "s3",
-            title: "វគ្គទី៣៖ Linked Lists and Stack/Queue",
-            date: "2026-10-24",
-            time: "08:00 - 10:00",
-            room: "Room 204",
-            status: "COMPLETED",
-          },
-          {
-            id: "s4",
-            title: "វគ្គទី៤៖ Binary Search Trees and Recursion",
-            date: "2026-11-07",
-            time: "08:00 - 10:00",
-            room: "Room 204",
-            status: "SCHEDULED",
-          },
-        ],
-      };
-      return NextResponse.json({ success: true, course });
+        });
+      }
     }
 
-    // Return all courses for the user
-    const courses = [
-      {
-        id: "c-prog",
-        code: "PROG101",
-        slug: "programming",
-        titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
-        titleEn: "Programming & Algorithmic Thinking",
-        category: "Engineering Foundation",
-        academicTerm: "2026-2027 Semester 1",
-        description: "C/C++, Data Structures, Memory Management និង Problem Solving",
-        leaderName: "លាង ជីងហេង (LEANG JINGHENG)",
-        enrolledMembersCount: 41,
-        totalSessions: 12,
-        completedSessions: 3,
-        myAttendanceRate: 100,
-        roleInCourse: session.roles.includes("COURSE_LEADER") ? "Course Leader" : "Enrolled Member",
+    // Return list of courses from SQLite database (stj.db)
+    const dbCourses = await prisma.course.findMany({
+      where: { status: "ACTIVE" },
+      include: {
+        leaders: { include: { user: true } },
+        enrollments: true,
+        sessions: true,
       },
-      {
-        id: "c-math",
-        code: "MATH101",
-        slug: "mathematics",
-        titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
-        titleEn: "Engineering Mathematics",
-        category: "Engineering Foundation",
-        academicTerm: "2026-2027 Semester 1",
-        description: "Calculus, Linear Algebra, Differential Equations និង Numerical Methods",
-        leaderName: "គឹម រតនៈ (KIM Ratanak)",
-        enrolledMembersCount: 38,
-        totalSessions: 12,
-        completedSessions: 2,
+      orderBy: { code: "asc" },
+    });
+
+    const courses = dbCourses.map((c) => {
+      const leaderName = c.leaders.length > 0
+        ? `${c.leaders[0].user.fullNameKh} (${c.leaders[0].user.fullNameEn})`
+        : "គណៈដឹកនាំ STJ";
+
+      return {
+        id: c.id,
+        code: c.code,
+        slug: c.slug,
+        titleKh: c.titleKh,
+        titleEn: c.titleEn,
+        category: c.category,
+        academicTerm: c.academicTerm || "2026-2027 Semester 1",
+        description: c.descriptionKh,
+        leaderName,
+        enrolledMembersCount: c.enrollments.length,
+        totalSessions: Math.max(c.sessions.length, 12),
+        completedSessions: c.sessions.filter((s) => s.status === "COMPLETED").length,
         myAttendanceRate: 100,
-        roleInCourse: "Enrolled Member",
-      },
-      {
-        id: "c-phys",
-        code: "PHYS101",
-        slug: "physics",
-        titleKh: "រូបវិទ្យាវិស្វកម្ម (Physics)",
-        titleEn: "Engineering Physics",
-        category: "Engineering Foundation",
-        academicTerm: "2026-2027 Semester 1",
-        description: "Classical Mechanics, Wave Dynamics និង Thermodynamics",
-        leaderName: "គ្រុយ អីុខាង (KRUY Ykhang)",
-        enrolledMembersCount: 35,
-        totalSessions: 10,
-        completedSessions: 2,
-        myAttendanceRate: 100,
-        roleInCourse: "Enrolled Member",
-      },
-      {
-        id: "c-chem",
-        code: "CHEM101",
-        slug: "chemistry",
-        titleKh: "គីមីវិទ្យាទូទៅ (Chemistry)",
-        titleEn: "General Chemistry",
-        category: "Engineering Foundation",
-        academicTerm: "2026-2027 Semester 1",
-        description: "Chemical Bonding, Kinetics, Catalysis និង Physical Chemistry",
-        leaderName: "ខេង លីឧស្សាហ៍ (KHENG Lyussa)",
-        enrolledMembersCount: 30,
-        totalSessions: 10,
-        completedSessions: 1,
-        myAttendanceRate: 100,
-        roleInCourse: "Enrolled Member",
-      },
-    ];
+        roleInCourse: session.roles.includes("COURSE_LEADER") ? "Course Leader" : "គ្រូបង្រៀនស្ម័គ្រចិត្ត",
+      };
+    });
 
     return NextResponse.json({ success: true, courses });
-  } catch (error: unknown) {
-    const msg = error instanceof Error ? error.message : "Failed to load courses";
-    return NextResponse.json({ error: msg }, { status: 500 });
+  } catch (error) {
+    console.error("Portal courses error:", error);
+    return NextResponse.json({ error: "Failed to load courses from database" }, { status: 500 });
   }
 }

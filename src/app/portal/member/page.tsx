@@ -72,19 +72,12 @@ export default function MemberDashboardPage() {
   const myCourses = [
     {
       code: "PROG101",
-      titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
+      titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
       leader: "លាង ជីងហេង (LEANG JINGHENG - I3 GTI)",
       schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 10:00",
-      room: "បន្ទប់ A-204",
-      status: "កំពុងសិក្សា",
-    },
-    {
-      code: "MATH101",
-      titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
-      leader: "គឹម រតនៈ (KIM Ratanak - I5 GIM)",
-      schedule: "រៀងរាល់ថ្ងៃចន្ទ ម៉ោង 14:00 - 16:00",
-      room: "បន្ទប់ B-108",
-      status: "កំពុងសិក្សា",
+      room: "បន្ទប់ A-204, ITC Campus 1",
+      role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត (Assigned Tutor)",
+      status: "សកម្ម (Active)",
     },
   ];
 
@@ -97,15 +90,6 @@ export default function MemberDashboardPage() {
       time: "08:00 - 10:00",
       room: "Campus 1, Building A, Room 204",
       leader: "លាង ជីងហេង",
-    },
-    {
-      id: "us-2",
-      course: "MATH101 - Mathematics",
-      title: "វគ្គទី៣៖ Eigenvalues & Linear Transformations",
-      date: "ចន្ទ ០៩ វិច្ឆិកា ២០២៦",
-      time: "14:00 - 16:00",
-      room: "Campus 1, Building B, Room 108",
-      leader: "គឹម រតនៈ",
     },
   ];
 
@@ -382,3 +366,4 @@ export default function MemberDashboardPage() {
     </PortalLayout>
   );
 }
+

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -19,21 +19,52 @@ import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+
+interface UserItem {
+  id: string;
+  memberId: string;
+  studentId?: string | null;
+  fullNameKh: string;
+  fullNameEn: string;
+  email?: string | null;
+  phone?: string | null;
+  status: string;
+  notes?: string | null;
+  department: { code: string; nameKh: string };
+  academicYear: { code: string };
+  enrollments?: Array<{ course: { code: string } }>;
+}
 
 export default function SystemPortalUsersPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
-  const [statusFilter, setStatusFilter] = useState("ALL");
-  const [usersList, setUsersList] = useState(OFFICIAL_STJ_ROSTER);
+  const [usersList, setUsersList] = useState<UserItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadUsers = () => {
+    setLoading(true);
+    fetch("/api/system/members")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.members) setUsersList(data.members);
+      })
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   const filtered = usersList.filter((u) => {
+    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("ប្រធាន") || u.notes?.includes("សមាគម");
     const matchesSearch =
-      u.nameKh.includes(searchTerm) ||
-      u.nameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === "ALL" || (roleFilter === "LEADER" ? u.isLeader : !u.isLeader);
+      u.fullNameKh.includes(searchTerm) ||
+      u.fullNameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (u.studentId && u.studentId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (u.email && u.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      u.department.code.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === "ALL" || (roleFilter === "LEADER" ? isLeader : !isLeader);
     return matchesSearch && matchesRole;
   });
 
@@ -58,116 +89,142 @@ export default function SystemPortalUsersPage() {
               គ្រប់គ្រងគណនីសមាជិក STJ (Portal User Accounts)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              គ្រប់គ្រងគណនីចូលប្រើប្រាស់របស់សមាជិករៀមច្បងស្ម័គ្រចិត្តទាំង {OFFICIAL_STJ_ROSTER.length} នាក់
+              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • គណនីផ្លូវការរបស់និស្សិតរៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ សរុប {usersList.length} នាក់
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
-            <Button size="sm" className="space-x-1.5 text-xs">
-              <UserPlus className="w-3.5 h-3.5" />
-              <span>បង្កើតគណនីថ្មី</span>
+            <Button variant="outline" size="sm" onClick={loadUsers} disabled={loading} className="text-xs">
+              <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loading ? "animate-spin" : ""}`} />
+              ទាញឡើងវិញ
             </Button>
+            <Link href="/system/members">
+              <Button size="sm" className="space-x-1.5 text-xs">
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>បន្ថែមសមាជិកថ្មី</span>
+              </Button>
+            </Link>
           </div>
         </div>
 
-        {/* Filter Controls */}
-        <Card>
-          <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="relative w-full sm:w-64">
-                <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="ស្វែងរកឈ្មោះ អ៊ីមែល ឬអត្តសញ្ញាណ..."
-                  className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-input bg-background"
-                />
-              </div>
+        {/* Filters */}
+        <div className="p-4 rounded-xl bg-card border border-border flex flex-wrap items-center justify-between gap-3">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="ស្វែងរកតាមឈ្មោះ អ៊ីមែល អត្តលេខ..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
+            />
+          </div>
 
-              <div className="flex items-center space-x-2">
-                <span className="font-semibold text-foreground">តួនាទី៖</span>
-                <select
-                  value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
-                  className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs"
-                >
-                  <option value="ALL">ទាំងអស់ (All Roles)</option>
-                  <option value="LEADER">រៀមច្បងប្រធានក្រុម (Course Leaders)</option>
-                  <option value="MEMBER">សមាជិករៀមច្បង (Senior Volunteers)</option>
-                </select>
-              </div>
-            </div>
-
-            <span className="text-muted-foreground">
-              បង្ហាញសរុប៖ <strong>{filtered.length} គណនី</strong>
-            </span>
-          </CardContent>
-        </Card>
+          <div className="flex items-center space-x-2">
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
+            >
+              <option value="ALL">គ្រប់តួនាទី (All Roles)</option>
+              <option value="LEADER">ថ្នាក់ដឹកនាំ & ប្រធានក្រុម (Leaders)</option>
+              <option value="MEMBER">សមាជិករៀមច្បងបង្រៀន (Tutors)</option>
+            </select>
+          </div>
+        </div>
 
         {/* Users Table */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">បញ្ជីគណនីសមាជិកស្ម័គ្រចិត្ត STJ ២០២៦~២០២៧</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                    <th className="py-2.5 px-3">ល.រ</th>
-                    <th className="py-2.5 px-3">លេខកូដ STJ</th>
-                    <th className="py-2.5 px-3">ឈ្មោះខ្មែរ</th>
-                    <th className="py-2.5 px-3">FullName En</th>
-                    <th className="py-2.5 px-3">អត្តសញ្ញាណ</th>
-                    <th className="py-2.5 px-3">ដេប៉ាតឺម៉ង់</th>
-                    <th className="py-2.5 px-3">អ៊ីមែល</th>
-                    <th className="py-2.5 px-3">តួនាទី</th>
-                    <th className="py-2.5 px-3">ស្ថានភាព</th>
-                    <th className="py-2.5 px-3 text-right">សកម្មភាព</th>
+        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
+                <tr>
+                  <th className="py-3 px-4 font-semibold">ល.រ</th>
+                  <th className="py-3 px-4 font-semibold">កូដ STJ</th>
+                  <th className="py-3 px-4 font-semibold">ឈ្មោះពេញ (Kh / En)</th>
+                  <th className="py-3 px-4 font-semibold">អ៊ីមែលផ្លូវការ (ITC)</th>
+                  <th className="py-3 px-4 font-semibold">ជំនាញ & កម្រិត</th>
+                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
+                  <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
+                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {loading ? (
+                  <tr>
+                    <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
+                      កំពុងទាញយកទិន្នន័យពី SQLite Database (stj.db)...
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filtered.map((u, idx) => (
-                    <tr key={u.memberId} className="hover:bg-muted/30 transition-colors">
-                      <td className="py-2 px-3 text-muted-foreground">{idx + 1}</td>
-                      <td className="py-2 px-3 font-mono font-semibold text-primary">{u.memberId}</td>
-                      <td className="py-2 px-3 font-medium text-foreground">{u.nameKh}</td>
-                      <td className="py-2 px-3 text-muted-foreground">{u.nameEn}</td>
-                      <td className="py-2 px-3 font-mono">{u.studentId}</td>
-                      <td className="py-2 px-3">
-                        <span className="font-semibold text-foreground px-1.5 py-0.5 rounded bg-muted">
-                          {u.dept} ({u.year})
-                        </span>
-                      </td>
-                      <td className="py-2 px-3 text-muted-foreground font-mono">{u.email}</td>
-                      <td className="py-2 px-3">
-                        {u.isLeader ? (
-                          <Badge variant="default" className="text-[10px]">Leader</Badge>
-                        ) : (
-                          <Badge variant="secondary" className="text-[10px]">Member</Badge>
-                        )}
-                      </td>
-                      <td className="py-2 px-3">
-                        <Badge variant="success" className="text-[10px]">សកម្ម</Badge>
-                      </td>
-                      <td className="py-2 px-3 text-right space-x-2">
-                        <button
-                          type="button"
-                          onClick={() => handleResetPassword(u.email)}
-                          className="text-primary hover:underline font-medium text-[11px]"
-                          title="Reset Password"
-                        >
-                          កំណត់កូដឡើងវិញ
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                ) : filtered.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
+                      រកមិនឃើញគណនីឡើយ។
+                    </td>
+                  </tr>
+                ) : (
+                  filtered.map((u, idx) => {
+                    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("ប្រធាន") || u.notes?.includes("សមាគម");
+                    return (
+                      <tr key={u.id} className="hover:bg-muted/20 transition-colors">
+                        <td className="py-3 px-4 font-mono text-muted-foreground">{idx + 1}</td>
+                        <td className="py-3 px-4 font-mono font-bold text-primary">{u.memberId}</td>
+                        <td className="py-3 px-4">
+                          <div className="font-semibold text-foreground flex items-center space-x-1.5">
+                            <span>{u.fullNameKh}</span>
+                            {isLeader && (
+                              <Badge variant="info" className="text-[9px] px-1 py-0 h-4">
+                                Leader
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-[10px] text-muted-foreground">{u.fullNameEn}</div>
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground font-mono text-[11px]">
+                          {u.email || `${u.fullNameEn.toLowerCase().replace(/\s+/g, ".")}@itc.edu.kh`}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span className="font-semibold text-foreground">{u.department.code}</span>
+                          <span className="text-muted-foreground ml-1">({u.academicYear.code})</span>
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground text-[11px]">
+                          {u.enrollments && u.enrollments.length > 0
+                            ? u.enrollments.map((e) => e.course.code).join(", ")
+                            : u.notes || "-"}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Badge variant="success" className="text-[10px]">
+                            ACTIVE
+                          </Badge>
+                        </td>
+                        <td className="py-3 px-4 text-right space-x-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleResetPassword(u.email || "")}
+                            className="h-7 text-[11px] px-2 text-muted-foreground hover:text-primary"
+                            title="កំណត់លេខសម្ងាត់ឡើងវិញ"
+                          >
+                            <KeyRound className="w-3.5 h-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleStatus(u.memberId)}
+                            className="h-7 text-[11px] px-2 text-muted-foreground hover:text-amber-600"
+                            title="ផ្អាកគណនីបណ្តោះអាសន្ន"
+                          >
+                            <Ban className="w-3.5 h-3.5" />
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </PortalLayout>
   );

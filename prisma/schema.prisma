@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -16,12 +16,12 @@ model User {
   displayName       String?
   gender            String?
   dateOfBirth       DateTime?
-  bio               String?            @db.Text
+  bio               String?
   studentId         String?
   phone             String?
   telegram          String?
-  address           String?            @db.Text
-  profileImage      String?            @db.Text
+  address           String?
+  profileImage      String?
   preferredLanguage String             @default("km")
   status            String             @default("ACTIVE") // ACTIVE, SUSPENDED, PENDING
   isSuspended       Boolean            @default(false)
@@ -55,7 +55,7 @@ model User {
 model Role {
   id          String           @id @default(cuid())
   name        String           @unique // SUPER_ADMIN, STJ_ADMIN, COURSE_LEADER, MEMBER
-  description String?          @db.Text
+  description String?
   isSystem    Boolean          @default(true)
   userRoles   UserRole[]
   permissions RolePermission[]
@@ -66,7 +66,7 @@ model Permission {
   id          String           @id @default(cuid())
   code        String           @unique // e.g., attendance:mark, attendance:read, members:manage
   module      String
-  description String?          @db.Text
+  description String?
   roles       RolePermission[]
 }
 
@@ -94,8 +94,8 @@ model UserRole {
 model UserSession {
   id        String   @id @default(cuid())
   userId    String
-  token     String   @unique @db.VarChar(500)
-  userAgent String?  @db.Text
+  token     String   @unique
+  userAgent String?
   ipAddress String?
   expiresAt DateTime
   createdAt DateTime @default(now())
@@ -108,7 +108,7 @@ model Department {
   nameKh      String
   nameEn      String
   nameFr      String
-  description String?  @db.Text
+  description String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -138,7 +138,7 @@ model Member {
   departmentId     String
   academicYearId   String
   status           String                 @default("ACTIVE") // ACTIVE, ARCHIVED, SUSPENDED
-  notes            String?                @db.Text
+  notes            String?
   registrationDate DateTime               @default(now())
   createdAt        DateTime               @default(now())
   updatedAt        DateTime               @updatedAt
@@ -158,12 +158,12 @@ model Course {
   titleKh       String
   titleEn       String
   titleFr       String
-  descriptionKh String             @db.Text
-  descriptionEn String             @db.Text
-  descriptionFr String             @db.Text
+  descriptionKh String
+  descriptionEn String
+  descriptionFr String
   category      String             // Engineering Foundation, Advanced Computing
   icon          String             @default("BookOpen") // Lucide icon identifier
-  coverImage    String?            @db.Text
+  coverImage    String?
   status        String             @default("ACTIVE") // ACTIVE, ARCHIVED, DRAFT
   academicTerm  String?            // 2026-2027 Semester 1
   startDate     DateTime?
@@ -212,7 +212,7 @@ model TeachingSession {
   endTime     String             // 10:00
   room        String             // Campus 1, Building A, Room 204
   status      String             @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
-  notes       String?            @db.Text
+  notes       String?
   createdById String
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
@@ -228,7 +228,7 @@ model AttendanceRecord {
   sessionId       String
   memberId        String
   status          String                 // PRESENT, LATE, ABSENT, EXCUSED
-  remarks         String?                @db.Text
+  remarks         String?
   markedById      String
   markedAt        DateTime               @default(now())
   lastUpdatedById String?
@@ -249,11 +249,11 @@ model AttendanceCorrection {
   requestedById   String
   previousStatus  String
   requestedStatus String
-  reason          String           @db.Text
-  attachmentUrl   String?          @db.Text
+  reason          String
+  attachmentUrl   String?
   reviewStatus    String           @default("PENDING") // PENDING, APPROVED, REJECTED
   reviewedById    String?
-  reviewNotes     String?          @db.Text
+  reviewNotes     String?
   reviewedAt      DateTime?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -265,8 +265,8 @@ model AttendanceCorrection {
 
 model ShareLink {
   id           String            @id @default(cuid())
-  token        String            @unique @db.VarChar(191)
-  tokenHash    String            @db.VarChar(191)
+  token        String            @unique
+  tokenHash    String
   courseId     String
   sessionId    String?
   title        String
@@ -275,7 +275,7 @@ model ShareLink {
   isRevoked    Boolean           @default(false)
   accessCount  Int               @default(0)
   showStats    Boolean           @default(true)
-  fieldsConfig String            @default("{}") @db.Text // JSON string of displayed columns
+  fieldsConfig String            @default("{}") // JSON string of displayed columns
   createdById  String
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
@@ -290,7 +290,7 @@ model ShareLinkAccess {
   id          String    @id @default(cuid())
   shareLinkId String
   ipAddress   String?
-  userAgent   String?   @db.Text
+  userAgent   String?
   accessedAt  DateTime  @default(now())
 
   shareLink   ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
@@ -301,9 +301,9 @@ model Announcement {
   titleKh      String
   titleEn      String
   titleFr      String
-  contentKh    String    @db.Text
-  contentEn    String    @db.Text
-  contentFr    String    @db.Text
+  contentKh    String
+  contentEn    String
+  contentFr    String
   scope        String    @default("GLOBAL") // GLOBAL, COURSE, DEPARTMENT
   courseId     String?
   isPublished  Boolean   @default(true)
@@ -320,7 +320,7 @@ model Notification {
   id        String   @id @default(cuid())
   userId    String
   title     String
-  message   String   @db.Text
+  message   String
   category  String   @default("ANNOUNCEMENT") // ANNOUNCEMENT, COURSE, SESSION, CORRECTION, SECURITY
   link      String?
   isRead    Boolean  @default(false)
@@ -334,9 +334,9 @@ model Activity {
   titleKh       String
   titleEn       String
   titleFr       String
-  descriptionKh String                  @db.Text
-  descriptionEn String                  @db.Text
-  descriptionFr String                  @db.Text
+  descriptionKh String
+  descriptionEn String
+  descriptionFr String
   location      String
   category      String                  // WORKSHOP, SEMINAR, TUTORING, COMPETITION
   status        String                  @default("UPCOMING") // UPCOMING, ONGOING, COMPLETED
@@ -367,9 +367,9 @@ model AuditLog {
   action     String   // LOGIN, ATTENDANCE_MARKED, RECORD_CORRECTED, SHARE_LINK_REVOKED
   entityType String   // ATTENDANCE, MEMBER, USER, COURSE, SYSTEM
   entityId   String?
-  details    String   @db.Text // JSON payload string
+  details    String   // JSON payload string
   ipAddress  String?
-  userAgent  String?  @db.Text
+  userAgent  String?
   createdAt  DateTime @default(now())
 
   user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -378,7 +378,7 @@ model AuditLog {
 model SystemSetting {
   id          String   @id @default(cuid())
   key         String   @unique
-  value       String   @db.Text
+  value       String
   description String?
   updatedAt   DateTime @updatedAt
 }
@@ -388,7 +388,7 @@ model Translation {
   locale    String   // km, fr, en
   namespace String   // common, navigation, attendance, etc.
   key       String
-  value     String   @db.Text
+  value     String
   updatedAt DateTime @updatedAt
 
   @@unique([locale, namespace, key])
@@ -412,12 +412,12 @@ model ProfileChangeRequest {
   id             String    @id @default(cuid())
   userId         String
   field          String    // fullNameKh, fullNameEn, studentId, department, academicYear
-  oldValue       String?   @db.Text
-  requestedValue String    @db.Text
-  reason         String    @db.Text
+  oldValue       String?
+  requestedValue String
+  reason         String
   status         String    @default("PENDING") // PENDING, APPROVED, REJECTED
   reviewedById   String?
-  reviewNotes    String?   @db.Text
+  reviewNotes    String?
   reviewedAt     DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -445,7 +445,7 @@ model LoginHistory {
   id        String   @id @default(cuid())
   userId    String
   ipAddress String?
-  userAgent String?  @db.Text
+  userAgent String?
   status    String   @default("SUCCESS") // SUCCESS, FAILED
   loginAt   DateTime @default(now())
 
