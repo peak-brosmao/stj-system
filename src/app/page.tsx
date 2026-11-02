@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { HomeGallery } from "@/components/home/HomeGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,7 @@ export default async function HomePage() {
       icon: Code,
       desc: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Algorithms, និងការដោះស្រាយបញ្ហាជាក់ស្តែងសម្រាប់វិស្វកម្ម។",
       color: "from-blue-600 to-indigo-600",
+      image: "/images/gallery/IMG_2847.JPG",
     },
     {
       slug: "mathematics",
@@ -83,6 +85,7 @@ export default async function HomePage() {
       icon: Calculator,
       desc: "ស្វែងយល់ស៊ីជម្រៅអំពី Calculus, Linear Algebra, Differential Equations, និងការអនុវត្តជាក់ស្តែងក្នុងវិស្វកម្ម។",
       color: "from-indigo-600 to-purple-600",
+      image: "/images/gallery/IMG_2849.JPG",
     },
     {
       slug: "physics",
@@ -91,6 +94,7 @@ export default async function HomePage() {
       icon: Atom,
       desc: "ទ្រឹស្តីមេកានិកបុរាណ ចលនារលក ទែរម៉ូឌីណាមិក និងបាតុភូតរូបវិទ្យាសម្រាប់និស្សិតវិស្វកម្ម។",
       color: "from-cyan-600 to-blue-600",
+      image: "/images/gallery/IMG_2851.JPG",
     },
     {
       slug: "chemistry",
@@ -99,6 +103,7 @@ export default async function HomePage() {
       icon: FlaskConical,
       desc: "ទម្រង់ម៉ូលេគុល ប្រតិកម្មកាតាលីករ និងទែរម៉ូឌីណាមិកគីមីសម្រាប់ការស្រាវជ្រាវវិស្វកម្មទំនើប។",
       color: "from-emerald-600 to-teal-600",
+      image: "/images/gallery/IMG_2854.JPG",
     },
   ];
 
@@ -172,6 +177,35 @@ export default async function HomePage() {
                   </Button>
                 </Link>
               </div>
+
+              {/* Hero Authentic Photo Showcase Strip */}
+              <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
+                {[
+                  { src: "/images/gallery/IMG_2845.JPG", label: "វគ្គបណ្តុះបណ្តាលផ្ទាល់", sub: "Mentorship Lab" },
+                  { src: "/images/gallery/IMG_2847.JPG", label: "ថ្នាក់រៀន Programming", sub: "Coding Session" },
+                  { src: "/images/gallery/IMG_2849.JPG", label: "ដោះស្រាយលំហាត់គណិតវិទ្យា", sub: "Math & Physics" },
+                  { src: "/images/gallery/IMG_2851.JPG", label: "សិក្ខាសាលាស្ម័គ្រចិត្ត", sub: "ITC Conference" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="group relative rounded-2xl overflow-hidden aspect-[4/3] border-2 border-white/40 dark:border-white/10 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-muted"
+                  >
+                    <Image
+                      src={item.src}
+                      alt={item.sub}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      priority={idx < 2}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute bottom-2 left-2 right-2 text-left text-white">
+                      <p className="text-[11px] font-bold leading-tight drop-shadow">{item.label}</p>
+                      <p className="text-[9px] text-white/80 font-sans">{item.sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -219,25 +253,39 @@ export default async function HomePage() {
               {programs.map((prog) => {
                 const Icon = prog.icon;
                 return (
-                  <Card key={prog.slug} className="group hover:border-primary/50 transition-all duration-300">
-                    <CardContent className="p-6 space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                  <Card key={prog.slug} className="group hover:border-primary/50 transition-all duration-300 overflow-hidden flex flex-col border border-border">
+                    {/* Authentic photo banner for course */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
+                      <Image
+                        src={prog.image}
+                        alt={prog.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                      <div className="absolute top-3 left-3">
+                        <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white border border-white/20">
                           {prog.code}
                         </span>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                          {prog.title}
-                        </h3>
-                        <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                          {prog.desc}
-                        </p>
+                      <div className="absolute bottom-3 left-3 right-3 text-white">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-8 h-8 rounded-lg bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-base font-bold text-white drop-shadow leading-snug">
+                            {prog.title}
+                          </h3>
+                        </div>
                       </div>
-                      <div className="pt-2">
+                    </div>
+
+                    <CardContent className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {prog.desc}
+                      </p>
+                      <div className="pt-2 border-t border-border/60">
                         <Link
                           href={`/programs/${prog.slug}`}
                           className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary hover:underline"
@@ -253,6 +301,9 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* AUTHENTIC CAMPUS PHOTO GALLERY */}
+        <HomeGallery />
 
         {/* PHILOSOPHY & OBJECTIVES */}
         <section className="py-16 md:py-20 bg-muted/20 border-b border-border">
