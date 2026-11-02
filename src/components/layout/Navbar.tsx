@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, LogIn } from "lucide-react";
+import { Menu, X, LogIn, LayoutDashboard, LogOut } from "lucide-react";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -12,8 +12,43 @@ import { Logo } from "@/components/ui/Logo";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [auth, setAuth] = useState<{
+    authenticated: boolean;
+    user: {
+      name: string;
+      fullNameKh: string;
+      memberId?: string;
+      roleLabel?: string;
+      dashboardUrl: string;
+      profileImage?: string;
+    } | null;
+  } | null>(null);
+
   const pathname = usePathname();
   const { t } = useI18n();
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.authenticated) {
+          setAuth(data);
+        } else {
+          setAuth({ authenticated: false, user: null });
+        }
+      })
+      .catch(() => setAuth({ authenticated: false, user: null }));
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setAuth({ authenticated: false, user: null });
+      window.location.href = "/portal/login";
+    } catch {
+      window.location.href = "/portal/login";
+    }
+  };
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
@@ -53,17 +88,45 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Controls & Unified Sign In */}
+        {/* Controls & Unified Sign In / Profile Desk */}
         <div className="hidden md:flex items-center space-x-2">
           <LanguageSelector />
           <ThemeToggle />
           <div className="h-4 w-px bg-border mx-1" />
-          <Link href="/portal/login">
-            <Button size="sm" className="space-x-1.5 font-bold shadow-sm px-4 h-9">
-              <LogIn className="w-4 h-4" />
-              <span>{t("nav.login")}</span>
-            </Button>
-          </Link>
+          {auth?.authenticated && auth.user ? (
+            <div className="flex items-center space-x-2">
+              <Link href={auth.user.dashboardUrl}>
+                <Button size="sm" className="space-x-2 font-bold shadow-sm px-3.5 h-9 bg-primary hover:bg-primary/90 text-primary-foreground">
+                  <div className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                    {auth.user.name.charAt(0)}
+                  </div>
+                  <span className="truncate max-w-[130px]">{auth.user.name}</span>
+                  {auth.user.memberId && (
+                    <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono hidden lg:inline-block">
+                      {auth.user.memberId}
+                    </span>
+                  )}
+                  <LayoutDashboard className="w-3.5 h-3.5 ml-0.5" />
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="h-9 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                title="ចាកចេញ (Sign Out)"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+          ) : (
+            <Link href="/portal/login">
+              <Button size="sm" className="space-x-1.5 font-bold shadow-sm px-4 h-9">
+                <LogIn className="w-4 h-4" />
+                <span>{t("nav.login")}</span>
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile controls & hamburger */}
@@ -100,15 +163,54 @@ export function Navbar() {
             ))}
           </nav>
           <div className="pt-3 border-t border-border">
-            <Link href="/portal/login" onClick={() => setMobileMenuOpen(false)}>
-              <Button size="sm" className="w-full justify-center space-x-2 font-bold h-10">
-                <LogIn className="w-4 h-4" />
-                <span>{t("nav.login")}</span>
-              </Button>
-            </Link>
+            {auth?.authenticated && auth.user ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-muted/40 border border-border">
+                  <div className="flex items-center space-x-2 min-w-0">
+                    <div className="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+                      {auth.user.name.charAt(0)}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold truncate text-foreground">{auth.user.name}</p>
+                      <p className="text-[10px] text-muted-foreground truncate">{auth.user.roleLabel}</p>
+                    </div>
+                  </div>
+                  {auth.user.memberId && (
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold border border-primary/20 shrink-0">
+                      {auth.user.memberId}
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link href={auth.user.dashboardUrl} onClick={() => setMobileMenuOpen(false)}>
+                    <Button size="sm" className="w-full justify-center space-x-1.5 font-bold h-9">
+                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      <span>ផ្ទាំងគ្រប់គ្រង</span>
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="w-full justify-center space-x-1.5 font-bold h-9 text-destructive hover:bg-destructive/10"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>ចាកចេញ</span>
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Link href="/portal/login" onClick={() => setMobileMenuOpen(false)}>
+                <Button size="sm" className="w-full justify-center space-x-2 font-bold h-10">
+                  <LogIn className="w-4 h-4" />
+                  <span>{t("nav.login")}</span>
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
     </header>
   );
 }
+

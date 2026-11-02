@@ -35,7 +35,18 @@ export async function GET(req: NextRequest) {
             ...(session.studentId ? [{ studentId: session.studentId }] : []),
           ],
         },
-        include: { member: { include: { enrollments: true, department: true } } },
+        include: {
+          member: {
+            include: {
+              enrollments: {
+                include: {
+                  course: true,
+                },
+              },
+              department: true,
+            },
+          },
+        },
       });
     } catch {
       // Non-blocking
@@ -59,10 +70,37 @@ export async function GET(req: NextRequest) {
 
     const member = user?.member;
 
+    // Build strictly the courses this tutor actually teaches
+    let enrolledCourses: Array<{ id: string; code: string; titleKh: string; titleEn: string }> = [];
+
+    if (member && member.enrollments && member.enrollments.length > 0) {
+      enrolledCourses = member.enrollments
+        .filter((e) => e.course)
+        .map((e) => ({
+          id: e.course.id,
+          code: e.course.code,
+          titleKh: e.course.titleKh,
+          titleEn: e.course.titleEn,
+        }));
+    }
+
+    if (enrolledCourses.length === 0 && rosterMatch && rosterMatch.assignedCourse) {
+      const courseMap: Record<string, { id: string; code: string; titleKh: string; titleEn: string }> = {
+        PROG101: { id: "c-prog", code: "PROG101", titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)", titleEn: "Programming" },
+        MATH101: { id: "c-math", code: "MATH101", titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)", titleEn: "Mathematics" },
+        PHYS101: { id: "c-phys", code: "PHYS101", titleKh: "រូបវិទ្យាវិស្វកម្ម (Physics)", titleEn: "Physics" },
+        CHEM101: { id: "c-chem", code: "CHEM101", titleKh: "គីមីវិទ្យាទូទៅ (Chemistry)", titleEn: "Chemistry" },
+      };
+      if (courseMap[rosterMatch.assignedCourse]) {
+        enrolledCourses = [courseMap[rosterMatch.assignedCourse]];
+      }
+    }
+
     if (!member) {
       return NextResponse.json({
         success: true,
         user: userInfo,
+        courses: enrolledCourses,
         records: [],
         upcoming: [],
         pending: [],
@@ -153,6 +191,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       user: userInfo,
+      courses: enrolledCourses,
       records,
       upcoming,
       pending,

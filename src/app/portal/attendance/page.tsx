@@ -46,12 +46,14 @@ export default function MyAttendancePage() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
   useEffect(() => {
     fetch(`/api/portal/attendance?course=${courseFilter}&status=${statusFilter}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user) setCurrentUser(data.user);
+        if (data.courses) setEnrolledCourses(data.courses);
         if (data.records) setRecords(data.records);
         if (data.stats) setStats(data.stats);
         if (data.monthlyStats) setMonthlyStats(data.monthlyStats);
@@ -199,11 +201,20 @@ export default function MyAttendancePage() {
                 <select
                   value={courseFilter}
                   onChange={(e) => setCourseFilter(e.target.value)}
-                  className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs"
+                  className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs font-medium"
                 >
-                  <option value="ALL">គ្រប់មុខវិជ្ជាទាំងអស់ (All Courses)</option>
-                  <option value="c-prog">PROG101 - Programming</option>
-                  <option value="c-math">MATH101 - Mathematics</option>
+                  {enrolledCourses.length > 1 && (
+                    <option value="ALL">គ្រប់មុខវិជ្ជាទាំងអស់ ({enrolledCourses.length} មុខវិជ្ជា)</option>
+                  )}
+                  {enrolledCourses.length > 0 ? (
+                    enrolledCourses.map((c: any) => (
+                      <option key={c.id || c.code} value={c.id || c.code}>
+                        {c.code} - {c.titleKh || c.titleEn}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="c-prog">PROG101 - Programming</option>
+                  )}
                 </select>
               </div>
 

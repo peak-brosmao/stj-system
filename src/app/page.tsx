@@ -15,16 +15,27 @@ import {
   UserCheck,
   Layers,
   Sparkles,
+  LayoutDashboard,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const session = await getSession();
+  const roles = session?.roles || [];
+  let dashboardUrl = "/portal/member";
+  if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
+    dashboardUrl = "/system/dashboard";
+  } else if (roles.includes("COURSE_LEADER")) {
+    dashboardUrl = "/leader/dashboard";
+  }
+
   // Live stats — read directly from the SQLite database with graceful fallbacks
   let totalMembers = 39;
   let totalCourses = 4;
@@ -140,12 +151,21 @@ export default async function HomePage() {
                     <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
                   </Button>
                 </Link>
-                <Link href="/portal/login">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5">
-                    <UserCheck className="w-4 h-4 text-primary" />
-                    <span>ច្រកចូលសមាជិក (Portal)</span>
-                  </Button>
-                </Link>
+                {session ? (
+                  <Link href={dashboardUrl}>
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary text-primary hover:bg-primary/10 font-bold">
+                      <LayoutDashboard className="w-4 h-4 text-primary" />
+                      <span>ផ្ទាំងគ្រប់គ្រង ({session.fullNameKh || "Dashboard"})</span>
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/portal/login">
+                    <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5">
+                      <UserCheck className="w-4 h-4 text-primary" />
+                      <span>ច្រកចូលសមាជិក (Portal)</span>
+                    </Button>
+                  </Link>
+                )}
                 <Link href="/about">
                   <Button variant="ghost" size="lg" className="w-full sm:w-auto">
                     អំពីកម្មវិធី STJ
