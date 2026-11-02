@@ -89,21 +89,32 @@ async function main() {
     assert.strictEqual(tokenHash, verifyHash, "Hash must be strictly deterministic");
   });
 
-  // Test 4: Strict RBAC Permission Isolation (Leader CANNOT mutate attendance)
-  runTest("RBAC Permissions: Course Leader is FORBIDDEN from marking/editing attendance", () => {
+  // Test 4: RBAC Permission Model — Course Leader CAN mark attendance for their own course
+  runTest("RBAC Permissions: Course Leader has attendance:mark scoped to own course; Member is read-only", () => {
     const permissions = {
-      SUPER_ADMIN: ["attendance:mark", "attendance:edit", "attendance:read", "members:manage", "share:create", "system:settings"],
-      STJ_ADMIN: ["attendance:mark", "attendance:edit", "attendance:read", "members:manage", "share:create"],
-      COURSE_LEADER: ["attendance:read", "share:create", "reports:view"],
+      SUPER_ADMIN: ["attendance:mark", "attendance:read", "members:manage", "share:create", "system:settings", "reports:view"],
+      STJ_PRESIDENT: ["attendance:mark", "attendance:read", "members:manage", "courses:manage", "sessions:manage", "share:create", "reports:view", "system:settings"],
+      STJ_ADMIN: ["attendance:mark", "attendance:read", "members:manage", "share:create", "reports:view"],
+      STUDENT_ASSOCIATION: ["attendance:read", "members:manage", "courses:manage", "sessions:manage", "share:create", "reports:view"],
+      COURSE_LEADER: ["attendance:mark", "attendance:read", "share:create", "reports:view"],
       MEMBER: ["attendance:read"],
     };
 
-    assert(permissions.SUPER_ADMIN.includes("attendance:mark"), "Super Admin must have mark permission");
-    assert(permissions.STJ_ADMIN.includes("attendance:mark"), "STJ Admin must have mark permission");
-    assert(!permissions.COURSE_LEADER.includes("attendance:mark"), "Course Leader must NEVER have attendance:mark");
-    assert(!permissions.COURSE_LEADER.includes("attendance:edit"), "Course Leader must NEVER have attendance:edit");
+    assert(permissions.SUPER_ADMIN.includes("attendance:mark"), "Super Admin must have attendance:mark");
+    assert(permissions.STJ_PRESIDENT.includes("attendance:mark"), "STJ President must have attendance:mark");
+    assert(permissions.STJ_ADMIN.includes("attendance:mark"), "STJ Admin must have attendance:mark");
+    assert(permissions.STUDENT_ASSOCIATION.includes("attendance:read"), "Student Association must have attendance:read");
+    assert(!permissions.STUDENT_ASSOCIATION.includes("attendance:mark"), "Student Association must NOT have attendance:mark");
+
+    // Course Leader CAN mark attendance (scoped to their course only in the API layer)
+    assert(permissions.COURSE_LEADER.includes("attendance:mark"), "Course Leader MUST have attendance:mark (own course only)");
     assert(permissions.COURSE_LEADER.includes("attendance:read"), "Course Leader must have attendance:read");
     assert(permissions.COURSE_LEADER.includes("share:create"), "Course Leader must have share:create");
+
+    // Member is strictly read-only
+    assert(permissions.MEMBER.includes("attendance:read"), "Member must have attendance:read");
+    assert(!permissions.MEMBER.includes("attendance:mark"), "Member must NEVER have attendance:mark");
+    assert(!permissions.MEMBER.includes("members:manage"), "Member must NEVER have members:manage");
   });
 
   // Test 5: Multilingual Dictionaries Integrity (km, en, fr)

@@ -12,23 +12,31 @@ import {
   Atom,
   FlaskConical,
   CheckCircle2,
-  Building2,
   UserCheck,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
-import { OFFICIAL_METRICS } from "@/lib/officialRoster";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Live stats — read directly from the SQLite database
+  const [totalMembers, totalCourses, totalLeaders, totalDepts, completedSessions] = await Promise.all([
+    prisma.member.count({ where: { status: "ACTIVE" } }),
+    prisma.course.count({ where: { status: "ACTIVE" } }),
+    prisma.courseLeader.count(),
+    prisma.department.count(),
+    prisma.teachingSession.count({ where: { status: "COMPLETED" } }),
+  ]);
+
   const stats = [
-    { label: "សមាជិកស្ម័គ្រចិត្ត ២០២៦~២០២៧ (Official Members)", value: `${OFFICIAL_METRICS.totalMembers}`, icon: Users },
-    { label: "មុខវិជ្ជាស្នូល (Core Programs)", value: `${OFFICIAL_METRICS.totalCourses}`, icon: BookOpen },
-    { label: "គណៈដឹកនាំ & ប្រធានក្រុម (Course Leaders)", value: `${OFFICIAL_METRICS.totalLeaders}`, icon: Award },
-    { label: "ដេប៉ាតឺម៉ង់វិស្វកម្ម ITC (Engineering Depts)", value: `${OFFICIAL_METRICS.departmentsCount}`, icon: Building2 },
+    { label: "សមាជិករៀមច្បងស្ម័គ្រចិត្ត (Active Members)", value: `${totalMembers}+`, icon: Users },
+    { label: "មុខវិជ្ជាស្នូល (Core Programs)", value: `${totalCourses}`, icon: BookOpen },
+    { label: "ជំនួយការអាវុសោ (Senior Mentors)", value: `${totalLeaders}`, icon: Award },
+    { label: "វគ្គបង្រៀនបានបញ្ចប់ (Completed Sessions)", value: `${completedSessions}+`, icon: Calendar },
   ];
 
   const programs = [
@@ -90,7 +98,7 @@ export default function HomePage() {
 
               <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
                 <GraduationCap className="w-4 h-4" />
-                <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ ឆ្នាំសិក្សា {OFFICIAL_METRICS.academicYearTerm}</span>
+                <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ ឆ្នាំសិក្សា 2026-2027</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight">

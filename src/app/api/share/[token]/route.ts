@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { calculateAttendanceRate } from "@/lib/utils";
 import { AttendanceStatus } from "@/types";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -16,55 +15,13 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const { password } = body;
 
-    let shareLink;
-    try {
-      shareLink = await prisma.shareLink.findUnique({
-        where: { token },
-        include: {
-          course: true,
-          session: true,
-        },
-      });
-    } catch {
-      // Fallback sample for demonstration if DB not yet connected
-      if (token === "demo" || token.length >= 8) {
-        const statuses: AttendanceStatus[] = ["PRESENT", "PRESENT", "PRESENT", "LATE", "PRESENT", "PRESENT", "EXCUSED", "PRESENT"];
-        const membersList = OFFICIAL_STJ_ROSTER.map((m, idx) => ({
-          no: m.num,
-          memberId: m.memberId,
-          fullNameKh: m.nameKh,
-          fullNameEn: m.nameEn,
-          department: m.dept,
-          year: m.year,
-          status: statuses[idx % statuses.length],
-        }));
-
-        const present = membersList.filter((m) => m.status === "PRESENT").length;
-        const late = membersList.filter((m) => m.status === "LATE").length;
-        const excused = membersList.filter((m) => m.status === "EXCUSED").length;
-        const absent = membersList.filter((m) => m.status === "ABSENT").length;
-        const rate = calculateAttendanceRate(present, late, membersList.length, excused);
-
-        return NextResponse.json({
-          title: "របាយការណ៍វត្តមាន STJ ជាផ្លូវការ (Academic Year 2026-2027)",
-          courseName: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
-          courseCode: "PROG101",
-          sessionTitle: "សប្តាហ៍ទី១៖ សេចក្តីផ្តើមអំពី C++ និង Pointer Mechanics",
-          sessionDate: "2026-10-15",
-          showStats: true,
-          stats: {
-            total: membersList.length,
-            present,
-            late,
-            absent,
-            excused,
-            rate,
-          },
-          members: membersList,
-        });
-      }
-      return NextResponse.json({ error: "Share link not found." }, { status: 404 });
-    }
+    const shareLink = await prisma.shareLink.findUnique({
+      where: { token },
+      include: {
+        course: true,
+        session: true,
+      },
+    });
 
     if (!shareLink) {
       return NextResponse.json({ error: "Share link not found or expired." }, { status: 404 });
@@ -95,7 +52,7 @@ export async function POST(
       }
     }
 
-    // Log access count
+    // Log access
     try {
       await prisma.shareLink.update({
         where: { id: shareLink.id },
@@ -109,10 +66,10 @@ export async function POST(
         },
       });
     } catch {
-      // Non-blocking
+      // Non-blocking — access logging failure should not block the response
     }
 
-    // Retrieve attendance records for the target session or all course sessions
+    // Retrieve attendance records from the database
     const sessionWhere = shareLink.sessionId
       ? { sessionId: shareLink.sessionId }
       : { session: { courseId: shareLink.courseId } };
@@ -152,8 +109,8 @@ export async function POST(
         memberId: r.member.memberId,
         fullNameKh: r.member.fullNameKh,
         fullNameEn: r.member.fullNameEn,
-        department: r.member.department.code,
-        year: r.member.academicYear.code,
+        department: r.member.department?.code ?? "",
+        year: r.member.academicYear?.code ?? "",
         status: r.status,
       };
     });
@@ -166,16 +123,11 @@ export async function POST(
       courseName: shareLink.course.titleKh,
       courseCode: shareLink.course.code,
       sessionTitle: shareLink.session?.title,
-      sessionDate: shareLink.session?.sessionDate ? new Date(shareLink.session.sessionDate).toISOString().split("T")[0] : undefined,
+      sessionDate: shareLink.session?.sessionDate
+        ? new Date(shareLink.session.sessionDate).toISOString().split("T")[0]
+        : undefined,
       showStats: shareLink.showStats,
-      stats: {
-        total,
-        present,
-        late,
-        absent,
-        excused,
-        rate,
-      },
+      stats: { total, present, late, absent, excused, rate },
       members: formattedMembers,
     });
   } catch (err: unknown) {
@@ -183,4 +135,3 @@ export async function POST(
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

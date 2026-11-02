@@ -47,6 +47,27 @@ async function main() {
     },
   });
 
+  // 1b. New roles — STJ President & Student Association Committee
+  const stjPresidentRole = await prisma.role.upsert({
+    where: { name: "STJ_PRESIDENT" },
+    update: {},
+    create: {
+      name: "STJ_PRESIDENT",
+      description: "ប្រធាន STJ — គ្រប់គ្រងទាំងអស់: ក្រុម, កាលវិភាគ, ស្ថាបនិក, ដំណើរការប្រព័ន្ធ",
+      isSystem: true,
+    },
+  });
+
+  const studentAssocRole = await prisma.role.upsert({
+    where: { name: "STUDENT_ASSOCIATION" },
+    update: {},
+    create: {
+      name: "STUDENT_ASSOCIATION",
+      description: "ប្រធានសមាគមនិស្សិត — សម្របសម្រួល មើលរបាយការណ៍ ជំនួយការប្រព័ន្ធ STJ",
+      isSystem: true,
+    },
+  });
+
   // 2. Permissions
   const permissionsList = [
     { code: "attendance:mark", module: "attendance", description: "ស្រង់ និងរក្សាទុកវត្តមានផ្លូវការ" },
@@ -83,8 +104,24 @@ async function main() {
       });
     }
 
-    // Course Leader: Read attendance, create share links, view reports
-    if (["attendance:read", "share:create", "reports:view"].includes(perm.code)) {
+    // STJ President: All permissions (same as Super Admin)
+    await prisma.rolePermission.upsert({
+      where: { roleId_permissionId: { roleId: stjPresidentRole.id, permissionId: p.id } },
+      update: {},
+      create: { roleId: stjPresidentRole.id, permissionId: p.id },
+    });
+
+    // Student Association: attendance:read, members:manage, courses:manage, sessions:manage, share:create, reports:view
+    if (["attendance:read", "members:manage", "courses:manage", "sessions:manage", "share:create", "reports:view"].includes(perm.code)) {
+      await prisma.rolePermission.upsert({
+        where: { roleId_permissionId: { roleId: studentAssocRole.id, permissionId: p.id } },
+        update: {},
+        create: { roleId: studentAssocRole.id, permissionId: p.id },
+      });
+    }
+
+    // Course Leader: Mark attendance for own course + read + share + reports
+    if (["attendance:mark", "attendance:read", "share:create", "reports:view"].includes(perm.code)) {
       await prisma.rolePermission.upsert({
         where: { roleId_permissionId: { roleId: courseLeaderRole.id, permissionId: p.id } },
         update: {},
@@ -179,6 +216,13 @@ async function main() {
     create: { userId: davidUser.id, roleId: stjAdminRole.id },
   });
 
+  // Also assign STJ_PRESIDENT role to PHAL David
+  await prisma.userRole.upsert({
+    where: { userId_roleId: { userId: davidUser.id, roleId: stjPresidentRole.id } },
+    update: {},
+    create: { userId: davidUser.id, roleId: stjPresidentRole.id },
+  });
+
   // Student Association Committee: សុខ សេងលី (SOK SENGLY - e20230969, I4-GCI)
   const senglyUser = await prisma.user.upsert({
     where: { email: "sok.sengly@itc.edu.kh" },
@@ -198,6 +242,13 @@ async function main() {
     where: { userId_roleId: { userId: senglyUser.id, roleId: stjAdminRole.id } },
     update: {},
     create: { userId: senglyUser.id, roleId: stjAdminRole.id },
+  });
+
+  // Also assign STUDENT_ASSOCIATION role to SOK SENGLY
+  await prisma.userRole.upsert({
+    where: { userId_roleId: { userId: senglyUser.id, roleId: studentAssocRole.id } },
+    update: {},
+    create: { userId: senglyUser.id, roleId: studentAssocRole.id },
   });
 
   // Programming Leader: លាង ជីងហេង (LEANG JINGHENG - e20240704, I3-GTI)

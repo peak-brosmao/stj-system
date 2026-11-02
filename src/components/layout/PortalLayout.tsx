@@ -113,7 +113,13 @@ export function PortalLayout({
     } catch {
       // ignore
     }
-    router.push(portalType === "system" ? "/system/login" : "/leader/login");
+    router.push(
+      portalType === "system"
+        ? "/system/login"
+        : portalType === "leader"
+        ? "/leader/login"
+        : "/portal/login"
+    );
     router.refresh();
   };
 
@@ -126,7 +132,13 @@ export function PortalLayout({
         <Logo
           href="/"
           size="sm"
-          subtitle={portalType === "system" ? "STJ System Portal" : "STJ Leader Portal"}
+          subtitle={
+            portalType === "system"
+              ? "STJ System Portal"
+              : portalType === "leader"
+              ? "STJ Leader Portal"
+              : "STJ Member Portal"
+          }
         />
         <div className="flex items-center space-x-2">
           <ThemeToggle />
@@ -159,7 +171,13 @@ export function PortalLayout({
           <Logo
             href="/"
             size="sm"
-            subtitle={portalType === "system" ? "Administration" : "Leader Desk"}
+            subtitle={
+              portalType === "system"
+                ? "Administration"
+                : portalType === "leader"
+                ? "Leader Desk"
+                : "Member Portal"
+            }
           />
           <button
             onClick={() => setSidebarOpen(false)}
