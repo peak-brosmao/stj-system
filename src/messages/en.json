@@ -30,6 +30,7 @@
   },
   "nav": {
     "home": "Home",
+    "structure": "Structure",
     "about": "About STJ",
     "programs": "Programs",
     "activities": "Activities",
@@ -104,10 +105,17 @@
   "auth": {
     "systemLoginTitle": "STJ System Administration Portal",
     "leaderLoginTitle": "STJ Course Leader Portal",
-    "email": "Email Address",
+    "portalLoginTitle": "STJ Management System Sign In",
+    "email": "Institutional Email or Student ID",
+    "emailLabel": "Institutional Email or Student ID",
     "password": "Password",
+    "passwordLabel": "Password",
     "signIn": "Sign In",
-    "errorInvalid": "Invalid email or password",
+    "loginButton": "Sign In",
+    "signingIn": "Authenticating...",
+    "forgotPassword": "Forgot Password?",
+    "errorInvalid": "Incorrect account or password",
+    "errorNotFound": "No account found in system",
     "welcomeBack": "Welcome back"
   }
 }

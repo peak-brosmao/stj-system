@@ -50,7 +50,11 @@ export async function POST(req: NextRequest) {
             },
           },
           courseLeaders: true,
-          member: true,
+          member: {
+            include: {
+              department: true,
+            },
+          },
         },
       });
     } catch {
@@ -123,8 +127,8 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "ឈ្មោះគណនី ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវឡើយ (Invalid credentials)" },
-        { status: 401 }
+        { error: "មិនមានទិន្នន័យគណនីនេះក្នុងប្រព័ន្ធទេ (No account found in system)" },
+        { status: 404 }
       );
     }
 
@@ -138,20 +142,47 @@ export async function POST(req: NextRequest) {
     const passwordMatches = await bcrypt.compare(password, user.passwordHash);
     if (!passwordMatches) {
       // Allow initial format verification fallback
-      const studentIdNorm = (user.studentId || "").toLowerCase();
+      const studentIdNorm = (user.studentId || studentIdRaw || "").toLowerCase();
       const isInitialDefaultPassword = studentIdNorm && password === `${studentIdNorm}@ITC!`;
       if (!isInitialDefaultPassword) {
         return NextResponse.json(
-          { error: "ឈ្មោះគណនី ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវឡើយ (Invalid credentials)" },
+          { error: "គណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវ (Incorrect account or password)" },
           { status: 401 }
         );
+      }
+    }
+
+    // Self-heal member link if not already linked
+    if (!user.member && (user.studentId || studentIdRaw)) {
+      try {
+        const matchedMember = await prisma.member.findFirst({
+          where: {
+            OR: [
+              { studentId: user.studentId || studentIdRaw },
+              { email: user.email },
+            ],
+          },
+          include: { department: true },
+        });
+        if (matchedMember) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              memberRecordId: matchedMember.id,
+              studentId: matchedMember.studentId,
+            },
+          });
+          user.member = matchedMember;
+        }
+      } catch {
+        // Non-blocking
       }
     }
 
     const roles = user.userRoles.map((ur) => ur.role.name as RoleName);
     const courseIds = user.courseLeaders.map((cl) => cl.courseId);
 
-    // Validate expected portal
+    // Validate expected portal only if caller explicitly specified one
     if (expectedPortal === "system" && !roles.includes("SUPER_ADMIN") && !roles.includes("STJ_ADMIN") && !roles.includes("STJ_PRESIDENT") && !roles.includes("STUDENT_ASSOCIATION")) {
       return NextResponse.json(
         { error: "មិនមានសិទ្ធិចូលកាន់ប្រព័ន្ធរដ្ឋបាលកណ្តាលឡើយ។ សិទ្ធិនេះសម្រាប់តែប្រធាន STJ ប៉ុណ្ណោះ។" },
@@ -193,6 +224,10 @@ export async function POST(req: NextRequest) {
       email: user.email,
       fullNameKh: user.fullNameKh,
       fullNameEn: user.fullNameEn,
+      studentId: user.studentId || user.member?.studentId || null,
+      memberId: user.member?.memberId || null,
+      profileImage: user.profileImage || null,
+      departmentCode: user.member?.department?.code || null,
       roles,
       courseIds,
     };
@@ -200,12 +235,13 @@ export async function POST(req: NextRequest) {
     const token = await createSessionToken(sessionPayload);
     await setSessionCookie(token);
 
+    // Automatic role-based portal destination
     let redirectUrl = "/portal/member";
-    if (expectedPortal === "system" || (!expectedPortal && (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")))) {
+    if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
       redirectUrl = "/system/dashboard";
-    } else if (expectedPortal === "leader" || (!expectedPortal && roles.includes("COURSE_LEADER"))) {
+    } else if (roles.includes("COURSE_LEADER") && !roles.includes("MEMBER")) {
       redirectUrl = "/leader/dashboard";
-    } else if (roles.includes("MEMBER")) {
+    } else {
       redirectUrl = "/portal/member";
     }
 

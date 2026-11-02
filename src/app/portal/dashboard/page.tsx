@@ -1,48 +1,37 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import MemberDashboardPage from "../member/page";
 import LeaderDashboardPage from "../leader/page";
-import { UserCheck, GraduationCap } from "lucide-react";
 
 export default function PortalDashboardPage() {
-  const [activeRoleView, setActiveRoleView] = useState<"member" | "leader">("member");
-  const [hasMultipleRoles, setHasMultipleRoles] = useState(true);
+  const [role, setRole] = useState<"member" | "leader">("member");
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <div className="relative">
-      {/* Role Switching Bar for Multi-Role users */}
-      {hasMultipleRoles && (
-        <div className="fixed bottom-4 right-4 z-50 p-1.5 rounded-2xl bg-card/90 backdrop-blur border border-border shadow-lg flex items-center space-x-1 text-xs">
-          <span className="text-[10px] text-muted-foreground px-2 font-medium">ប្តូរទិដ្ឋភាព:</span>
-          <button
-            type="button"
-            onClick={() => setActiveRoleView("member")}
-            className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-              activeRoleView === "member"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted"
-            }`}
-          >
-            សមាជិក (Member)
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveRoleView("leader")}
-            className={`px-3 py-1.5 rounded-xl font-medium transition-all ${
-              activeRoleView === "leader"
-                ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted"
-            }`}
-          >
-            រៀមច្បង (Leader)
-          </button>
-        </div>
-      )}
+  useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        const roles = data?.profile?.roles || data?.profile?.userRoles?.map((r: any) => r.role?.name) || [];
+        if (roles.includes("COURSE_LEADER") && !roles.includes("MEMBER")) {
+          setRole("leader");
+        } else {
+          setRole("member");
+        }
+      })
+      .catch(() => {
+        setRole("member");
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
-      {activeRoleView === "member" ? <MemberDashboardPage /> : <LeaderDashboardPage />}
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  return role === "leader" ? <LeaderDashboardPage /> : <MemberDashboardPage />;
 }
-

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ShieldCheck, UserCheck } from "lucide-react";
+import { Menu, X, LogIn } from "lucide-react";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
@@ -17,7 +17,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
-    { href: "/structure", label: "រចនាសម្ព័ន្ធ (Structure)" },
+    { href: "/structure", label: t("nav.structure") },
     { href: "/about", label: t("nav.about") },
     { href: "/programs", label: t("nav.programs") },
     { href: "/activities", label: t("nav.activities") },
@@ -31,20 +31,20 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-colors duration-300">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 transition-colors duration-300">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
         {/* Brand */}
         <Logo href="/" size="md" />
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <nav className="hidden xl:flex items-center space-x-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
                 isActive(link.href)
-                  ? "bg-primary/10 text-primary font-semibold"
+                  ? "bg-primary/10 text-primary font-bold"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
@@ -53,32 +53,26 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Controls & Portals */}
-        <div className="hidden lg:flex items-center space-x-2">
+        {/* Controls & Unified Sign In */}
+        <div className="hidden md:flex items-center space-x-2">
           <LanguageSelector />
           <ThemeToggle />
-          <div className="h-5 w-px bg-border mx-1" />
+          <div className="h-4 w-px bg-border mx-1" />
           <Link href="/portal/login">
-            <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
-              <UserCheck className="w-3.5 h-3.5 text-primary" />
-              <span>ច្រកចូលសមាជិក & រៀមច្បង</span>
-            </Button>
-          </Link>
-          <Link href="/system/login">
-            <Button variant="default" size="sm" className="space-x-1.5 text-xs">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>{t("nav.systemPortal")}</span>
+            <Button size="sm" className="space-x-1.5 font-bold shadow-sm px-4 h-9">
+              <LogIn className="w-4 h-4" />
+              <span>{t("nav.login")}</span>
             </Button>
           </Link>
         </div>
 
         {/* Mobile controls & hamburger */}
-        <div className="flex items-center space-x-2 lg:hidden">
+        <div className="flex items-center space-x-2 md:hidden">
           <LanguageSelector />
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg border border-border text-foreground hover:bg-muted focus:outline-none"
+            className="p-2 rounded-xl border border-border text-foreground hover:bg-muted focus:outline-none"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -88,16 +82,16 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
+        <div className="md:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                className={`px-3 py-2 rounded-xl text-sm font-medium ${
                   isActive(link.href)
-                    ? "bg-primary/10 text-primary font-semibold"
+                    ? "bg-primary/10 text-primary font-bold"
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
@@ -105,17 +99,11 @@ export function Navbar() {
               </Link>
             ))}
           </nav>
-          <div className="pt-3 border-t border-border flex flex-col space-y-2">
+          <div className="pt-3 border-t border-border">
             <Link href="/portal/login" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="outline" size="sm" className="w-full justify-start space-x-2">
-                <UserCheck className="w-4 h-4 text-primary" />
-                <span>ច្រកចូលសមាជិក & រៀមច្បង (Portal)</span>
-              </Button>
-            </Link>
-            <Link href="/system/login" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="default" size="sm" className="w-full justify-start space-x-2">
-                <ShieldCheck className="w-4 h-4" />
-                <span>{t("nav.systemPortal")}</span>
+              <Button size="sm" className="w-full justify-center space-x-2 font-bold h-10">
+                <LogIn className="w-4 h-4" />
+                <span>{t("nav.login")}</span>
               </Button>
             </Link>
           </div>
@@ -124,4 +112,3 @@ export function Navbar() {
     </header>
   );
 }
-

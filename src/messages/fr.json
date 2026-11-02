@@ -30,6 +30,7 @@
   },
   "nav": {
     "home": "Accueil",
+    "structure": "Structure",
     "about": "À propos",
     "programs": "Programmes",
     "activities": "Activités",
@@ -104,10 +105,17 @@
   "auth": {
     "systemLoginTitle": "Portail d'Administration STJ",
     "leaderLoginTitle": "Portail Tuteur STJ",
-    "email": "Adresse e-mail",
+    "portalLoginTitle": "Connexion Système STJ",
+    "email": "Adresse e-mail ou Identifiant Étudiant",
+    "emailLabel": "Adresse e-mail ou Identifiant Étudiant",
     "password": "Mot de passe",
+    "passwordLabel": "Mot de passe",
     "signIn": "Se connecter",
-    "errorInvalid": "Identifiants invalides",
+    "loginButton": "Se connecter",
+    "signingIn": "Authentification...",
+    "forgotPassword": "Mot de passe oublié ?",
+    "errorInvalid": "Compte ou mot de passe incorrect",
+    "errorNotFound": "Aucun compte trouvé dans le système",
     "welcomeBack": "Bienvenue"
   }
 }
