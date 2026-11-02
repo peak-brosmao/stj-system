@@ -135,15 +135,9 @@ export function LoginForm({ portalType }: LoginFormProps) {
 
         {/* Portal switch link */}
         <div className="text-center mt-6 text-xs text-muted-foreground">
-          {isSystem ? (
-            <Link href="/leader/login" className="text-primary hover:underline font-medium">
-              Switch to Course Leader Portal
-            </Link>
-          ) : (
-            <Link href="/system/login" className="text-primary hover:underline font-medium">
-              Switch to System Administration Portal
-            </Link>
-          )}
+          <Link href="/portal/login" className="text-primary hover:underline font-medium">
+            STJ Portal Sign In
+          </Link>
           <span className="mx-2">•</span>
           <Link href="/" className="hover:underline">
             {t("common.back")} {t("nav.home")}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { OrganizationTree } from "@/components/structure/OrganizationTree";
-import { Layers, ShieldCheck, UserCheck, ArrowLeft, GraduationCap } from "lucide-react";
+import { Layers, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export const metadata = {
@@ -38,28 +38,13 @@ export default function StructurePage() {
           <OrganizationTree />
 
           {/* Bottom Navigation CTA */}
-          <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="pt-8 border-t border-border flex items-center justify-between">
             <Link href="/">
               <Button variant="ghost" size="sm" className="space-x-1.5 text-xs">
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>ត្រឡប់ទៅទំព័រដើម</span>
+                <span>ត្រឡប់ទៅទំព័រដើម (Back to Home)</span>
               </Button>
             </Link>
-
-            <div className="flex items-center space-x-3">
-              <Link href="/portal/login">
-                <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
-                  <UserCheck className="w-3.5 h-3.5 text-primary" />
-                  <span>ច្រកចូលសមាជិក (Member Portal)</span>
-                </Button>
-              </Link>
-              <Link href="/system/login">
-                <Button variant="default" size="sm" className="space-x-1.5 text-xs">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>ច្រកចូលប្រធាន STJ (Admin Portal)</span>
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </main>

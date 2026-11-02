@@ -148,13 +148,7 @@ export function PortalLayout({
     } catch {
       // ignore
     }
-    router.push(
-      portalType === "system"
-        ? "/system/login"
-        : portalType === "leader"
-        ? "/leader/login"
-        : "/portal/login"
-    );
+    router.push("/portal/login");
     router.refresh();
   };
 

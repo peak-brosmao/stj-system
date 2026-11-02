@@ -1,6 +1,5 @@
-import { LoginForm } from "@/components/auth/LoginForm";
+import { redirect } from "next/navigation";
 
 export default function LeaderLoginPage() {
-  return <LoginForm portalType="leader" />;
+  redirect("/portal/login");
 }
-
