@@ -121,8 +121,8 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground space-y-2 sm:space-y-0">
-          <p>© {new Date().getFullYear()} Senior Teaching Junior (STJ) - Institute of Technology of Cambodia.</p>
-          <p>Hostinger Node.js & MySQL Certified Edition</p>
+          <p>© {new Date().getFullYear()} Senior Teaching Junior (STJ) • វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)</p>
+          <p>ប្រព័ន្ធគ្រប់គ្រងការសិក្សា និងវត្តមានសមាជិកផ្លូវការ</p>
         </div>
       </div>
     </footer>

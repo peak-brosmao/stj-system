@@ -28,6 +28,7 @@ import {
   Lock,
   Sliders,
   CheckCircle2,
+  Layers,
 } from "lucide-react";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { LanguageSelector } from "@/components/i18n/LanguageSelector";
@@ -93,6 +94,7 @@ export function PortalLayout({
     { href: "/system/attendance", label: "ស្រង់វត្តមាន (Attendance)", icon: CalendarCheck },
     { href: "/system/sessions", label: "វគ្គបង្រៀន (Sessions)", icon: CalendarDays },
     { href: "/system/members", label: "សមាជិក (Members)", icon: Users },
+    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
     { href: "/system/leaders", label: "ប្រធានមុខវិជ្ជា (Leaders)", icon: UserCheck },
     { href: "/system/courses", label: "មុខវិជ្ជា (Courses)", icon: BookOpen },
     { href: "/system/departments", label: "ដេប៉ាតឺម៉ង់ (Departments)", icon: Building2 },
@@ -110,6 +112,7 @@ export function PortalLayout({
   const leaderNavItems = [
     { href: "/leader/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
     { href: "/leader/members", label: "សមាជិកក្នុងបន្ទុក (Assigned Members)", icon: Users },
+    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
     { href: "/leader/attendance", label: "មើលវត្តមាន (View Attendance)", icon: CalendarCheck },
     { href: "/leader/sessions", label: "កាលវិភាគបង្រៀន (Teaching Schedule)", icon: CalendarDays },
     { href: "/leader/reports", label: "របាយការណ៍មុខវិជ្ជា (Course Reports)", icon: FileBarChart },
@@ -121,6 +124,7 @@ export function PortalLayout({
   const portalNavItems = [
     { href: "/portal/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
     { href: "/portal/profile", label: "គណនីផ្ទាល់ខ្លួន (My Profile)", icon: User },
+    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
     { href: "/portal/attendance", label: "វត្តមានរបស់ខ្ញុំ (My Attendance)", icon: CalendarCheck },
     { href: "/portal/courses", label: "មុខវិជ្ជារបស់ខ្ញុំ (My Courses)", icon: BookOpen },
     { href: "/portal/schedule", label: "កាលវិភាគសិក្សា (My Schedule)", icon: CalendarDays },

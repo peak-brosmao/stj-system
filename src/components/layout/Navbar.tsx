@@ -17,6 +17,7 @@ export function Navbar() {
 
   const navLinks = [
     { href: "/", label: t("nav.home") },
+    { href: "/structure", label: "រចនាសម្ព័ន្ធ (Structure)" },
     { href: "/about", label: t("nav.about") },
     { href: "/programs", label: t("nav.programs") },
     { href: "/activities", label: t("nav.activities") },

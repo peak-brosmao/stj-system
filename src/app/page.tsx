@@ -13,6 +13,8 @@ import {
   FlaskConical,
   CheckCircle2,
   UserCheck,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -23,14 +25,29 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Live stats — read directly from the SQLite database
-  const [totalMembers, totalCourses, totalLeaders, totalDepts, completedSessions] = await Promise.all([
-    prisma.member.count({ where: { status: "ACTIVE" } }),
-    prisma.course.count({ where: { status: "ACTIVE" } }),
-    prisma.courseLeader.count(),
-    prisma.department.count(),
-    prisma.teachingSession.count({ where: { status: "COMPLETED" } }),
-  ]);
+  // Live stats — read directly from the SQLite database with graceful fallbacks
+  let totalMembers = 39;
+  let totalCourses = 4;
+  let totalLeaders = 4;
+  let totalDepts = 9;
+  let completedSessions = 0;
+
+  try {
+    const [m, c, l, d, s] = await Promise.all([
+      prisma.member.count({ where: { status: "ACTIVE" } }),
+      prisma.course.count({ where: { status: "ACTIVE" } }),
+      prisma.courseLeader.count(),
+      prisma.department.count(),
+      prisma.teachingSession.count({ where: { status: "COMPLETED" } }),
+    ]);
+    totalMembers = m;
+    totalCourses = c;
+    totalLeaders = l;
+    totalDepts = d;
+    completedSessions = s;
+  } catch (err) {
+    console.warn("[HomePage] Database stats fallback activated:", err);
+  }
 
   const stats = [
     { label: "សមាជិករៀមច្បងស្ម័គ្រចិត្ត (Active Members)", value: `${totalMembers}+`, icon: Users },
@@ -117,10 +134,16 @@ export default async function HomePage() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
+                <Link href="/structure">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5">
+                    <Layers className="w-4 h-4 text-primary" />
+                    <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
+                  </Button>
+                </Link>
                 <Link href="/portal/login">
                   <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5">
                     <UserCheck className="w-4 h-4 text-primary" />
-                    <span>ច្រកចូលសមាជិក & រៀមច្បង (Portal)</span>
+                    <span>ច្រកចូលសមាជិក (Portal)</span>
                   </Button>
                 </Link>
                 <Link href="/about">
@@ -262,6 +285,34 @@ export default async function HomePage() {
                     </Button>
                   </Link>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ORGANIZATIONAL HIERARCHY TREE BANNER SECTION */}
+        <section className="py-16 md:py-20 border-b border-border bg-gradient-to-r from-primary/5 via-card to-background">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="rounded-3xl border-2 border-primary/20 bg-card p-8 md:p-12 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="space-y-4 max-w-xl">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>រចនាសម្ព័ន្ធមែកធាងដឹកនាំ (Organizational Tree)</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                  ស្វែងយល់អំពីរចនាសម្ព័ន្ធ និងសមាជិក STJ តាមឆ្នាំសិក្សា
+                </h2>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  ពិនិត្យមើលរចនាសម្ព័ន្ធមែកធាងដឹកនាំពីប្រធាន STJ កណ្តាល ប្រធានក្រុមតាមមុខវិជ្ជា និងសមាជិករៀមច្បងបង្រៀនទាំងអស់ ជាមួយនឹងមុខងារផ្លាស់ប្តូរឆ្នាំសិក្សាដោយស្វ័យប្រវត្តិ។
+                </p>
+              </div>
+              <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3">
+                <Link href="/structure">
+                  <Button size="lg" className="space-x-2 shadow-md">
+                    <Sparkles className="w-4 h-4" />
+                    <span>ពិនិត្យមើលមែកធាងពេញលេញ</span>
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

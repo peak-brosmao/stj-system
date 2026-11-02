@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { id: session.id },
       include: {
         member: {
@@ -50,14 +50,53 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    if (!user) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+    if (!user && session.studentId) {
+      user = await prisma.user.findFirst({
+        where: { studentId: session.studentId },
+        include: {
+          member: {
+            include: {
+              department: true,
+              academicYear: true,
+              enrollments: { include: { course: true } },
+            },
+          },
+          courseLeaders: { include: { course: true } },
+          userRoles: { include: { role: true } },
+          notificationPreferences: true,
+        },
+      });
     }
 
-    const profile = {
-      ...user,
-      roles: session.roles,
-    };
+    const profile = user
+      ? {
+          ...user,
+          roles: session.roles,
+        }
+      : {
+          id: session.id,
+          email: session.email,
+          fullNameKh: session.fullNameKh,
+          fullNameEn: session.fullNameEn,
+          displayName: session.displayName || session.fullNameKh,
+          studentId: session.studentId,
+          status: "ACTIVE",
+          profileImage: session.profileImage,
+          phone: null,
+          telegram: null,
+          address: null,
+          bio: null,
+          member: {
+            memberId: session.memberId || "STJ",
+            studentId: session.studentId,
+            department: {
+              code: session.departmentCode || "ITC",
+              nameKh: session.departmentCode || "ITC",
+            },
+            enrollments: [],
+          },
+          roles: session.roles,
+        };
 
     // Calculate profile completeness
     let completedFields = 0;
