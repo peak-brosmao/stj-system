@@ -24,7 +24,7 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { HomeGallery } from "@/components/home/HomeGallery";
-import { HeroAnimatedBackground } from "@/components/home/HeroAnimatedBackground";
+import { HeroShowcase } from "@/components/home/HeroShowcase";
 
 export const dynamic = "force-dynamic";
 
@@ -113,72 +113,8 @@ export default async function HomePage() {
       <Navbar />
 
       <main className="flex-1">
-        {/* HERO SECTION WITH ANIMATED REDEEM BACKGROUND */}
-        <HeroAnimatedBackground>
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <div className="flex justify-center mb-1">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-2 shadow-xl ring-4 ring-primary/20 flex items-center justify-center transition-transform hover:scale-105">
-                <Image
-                  src="/images/itc-logo.png"
-                  alt="ITC Logo"
-                  width={112}
-                  height={112}
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </div>
-
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold backdrop-blur-md">
-              <GraduationCap className="w-4 h-4" />
-              <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ ឆ្នាំសិក្សា 2026-2027</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight drop-shadow-sm">
-              កម្មវិធីរៀមច្បងបង្រៀនប្អូន <br />
-              <span className="text-primary font-bold">Senior Teaching Junior</span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              ប្រព័ន្ធគ្រប់គ្រងការសិក្សា និងស្រង់វត្តមានផ្លូវការ នៃកម្មវិធី STJ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)។ លើកកម្ពស់គុណភាពអប់រំវិស្វកម្ម តាមរយៈការផ្ទេរចំណេះដឹងពីនិស្សិតរៀមច្បងឆ្នើម ជូនដល់និស្សិតជំនាន់ក្រោយ។
-            </p>
-
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/programs">
-                <Button size="lg" className="w-full sm:w-auto space-x-2 shadow-md">
-                  <span>ស្វែងយល់ពីមុខវិជ្ជាសិក្សា</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Link href="/structure">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5 bg-background/80 backdrop-blur-md">
-                  <Layers className="w-4 h-4 text-primary" />
-                  <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
-                </Button>
-              </Link>
-              {session ? (
-                <Link href={dashboardUrl}>
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary text-primary hover:bg-primary/10 font-bold bg-background/80 backdrop-blur-md">
-                    <LayoutDashboard className="w-4 h-4 text-primary" />
-                    <span>ផ្ទាំងគ្រប់គ្រង ({session.fullNameKh || "Dashboard"})</span>
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/portal/login">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto space-x-2 border-primary/40 hover:bg-primary/5 bg-background/80 backdrop-blur-md">
-                    <UserCheck className="w-4 h-4 text-primary" />
-                    <span>ច្រកចូលសមាជិក (Portal)</span>
-                  </Button>
-                </Link>
-              )}
-              <Link href="/about">
-                <Button variant="ghost" size="lg" className="w-full sm:w-auto bg-background/40 hover:bg-background/80 backdrop-blur-md">
-                  អំពីកម្មវិធី STJ
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </HeroAnimatedBackground>
+        {/* HERO SECTION WITH ULTRA-SHARP ANIMATED PHOTO SHOWCASE */}
+        <HeroShowcase session={session} dashboardUrl={dashboardUrl} />
 
         {/* STATISTICS SECTION */}
         <section className="py-12 border-b border-border bg-card/40">
