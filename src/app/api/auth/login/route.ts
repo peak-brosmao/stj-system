@@ -235,7 +235,7 @@ export async function POST(req: NextRequest) {
     let redirectUrl = "/portal/member";
     if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
       redirectUrl = "/system/dashboard";
-    } else if (roles.includes("COURSE_LEADER") && !roles.includes("MEMBER")) {
+    } else if (roles.includes("COURSE_LEADER")) {
       redirectUrl = "/leader/dashboard";
     } else {
       redirectUrl = "/portal/member";

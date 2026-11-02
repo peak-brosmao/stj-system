@@ -73,9 +73,11 @@ export function PortalLayout({
     : rosterMatch?.nameKh || "សមាជិក STJ";
 
   const initialMemberId = userMemberId || rosterMatch?.memberId;
-  const initialRole = userRole && userRole !== "Administrator"
-    ? userRole
-    : rosterMatch?.role || (portalType === "system" ? "ប្រធាន STJ (President)" : portalType === "leader" ? "ប្រធានក្រុម (Course Leader)" : "សមាជិក STJ (Member)");
+  const initialRole = rosterMatch?.isLeader
+    ? "ប្រធានក្រុម (Course Leader)"
+    : rosterMatch?.studentId === "e20221334"
+    ? "ប្រធាន STJ (President)"
+    : rosterMatch?.role || userRole || "សមាជិក STJ (Member)";
 
   const [currentUser, setCurrentUser] = useState({
     name: initialName,
@@ -94,12 +96,18 @@ export function PortalLayout({
       .then((data) => {
         const u = data?.profile || data?.user;
         if (u) {
-          const resolvedRole =
-            portalType === "system"
-              ? "ប្រធាន STJ (President)"
-              : portalType === "leader"
-              ? "ប្រធានក្រុម (Course Leader)"
-              : u.member?.role || (u.roles?.includes("SUPER_ADMIN") ? "ប្រធាន STJ (President)" : "សមាជិក STJ (Member)");
+          const userRoles: string[] = u.roles || u.userRoles?.map((r: any) => r.role?.name || r) || [];
+          let resolvedRole = "សមាជិក STJ (Member)";
+          if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT")) {
+            resolvedRole = "ប្រធាន STJ (President)";
+          } else if (userRoles.includes("COURSE_LEADER")) {
+            resolvedRole = "ប្រធានក្រុម (Course Leader)";
+          } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION")) {
+            resolvedRole = "គណៈគ្រប់គ្រង (Admin)";
+          } else if (u.member?.role) {
+            resolvedRole = u.member.role;
+          }
+
           setCurrentUser({
             name: u.fullNameKh || u.fullNameEn || initialName,
             role: resolvedRole,
@@ -110,7 +118,7 @@ export function PortalLayout({
         }
       })
       .catch(() => {});
-  }, [portalType, userEmail, initialName, initialMemberId]);
+  }, [userEmail, initialName, initialMemberId]);
 
   const systemNavItems = [
     { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },

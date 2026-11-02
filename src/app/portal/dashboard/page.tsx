@@ -1,37 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import MemberDashboardPage from "../member/page";
-import LeaderDashboardPage from "../leader/page";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function PortalDashboardPage() {
-  const [role, setRole] = useState<"member" | "leader">("member");
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/portal/profile")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          router.replace("/portal/login");
+          return null;
+        }
+        return res.json();
+      })
       .then((data) => {
-        const roles = data?.profile?.roles || data?.profile?.userRoles?.map((r: any) => r.role?.name) || [];
-        if (roles.includes("COURSE_LEADER") && !roles.includes("MEMBER")) {
-          setRole("leader");
+        if (!data) return;
+        const roles = data?.profile?.roles || data?.profile?.userRoles?.map((r: any) => r.role?.name || r) || [];
+        if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
+          router.replace("/system/dashboard");
+        } else if (roles.includes("COURSE_LEADER")) {
+          router.replace("/leader/dashboard");
         } else {
-          setRole("member");
+          router.replace("/portal/member");
         }
       })
       .catch(() => {
-        setRole("member");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+        router.replace("/portal/member");
+      });
+  }, [router]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  return role === "leader" ? <LeaderDashboardPage /> : <MemberDashboardPage />;
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 }
