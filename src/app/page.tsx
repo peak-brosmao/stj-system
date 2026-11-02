@@ -22,22 +22,12 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
 import { HomeGallery } from "@/components/home/HomeGallery";
-import { HeroShowcase } from "@/components/home/HeroShowcase";
+import { HeroAnimatedBackground } from "@/components/home/HeroAnimatedBackground";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const session = await getSession();
-  const roles = session?.roles || [];
-  let dashboardUrl = "/portal/member";
-  if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
-    dashboardUrl = "/system/dashboard";
-  } else if (roles.includes("COURSE_LEADER")) {
-    dashboardUrl = "/leader/dashboard";
-  }
-
   // Live stats — read directly from the SQLite database with graceful fallbacks
   let totalMembers = 39;
   let totalCourses = 4;
@@ -113,8 +103,58 @@ export default async function HomePage() {
       <Navbar />
 
       <main className="flex-1">
-        {/* HERO SECTION WITH ULTRA-SHARP ANIMATED PHOTO SHOWCASE */}
-        <HeroShowcase session={session} dashboardUrl={dashboardUrl} />
+        {/* HERO SECTION WITH ULTRA-SHARP ANIMATED PHOTO BACKGROUND */}
+        <HeroAnimatedBackground>
+          <div className="text-center space-y-6">
+            <div className="flex justify-center mb-1">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white p-2 shadow-xl ring-4 ring-primary/20 flex items-center justify-center transition-transform hover:scale-105">
+                <Image
+                  src="/images/itc-logo.png"
+                  alt="ITC Logo"
+                  width={96}
+                  height={96}
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold backdrop-blur-md">
+              <GraduationCap className="w-4 h-4 shrink-0" />
+              <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ ឆ្នាំសិក្សា 2026-2027 • បន្ទប់ SF1 & SF2</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight drop-shadow-sm">
+              កម្មវិធីរៀមច្បងបង្រៀនប្អូន <br />
+              <span className="text-primary font-bold">Senior Teaching Junior</span>
+            </h1>
+
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              ប្រព័ន្ធគ្រប់គ្រងការសិក្សា និងស្រង់វត្តមានផ្លូវការ នៃកម្មវិធី STJ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)។ ថ្នាក់រៀន និងការបង្រៀនប្រព្រឹត្តទៅនៅបន្ទប់ SF1 និង SF2 ដើម្បីពង្រឹងគុណភាពអប់រំវិស្វកម្ម។
+            </p>
+
+            {/* ONLY 3 PUBLIC BUTTONS - STRICTLY NO SYSTEM/DASHBOARD LINK */}
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <Link href="/programs">
+                <Button size="lg" className="space-x-2 shadow-md">
+                  <span>ស្វែងយល់ពីមុខវិជ្ជាសិក្សា</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+              <Link href="/structure">
+                <Button variant="outline" size="lg" className="space-x-2 border-primary/40 hover:bg-primary/5 bg-background/80 backdrop-blur-md">
+                  <Layers className="w-4 h-4 text-primary" />
+                  <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
+                </Button>
+              </Link>
+              <Link href="/about">
+                <Button variant="ghost" size="lg" className="bg-background/40 hover:bg-background/80 backdrop-blur-md">
+                  អំពីកម្មវិធី STJ
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </HeroAnimatedBackground>
 
         {/* STATISTICS SECTION */}
         <section className="py-12 border-b border-border bg-card/40">

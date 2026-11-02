@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play, MapPin } from "lucide-react";
 
 interface HeroImage {
   src: string;
   titleKh: string;
   titleEn: string;
+  room: string;
 }
 
 const HERO_IMAGES: HeroImage[] = [
@@ -15,36 +16,43 @@ const HERO_IMAGES: HeroImage[] = [
     src: "/images/gallery/IMG_2910.JPG",
     titleKh: "សាមគ្គីភាព និងការប្តេជ្ញាចិត្តរបស់សមាជិកស្ម័គ្រចិត្ត STJ",
     titleEn: "STJ Volunteer Mentors Solidarity at ITC",
+    room: "បរិវេណវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា",
   },
   {
     src: "/images/gallery/IMG_2847.JPG",
-    titleKh: "ថ្នាក់រៀនអនុវត្តជាក់ស្តែង Programming & Coding",
+    titleKh: "ថ្នាក់រៀនអនុវត្តជាក់ស្តែង Computer Programming & Coding",
     titleEn: "Hands-on Programming & Coding Lab",
+    room: "បន្ទប់ SF1, ITC",
   },
   {
     src: "/images/gallery/IMG_2845.JPG",
     titleKh: "វគ្គបណ្តុះបណ្តាល និងចែករំលែកបទពិសោធន៍ផ្ទាល់",
     titleEn: "Direct Peer Coaching & Mentorship",
-  },
-  {
-    src: "/images/gallery/IMG_2851.JPG",
-    titleKh: "សិក្ខាសាលាពង្រឹងមូលដ្ឋានគ្រឹះវិទ្យាសាស្ត្រពិត",
-    titleEn: "Science & Engineering Workshop",
+    room: "បន្ទប់ SF2, ITC",
   },
   {
     src: "/images/gallery/IMG_2849.JPG",
     titleKh: "ការពិភាក្សាដោះស្រាយលំហាត់ស្មុគស្មាញជាក្រុម",
     titleEn: "Engineering Problem Solving Session",
+    room: "បន្ទប់ SF1, ITC",
   },
   {
     src: "/images/gallery/IMG_2905.JPG",
     titleKh: "បរិយាកាសសិក្សាសកម្ម និងកក់ក្តៅរវាងរៀមច្បង និងប្អូនៗ",
     titleEn: "Active & Supportive Learning Environment",
+    room: "បន្ទប់ SF2, ITC",
+  },
+  {
+    src: "/images/gallery/IMG_2851.JPG",
+    titleKh: "សិក្ខាសាលាពង្រឹងមូលដ្ឋានគ្រឹះវិទ្យាសាស្ត្រពិត",
+    titleEn: "Science & Engineering Workshop",
+    room: "បន្ទប់ SF1 & SF2, ITC",
   },
   {
     src: "/images/gallery/IMG_2915.JPG",
     titleKh: "ការបង្ហាញវិធីសាស្ត្រស្រាវជ្រាវបច្ចេកវិទ្យាទំនើប",
     titleEn: "Modern Engineering & Tech Research Showcase",
+    room: "បន្ទប់ SF1, ITC",
   },
 ];
 
@@ -72,9 +80,11 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
     setCurrentIndex((prev) => (prev + 1) % HERO_IMAGES.length);
   };
 
+  const currentImage = HERO_IMAGES[currentIndex];
+
   return (
-    <div className="relative min-h-[640px] md:min-h-[720px] flex items-center justify-center overflow-hidden border-b border-border">
-      {/* BACKGROUND IMAGE CAROUSEL / REDEEM ANIMATION LAYERS */}
+    <div className="relative min-h-[600px] md:min-h-[680px] flex items-center justify-center overflow-hidden border-b border-border bg-black">
+      {/* BACKGROUND IMAGE CAROUSEL WITH HIGH CLARITY (ច្បាស់ត្រដែត) */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
         {HERO_IMAGES.map((img, idx) => {
           const isActive = idx === currentIndex;
@@ -82,7 +92,7 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
             <div
               key={img.src}
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+                isActive ? "opacity-80 dark:opacity-75 z-10" : "opacity-0 z-0"
               }`}
             >
               <div
@@ -103,42 +113,39 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
           );
         })}
 
-        {/* ELEGANT GRADIENT & GLASS OVERLAYS */}
-        {/* Layer 1: Soft radial glow in center for text focus */}
-        <div className="absolute inset-0 z-20 bg-background/85 dark:bg-background/90 backdrop-blur-[4px]" />
-
-        {/* Layer 2: Top and Bottom Edge Fades for seamless integration */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-b from-background/95 via-transparent to-background" />
-
-        {/* Layer 3: Subtle primary accent tint */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-tr from-primary/10 via-transparent to-indigo-500/10 pointer-events-none" />
+        {/* LIGHT VIGNETTE & SUBTLE GRADIENTS FOR MAXIMUM IMAGE CLARITY & TEXT READABILITY */}
+        <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/50 via-black/25 to-black/60 pointer-events-none" />
+        <div className="absolute inset-0 z-20 bg-background/35 dark:bg-background/50 backdrop-blur-[1px] pointer-events-none" />
       </div>
 
-      {/* FOREGROUND HERO CONTENT */}
-      <div className="relative z-30 container mx-auto px-4 py-16 md:py-24">
-        {children}
+      {/* FOREGROUND HERO CONTENT WRAPPED IN A TRANSLUCENT GLASS CARD */}
+      <div className="relative z-30 container mx-auto px-4 py-14 md:py-20 flex justify-center">
+        <div className="max-w-3xl w-full bg-background/80 dark:bg-background/85 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-white/40 dark:border-white/10 shadow-2xl">
+          {children}
+        </div>
       </div>
 
       {/* BOTTOM CONTROLS & PHOTO CAPTION PILL */}
       <div className="absolute bottom-4 left-4 right-4 z-30 flex flex-col sm:flex-row items-center justify-between gap-2 pointer-events-auto">
-        {/* Current photo caption pill */}
-        <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-background/80 dark:bg-card/85 backdrop-blur-md border border-border/80 text-[11px] text-muted-foreground shadow-sm">
+        {/* Current photo caption pill with Room */}
+        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-[11px] text-white shadow-lg">
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
-          <span className="font-semibold text-foreground truncate max-w-[260px] sm:max-w-md">
-            {HERO_IMAGES[currentIndex].titleKh}
+          <span className="font-semibold truncate max-w-[240px] sm:max-w-md">
+            {currentImage.titleKh}
           </span>
-          <span className="hidden md:inline font-sans text-muted-foreground/80">
-            • {HERO_IMAGES[currentIndex].titleEn}
+          <span className="flex items-center space-x-1 text-primary-foreground font-mono bg-primary/40 px-2 py-0.5 rounded-full text-[10px]">
+            <MapPin className="w-2.5 h-2.5 shrink-0" />
+            <span>{currentImage.room}</span>
           </span>
         </div>
 
-        {/* Interactive Slide Navigation Dots & Play/Pause */}
-        <div className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-background/80 dark:bg-card/85 backdrop-blur-md border border-border/80 shadow-sm">
+        {/* Slide Navigation Dots & Play/Pause */}
+        <div className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-lg">
           <button
             type="button"
             onClick={goToPrev}
             aria-label="Previous slide"
-            className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
@@ -153,7 +160,7 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   i === currentIndex
                     ? "w-5 bg-primary"
-                    : "w-1.5 bg-muted-foreground/40 hover:bg-muted-foreground/70"
+                    : "w-1.5 bg-white/40 hover:bg-white/80"
                 }`}
               />
             ))}
@@ -163,18 +170,18 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
             type="button"
             onClick={goToNext}
             aria-label="Next slide"
-            className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
           >
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
-          <span className="w-px h-3 bg-border mx-0.5" />
+          <span className="w-px h-3 bg-white/30 mx-1" />
 
           <button
             type="button"
             onClick={() => setIsPlaying(!isPlaying)}
             aria-label={isPlaying ? "Pause autoplay" : "Play autoplay"}
-            className="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
+            className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/20 transition-colors"
           >
             {isPlaying ? (
               <Pause className="w-3 h-3" />

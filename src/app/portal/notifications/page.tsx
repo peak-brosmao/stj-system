@@ -32,7 +32,7 @@ export default function PortalNotificationsPage() {
       id: "n-2",
       category: "SESSION",
       title: "កាលវិភាគវគ្គបង្រៀនបន្ទាប់ (PROG101)",
-      message: "វគ្គទី៤ ស្តីពី Binary Search Trees & Recursion នឹងប្រព្រឹត្តទៅនៅថ្ងៃសៅរ៍ ០៧ វិច្ឆិកា វេលាម៉ោង ០៨:០០ ព្រឹក នៅបន្ទប់ A-204។",
+      message: "វគ្គទី៤ ស្តីពី Binary Search Trees & Recursion នឹងប្រព្រឹត្តទៅនៅថ្ងៃសៅរ៍ ០៧ វិច្ឆិកា វេលាម៉ោង ០៨:០០ ព្រឹក នៅបន្ទប់ SF1។",
       date: "២៨ តុលា ២០២៦ • 09:15 AM",
       link: "/portal/schedule",
       isRead: false,

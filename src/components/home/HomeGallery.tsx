@@ -23,7 +23,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "វគ្គបណ្តុះបណ្តាល និងចែករំលែកបទពិសោធន៍ផ្ទាល់",
     titleEn: "Mentorship & Direct Peer Coaching",
     category: "mentorship",
-    location: "បន្ទប់សិក្សា ITC, Campus 1",
+    location: "បន្ទប់ SF2, ITC",
     date: "តុលា ២០២៦",
   },
   {
@@ -32,7 +32,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "ថ្នាក់រៀនអនុវត្តជាក់ស្តែង Programming & Coding",
     titleEn: "Hands-on Programming Classroom Session",
     category: "classroom",
-    location: "Computer Lab អគារ F, ITC",
+    location: "បន្ទប់ SF1, ITC",
     date: "តុលា ២០២៦",
   },
   {
@@ -41,7 +41,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "ការពិភាក្សាដោះស្រាយលំហាត់ស្មុគស្មាញជាក្រុម",
     titleEn: "Interactive Group Problem Solving",
     category: "classroom",
-    location: "អគារ A, ITC",
+    location: "បន្ទប់ SF1, ITC",
     date: "តុលា ២០២៦",
   },
   {
@@ -50,7 +50,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "សិក្ខាសាលាពង្រឹងមូលដ្ឋានគ្រឹះវិទ្យាសាស្ត្រពិត",
     titleEn: "Science & Engineering Foundations Workshop",
     category: "workshop",
-    location: "សាលសន្និសីទ ITC",
+    location: "បន្ទប់ SF1 & SF2, ITC",
     date: "កញ្ញា ២០២៦",
   },
   {
@@ -59,7 +59,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "ការប្រជុំត្រួតពិនិត្យវត្តមាន និងផែនការបង្រៀនរបស់ក្រុមដឹកនាំ",
     titleEn: "STJ Leadership & Academic Coordination Meeting",
     category: "workshop",
-    location: "បន្ទប់ប្រជុំកណ្តាល STJ",
+    location: "បន្ទប់ SF1, ITC",
     date: "តុលា ២០២៦",
   },
   {
@@ -68,7 +68,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "បរិយាកាសសិក្សាសកម្ម និងកក់ក្តៅរវាងរៀមច្បង និងប្អូនៗ",
     titleEn: "Active & Supportive Peer-Learning Atmosphere",
     category: "mentorship",
-    location: "អគារ B, ITC",
+    location: "បន្ទប់ SF2, ITC",
     date: "តុលា ២០២៦",
   },
   {
@@ -77,7 +77,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "ការណែនាំគន្លឹះដោះស្រាយលំហាត់ប្រឡងប្រចាំឆមាស",
     titleEn: "Midterm & Final Exam Strategy Coaching",
     category: "classroom",
-    location: "បន្ទប់ A-203, ITC",
+    location: "បន្ទប់ SF1, ITC",
     date: "វិច្ឆិកា ២០២៦",
   },
   {
@@ -95,7 +95,7 @@ const GALLERY_PHOTOS: PhotoItem[] = [
     titleKh: "ការបង្ហាញវិធីសាស្ត្រស្រាវជ្រាវបច្ចេកវិទ្យាទំនើប",
     titleEn: "Modern Engineering & Tech Research Showcase",
     category: "workshop",
-    location: "Innovation Hub, ITC",
+    location: "បន្ទប់ SF2, ITC",
     date: "វិច្ឆិកា ២០២៦",
   },
 ];

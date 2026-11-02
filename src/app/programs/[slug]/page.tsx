@@ -27,7 +27,7 @@ const COURSE_DATA: Record<
     term: "2026-2027 Semester 1",
     leaders: ["លាង ជីងហេង (LEANG JINGHENG - I3-GTI, Student ID: e20240704)"],
     schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 11:00 ព្រឹក",
-    room: "បន្ទប់ A-204, ITC Campus 1",
+    room: "បន្ទប់ SF1 (Room SF1), ITC Campus 1",
     desc: "វគ្គបណ្តុះបណ្តាលដែលផ្តោតលើការសរសេរកូដប្រកបដោយប្រសិទ្ធភាព ការយល់ដឹងអំពី Memory Management, Pointer Mechanics, និង Algorithms សំខាន់ៗសម្រាប់និស្សិតវិស្វកម្ម។",
     syllabus: [
       "សប្តាហ៍ទី១-២៖ មូលដ្ឋានគ្រឹះ C/C++, Syntax, Data Types & Control Flow",
@@ -43,7 +43,7 @@ const COURSE_DATA: Record<
     term: "2026-2027 Semester 1",
     leaders: ["គឹម រតនៈ (KIM Ratanak - I5-GIM, Student ID: e20221423)"],
     schedule: "រៀងរាល់ថ្ងៃអាទិត្យ ម៉ោង 08:00 - 11:00 ព្រឹក",
-    room: "បន្ទប់ B-102, ITC Campus 1",
+    room: "បន្ទប់ SF2 (Room SF2), ITC Campus 1",
     desc: "ពង្រឹងការគិតបែបរិះគន់តាមរយៈការដោះស្រាយសមីការឌីផេរ៉ង់ស្យែល ការវិភាគម៉ាទ្រីស និង Calculus កម្រិតខ្ពស់សម្រាប់វិស្វកម្ម។",
     syllabus: [
       "សប្តាហ៍ទី១-២៖ Partial Derivatives, Gradients & Directional Derivatives",
@@ -59,7 +59,7 @@ const COURSE_DATA: Record<
     term: "2026-2027 Semester 1",
     leaders: ["គ្រុយ អីុខាង (KRUY Ykhang - I3-GIM, Student ID: e20240096)"],
     schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 02:00 - 05:00 រសៀល",
-    room: "បន្ទប់ A-301, ITC Campus 1",
+    room: "បន្ទប់ SF1 (Room SF1), ITC Campus 1",
     desc: "ទ្រឹស្តីមេកានិកបុរាណ ថាមពល ចលនារលក និងអុបទិចសម្រាប់និស្សិតវិស្វកម្មទូទៅ។",
     syllabus: [
       "សប្តាហ៍ទី១-២៖ Kinematics, Newton's Laws & Friction Forces",
@@ -75,7 +75,7 @@ const COURSE_DATA: Record<
     term: "2026-2027 Semester 1",
     leaders: ["ខេង លីឧស្សាហ៍ (KHENG Lyussa - I3-GCI, Student ID: e20240046)"],
     schedule: "រៀងរាល់ថ្ងៃអាទិត្យ ម៉ោង 02:00 - 05:00 រសៀល",
-    room: "បន្ទប់ C-205, ITC Campus 1",
+    room: "បន្ទប់ SF2 (Room SF2), ITC Campus 1",
     desc: "ការយល់ដឹងអំពីទម្រង់អាតូម ប្រតិកម្មគីមី ទែរម៉ូឌីណាមិកគីមី និងអេឡិចត្រូគីមី។",
     syllabus: [
       "សប្តាហ៍ទី១-២៖ Atomic Structure, Periodic Trends & Chemical Bonding",
