@@ -33,9 +33,15 @@ export default function MyProfilePage() {
 
   useEffect(() => {
     fetch("/api/portal/profile")
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          window.location.href = "/portal/login";
+          return null;
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (data.profile) {
+        if (data && data.profile) {
           setProfile(data.profile);
           setCompleteness(data.completeness || 0);
         }
@@ -43,6 +49,17 @@ export default function MyProfilePage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <PortalLayout portalType="portal">
+        <div className="min-h-[500px] flex flex-col items-center justify-center space-y-3">
+          <div className="w-9 h-9 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground animate-pulse">កំពុងទាញយកព័ត៌មានគណនី...</p>
+        </div>
+      </PortalLayout>
+    );
+  }
 
   const nameKh = profile?.fullNameKh || "";
   const nameEn = profile?.fullNameEn || "";

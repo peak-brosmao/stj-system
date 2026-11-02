@@ -41,7 +41,7 @@ export default function CourseDetailPage() {
   }, [slug]);
 
   return (
-    <PortalLayout portalType="portal" userRole="STJ Team Tutor" userName="">
+    <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
         <Link href="/portal/courses" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
           <ArrowLeft className="w-3.5 h-3.5" />

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { calculateAttendanceRate } from "@/lib/utils";
+import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -24,15 +25,44 @@ export async function GET(req: NextRequest) {
     const courseFilter = searchParams.get("course") || "ALL";
     const statusFilter = searchParams.get("status") || "ALL";
 
-    const user = await prisma.user.findUnique({
-      where: { id: session.id },
-      include: { member: { include: { enrollments: true } } },
-    });
+    let user = null;
+    try {
+      user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { id: session.id },
+            ...(session.email ? [{ email: session.email }] : []),
+            ...(session.studentId ? [{ studentId: session.studentId }] : []),
+          ],
+        },
+        include: { member: { include: { enrollments: true, department: true } } },
+      });
+    } catch {
+      // Non-blocking
+    }
+
+    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
+      (m) =>
+        (session.studentId && m.studentId.toLowerCase() === session.studentId.toLowerCase()) ||
+        (session.email && m.email.toLowerCase() === session.email.toLowerCase()) ||
+        (user?.studentId && m.studentId.toLowerCase() === user.studentId.toLowerCase()) ||
+        (user?.email && m.email.toLowerCase() === user.email.toLowerCase())
+    );
+
+    const userInfo = {
+      fullNameKh: user?.fullNameKh || rosterMatch?.nameKh || session.fullNameKh || "សមាជិក STJ",
+      fullNameEn: user?.fullNameEn || rosterMatch?.nameEn || session.fullNameEn || "",
+      studentId: user?.member?.studentId || user?.studentId || rosterMatch?.studentId || session.studentId || "-",
+      memberId: user?.member?.memberId || rosterMatch?.memberId || session.memberId || "STJ",
+      departmentCode: user?.member?.department?.code || rosterMatch?.dept || session.departmentCode || "ITC",
+    };
+
     const member = user?.member;
 
     if (!member) {
       return NextResponse.json({
         success: true,
+        user: userInfo,
         records: [],
         upcoming: [],
         pending: [],
@@ -122,6 +152,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      user: userInfo,
       records,
       upcoming,
       pending,

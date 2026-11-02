@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -22,80 +23,90 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    let user = await prisma.user.findUnique({
-      where: { id: session.id },
-      include: {
-        member: {
-          include: {
-            department: true,
-            academicYear: true,
-            enrollments: {
-              include: {
-                course: true,
-              },
-            },
-          },
-        },
-        courseLeaders: {
-          include: {
-            course: true,
-          },
-        },
-        userRoles: {
-          include: {
-            role: true,
-          },
-        },
-        notificationPreferences: true,
-      },
-    });
-
-    if (!user && session.studentId) {
+    let user = null;
+    try {
       user = await prisma.user.findFirst({
-        where: { studentId: session.studentId },
+        where: {
+          OR: [
+            { id: session.id },
+            ...(session.email ? [{ email: session.email }] : []),
+            ...(session.studentId ? [{ studentId: session.studentId }] : []),
+          ],
+        },
         include: {
           member: {
             include: {
               department: true,
               academicYear: true,
-              enrollments: { include: { course: true } },
+              enrollments: {
+                include: {
+                  course: true,
+                },
+              },
             },
           },
-          courseLeaders: { include: { course: true } },
-          userRoles: { include: { role: true } },
+          courseLeaders: {
+            include: {
+              course: true,
+            },
+          },
+          userRoles: {
+            include: {
+              role: true,
+            },
+          },
           notificationPreferences: true,
         },
       });
+    } catch {
+      // Database query failed, use session and official roster
     }
+
+    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
+      (m) =>
+        (session.studentId && m.studentId.toLowerCase() === session.studentId.toLowerCase()) ||
+        (session.email && m.email.toLowerCase() === session.email.toLowerCase()) ||
+        (user?.studentId && m.studentId.toLowerCase() === user.studentId.toLowerCase()) ||
+        (user?.email && m.email.toLowerCase() === user.email.toLowerCase())
+    );
 
     const profile = user
       ? {
           ...user,
-          roles: session.roles,
+          fullNameKh: user.fullNameKh || rosterMatch?.nameKh || session.fullNameKh || "សមាជិក STJ",
+          fullNameEn: user.fullNameEn || rosterMatch?.nameEn || session.fullNameEn || "",
+          studentId: user.studentId || rosterMatch?.studentId || session.studentId,
+          member: user.member || (rosterMatch ? {
+            memberId: rosterMatch.memberId,
+            studentId: rosterMatch.studentId,
+            department: { code: rosterMatch.dept, nameKh: rosterMatch.dept },
+            enrollments: [],
+          } : null),
+          roles: session.roles && session.roles.length > 0 ? session.roles : user.userRoles?.map((ur) => ur.role.name) || [],
         }
       : {
           id: session.id,
-          email: session.email,
-          fullNameKh: session.fullNameKh,
-          fullNameEn: session.fullNameEn,
-          displayName: session.displayName || session.fullNameKh,
-          studentId: session.studentId,
+          email: session.email || rosterMatch?.email || "user@itc.edu.kh",
+          fullNameKh: session.fullNameKh || rosterMatch?.nameKh || "សមាជិក STJ",
+          fullNameEn: session.fullNameEn || rosterMatch?.nameEn || "",
+          displayName: session.displayName || rosterMatch?.nameKh || session.fullNameKh || "សមាជិក STJ",
+          studentId: session.studentId || rosterMatch?.studentId || null,
           status: "ACTIVE",
-          profileImage: session.profileImage,
+          profileImage: session.profileImage || null,
           phone: null,
           telegram: null,
           address: null,
           bio: null,
           member: {
-            memberId: session.memberId || "STJ",
-            studentId: session.studentId,
+            memberId: session.memberId || rosterMatch?.memberId || "STJ",
+            studentId: session.studentId || rosterMatch?.studentId,
             department: {
-              code: session.departmentCode || "ITC",
-              nameKh: session.departmentCode || "ITC",
+              code: session.departmentCode || rosterMatch?.dept || "ITC",
+              nameKh: session.departmentCode || rosterMatch?.dept || "ITC",
             },
             enrollments: [],
           },
-          roles: session.roles,
+          roles: session.roles || (rosterMatch?.isLeader ? ["COURSE_LEADER", "MEMBER"] : ["MEMBER"]),
         };
 
     // Calculate profile completeness
@@ -113,6 +124,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       profile,
+      user: profile,
       completeness: completionPercentage,
     });
   } catch (error: unknown) {

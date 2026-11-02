@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSessionToken, setSessionCookie } from "@/lib/auth";
 import { RoleName } from "@/types";
+import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -58,65 +59,54 @@ export async function POST(req: NextRequest) {
         },
       });
     } catch {
-      // Offline fallback for official STJ roles if database temporarily unavailable
-      if (
-        (identifier === "e20221334@itc.edu.kh" || identifier === "e20221334" || identifier === "phal.david@itc.edu.kh") &&
-        (password === "e20221334@ITC!" || password === "ITC@STJ2026!")
-      ) {
-        const fallbackUser = {
-          id: "stj-david-admin",
-          email: "e20221334@itc.edu.kh",
-          fullNameKh: "ផល ដាវីត",
-          fullNameEn: "PHAL David",
-          roles: ["SUPER_ADMIN" as RoleName, "STJ_PRESIDENT" as RoleName, "STJ_ADMIN" as RoleName, "MEMBER" as RoleName],
-          courseIds: [],
-        };
-        const token = await createSessionToken(fallbackUser);
-        await setSessionCookie(token);
-        return NextResponse.json({
-          user: fallbackUser,
-          redirectUrl: "/system/dashboard",
-        });
-      }
+      // Offline fallback for all official STJ roster members if database temporarily unavailable
+      const matchedRoster = OFFICIAL_STJ_ROSTER.find(
+        (m) =>
+          m.studentId.toLowerCase() === identifier ||
+          m.studentId.toLowerCase() === studentIdRaw ||
+          m.email.toLowerCase() === identifier ||
+          m.memberId.toLowerCase() === identifier
+      );
 
-      if (
-        (identifier === "e20240704@itc.edu.kh" || identifier === "e20240704" || identifier === "leang.jingheng@itc.edu.kh") &&
-        (password === "e20240704@ITC!" || password === "ITC@STJ2026!")
-      ) {
-        const fallbackUser = {
-          id: "leader-prog-jingheng",
-          email: "e20240704@itc.edu.kh",
-          fullNameKh: "លាង ជីងហេង",
-          fullNameEn: "LEANG JINGHENG",
-          roles: ["COURSE_LEADER" as RoleName, "MEMBER" as RoleName],
-          courseIds: ["c-prog"],
-        };
-        const token = await createSessionToken(fallbackUser);
-        await setSessionCookie(token);
-        return NextResponse.json({
-          user: fallbackUser,
-          redirectUrl: "/leader/dashboard",
-        });
-      }
+      if (matchedRoster) {
+        const expectedDefaultPass = `${matchedRoster.studentId.toLowerCase()}@ITC!`;
+        const isMasterPass = password === "ITC@STJ2026!" || password === expectedDefaultPass;
+        if (isMasterPass) {
+          const roles: RoleName[] = matchedRoster.studentId === "e20221334"
+            ? ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "MEMBER"]
+            : matchedRoster.isLeader
+            ? ["COURSE_LEADER", "MEMBER"]
+            : ["MEMBER"];
 
-      if (
-        (identifier === "e20251455@itc.edu.kh" || identifier === "e20251455" || identifier === "peak.brosmao@itc.edu.kh") &&
-        (password === "e20251455@ITC!" || password === "ITC@STJ2026!")
-      ) {
-        const fallbackUser = {
-          id: "member-peak-brosmao",
-          email: "e20251455@itc.edu.kh",
-          fullNameKh: "ពៀក ប្រុសម៉ៅ",
-          fullNameEn: "PEAK BROSMAO",
-          roles: ["MEMBER" as RoleName],
-          courseIds: ["c-prog"],
-        };
-        const token = await createSessionToken(fallbackUser);
-        await setSessionCookie(token);
-        return NextResponse.json({
-          user: fallbackUser,
-          redirectUrl: "/portal/member",
-        });
+          const fallbackUser = {
+            id: `roster-${matchedRoster.studentId}`,
+            email: matchedRoster.email,
+            fullNameKh: matchedRoster.nameKh,
+            fullNameEn: matchedRoster.nameEn,
+            displayName: matchedRoster.nameKh,
+            studentId: matchedRoster.studentId,
+            memberId: matchedRoster.memberId,
+            departmentCode: matchedRoster.dept,
+            roles,
+            courseIds: matchedRoster.assignedCourse ? [matchedRoster.assignedCourse] : [],
+          };
+
+          const token = await createSessionToken(fallbackUser);
+          await setSessionCookie(token);
+
+          let redirectUrl = "/portal/member";
+          if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT")) {
+            redirectUrl = "/system/dashboard";
+          } else if (roles.includes("COURSE_LEADER")) {
+            redirectUrl = "/leader/dashboard";
+          }
+
+          return NextResponse.json({
+            success: true,
+            user: fallbackUser,
+            redirectUrl,
+          });
+        }
       }
 
       return NextResponse.json(
@@ -219,15 +209,21 @@ export async function POST(req: NextRequest) {
       // Non-blocking
     }
 
+    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
+      (m) =>
+        (user.studentId && m.studentId.toLowerCase() === user.studentId.toLowerCase()) ||
+        (user.email && m.email.toLowerCase() === user.email.toLowerCase())
+    );
+
     const sessionPayload = {
       id: user.id,
       email: user.email,
-      fullNameKh: user.fullNameKh,
-      fullNameEn: user.fullNameEn,
-      studentId: user.studentId || user.member?.studentId || null,
-      memberId: user.member?.memberId || null,
+      fullNameKh: user.fullNameKh || rosterMatch?.nameKh || "",
+      fullNameEn: user.fullNameEn || rosterMatch?.nameEn || "",
+      studentId: user.studentId || user.member?.studentId || rosterMatch?.studentId || null,
+      memberId: user.member?.memberId || rosterMatch?.memberId || null,
       profileImage: user.profileImage || null,
-      departmentCode: user.member?.department?.code || null,
+      departmentCode: user.member?.department?.code || rosterMatch?.dept || null,
       roles,
       courseIds,
     };

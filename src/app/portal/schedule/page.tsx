@@ -55,7 +55,7 @@ export default function SchedulePage() {
   }, []);
 
   return (
-    <PortalLayout portalType="portal" userRole="STJ Team Tutor" userName="">
+    <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">

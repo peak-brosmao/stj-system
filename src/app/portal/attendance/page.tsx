@@ -45,11 +45,13 @@ export default function MyAttendancePage() {
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
     fetch(`/api/portal/attendance?course=${courseFilter}&status=${statusFilter}`)
       .then((res) => res.json())
       .then((data) => {
+        if (data.user) setCurrentUser(data.user);
         if (data.records) setRecords(data.records);
         if (data.stats) setStats(data.stats);
         if (data.monthlyStats) setMonthlyStats(data.monthlyStats);
@@ -104,8 +106,8 @@ export default function MyAttendancePage() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName="ពៀក ប្រុសម៉ៅ"
-      userMemberId="STJ033"
+      userName={currentUser?.fullNameKh || ""}
+      userMemberId={currentUser?.memberId || undefined}
     >
       <div className="space-y-6">
         {/* Header Bar */}
@@ -119,7 +121,7 @@ export default function MyAttendancePage() {
               កំណត់ត្រាវត្តមានរបស់ខ្ញុំ (My Attendance Ledger)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              សមាជិក៖ <strong>ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)</strong> • STJ033 • I2-GIC (e20251455)
+              សមាជិក៖ <strong>{currentUser ? `${currentUser.fullNameKh} (${currentUser.fullNameEn})` : "ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)"}</strong> • {currentUser?.memberId || "STJ033"} • {currentUser?.departmentCode || "I2-GIC"} ({currentUser?.studentId || "e20251455"})
             </p>
           </div>
 

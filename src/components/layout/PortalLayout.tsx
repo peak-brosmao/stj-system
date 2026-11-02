@@ -35,6 +35,7 @@ import { LanguageSelector } from "@/components/i18n/LanguageSelector";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
+import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -49,8 +50,8 @@ export function PortalLayout({
   children,
   portalType,
   userEmail = "user@itc.edu.kh",
-  userName = "STJ Academic Staff",
-  userRole = "Administrator",
+  userName = "",
+  userRole = "",
   userMemberId,
 }: PortalLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -58,36 +59,58 @@ export function PortalLayout({
   const router = useRouter();
   const { t } = useI18n();
 
+  const rosterMatch = React.useMemo(() => {
+    return OFFICIAL_STJ_ROSTER.find(
+      (m) =>
+        (userEmail && m.email.toLowerCase() === userEmail.toLowerCase()) ||
+        (userMemberId && m.memberId.toLowerCase() === userMemberId.toLowerCase()) ||
+        (userName && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
+    );
+  }, [userEmail, userMemberId, userName]);
+
+  const initialName = userName && userName !== "STJ Academic Staff"
+    ? userName
+    : rosterMatch?.nameKh || "សមាជិក STJ";
+
+  const initialMemberId = userMemberId || rosterMatch?.memberId;
+  const initialRole = userRole && userRole !== "Administrator"
+    ? userRole
+    : rosterMatch?.role || (portalType === "system" ? "ប្រធាន STJ (President)" : portalType === "leader" ? "ប្រធានក្រុម (Course Leader)" : "សមាជិក STJ (Member)");
+
   const [currentUser, setCurrentUser] = useState({
-    name: userName,
-    role: userRole,
+    name: initialName,
+    role: initialRole,
     email: userEmail,
-    memberId: userMemberId,
+    memberId: initialMemberId,
     avatar: "" as string | undefined,
   });
 
   React.useEffect(() => {
     fetch("/api/portal/profile")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
       .then((data) => {
-        if (data && data.user) {
+        const u = data?.profile || data?.user;
+        if (u) {
           const resolvedRole =
             portalType === "system"
               ? "ប្រធាន STJ (President)"
               : portalType === "leader"
               ? "ប្រធានក្រុម (Course Leader)"
-              : data.member?.role || "សមាជិក STJ (Member)";
+              : u.member?.role || (u.roles?.includes("SUPER_ADMIN") ? "ប្រធាន STJ (President)" : "សមាជិក STJ (Member)");
           setCurrentUser({
-            name: data.user.fullNameKh || userName,
+            name: u.fullNameKh || u.fullNameEn || initialName,
             role: resolvedRole,
-            email: data.user.email || userEmail,
-            memberId: data.member?.memberId || userMemberId,
-            avatar: data.user.profileImage,
+            email: u.email || userEmail,
+            memberId: u.member?.memberId || u.studentId || initialMemberId,
+            avatar: u.profileImage,
           });
         }
       })
       .catch(() => {});
-  }, [portalType, userEmail, userName, userRole, userMemberId]);
+  }, [portalType, userEmail, initialName, initialMemberId]);
 
   const systemNavItems = [
     { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
@@ -241,29 +264,29 @@ export function PortalLayout({
 
         {/* User Card & Sign Out */}
         <div className="p-3 border-t border-border bg-muted/30">
-          <Link href="/portal/profile" className="flex items-center space-x-2.5 px-2 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
+          <Link href="/portal/profile" className="flex items-center space-x-2.5 px-2 py-1.5 rounded-xl hover:bg-muted/60 transition-colors">
             {currentUser.avatar ? (
               <img
                 src={currentUser.avatar}
-                alt={currentUser.name}
-                className="w-8 h-8 rounded-full object-cover ring-1 ring-primary/40 shrink-0"
+                alt={currentUser.name || "User"}
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-primary/40 shrink-0"
               />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/30 shrink-0">
-                {currentUser.name.charAt(0)}
+              <div className="w-9 h-9 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs ring-2 ring-primary/30 shrink-0">
+                {currentUser.name ? currentUser.name.charAt(0) : "U"}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-1">
-                <p className="text-xs font-semibold truncate text-foreground">{currentUser.name}</p>
+                <p className="text-xs font-bold truncate text-foreground">{currentUser.name || "សមាជិក STJ"}</p>
               </div>
               <div className="flex items-center space-x-1 mt-0.5">
                 {currentUser.memberId && (
-                  <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-primary/10 text-primary font-bold border border-primary/20">
+                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-primary/10 text-primary font-bold border border-primary/20">
                     {currentUser.memberId}
                   </span>
                 )}
-                <span className="text-[10px] text-muted-foreground truncate">{currentUser.role}</span>
+                <span className="text-[10px] text-muted-foreground truncate font-medium">{currentUser.role}</span>
               </div>
             </div>
           </Link>

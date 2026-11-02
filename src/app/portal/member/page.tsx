@@ -67,7 +67,7 @@ export default function MemberDashboardPage() {
   return (
     <PortalLayout
       portalType="portal"
-      userRole="STJ Team Tutor"
+      userRole="សមាជិក (Member)"
       userName={u?.fullNameKh || ""}
       userMemberId={u?.memberId || undefined}
       userEmail={u?.email}

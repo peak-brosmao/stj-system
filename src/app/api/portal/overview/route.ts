@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession, getManageableCourseIds } from "@/lib/auth";
 import { calculateAttendanceRate } from "@/lib/utils";
+import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 export const dynamic = "force-dynamic";
 
@@ -40,27 +41,47 @@ export async function GET() {
     const session = await getSession();
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const user = await prisma.user.findUnique({
-      where: { id: session.id },
-      include: {
-        member: {
-          include: {
-            department: true,
-            academicYear: true,
-            enrollments: {
-              include: { course: { include: { leaders: { include: { user: true } } } } },
+    let user = null;
+    try {
+      user = await prisma.user.findFirst({
+        where: {
+          OR: [
+            { id: session.id },
+            ...(session.email ? [{ email: session.email }] : []),
+            ...(session.studentId ? [{ studentId: session.studentId }] : []),
+          ],
+        },
+        include: {
+          member: {
+            include: {
+              department: true,
+              academicYear: true,
+              enrollments: {
+                include: { course: { include: { leaders: { include: { user: true } } } } },
+              },
             },
           },
         },
-      },
-    });
-    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+      });
+    } catch {
+      // Non-blocking
+    }
+
+    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
+      (m) =>
+        (session.studentId && m.studentId.toLowerCase() === session.studentId.toLowerCase()) ||
+        (session.email && m.email.toLowerCase() === session.email.toLowerCase()) ||
+        (user?.studentId && m.studentId.toLowerCase() === user.studentId.toLowerCase()) ||
+        (user?.email && m.email.toLowerCase() === user.email.toLowerCase())
+    );
+
+    if (!user && !rosterMatch) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
 
     // ---------------- Member view ----------------
-    const member = user.member;
+    const member = user?.member;
     let memberView: Record<string, unknown> | null = null;
 
     if (member) {
@@ -243,19 +264,39 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       user: {
-        fullNameKh: user.fullNameKh,
-        fullNameEn: user.fullNameEn,
-        displayName: user.displayName,
-        profileImage: user.profileImage,
-        email: user.email,
-        studentId: member?.studentId || user.studentId,
-        memberId: member?.memberId || null,
-        department: member?.department ? { code: member.department.code, nameKh: member.department.nameKh } : null,
+        fullNameKh: user?.fullNameKh || rosterMatch?.nameKh || session.fullNameKh || "សមាជិក STJ",
+        fullNameEn: user?.fullNameEn || rosterMatch?.nameEn || session.fullNameEn || "",
+        displayName: user?.displayName || rosterMatch?.nameKh || session.fullNameKh || "សមាជិក STJ",
+        profileImage: user?.profileImage || session.profileImage || null,
+        email: user?.email || session.email || rosterMatch?.email || "user@itc.edu.kh",
+        studentId: member?.studentId || user?.studentId || rosterMatch?.studentId || session.studentId,
+        memberId: member?.memberId || rosterMatch?.memberId || session.memberId || null,
+        department: member?.department
+          ? { code: member.department.code, nameKh: member.department.nameKh }
+          : rosterMatch
+          ? { code: rosterMatch.dept, nameKh: rosterMatch.dept }
+          : null,
         academicYear: member?.academicYear ? { code: member.academicYear.code } : null,
-        status: member?.status || user.status,
+        status: member?.status || user?.status || "ACTIVE",
         roles: session.roles,
       },
-      member: memberView,
+      member: memberView || (rosterMatch ? {
+        courses: rosterMatch.assignedCourse ? [{
+          id: rosterMatch.assignedCourse,
+          code: rosterMatch.assignedCourse,
+          slug: rosterMatch.assignedCourse.toLowerCase(),
+          titleKh: rosterMatch.assignedCourse,
+          titleEn: rosterMatch.assignedCourse,
+          leaders: [],
+          totalLessons: 0,
+          rate: 100,
+        }] : [],
+        stats: { present: 0, late: 0, absent: 0, excused: 0, total: 0, rate: 0 },
+        totalLessons: 0,
+        monthly: [],
+        upcoming: [],
+        recent: [],
+      } : null),
       leader: leaderView,
       announcements,
     });
