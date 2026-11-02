@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { calculateAttendanceRate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export async function GET(req: NextRequest) {
             titleEn: dbCourse.titleEn,
             titleFr: dbCourse.titleFr,
             category: dbCourse.category,
-            academicTerm: dbCourse.academicTerm || "2026-2027 Semester 1",
+            academicTerm: dbCourse.academicTerm || "",
             descriptionKh: dbCourse.descriptionKh,
             descriptionEn: dbCourse.descriptionEn,
             leaders: dbCourse.leaders.map((l) => ({
@@ -64,21 +65,50 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Return list of courses from SQLite database (stj.db)
+    // Courses I belong to, read from the SQLite database (stj.db)
+    const me = await prisma.user.findUnique({
+      where: { id: session.id },
+      select: { memberRecordId: true },
+    });
+    const memberId = me?.memberRecordId || "__none__";
+    const isManager = session.roles.some((r) =>
+      ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "STUDENT_ASSOCIATION"].includes(r)
+    );
+
     const dbCourses = await prisma.course.findMany({
-      where: { status: "ACTIVE" },
+      where: {
+        status: "ACTIVE",
+        ...(isManager
+          ? {}
+          : {
+              OR: [
+                { enrollments: { some: { memberId } } },
+                { leaders: { some: { userId: session.id } } },
+              ],
+            }),
+      },
       include: {
         leaders: { include: { user: true } },
         enrollments: true,
-        sessions: true,
+        sessions: {
+          where: { status: { not: "CANCELLED" } },
+          include: { attendance: { where: { memberId } } },
+        },
       },
       orderBy: { code: "asc" },
     });
 
     const courses = dbCourses.map((c) => {
-      const leaderName = c.leaders.length > 0
-        ? `${c.leaders[0].user.fullNameKh} (${c.leaders[0].user.fullNameEn})`
-        : "គណៈដឹកនាំ STJ";
+      const leaderName =
+        c.leaders.length > 0
+          ? `${c.leaders[0].user.fullNameKh} (${c.leaders[0].user.fullNameEn})`
+          : "-";
+
+      const mine = c.sessions.flatMap((s) => s.attendance);
+      const present = mine.filter((r) => r.status === "PRESENT").length;
+      const late = mine.filter((r) => r.status === "LATE").length;
+      const excused = mine.filter((r) => r.status === "EXCUSED").length;
+      const isLeaderHere = c.leaders.some((l) => l.userId === session.id);
 
       return {
         id: c.id,
@@ -87,14 +117,14 @@ export async function GET(req: NextRequest) {
         titleKh: c.titleKh,
         titleEn: c.titleEn,
         category: c.category,
-        academicTerm: c.academicTerm || "2026-2027 Semester 1",
+        academicTerm: c.academicTerm || "",
         description: c.descriptionKh,
         leaderName,
         enrolledMembersCount: c.enrollments.length,
-        totalSessions: Math.max(c.sessions.length, 12),
+        totalSessions: c.sessions.length,
         completedSessions: c.sessions.filter((s) => s.status === "COMPLETED").length,
-        myAttendanceRate: 100,
-        roleInCourse: session.roles.includes("COURSE_LEADER") ? "Course Leader" : "គ្រូបង្រៀនស្ម័គ្រចិត្ត",
+        myAttendanceRate: mine.length > 0 ? calculateAttendanceRate(present, late, mine.length, excused) : null,
+        roleInCourse: isLeaderHere ? "Course Leader" : "Team Tutor",
       };
     });
 

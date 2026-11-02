@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/Badge";
 
 export default function MyProfilePage() {
   const [profile, setProfile] = useState<any>(null);
-  const [completeness, setCompleteness] = useState(85);
+  const [completeness, setCompleteness] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,33 +37,38 @@ export default function MyProfilePage() {
       .then((data) => {
         if (data.profile) {
           setProfile(data.profile);
-          setCompleteness(data.completeness || 85);
+          setCompleteness(data.completeness || 0);
         }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
-  const nameKh = profile?.fullNameKh || "ពាក់ ប្រុសម៉ៅ";
-  const nameEn = profile?.fullNameEn || "PEAK BROSMAO";
-  const displayName = profile?.displayName || "Brosmao";
-  const memberId = profile?.member?.memberId || "STJ033";
-  const studentId = profile?.member?.studentId || "e20251455";
-  const department = profile?.member?.department?.nameKh || "ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង (GIC)";
-  const deptCode = profile?.member?.department?.code || "GIC";
-  const year = profile?.member?.academicYear?.label || "Ingénieur 2ème Année (Year I2)";
-  const phone = profile?.phone || "099661460";
-  const email = profile?.email || "peak.brosmao@itc.edu.kh";
-  const telegram = profile?.telegram || "@brosmao_peak";
-  const address = profile?.address || "Russian Federation Blvd, Toul Kork, Phnom Penh";
-  const bio = profile?.bio || "និស្សិតវិស្វកម្មព័ត៌មានវិទ្យា (GIC) ជំនាន់ I2 នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។ មានចំណាប់អារម្មណ៍លើ Software Engineering, Systems Architecture និង Peer Mentorship។";
+  const nameKh = profile?.fullNameKh || "";
+  const nameEn = profile?.fullNameEn || "";
+  const displayName = profile?.displayName || "-";
+  const isMember = !!profile?.member;
+  const memberId = profile?.member?.memberId || "-";
+  const studentId = profile?.member?.studentId || profile?.studentId || "-";
+  const department = profile?.member?.department?.nameKh || (isMember ? "-" : "គណៈគ្រប់គ្រងប្រព័ន្ធ (Administration)");
+  const deptCode = profile?.member?.department?.code || (isMember ? "-" : "STJ Admin");
+  const year = profile?.member?.academicYear?.label || (isMember ? "-" : "-");
+  const phone = profile?.phone || "-";
+  const email = profile?.email || "";
+  const telegram = profile?.telegram || "-";
+  const address = profile?.address || "-";
+  const bio = profile?.bio || "មិនទាន់មានជីវប្រវត្តិសង្ខេបនៅឡើយ (No biography added yet)";
+  const gender = profile?.gender === "M" ? "ប្រុស (Male)" : profile?.gender === "F" ? "ស្រី (Female)" : "-";
+  const userRole = profile?.userRoles?.[0]?.role?.name || (isMember ? "STJ Member" : "Administrator");
+
+  const enrolledCourses = profile?.member?.enrollments?.map((e: any) => `${e.course?.code} - ${e.course?.titleKh}`).join(", ");
 
   return (
     <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
+      portalType={profile?.userRoles?.some((r: any) => r.role?.name === "SUPER_ADMIN" || r.role?.name === "STJ_ADMIN") ? "system" : "portal"}
+      userRole={userRole}
       userName={nameKh}
-      userMemberId={memberId}
+      userMemberId={isMember ? memberId : undefined}
       userEmail={email}
     >
       <div className="space-y-6 max-w-5xl mx-auto">
@@ -77,32 +82,47 @@ export default function MyProfilePage() {
                   {profile?.profileImage ? (
                     <Image
                       src={profile.profileImage}
-                      alt={nameEn}
+                      alt={nameEn || "Avatar"}
                       fill
                       className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary">
-                      {nameEn.charAt(0)}
+                      {nameEn ? nameEn.charAt(0) : "U"}
                     </div>
                   )}
                 </div>
                 <div className="text-center sm:text-left space-y-1">
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">{nameKh}</h1>
-                    <span className="text-sm font-semibold text-muted-foreground font-sans">({nameEn})</span>
-                    <Badge variant="success">សកម្ម (Active)</Badge>
+                    {nameEn && <span className="text-sm font-semibold text-muted-foreground font-sans">({nameEn})</span>}
+                    <Badge variant={profile?.status === "ACTIVE" ? "success" : "info"}>
+                      {profile?.status === "ACTIVE" ? "សកម្ម (Active)" : profile?.status || "Active"}
+                    </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    ឈ្មោះហៅក្រៅ: <strong className="text-foreground">{displayName}</strong> • អត្តសញ្ញាណនិស្សិត: <strong className="text-foreground font-mono">{studentId}</strong>
+                    ឈ្មោះពេញក្រៅ: <strong className="text-foreground">{displayName}</strong>
+                    {isMember && (
+                      <>
+                        {" "}• អត្តសញ្ញាណនិស្សិត: <strong className="text-foreground font-mono">{studentId}</strong>
+                      </>
+                    )}
                   </p>
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary font-bold border border-primary/20">
-                      STJ Member: {memberId}
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium">
-                      ដេប៉ាតឺម៉ង់: {deptCode} ({year})
-                    </span>
+                    {isMember ? (
+                      <>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/10 text-primary font-bold border border-primary/20">
+                          STJ Member: {memberId}
+                        </span>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium">
+                          ដេប៉ាតឺម៉ង់: {deptCode} ({year})
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary font-bold border border-primary/20">
+                        {userRole}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -134,7 +154,7 @@ export default function MyProfilePage() {
                 <span className="text-xs font-bold text-foreground">កម្រិតនៃការបំពេញព័ត៌មាន (Profile Completeness): {completeness}%</span>
               </div>
               <p className="text-xs text-muted-foreground">
-                ព័ត៌មានផ្ទាល់ខ្លួនត្រូវបានបំពេញយ៉ាងល្អប្រសើរ។ ព័ត៌មានស្រេចចិត្តមិនត្រូវបានទាមទារជាកាតព្វកិច្ចឡើយ។
+                ព័ត៌មានផ្ទាល់ខ្លួនត្រូវបានបំពេញដោយស្វ័យប្រវត្តិ។ ព័ត៌មានស្របច្បាប់ត្រូវទាមទារការបញ្ជាក់ផ្លូវការ។
               </p>
             </div>
             <div className="w-full sm:w-48 bg-muted rounded-full h-2.5 overflow-hidden">
@@ -163,12 +183,12 @@ export default function MyProfilePage() {
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
                 <div>
-                  <span className="text-muted-foreground text-[11px]">គោត្តនាម-នាម (ខ្មែរ):</span>
-                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameKh}</p>
+                  <span className="text-muted-foreground text-[11px]">ឈ្មោះពេញ (ខ្មែរ):</span>
+                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameKh || "-"}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground text-[11px]">FullName (English):</span>
-                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameEn}</p>
+                  <p className="font-semibold text-foreground text-sm mt-0.5">{nameEn || "-"}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
@@ -178,7 +198,7 @@ export default function MyProfilePage() {
                 </div>
                 <div>
                   <span className="text-muted-foreground text-[11px]">ភេទ (Gender):</span>
-                  <p className="font-medium text-foreground mt-0.5">ប្រុស (Male)</p>
+                  <p className="font-medium text-foreground mt-0.5">{gender}</p>
                 </div>
               </div>
               <div>
@@ -208,7 +228,7 @@ export default function MyProfilePage() {
                   <Mail className="w-4 h-4 text-primary" />
                   <div>
                     <span className="text-[11px] text-muted-foreground">អ៊ីមែលស្ថាប័ន (Institutional Email):</span>
-                    <p className="font-medium text-foreground">{email}</p>
+                    <p className="font-medium text-foreground">{email || "-"}</p>
                   </div>
                 </div>
                 <Badge variant="success" className="text-[10px]">ផ្ទៀងផ្ទាត់រួច</Badge>
@@ -242,53 +262,69 @@ export default function MyProfilePage() {
         </div>
 
         {/* Section C: Official Academic Information (Read-only with Correction Desk) */}
-        <Card className="border-border">
-          <CardHeader className="pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                <GraduationCap className="w-4 h-4 text-primary" />
-                <span>ព័ត៌មានសិក្សាផ្លូវការ (Official Academic Records)</span>
-              </CardTitle>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                កំណត់ត្រាផ្លូវការរបស់វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។ ការកែប្រែទាមទារការអនុម័តពីគណៈគ្រប់គ្រង STJ។
-              </p>
-            </div>
-            <Link href="/portal/profile/edit#correction-request">
-              <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
-                <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>ស្នើសុំកែប្រែទិន្នន័យផ្លូវការ</span>
-              </Button>
-            </Link>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border border-border">
+        {isMember ? (
+          <Card className="border-border">
+            <CardHeader className="pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <span className="text-[11px] text-muted-foreground">លេខកូដសមាជិក STJ:</span>
-                <p className="font-bold text-primary font-mono text-sm mt-0.5">{memberId}</p>
+                <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                  <GraduationCap className="w-4 h-4 text-primary" />
+                  <span>ព័ត៌មានសិក្សាផ្លូវការ (Official Academic Records)</span>
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  កំណត់ត្រាផ្លូវការរបស់វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។ ការកែប្រែទាមទារការស្នើសុំ និងការយល់ព្រមពីគណៈគ្រប់គ្រង STJ។
+                </p>
               </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground">លេខអត្តសញ្ញាណនិស្សិត:</span>
-                <p className="font-bold text-foreground font-mono text-sm mt-0.5">{studentId}</p>
+              <Link href="/portal/profile/edit#correction-request">
+                <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
+                  <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                  <span>ស្នើសុំកែប្រែទិន្នន័យផ្លូវការ</span>
+                </Button>
+              </Link>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border border-border">
+                <div>
+                  <span className="text-[11px] text-muted-foreground">លេខកូដសមាជិក STJ:</span>
+                  <p className="font-bold text-primary font-mono text-sm mt-0.5">{memberId}</p>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground">អត្តសញ្ញាណនិស្សិត:</span>
+                  <p className="font-bold text-foreground font-mono text-sm mt-0.5">{studentId}</p>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground">ដេប៉ាតឺម៉ង់ (Department):</span>
+                  <p className="font-semibold text-foreground text-xs mt-0.5">{deptCode} ({department})</p>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground">កម្រិតសិក្សា (Year):</span>
+                  <p className="font-semibold text-foreground text-xs mt-0.5">{year}</p>
+                </div>
               </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground">ដេប៉ាតឺម៉ង់ (Department):</span>
-                <p className="font-semibold text-foreground text-xs mt-0.5">{deptCode}</p>
-              </div>
-              <div>
-                <span className="text-[11px] text-muted-foreground">កម្រិតសិក្សា (Year):</span>
-                <p className="font-semibold text-foreground text-xs mt-0.5">{year}</p>
-              </div>
-            </div>
 
-            <div className="mt-4 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
-              <div className="space-y-1">
-                <span className="font-semibold text-foreground">មុខវិជ្ជាបានចុះឈ្មោះក្នុងប្រព័ន្ធ (Enrolled Courses):</span>
-                <p className="text-muted-foreground">PROG101 - Programming & Algorithmic Thinking, MATH101 - Mathematics</p>
-              </div>
-              <span className="text-[11px] text-muted-foreground shrink-0">កាលបរិច្ឆេទចុះឈ្មោះ៖ ១៥ កញ្ញា ២០២៦</span>
-            </div>
-          </CardContent>
-        </Card>
+              {enrolledCourses && (
+                <div className="mt-4 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                  <div className="space-y-1">
+                    <span className="font-semibold text-foreground">មុខវិជ្ជាទទួលខុសត្រូវបង្រៀន (Enrolled Course Team):</span>
+                    <p className="text-muted-foreground">{enrolledCourses}</p>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground shrink-0">ឆ្នាំសិក្សា ២០២៦-២០២៧</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="border-border">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+                <Shield className="w-4 h-4 text-primary" />
+                <span>តួនាទីគ្រប់គ្រងប្រព័ន្ធ (System Administrative Role)</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs text-muted-foreground">
+              គណនីនេះជាគណនីថ្នាក់ដឹកនាំ STJ (STJ Leadership Account)។
+            </CardContent>
+          </Card>
+        )}
 
         {/* Section D: Account & Security Overview */}
         <Card>
@@ -307,15 +343,17 @@ export default function MyProfilePage() {
               <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">សកម្ម (Active)</p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">ភាសាដែលពេញចិត្ត:</span>
+              <span className="text-[11px] text-muted-foreground">ភាសាពេញចិត្ត:</span>
               <p className="font-medium text-foreground mt-0.5">ភាសាខ្មែរ (km)</p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">ចូលប្រើប្រាស់ចុងក្រោយ:</span>
-              <p className="font-medium text-muted-foreground mt-0.5">ទើបតែពេលនេះ</p>
+              <span className="text-[11px] text-muted-foreground">ការចូលប្រើចុងក្រោយ:</span>
+              <p className="font-medium text-muted-foreground mt-0.5">
+                {profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString("km-KH") : "ថ្មីៗនេះ"}
+              </p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">ការការពារ ២ ជាន់ (2FA):</span>
+              <span className="text-[11px] text-muted-foreground">ការផ្ទៀងផ្ទាត់ ២ ជំហាន (2FA):</span>
               <p className="font-medium text-muted-foreground mt-0.5">មិនទាន់បើក (Optional)</p>
             </div>
           </CardContent>
@@ -324,4 +362,3 @@ export default function MyProfilePage() {
     </PortalLayout>
   );
 }
-

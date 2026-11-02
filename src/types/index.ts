@@ -1,6 +1,12 @@
 export type Locale = "km" | "en" | "fr";
 
-export type RoleName = "SUPER_ADMIN" | "STJ_ADMIN" | "COURSE_LEADER" | "MEMBER";
+export type RoleName =
+  | "SUPER_ADMIN"
+  | "STJ_PRESIDENT"
+  | "STJ_ADMIN"
+  | "STUDENT_ASSOCIATION"
+  | "COURSE_LEADER"
+  | "MEMBER";
 
 export type AttendanceStatus = "PRESENT" | "LATE" | "ABSENT" | "EXCUSED";
 

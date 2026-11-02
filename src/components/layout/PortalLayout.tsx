@@ -57,6 +57,37 @@ export function PortalLayout({
   const router = useRouter();
   const { t } = useI18n();
 
+  const [currentUser, setCurrentUser] = useState({
+    name: userName,
+    role: userRole,
+    email: userEmail,
+    memberId: userMemberId,
+    avatar: "" as string | undefined,
+  });
+
+  React.useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.user) {
+          const resolvedRole =
+            portalType === "system"
+              ? "ប្រធាន STJ (President)"
+              : portalType === "leader"
+              ? "ប្រធានក្រុម (Course Leader)"
+              : data.member?.role || "សមាជិក STJ (Member)";
+          setCurrentUser({
+            name: data.user.fullNameKh || userName,
+            role: resolvedRole,
+            email: data.user.email || userEmail,
+            memberId: data.member?.memberId || userMemberId,
+            avatar: data.user.profileImage,
+          });
+        }
+      })
+      .catch(() => {});
+  }, [portalType, userEmail, userName, userRole, userMemberId]);
+
   const systemNavItems = [
     { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
     { href: "/system/attendance", label: "ស្រង់វត្តមាន (Attendance)", icon: CalendarCheck },
@@ -213,20 +244,28 @@ export function PortalLayout({
         {/* User Card & Sign Out */}
         <div className="p-3 border-t border-border bg-muted/30">
           <Link href="/portal/profile" className="flex items-center space-x-2.5 px-2 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/30">
-              {userName.charAt(0)}
-            </div>
+            {currentUser.avatar ? (
+              <img
+                src={currentUser.avatar}
+                alt={currentUser.name}
+                className="w-8 h-8 rounded-full object-cover ring-1 ring-primary/40 shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs ring-1 ring-primary/30 shrink-0">
+                {currentUser.name.charAt(0)}
+              </div>
+            )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-1">
-                <p className="text-xs font-semibold truncate text-foreground">{userName}</p>
+                <p className="text-xs font-semibold truncate text-foreground">{currentUser.name}</p>
               </div>
               <div className="flex items-center space-x-1 mt-0.5">
-                {userMemberId && (
+                {currentUser.memberId && (
                   <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-primary/10 text-primary font-bold border border-primary/20">
-                    {userMemberId}
+                    {currentUser.memberId}
                   </span>
                 )}
-                <span className="text-[10px] text-muted-foreground truncate">{userRole}</span>
+                <span className="text-[10px] text-muted-foreground truncate">{currentUser.role}</span>
               </div>
             </div>
           </Link>
@@ -274,7 +313,7 @@ export function PortalLayout({
               </Link>
             )}
             <span className="text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium border border-primary/20">
-              {userRole}
+              {currentUser.role}
             </span>
             <div className="h-4 w-px bg-border" />
             <Button

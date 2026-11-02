@@ -20,10 +20,11 @@ import { Badge } from "@/components/ui/Badge";
 
 function CorrectionRequestsContent() {
   const searchParams = useSearchParams();
-  const prefilledRecordId = searchParams.get("recordId") || "rec-3";
-  const prefilledStatus = searchParams.get("status") || "LATE";
+  const prefilledRecordId = searchParams.get("recordId") || "";
+  const prefilledStatus = searchParams.get("status") || "";
 
   const [corrections, setCorrections] = useState<any[]>([]);
+  const [myRecords, setMyRecords] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -47,10 +48,32 @@ function CorrectionRequestsContent() {
 
   useEffect(() => {
     loadCorrections();
+    // Real attendance records recorded by my Course Leader
+    fetch("/api/portal/attendance")
+      .then((res) => res.json())
+      .then((data) => {
+        const list = data.records || [];
+        setMyRecords(list);
+        if (!prefilledRecordId && list[0]) {
+          setRecordId(list[0].id);
+          setPreviousStatus(list[0].status);
+        }
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const rec = myRecords.find((r) => r.id === recordId);
+    if (rec) setPreviousStatus(rec.status);
+  }, [recordId, myRecords]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!recordId) {
+      alert("មិនទាន់មានកំណត់ត្រាវត្តមានសម្រាប់ស្នើសុំកែតម្រូវឡើយ (No attendance record to correct yet)");
+      return;
+    }
     setSubmitting(true);
     setSuccessMsg(null);
 
@@ -96,7 +119,7 @@ function CorrectionRequestsContent() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName="ពាក់ ប្រុសម៉ៅ"
+      userName="ពៀក ប្រុសម៉ៅ"
       userMemberId="STJ033"
     >
       <div className="space-y-6 max-w-4xl mx-auto">
@@ -204,11 +227,18 @@ function CorrectionRequestsContent() {
                   <select
                     value={recordId}
                     onChange={(e) => setRecordId(e.target.value)}
+                    disabled={myRecords.length === 0}
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                   >
-                    <option value="rec-3">វគ្គទី១៖ Linear Algebra - MATH101 (កត់ត្រា៖ LATE)</option>
-                    <option value="rec-1">វគ្គទី១៖ Data Structures - PROG101 (កត់ត្រា៖ PRESENT)</option>
-                    <option value="rec-5">វគ្គទី២៖ Differential Equations - MATH101 (កត់ត្រា៖ EXCUSED)</option>
+                    {myRecords.length === 0 ? (
+                      <option value="">ពុំទាន់មានកំណត់ត្រាវត្តមានដែលបានកត់ត្រានៅឡើយទេ (No attendance records yet)</option>
+                    ) : (
+                      myRecords.map((r) => (
+                        <option key={r.id} value={r.id}>
+                          {r.session?.title} - {r.session?.course?.code} (កត់ត្រា៖ {r.status})
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
 

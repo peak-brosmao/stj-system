@@ -100,16 +100,57 @@ export async function requireRole(allowedRoles: RoleName[]): Promise<SessionUser
   return session;
 }
 
+/** Roles with full management power over teams, schedules, sessions and attendance. */
+export const FULL_MANAGER_ROLES: RoleName[] = ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN"];
+
 export async function requireAdmin(): Promise<SessionUser> {
-  return requireRole(["SUPER_ADMIN", "STJ_ADMIN"]);
+  return requireRole(FULL_MANAGER_ROLES);
 }
 
 /**
- * Strict rule: ONLY Super Admin or STJ Administrator can mark, edit, or delete attendance.
- * Course Leaders are strictly forbidden.
+ * Only the STJ President (and system admins) may create academic years, assign
+ * course leaders, assign team members and set weekly schedules.
  */
+export async function requirePresident(): Promise<SessionUser> {
+  return requireRole(FULL_MANAGER_ROLES);
+}
+
+/**
+ * Attendance and lesson management: STJ President / admins (any course) and
+ * Course Leaders (only their own course, see getManageableCourseIds).
+ */
+export async function requireTeamManager(): Promise<SessionUser> {
+  return requireRole([...FULL_MANAGER_ROLES, "COURSE_LEADER"]);
+}
+
+/** Kept for backwards compatibility with older routes. */
 export async function requireAttendanceAdmin(): Promise<SessionUser> {
-  return requireRole(["SUPER_ADMIN", "STJ_ADMIN"]);
+  return requireTeamManager();
+}
+
+export function isFullManager(user: SessionUser): boolean {
+  return user.roles.some((r) => FULL_MANAGER_ROLES.includes(r));
+}
+
+/**
+ * Returns null when the user can manage every course (President/admin),
+ * otherwise the list of course ids the user leads (read from the database).
+ */
+export async function getManageableCourseIds(user: SessionUser): Promise<string[] | null> {
+  if (isFullManager(user)) return null;
+  const rows = await prisma.courseLeader.findMany({
+    where: { userId: user.id },
+    select: { courseId: true },
+  });
+  return rows.map((r) => r.courseId);
+}
+
+/** Throws FORBIDDEN unless the user may manage the given course. */
+export async function assertCourseAccess(user: SessionUser, courseId: string): Promise<void> {
+  const ids = await getManageableCourseIds(user);
+  if (ids !== null && !ids.includes(courseId)) {
+    throw new Error("FORBIDDEN: You can only manage your own course");
+  }
 }
 
 /**

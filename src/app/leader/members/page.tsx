@@ -172,18 +172,19 @@ export default function LeaderMembersPage() {
                   <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់ & កម្រិត</th>
                   <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
                   <th className="py-3 px-4 font-semibold text-center">អត្រាវត្តមាន</th>
+                  <th className="py-3 px-4 font-semibold text-right">កំណត់ពាក្យសម្ងាត់</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-muted-foreground text-xs">
+                    <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
                       កំពុងទាញយកទិន្នន័យពី SQLite Database (stj.db)...
                     </td>
                   </tr>
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-muted-foreground text-xs">
+                    <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
                       រកមិនឃើញទិន្នន័យសមាជិកឡើយ។
                     </td>
                   </tr>
@@ -208,6 +209,30 @@ export default function LeaderMembersPage() {
                         <Badge variant="success" className="text-[10px]">
                           100%
                         </Badge>
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={async () => {
+                            if (!confirm(`តើអ្នកពិតជាចង់កំណត់ពាក្យសម្ងាត់ឡើងវិញសម្រាប់សមាជិក ${m.fullNameKh} មែនទេ?`)) return;
+                            try {
+                              const res = await fetch("/api/system/members/reset-password", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ memberId: m.id }),
+                              });
+                              const data = await res.json();
+                              if (!res.ok) throw new Error(data.error || "Reset failed");
+                              alert(`ពាក្យសម្ងាត់របស់ ${m.fullNameKh} ត្រូវបានកំណត់ឡើងវិញជោគជ័យ: ${data.defaultPassword}`);
+                            } catch (err: unknown) {
+                              alert(err instanceof Error ? err.message : "Error resetting password");
+                            }
+                          }}
+                          className="h-7 text-[11px] px-2 text-primary hover:bg-primary/10"
+                        >
+                          Reset Pass
+                        </Button>
                       </td>
                     </tr>
                   ))

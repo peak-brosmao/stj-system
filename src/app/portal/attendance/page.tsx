@@ -32,14 +32,16 @@ import * as XLSX from "xlsx";
 export default function MyAttendancePage() {
   const [records, setRecords] = useState<any[]>([]);
   const [stats, setStats] = useState({
-    total: 5,
-    present: 4,
-    late: 1,
+    total: 0,
+    present: 0,
+    late: 0,
     absent: 0,
     excused: 0,
-    rate: 100,
+    rate: 0,
   });
   const [monthlyStats, setMonthlyStats] = useState<any[]>([]);
+  const [upcoming, setUpcoming] = useState<any[]>([]);
+  const [pending, setPending] = useState<any[]>([]);
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
@@ -51,6 +53,8 @@ export default function MyAttendancePage() {
         if (data.records) setRecords(data.records);
         if (data.stats) setStats(data.stats);
         if (data.monthlyStats) setMonthlyStats(data.monthlyStats);
+        setUpcoming(data.upcoming || []);
+        setPending(data.pending || []);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -100,7 +104,7 @@ export default function MyAttendancePage() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName="ពាក់ ប្រុសម៉ៅ"
+      userName="ពៀក ប្រុសម៉ៅ"
       userMemberId="STJ033"
     >
       <div className="space-y-6">
@@ -115,7 +119,7 @@ export default function MyAttendancePage() {
               កំណត់ត្រាវត្តមានរបស់ខ្ញុំ (My Attendance Ledger)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              សមាជិក៖ <strong>ពាក់ ប្រុសម៉ៅ (PEAK BROSMAO)</strong> • STJ033 • I2-GIC (e20251455)
+              សមាជិក៖ <strong>ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)</strong> • STJ033 • I2-GIC (e20251455)
             </p>
           </div>
 
@@ -223,6 +227,55 @@ export default function MyAttendancePage() {
           </CardContent>
         </Card>
 
+        {/* Lessons created by the Leader Team (read-only) */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold">
+              មេរៀនដែលបានរៀបចំដោយប្រធានក្រុម (Lessons set by your Leader Team)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {upcoming.length === 0 && pending.length === 0 && (
+              <p className="text-xs text-muted-foreground">
+                ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ។ មេរៀននឹងបង្ហាញនៅទីនេះភ្លាមៗនៅពេល Leader បានបង្កើតវា។ (No lessons have been
+                created yet. They appear here as soon as your Leader creates them.)
+              </p>
+            )}
+            {upcoming.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground">មេរៀនខាងមុខ (Upcoming)</p>
+                {upcoming.map((l: any) => (
+                  <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
+                    <div>
+                      <p className="font-semibold text-foreground">{l.title}</p>
+                      <p className="text-muted-foreground">
+                        {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
+                      </p>
+                    </div>
+                    <Badge variant="info">មិនទាន់បង្រៀន (Not taught yet)</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+            {pending.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground">មេរៀនរង់ចាំការស្រង់វត្តមាន (Awaiting attendance)</p>
+                {pending.map((l: any) => (
+                  <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
+                    <div>
+                      <p className="font-semibold text-foreground">{l.title}</p>
+                      <p className="text-muted-foreground">
+                        {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
+                      </p>
+                    </div>
+                    <Badge variant="warning">មិនទាន់ស្រង់វត្តមាន (Not marked yet)</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Records Table */}
         <Card>
           <CardHeader className="pb-3">
@@ -275,6 +328,13 @@ export default function MyAttendancePage() {
                       </td>
                     </tr>
                   ))}
+                  {records.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="py-6 px-3 text-center text-muted-foreground">
+                        ពុំទាន់មានកំណត់ត្រាវត្តមានដែលបានកត់ត្រានៅឡើយទេ (No attendance recorded yet)
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

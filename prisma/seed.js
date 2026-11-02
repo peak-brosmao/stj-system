@@ -4,338 +4,98 @@ const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding STJ 2026-2027 Official ITC Data into SQLite (.db file)...");
+  console.log("Seeding STJ SQLite Database (Academic Year 2026-2027)...");
 
-  // 1. Roles
-  const superAdminRole = await prisma.role.upsert({
-    where: { name: "SUPER_ADMIN" },
-    update: {},
-    create: {
-      name: "SUPER_ADMIN",
-      description: "គណៈគ្រប់គ្រង STJ កណ្តាល នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា",
-      isSystem: true,
-    },
+  // Clean up obsolete generic admin account if it exists
+  await prisma.user.deleteMany({
+    where: { email: "admin@itc.edu.kh" },
   });
 
-  const stjAdminRole = await prisma.role.upsert({
-    where: { name: "STJ_ADMIN" },
-    update: {},
-    create: {
-      name: "STJ_ADMIN",
-      description: "គណៈកម្មាធិការសមាគមនិស្សិត និងអ្នកសម្របសម្រួល STJ",
-      isSystem: true,
-    },
-  });
-
-  const courseLeaderRole = await prisma.role.upsert({
-    where: { name: "COURSE_LEADER" },
-    update: {},
-    create: {
-      name: "COURSE_LEADER",
-      description: "ប្រធានក្រុមមុខវិជ្ជា (Programming, Math, Physics, Chemistry) - សិទ្ធិត្រឹមតែមើលវត្តមាន និងបង្កើត Share Link",
-      isSystem: true,
-    },
-  });
-
-  const memberRole = await prisma.role.upsert({
-    where: { name: "MEMBER" },
-    update: {},
-    create: {
-      name: "MEMBER",
-      description: "សមាជិកនិស្សិតស្ម័គ្រចិត្ត STJ",
-      isSystem: true,
-    },
-  });
-
-  // 1b. New roles — STJ President & Student Association Committee
-  const stjPresidentRole = await prisma.role.upsert({
-    where: { name: "STJ_PRESIDENT" },
-    update: {},
-    create: {
-      name: "STJ_PRESIDENT",
-      description: "ប្រធាន STJ — គ្រប់គ្រងទាំងអស់: ក្រុម, កាលវិភាគ, ស្ថាបនិក, ដំណើរការប្រព័ន្ធ",
-      isSystem: true,
-    },
-  });
-
-  const studentAssocRole = await prisma.role.upsert({
-    where: { name: "STUDENT_ASSOCIATION" },
-    update: {},
-    create: {
-      name: "STUDENT_ASSOCIATION",
-      description: "ប្រធានសមាគមនិស្សិត — សម្របសម្រួល មើលរបាយការណ៍ ជំនួយការប្រព័ន្ធ STJ",
-      isSystem: true,
-    },
-  });
-
-  // 2. Permissions
-  const permissionsList = [
-    { code: "attendance:mark", module: "attendance", description: "ស្រង់ និងរក្សាទុកវត្តមានផ្លូវការ" },
-    { code: "attendance:read", module: "attendance", description: "មើលកំណត់ត្រាវត្តមាន" },
-    { code: "attendance:correct", module: "attendance", description: "ពិនិត្យ និងអនុម័តសំណើកែតម្រូវវត្តមាន" },
-    { code: "members:manage", module: "members", description: "គ្រប់គ្រងបញ្ជីសមាជិក (CRUD)" },
-    { code: "courses:manage", module: "courses", description: "គ្រប់គ្រងមុខវិជ្ជា និងប្រធានក្រុម" },
-    { code: "sessions:manage", module: "sessions", description: "បង្កើត និងរៀបចំវគ្គបង្រៀន" },
-    { code: "share:create", module: "share", description: "បង្កើតតំណភ្ជាប់ចែករំលែកវត្តមាន" },
-    { code: "reports:view", module: "reports", description: "ទាញយករបាយការណ៍ និងស្ថិតិ" },
-    { code: "system:settings", module: "system", description: "គ្រប់គ្រងការកំណត់ប្រព័ន្ធ និង Audit Logs" },
+  // 1. Roles Definition
+  const roles = [
+    { name: "SUPER_ADMIN", description: "អភិបាលជាន់ខ្ពស់ប្រព័ន្ធ (STJ Top Authority / President)" },
+    { name: "STJ_PRESIDENT", description: "ប្រធានក្រុមដឹកនាំ STJ (Overall STJ President)" },
+    { name: "STJ_ADMIN", description: "គណៈគ្រប់គ្រង STJ និងតំណាងសមាគមនិស្សិត" },
+    { name: "STUDENT_ASSOCIATION", description: "គណៈកម្មាធិការសមាគមនិស្សិត (ITC Student Association)" },
+    { name: "COURSE_LEADER", description: "ប្រធានក្រុមមុខវិជ្ជាបង្រៀន (Course Team Leader)" },
+    { name: "MEMBER", description: "សមាជិកបង្រៀនស្ម័គ្រចិត្ត STJ (Senior Tutor Member)" },
   ];
 
-  for (const perm of permissionsList) {
-    const p = await prisma.permission.upsert({
-      where: { code: perm.code },
-      update: {},
-      create: perm,
+  const rolesMap = {};
+  for (const r of roles) {
+    const role = await prisma.role.upsert({
+      where: { name: r.name },
+      update: { description: r.description },
+      create: r,
     });
-
-    // Super Admin: All permissions
-    await prisma.rolePermission.upsert({
-      where: { roleId_permissionId: { roleId: superAdminRole.id, permissionId: p.id } },
-      update: {},
-      create: { roleId: superAdminRole.id, permissionId: p.id },
-    });
-
-    // STJ Admin: All except system:settings
-    if (perm.code !== "system:settings") {
-      await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: stjAdminRole.id, permissionId: p.id } },
-        update: {},
-        create: { roleId: stjAdminRole.id, permissionId: p.id },
-      });
-    }
-
-    // STJ President: All permissions (same as Super Admin)
-    await prisma.rolePermission.upsert({
-      where: { roleId_permissionId: { roleId: stjPresidentRole.id, permissionId: p.id } },
-      update: {},
-      create: { roleId: stjPresidentRole.id, permissionId: p.id },
-    });
-
-    // Student Association: attendance:read, members:manage, courses:manage, sessions:manage, share:create, reports:view
-    if (["attendance:read", "members:manage", "courses:manage", "sessions:manage", "share:create", "reports:view"].includes(perm.code)) {
-      await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: studentAssocRole.id, permissionId: p.id } },
-        update: {},
-        create: { roleId: studentAssocRole.id, permissionId: p.id },
-      });
-    }
-
-    // Course Leader: Mark attendance for own course + read + share + reports
-    if (["attendance:mark", "attendance:read", "share:create", "reports:view"].includes(perm.code)) {
-      await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId: courseLeaderRole.id, permissionId: p.id } },
-        update: {},
-        create: { roleId: courseLeaderRole.id, permissionId: p.id },
-      });
-    }
+    rolesMap[r.name] = role.id;
   }
 
-  // 3. Departments (9 Official ITC Engineering Departments)
-  const departmentsData = [
-    { code: "GIC", nameKh: "ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង", nameEn: "Department of Information and Communication Engineering", nameFr: "Génie Informatique et Communication" },
-    { code: "GTI", nameKh: "ដេប៉ាតឺម៉ង់ បច្ចេកវិទ្យាព័ត៌មាន", nameEn: "Department of Information Technology", nameFr: "Génie Télécommunications et Informatique" },
-    { code: "AMS", nameKh: "ដេប៉ាតឺម៉ង់ គណិតវិទ្យាអនុវត្ត និងស្ថិតិ", nameEn: "Department of Applied Mathematics and Statistics", nameFr: "Mathématiques Appliquées et Statistiques" },
-    { code: "GIM", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មឧស្សាហកម្ម និងមេកានិក", nameEn: "Department of Industrial and Mechanical Engineering", nameFr: "Génie Industriel et Mécanique" },
-    { code: "GCI", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មសំណង់ស៊ីវិល", nameEn: "Department of Civil Engineering", nameFr: "Génie Civil" },
-    { code: "GTR", nameKh: "ដេប៉ាតឺម៉ង់ ទូរគមនាគមន៍ និងបណ្តាញ", nameEn: "Department of Telecommunication and Network", nameFr: "Génie Télécommunications et Réseaux" },
-    { code: "GEE", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មអគ្គិសនី និងថាមពល", nameEn: "Department of Electrical and Energy Engineering", nameFr: "Génie Électrique et Énergétique" },
-    { code: "GAR", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មជនបទ", nameEn: "Department of Rural Engineering", nameFr: "Génie Rural" },
-    { code: "GCA", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មសំណង់ស៊ីវិល និងក្សេត្រសាស្រ្ត", nameEn: "Department of Civil Engineering and Agronomy", nameFr: "Génie Civil et Agronomie" },
+  // 2. Core Permissions
+  const permissions = [
+    { code: "attendance:mark", module: "attendance", description: "ស្រង់វត្តមានសមាជិកក្នុងក្រុម" },
+    { code: "attendance:read", module: "attendance", description: "មើលកំណត់ត្រាវត្តមាន" },
+    { code: "attendance:correct", module: "attendance", description: "ស្នើសុំ ឬអនុម័តការកែតម្រូវវត្តមាន" },
+    { code: "members:manage", module: "members", description: "គ្រប់គ្រង និងចាត់ចែងសមាជិក" },
+    { code: "courses:manage", module: "courses", description: "គ្រប់គ្រងមុខវិជ្ជា និងមេរៀន" },
+    { code: "sessions:manage", module: "sessions", description: "បង្កើត និងកែសម្រួលវគ្គបង្រៀន" },
+    { code: "share_links:manage", module: "share_links", description: "បង្កើត និងគ្រប់គ្រងតំណភ្ជាប់ចែករំលែក" },
+    { code: "reports:view", module: "reports", description: "មើលរបាយការណ៍ និងស្ថិតិទូទៅ" },
+    { code: "system:admin", module: "system", description: "គ្រប់គ្រងការកំណត់ប្រព័ន្ធទាំងមូល" },
+    { code: "leadership:handover", module: "system", description: "ប្រគល់សិទ្ធិដឹកនាំ STJ ទៅប្រធានអាណត្តិថ្មី" },
+  ];
+
+  for (const p of permissions) {
+    await prisma.permission.upsert({
+      where: { code: p.code },
+      update: { description: p.description },
+      create: p,
+    });
+  }
+
+  // 3. Departments
+  const departments = [
+    { code: "GIC", nameKh: "ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង", nameEn: "Information and Communication Engineering", nameFr: "Génie Informatique et Communication" },
+    { code: "AMS", nameKh: "ដេប៉ាតឺម៉ង់ គណិតវិទ្យាអនុវត្ត និងស្ថិតិ", nameEn: "Applied Mathematics and Statistics", nameFr: "Mathématiques Appliquées et Statistique" },
+    { code: "GIM", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មឧស្សាហកម្ម និងមេកានិក", nameEn: "Industrial and Mechanical Engineering", nameFr: "Génie Industriel et Mécanique" },
+    { code: "GCI", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មសំណង់ស៊ីវិល", nameEn: "Civil Engineering", nameFr: "Génie Civil" },
+    { code: "GEE", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មអគ្គិសនី និងថាមពល", nameEn: "Electrical and Energy Engineering", nameFr: "Génie Électrique et Énergétique" },
+    { code: "GTI", nameKh: "ដេប៉ាតឺម៉ង់ បច្ចេកវិទ្យាព័ត៌មាន", nameEn: "Information Technology", nameFr: "Génie Télécommunications et Réseaux" },
+    { code: "GAR", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មជនបទ", nameEn: "Rural Engineering", nameFr: "Génie Rural" },
+    { code: "GCA", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មសំណង់ស៊ីវិល និងក្សេត្រសាស្រ្ត", nameEn: "Agricultural Engineering", nameFr: "Génie Chimique et Alimentaire" },
+    { code: "GTR", nameKh: "ដេប៉ាតឺម៉ង់ ទូរគមនាគមន៍ និងបណ្តាញ", nameEn: "Telecommunications and Network Engineering", nameFr: "Génie Télécommunication" },
   ];
 
   const departmentsMap = {};
-  for (const dept of departmentsData) {
-    const d = await prisma.department.upsert({
-      where: { code: dept.code },
-      update: {},
-      create: dept,
+  for (const d of departments) {
+    const dept = await prisma.department.upsert({
+      where: { code: d.code },
+      update: { nameKh: d.nameKh, nameEn: d.nameEn, nameFr: d.nameFr },
+      create: d,
     });
-    departmentsMap[dept.code] = d.id;
+    departmentsMap[d.code] = dept.id;
   }
 
-  // 4. Academic Year Levels (I1 to I5)
-  const academicYearsData = [
-    { code: "I1", label: "Ingénieur 1ère Année (Year 1)", order: 1 },
-    { code: "I2", label: "Ingénieur 2ème Année (Year 2)", order: 2 },
-    { code: "I3", label: "Ingénieur 3ème Année (Year 3)", order: 3 },
-    { code: "I4", label: "Ingénieur 4ème Année (Year 4)", order: 4 },
-    { code: "I5", label: "Ingénieur 5ème Année (Year 5)", order: 5 },
+  // 4. Academic Years (Levels)
+  const academicYears = [
+    { code: "I1", label: "I1 (Ingénieur 1ère Année - Year 1)", order: 1 },
+    { code: "I2", label: "I2 (Ingénieur 2ème Année - Year 2)", order: 2 },
+    { code: "I3", label: "I3 (Ingénieur 3ème Année - Year 3)", order: 3 },
+    { code: "I4", label: "I4 (Ingénieur 4ème Année - Year 4)", order: 4 },
+    { code: "I5", label: "I5 (Ingénieur 5ème Année - Year 5)", order: 5 },
   ];
 
   const academicYearsMap = {};
-  for (const yr of academicYearsData) {
+  for (const yr of academicYears) {
     const y = await prisma.academicYear.upsert({
       where: { code: yr.code },
-      update: {},
+      update: { label: yr.label, order: yr.order },
       create: yr,
     });
     academicYearsMap[yr.code] = y.id;
   }
 
-  // 5. Default Passwords & Leadership Users
-  const defaultPassword = await bcrypt.hash("ITC@STJ2026!", 10);
-
-  // Super Admin: Central Administrator
-  const adminUser = await prisma.user.upsert({
-    where: { email: "admin@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "admin@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "គណៈគ្រប់គ្រង STJ កណ្តាល",
-      fullNameEn: "Central STJ Administrator",
-      phone: "+855 23 880 370",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: adminUser.id, roleId: superAdminRole.id } },
-    update: {},
-    create: { userId: adminUser.id, roleId: superAdminRole.id },
-  });
-
-  // Leadership Team President: ផល ដាវីត (PHAL David - e20221334, I5-GTR)
-  const davidUser = await prisma.user.upsert({
-    where: { email: "phal.david@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "phal.david@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "ផល ដាវីត",
-      fullNameEn: "PHAL David",
-      studentId: "e20221334",
-      phone: "086439191",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: davidUser.id, roleId: stjAdminRole.id } },
-    update: {},
-    create: { userId: davidUser.id, roleId: stjAdminRole.id },
-  });
-
-  // Also assign STJ_PRESIDENT role to PHAL David
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: davidUser.id, roleId: stjPresidentRole.id } },
-    update: {},
-    create: { userId: davidUser.id, roleId: stjPresidentRole.id },
-  });
-
-  // Student Association Committee: សុខ សេងលី (SOK SENGLY - e20230969, I4-GCI)
-  const senglyUser = await prisma.user.upsert({
-    where: { email: "sok.sengly@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "sok.sengly@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "សុខ សេងលី",
-      fullNameEn: "SOK SENGLY",
-      studentId: "e20230969",
-      phone: "015399209",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: senglyUser.id, roleId: stjAdminRole.id } },
-    update: {},
-    create: { userId: senglyUser.id, roleId: stjAdminRole.id },
-  });
-
-  // Also assign STUDENT_ASSOCIATION role to SOK SENGLY
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: senglyUser.id, roleId: studentAssocRole.id } },
-    update: {},
-    create: { userId: senglyUser.id, roleId: studentAssocRole.id },
-  });
-
-  // Programming Leader: លាង ជីងហេង (LEANG JINGHENG - e20240704, I3-GTI)
-  const progLeaderUser = await prisma.user.upsert({
-    where: { email: "leang.jingheng@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "leang.jingheng@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "លាង ជីងហេង",
-      fullNameEn: "LEANG JINGHENG",
-      studentId: "e20240704",
-      phone: "0976355500",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: progLeaderUser.id, roleId: courseLeaderRole.id } },
-    update: {},
-    create: { userId: progLeaderUser.id, roleId: courseLeaderRole.id },
-  });
-
-  // Mathematics Leader: គឹម រតនៈ (KIM Ratanak - e20221423, I5-GIM)
-  const mathLeaderUser = await prisma.user.upsert({
-    where: { email: "kim.ratanak@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "kim.ratanak@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "គឹម រតនៈ",
-      fullNameEn: "KIM Ratanak",
-      studentId: "e20221423",
-      phone: "010650202",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: mathLeaderUser.id, roleId: courseLeaderRole.id } },
-    update: {},
-    create: { userId: mathLeaderUser.id, roleId: courseLeaderRole.id },
-  });
-
-  // Physics Leader: គ្រុយ អីុខាង (KRUY Ykhang - e20240096, I3-GIM)
-  const physLeaderUser = await prisma.user.upsert({
-    where: { email: "kruy.ykhang@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "kruy.ykhang@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "គ្រុយ អីុខាង",
-      fullNameEn: "KRUY Ykhang",
-      studentId: "e20240096",
-      phone: "0968925682",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: physLeaderUser.id, roleId: courseLeaderRole.id } },
-    update: {},
-    create: { userId: physLeaderUser.id, roleId: courseLeaderRole.id },
-  });
-
-  // Chemistry Leader: ខេង លីឧស្សាហ៍ (KHENG Lyussa - e20240046, I3-GCI)
-  const chemLeaderUser = await prisma.user.upsert({
-    where: { email: "kheng.lyussa@itc.edu.kh" },
-    update: {},
-    create: {
-      email: "kheng.lyussa@itc.edu.kh",
-      passwordHash: defaultPassword,
-      fullNameKh: "ខេង លីឧស្សាហ៍",
-      fullNameEn: "KHENG Lyussa",
-      studentId: "e20240046",
-      phone: "0974253117",
-      status: "ACTIVE",
-    },
-  });
-
-  await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: chemLeaderUser.id, roleId: courseLeaderRole.id } },
-    update: {},
-    create: { userId: chemLeaderUser.id, roleId: courseLeaderRole.id },
-  });
-
-  // 6. 4 Core Courses
+  // 5. 4 Core Courses
   const coursesData = [
     {
       code: "PROG101",
@@ -348,7 +108,7 @@ async function main() {
       descriptionFr: "Structures de données, pointeurs et algorithmes avancés.",
       category: "Engineering Foundation",
       icon: "Code",
-      academicTerm: "2026-2027 Semester 1",
+      academicTerm: "2026-2027",
     },
     {
       code: "MATH101",
@@ -361,7 +121,7 @@ async function main() {
       descriptionFr: "Calcul différentiel et intégral appliqué à l'ingénierie.",
       category: "Engineering Foundation",
       icon: "Calculator",
-      academicTerm: "2026-2027 Semester 1",
+      academicTerm: "2026-2027",
     },
     {
       code: "PHYS101",
@@ -374,7 +134,7 @@ async function main() {
       descriptionFr: "Mécanique générale et phénomènes ondulatoires.",
       category: "Natural Sciences",
       icon: "Atom",
-      academicTerm: "2026-2027 Semester 1",
+      academicTerm: "2026-2027",
     },
     {
       code: "CHEM101",
@@ -387,7 +147,7 @@ async function main() {
       descriptionFr: "Cinétique et équilibres chimiques.",
       category: "Natural Sciences",
       icon: "FlaskConical",
-      academicTerm: "2026-2027 Semester 1",
+      academicTerm: "2026-2027",
     },
   ];
 
@@ -396,43 +156,17 @@ async function main() {
   for (const c of coursesData) {
     const course = await prisma.course.upsert({
       where: { code: c.code },
-      update: {},
+      update: c,
       create: c,
     });
     coursesMap[c.slug] = course.id;
     coursesByCode[c.code] = course.id;
   }
 
-  // Assign Leaders to Courses
-  await prisma.courseLeader.upsert({
-    where: { courseId_userId: { courseId: coursesMap["programming"], userId: progLeaderUser.id } },
-    update: {},
-    create: { courseId: coursesMap["programming"], userId: progLeaderUser.id },
-  });
-
-  await prisma.courseLeader.upsert({
-    where: { courseId_userId: { courseId: coursesMap["mathematics"], userId: mathLeaderUser.id } },
-    update: {},
-    create: { courseId: coursesMap["mathematics"], userId: mathLeaderUser.id },
-  });
-
-  await prisma.courseLeader.upsert({
-    where: { courseId_userId: { courseId: coursesMap["physics"], userId: physLeaderUser.id } },
-    update: {},
-    create: { courseId: coursesMap["physics"], userId: physLeaderUser.id },
-  });
-
-  await prisma.courseLeader.upsert({
-    where: { courseId_userId: { courseId: coursesMap["chemistry"], userId: chemLeaderUser.id } },
-    update: {},
-    create: { courseId: coursesMap["chemistry"], userId: chemLeaderUser.id },
-  });
-
-  // 7. Complete Official STJ 2026-2027 Roster (All 39 Official Senior Members)
-  // Each member has their SPECIFIC assignedCourse according to their engineering specialty!
+  // 6. Complete Official STJ 2026-2027 Roster (All 39 Official Senior Members)
   const officialRoster = [
     { num: 1, nameKh: "សុខ សេងលី", nameEn: "SOK SENGLY", gender: "F", studentId: "e20230969", yr: "I4", dept: "GCI", phone: "015399209", assignedCourse: "EXECUTIVE", role: "គណៈកម្មាធិការសមាគមនិស្សិត" },
-    { num: 2, nameKh: "ផល ដាវីត", nameEn: "PHAL David", gender: "M", studentId: "e20221334", yr: "I5", dept: "GTR", phone: "086439191", assignedCourse: "EXECUTIVE", role: "ប្រធានក្រុមដឹកនាំ STJ" },
+    { num: 2, nameKh: "ផល ដាវីត", nameEn: "PHAL David", gender: "M", studentId: "e20221334", yr: "I5", dept: "GTR", phone: "086439191", assignedCourse: "EXECUTIVE", role: "ប្រធានក្រុមដឹកនាំ STJ (Overall President)" },
     { num: 3, nameKh: "គ្រុយ អីុខាង", nameEn: "KRUY Ykhang", gender: "M", studentId: "e20240096", yr: "I3", dept: "GIM", phone: "0968925682", assignedCourse: "PHYS101", role: "ប្រធានក្រុម រូបវិទ្យា (Physics Leader)" },
     { num: 4, nameKh: "ឈិន តុលា", nameEn: "CHHIN TOLA", gender: "M", studentId: "e20240866", yr: "I3", dept: "GIM", phone: "0969720656", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
     { num: 5, nameKh: "ឡាន បូរិន", nameEn: "LAN BORIN", gender: "F", studentId: "e20240662", yr: "I3", dept: "GEE", phone: "070981465", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
@@ -462,7 +196,7 @@ async function main() {
     { num: 30, nameKh: "ណាំ ម៉េងហួត", nameEn: "NAM MENGHOUT", gender: "M", studentId: "e20250475", yr: "I2", dept: "GIC", phone: "099998951", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 31, nameKh: "ចៃ ជីជូ", nameEn: "CHAI CHICHOU", gender: "M", studentId: "e20250731", yr: "I2", dept: "AMS", phone: "090249820", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 32, nameKh: "ហាក់ ដូនីឡា", nameEn: "HAK DONYLA", gender: "M", studentId: "e20251399", yr: "I2", dept: "GIC", phone: "089926734", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
-    { num: 33, nameKh: "ពាក់ ប្រុសម៉ៅ", nameEn: "PEAK BROSMAO", gender: "M", studentId: "e20251455", yr: "I2", dept: "GIC", phone: "099661460", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
+    { num: 33, nameKh: "ពៀក ប្រុសម៉ៅ", nameEn: "PEAK BROSMAO", gender: "M", studentId: "e20251455", yr: "I2", dept: "GIC", phone: "099661460", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 34, nameKh: "ចំរើន ដេន", nameEn: "CHAMROEN DEN", gender: "M", studentId: "e20250414", yr: "I2", dept: "GIC", phone: "0963221116", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 35, nameKh: "ខេង លីឧស្សាហ៍", nameEn: "KHENG Lyussa", gender: "F", studentId: "e20240046", yr: "I3", dept: "GCI", phone: "0974253117", assignedCourse: "CHEM101", role: "ប្រធានក្រុម គីមីវិទ្យា (Chemistry Leader)" },
     { num: 37, nameKh: "ឯល មូហាំម៉ាត់សាហ្វី", nameEn: "EL Muhammadshafi", gender: "M", studentId: "e20240945", yr: "I3", dept: "GAR", phone: "093696794", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
@@ -480,12 +214,18 @@ async function main() {
     EXECUTIVE: [],
   };
 
+  const createdUsers = {};
   const createdMembers = [];
+
   for (const m of officialRoster) {
     const memberId = `STJ${String(m.num).padStart(3, "0")}`;
     const deptId = departmentsMap[m.dept] || departmentsMap["GIC"];
     const yrId = academicYearsMap[m.yr] || academicYearsMap["I2"];
-    const memberEmail = `${m.nameEn.toLowerCase().replace(/\s+/g, ".")}@itc.edu.kh`;
+
+    // Login credentials format: e202xxxxx@itc.edu.kh & password e202xxxxx@ITC!
+    const studentEmail = `${m.studentId.toLowerCase()}@itc.edu.kh`;
+    const studentPassword = `${m.studentId.toLowerCase()}@ITC!`;
+    const passwordHash = await bcrypt.hash(studentPassword, 10);
 
     const member = await prisma.member.upsert({
       where: { memberId },
@@ -493,11 +233,12 @@ async function main() {
         fullNameKh: m.nameKh,
         fullNameEn: m.nameEn,
         studentId: m.studentId,
-        email: memberEmail,
+        email: studentEmail,
         phone: m.phone,
         gender: m.gender,
         departmentId: deptId,
         academicYearId: yrId,
+        cohortYear: "2026-2027",
         notes: `មុខវិជ្ជាទទួលខុសត្រូវ៖ ${m.assignedCourse} | តួនាទី៖ ${m.role}`,
       },
       create: {
@@ -505,11 +246,12 @@ async function main() {
         studentId: m.studentId,
         fullNameKh: m.nameKh,
         fullNameEn: m.nameEn,
-        email: memberEmail,
+        email: studentEmail,
         phone: m.phone,
         gender: m.gender,
         departmentId: deptId,
         academicYearId: yrId,
+        cohortYear: "2026-2027",
         notes: `មុខវិជ្ជាទទួលខុសត្រូវ៖ ${m.assignedCourse} | តួនាទី៖ ${m.role}`,
         status: "ACTIVE",
       },
@@ -520,44 +262,93 @@ async function main() {
       membersByCourse[m.assignedCourse].push(member);
     }
 
-    // Create / Link User Account for Member Self-Service Portal
-    const userAccount = await prisma.user.upsert({
-      where: { email: memberEmail },
-      update: {
-        memberRecordId: member.id,
-      },
-      create: {
-        email: memberEmail,
-        passwordHash: defaultPassword,
-        fullNameKh: m.nameKh,
-        fullNameEn: m.nameEn,
-        studentId: m.studentId,
-        phone: m.phone,
-        gender: m.gender,
-        status: "ACTIVE",
-        memberRecordId: member.id,
+    // Find existing user by memberRecordId, studentId, or email
+    let userAccount = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { memberRecordId: member.id },
+          { studentId: m.studentId },
+          { email: studentEmail },
+          { email: `${m.nameEn.toLowerCase().replace(/\s+/g, ".")}@itc.edu.kh` },
+        ],
       },
     });
 
-    // Assign appropriate user role
-    const assignedRoleId = m.assignedCourse === "EXECUTIVE" ? stjAdminRole.id : memberRole.id;
-    await prisma.userRole.upsert({
-      where: { userId_roleId: { userId: userAccount.id, roleId: assignedRoleId } },
-      update: {},
-      create: { userId: userAccount.id, roleId: assignedRoleId },
-    });
+    if (userAccount) {
+      userAccount = await prisma.user.update({
+        where: { id: userAccount.id },
+        data: {
+          email: studentEmail,
+          passwordHash,
+          fullNameKh: m.nameKh,
+          fullNameEn: m.nameEn,
+          studentId: m.studentId,
+          phone: m.phone,
+          gender: m.gender,
+          status: "ACTIVE",
+          memberRecordId: member.id,
+        },
+      });
+    } else {
+      userAccount = await prisma.user.create({
+        data: {
+          email: studentEmail,
+          passwordHash,
+          fullNameKh: m.nameKh,
+          fullNameEn: m.nameEn,
+          studentId: m.studentId,
+          phone: m.phone,
+          gender: m.gender,
+          status: "ACTIVE",
+          memberRecordId: member.id,
+        },
+      });
+    }
 
-    // ENROLLMENT: Enroll member ONLY in their designated course!
-    // If Executive, enroll in all 4 for oversight; if course tutor, enroll ONLY in their specific course!
-    if (m.assignedCourse === "EXECUTIVE") {
-      for (const code of ["PROG101", "MATH101", "PHYS101", "CHEM101"]) {
-        await prisma.courseEnrollment.upsert({
-          where: { courseId_memberId: { courseId: coursesByCode[code], memberId: member.id } },
+    createdUsers[m.studentId] = userAccount;
+
+    // Role assignment
+    // Num 2 = ផល ដាវីត (STJ President & Top Authority)
+    if (m.num === 2) {
+      for (const rName of ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "MEMBER"]) {
+        await prisma.userRole.upsert({
+          where: { userId_roleId: { userId: userAccount.id, roleId: rolesMap[rName] } },
           update: {},
-          create: { courseId: coursesByCode[code], memberId: member.id },
+          create: { userId: userAccount.id, roleId: rolesMap[rName] },
         });
       }
-    } else if (coursesByCode[m.assignedCourse]) {
+    }
+    // Num 1 = សុខ សេងលី (Student Association Committee)
+    else if (m.num === 1) {
+      for (const rName of ["STUDENT_ASSOCIATION", "STJ_ADMIN", "MEMBER"]) {
+        await prisma.userRole.upsert({
+          where: { userId_roleId: { userId: userAccount.id, roleId: rolesMap[rName] } },
+          update: {},
+          create: { userId: userAccount.id, roleId: rolesMap[rName] },
+        });
+      }
+    }
+    // Course Leaders
+    else if (m.num === 25 || m.num === 13 || m.num === 3 || m.num === 35) {
+      for (const rName of ["COURSE_LEADER", "MEMBER"]) {
+        await prisma.userRole.upsert({
+          where: { userId_roleId: { userId: userAccount.id, roleId: rolesMap[rName] } },
+          update: {},
+          create: { userId: userAccount.id, roleId: rolesMap[rName] },
+        });
+      }
+    }
+    // Regular Members
+    else {
+      await prisma.userRole.upsert({
+        where: { userId_roleId: { userId: userAccount.id, roleId: rolesMap["MEMBER"] } },
+        update: {},
+        create: { userId: userAccount.id, roleId: rolesMap["MEMBER"] },
+      });
+    }
+
+    // Enrollments
+    if (m.assignedCourse !== "EXECUTIVE" && coursesByCode[m.assignedCourse]) {
       await prisma.courseEnrollment.upsert({
         where: { courseId_memberId: { courseId: coursesByCode[m.assignedCourse], memberId: member.id } },
         update: {},
@@ -566,144 +357,59 @@ async function main() {
     }
   }
 
-  // 8. Teaching Sessions with Precise Subject Attendance
-  // Session 1: Programming (9 tutors)
-  const progSession = await prisma.teachingSession.upsert({
-    where: { id: "session-prog-week-1" },
+  // 7. Course Leader Assignments
+  const davidUser = createdUsers["e20221334"];
+  const progLeaderUser = createdUsers["e20240704"]; // លាង ជីងហេង
+  const mathLeaderUser = createdUsers["e20221423"]; // គឹម រតនៈ
+  const physLeaderUser = createdUsers["e20240096"]; // គ្រុយ អីុខាង
+  const chemLeaderUser = createdUsers["e20240046"]; // ខេង លីឧស្សាហ៍
+
+  await prisma.courseLeader.upsert({
+    where: { courseId_userId: { courseId: coursesMap["programming"], userId: progLeaderUser.id } },
     update: {},
+    create: { courseId: coursesMap["programming"], userId: progLeaderUser.id },
+  });
+
+  await prisma.courseLeader.upsert({
+    where: { courseId_userId: { courseId: coursesMap["mathematics"], userId: mathLeaderUser.id } },
+    update: {},
+    create: { courseId: coursesMap["mathematics"], userId: mathLeaderUser.id },
+  });
+
+  await prisma.courseLeader.upsert({
+    where: { courseId_userId: { courseId: coursesMap["physics"], userId: physLeaderUser.id } },
+    update: {},
+    create: { courseId: coursesMap["physics"], userId: physLeaderUser.id },
+  });
+
+  await prisma.courseLeader.upsert({
+    where: { courseId_userId: { courseId: coursesMap["chemistry"], userId: chemLeaderUser.id } },
+    update: {},
+    create: { courseId: coursesMap["chemistry"], userId: chemLeaderUser.id },
+  });
+
+  // 8. Academic Mandate (2026-2027) with ផល ដាវីត as STJ President
+  await prisma.stjMandate.upsert({
+    where: { academicYear: "2026-2027" },
+    update: {
+      presidentId: davidUser.id,
+      presidentNameKh: "ផល ដាវីត",
+      presidentStudentId: "e20221334",
+      status: "ACTIVE",
+      isLocked: false,
+    },
     create: {
-      id: "session-prog-week-1",
-      courseId: coursesMap["programming"],
-      title: "សប្តាហ៍ទី១៖ សេចក្តីផ្តើមអំពី C++ និង Pointer Mechanics",
-      sessionDate: new Date("2026-10-15T08:00:00Z"),
-      startTime: "08:00",
-      endTime: "10:30",
-      room: "បន្ទប់ A-204, ITC Campus 1",
-      status: "COMPLETED",
-      createdById: adminUser.id,
+      academicYear: "2026-2027",
+      titleKh: "អាណត្តិដឹកនាំ STJ ឆ្នាំសិក្សា ២០២៦-២០២៧",
+      presidentId: davidUser.id,
+      presidentNameKh: "ផល ដាវីត",
+      presidentStudentId: "e20221334",
+      status: "ACTIVE",
+      isLocked: false,
     },
   });
 
-  const progStatuses = ["PRESENT", "PRESENT", "PRESENT", "LATE", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT"];
-  for (let i = 0; i < membersByCourse["PROG101"].length; i++) {
-    const mem = membersByCourse["PROG101"][i];
-    const st = progStatuses[i % progStatuses.length];
-    await prisma.attendanceRecord.upsert({
-      where: { sessionId_memberId: { sessionId: progSession.id, memberId: mem.id } },
-      update: { status: st },
-      create: {
-        sessionId: progSession.id,
-        memberId: mem.id,
-        status: st,
-        markedById: adminUser.id,
-        remarks: st === "LATE" ? "យឺត ១០ នាទី" : "វត្តមានទាន់ពេលវេលា",
-      },
-    });
-  }
-
-  // Session 2: Mathematics (7 tutors)
-  const mathSession = await prisma.teachingSession.upsert({
-    where: { id: "session-math-week-1" },
-    update: {},
-    create: {
-      id: "session-math-week-1",
-      courseId: coursesMap["mathematics"],
-      title: "សប្តាហ៍ទី១៖ មូលដ្ឋានគ្រឹះ Calculus និង Linear Algebra",
-      sessionDate: new Date("2026-10-16T14:00:00Z"),
-      startTime: "14:00",
-      endTime: "16:30",
-      room: "បន្ទប់ B-102, ITC Campus 1",
-      status: "COMPLETED",
-      createdById: adminUser.id,
-    },
-  });
-
-  const mathStatuses = ["PRESENT", "PRESENT", "PRESENT", "EXCUSED", "PRESENT", "PRESENT", "PRESENT"];
-  for (let i = 0; i < membersByCourse["MATH101"].length; i++) {
-    const mem = membersByCourse["MATH101"][i];
-    const st = mathStatuses[i % mathStatuses.length];
-    await prisma.attendanceRecord.upsert({
-      where: { sessionId_memberId: { sessionId: mathSession.id, memberId: mem.id } },
-      update: { status: st },
-      create: {
-        sessionId: mathSession.id,
-        memberId: mem.id,
-        status: st,
-        markedById: adminUser.id,
-        remarks: st === "EXCUSED" ? "សុំច្បាប់ប្រឡងពាក់កណ្តាលឆមាស" : "វត្តមានពេញលេញ",
-      },
-    });
-  }
-
-  // Session 3: Physics (10 tutors)
-  const physSession = await prisma.teachingSession.upsert({
-    where: { id: "session-phys-week-1" },
-    update: {},
-    create: {
-      id: "session-phys-week-1",
-      courseId: coursesMap["physics"],
-      title: "សប្តាហ៍ទី១៖ ចលនាក្នុងប្លង់ និងច្បាប់ញូតុន (Newton's Laws)",
-      sessionDate: new Date("2026-10-17T08:00:00Z"),
-      startTime: "08:00",
-      endTime: "10:30",
-      room: "បន្ទប់ C-301, ITC Campus 1",
-      status: "COMPLETED",
-      createdById: adminUser.id,
-    },
-  });
-
-  const physStatuses = ["PRESENT", "PRESENT", "LATE", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT"];
-  for (let i = 0; i < membersByCourse["PHYS101"].length; i++) {
-    const mem = membersByCourse["PHYS101"][i];
-    const st = physStatuses[i % physStatuses.length];
-    await prisma.attendanceRecord.upsert({
-      where: { sessionId_memberId: { sessionId: physSession.id, memberId: mem.id } },
-      update: { status: st },
-      create: {
-        sessionId: physSession.id,
-        memberId: mem.id,
-        status: st,
-        markedById: adminUser.id,
-        remarks: st === "LATE" ? "យឺត ១៥ នាទី" : "វត្តមានទាន់ពេលវេលា",
-      },
-    });
-  }
-
-  // Session 4: Chemistry (11 tutors)
-  const chemSession = await prisma.teachingSession.upsert({
-    where: { id: "session-chem-week-1" },
-    update: {},
-    create: {
-      id: "session-chem-week-1",
-      courseId: coursesMap["chemistry"],
-      title: "សប្តាហ៍ទី១៖ ទ្រឹស្តីអាតូម និងតុល្យភាពសមីការគីមី",
-      sessionDate: new Date("2026-10-18T14:00:00Z"),
-      startTime: "14:00",
-      endTime: "16:30",
-      room: "បន្ទប់ D-205, ITC Campus 1",
-      status: "COMPLETED",
-      createdById: adminUser.id,
-    },
-  });
-
-  const chemStatuses = ["PRESENT", "PRESENT", "PRESENT", "PRESENT", "EXCUSED", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT", "PRESENT"];
-  for (let i = 0; i < membersByCourse["CHEM101"].length; i++) {
-    const mem = membersByCourse["CHEM101"][i];
-    const st = chemStatuses[i % chemStatuses.length];
-    await prisma.attendanceRecord.upsert({
-      where: { sessionId_memberId: { sessionId: chemSession.id, memberId: mem.id } },
-      update: { status: st },
-      create: {
-        sessionId: chemSession.id,
-        memberId: mem.id,
-        status: st,
-        markedById: adminUser.id,
-        remarks: st === "EXCUSED" ? "សុំច្បាប់បំពេញបេសកកម្ម" : "វត្តមានទាន់ពេលវេលា",
-      },
-    });
-  }
-
-  // 9. Public Share Links for Each Course Leader
+  // 9. Initial Public Share Links
   await prisma.shareLink.upsert({
     where: { token: "stj-official-2027" },
     update: {},
@@ -711,7 +417,6 @@ async function main() {
       token: "stj-official-2027",
       tokenHash: "sha256_hash_stj_official_2027",
       courseId: coursesMap["programming"],
-      sessionId: progSession.id,
       title: "របាយការណ៍វត្តមាន STJ Programming ឆ្នាំសិក្សា ២០២៦-២០២៧",
       showStats: true,
       createdById: progLeaderUser.id,
@@ -723,6 +428,9 @@ async function main() {
     { key: "org_name", value: "Senior Teaching Junior (STJ)" },
     { key: "institution", value: "Institute of Technology of Cambodia (ITC)" },
     { key: "academic_year_current", value: "2026-2027" },
+    { key: "stj_current_president_id", value: davidUser.id },
+    { key: "stj_current_president_name", value: "ផល ដាវីត" },
+    { key: "stj_current_president_student_id", value: "e20221334" },
     { key: "semester_current", value: "Semester 1" },
     { key: "attendance_warning_threshold", value: "75" },
     { key: "target_audience", value: "STJ Senior Members (Tutors) Only - Not For Junior Students" },
@@ -737,14 +445,18 @@ async function main() {
     });
   }
 
-  console.log(`STJ Database successfully seeded into .db file:`);
-  console.log(`- Total Official Senior Volunteers: ${createdMembers.length}`);
-  console.log(`- Programming (PROG101): ${membersByCourse["PROG101"].length} tutors`);
-  console.log(`- Mathematics (MATH101): ${membersByCourse["MATH101"].length} tutors`);
-  console.log(`- Physics (PHYS101): ${membersByCourse["PHYS101"].length} tutors`);
-  console.log(`- Chemistry (CHEM101): ${membersByCourse["CHEM101"].length} tutors`);
-  console.log(`- Executive Oversight: ${membersByCourse["EXECUTIVE"].length} leaders`);
-  console.log(`- All teaching sessions and attendance records populated.`);
+  console.log(`STJ Database successfully seeded into prisma/stj.db:`);
+  console.log(`- Created Accounts for ALL ${createdMembers.length} Senior Members`);
+  console.log(`  * Login Email Format: e202xxxxx@itc.edu.kh`);
+  console.log(`  * Default Password Format: e202xxxxx@ITC!`);
+  console.log(`- Top Authority / STJ President: ផល ដាវីត (e20221334@itc.edu.kh)`);
+  console.log(`- Student Association: សុខ សេងលី (e20230969@itc.edu.kh)`);
+  console.log(`- Programming Leader: លាង ជីងហេង (e20240704@itc.edu.kh)`);
+  console.log(`- Mathematics Leader: គឹម រតនៈ (e20221423@itc.edu.kh)`);
+  console.log(`- Physics Leader: គ្រុយ អីុខាង (e20240096@itc.edu.kh)`);
+  console.log(`- Chemistry Leader: ខេង លីឧស្សាហ៍ (e20240046@itc.edu.kh)`);
+  console.log(`- Active Mandate: 2026-2027 (Under ផល ដាវីត)`);
+  console.log(`- Generic admin@itc.edu.kh eliminated completely.`);
 }
 
 main()

@@ -23,7 +23,7 @@ export default function SystemProfileRequestsPage() {
   const [requests, setRequests] = useState([
     {
       id: "req-1",
-      memberName: "ពាក់ ប្រុសម៉ៅ (PEAK BROSMAO)",
+      memberName: "ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)",
       memberId: "STJ033",
       field: "studentId",
       fieldLabel: "លេខអត្តសញ្ញាណនិស្សិត (Student ID)",

@@ -1,369 +1,236 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  User,
-  GraduationCap,
-  CalendarCheck,
-  BookOpen,
-  CalendarDays,
-  FileText,
-  Lock,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  XCircle,
-  AlertCircle,
-  Bell,
-  Sparkles,
-  ChevronRight,
-  ExternalLink,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { BookOpen, CalendarCheck, CalendarDays, CheckCircle2, Clock, MapPin, Percent, UserCircle } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 
+interface Overview {
+  user: {
+    fullNameKh: string;
+    fullNameEn: string;
+    displayName: string | null;
+    email: string;
+    studentId: string | null;
+    memberId: string | null;
+    department: { code: string; nameKh: string } | null;
+    academicYear: { code: string } | null;
+    status: string;
+  };
+  member: {
+    courses: Array<{
+      id: string;
+      code: string;
+      slug: string;
+      titleKh: string;
+      titleEn: string;
+      leaders: Array<{ nameKh: string; nameEn: string }>;
+      totalLessons: number;
+      rate: number;
+    }>;
+    stats: { present: number; late: number; absent: number; excused: number; total: number; rate: number };
+    totalLessons: number;
+    monthly: Array<{ month: string; present: number; late: number; absent: number }>;
+    upcoming: Array<{ id: string; title: string; courseCode: string; date: string; startTime: string; endTime: string; room: string }>;
+    recent: Array<{ id: string; title: string; courseCode: string; date: string; status: string }>;
+  } | null;
+  announcements: Array<{ id: string; titleKh: string; titleEn: string; publishedAt: string }>;
+}
+
+const STATUS_BADGE: Record<string, { v: "success" | "warning" | "destructive" | "purple"; t: string }> = {
+  PRESENT: { v: "success", t: "មានវត្តមាន" },
+  LATE: { v: "warning", t: "យឺត" },
+  ABSENT: { v: "destructive", t: "អវត្តមាន" },
+  EXCUSED: { v: "purple", t: "ច្បាប់" },
+};
+
 export default function MemberDashboardPage() {
-  const [profile, setProfile] = useState<any>(null);
+  const [data, setData] = useState<Overview | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/portal/profile")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.profile) setProfile(data.profile);
-      })
-      .catch(() => {})
+    fetch("/api/portal/overview")
+      .then((r) => r.json())
+      .then((d) => d.success && setData(d))
       .finally(() => setLoading(false));
   }, []);
 
-  const studentNameKh = profile?.fullNameKh || "ពាក់ ប្រុសម៉ៅ";
-  const studentNameEn = profile?.fullNameEn || "PEAK BROSMAO";
-  const memberId = profile?.member?.memberId || "STJ033";
-  const studentId = profile?.member?.studentId || "e20251455";
-  const department = profile?.member?.department?.code || "GIC";
-  const year = profile?.member?.academicYear?.code || "I2";
-
-  const attendanceSummary = {
-    totalSessions: 5,
-    present: 4,
-    late: 1,
-    absent: 0,
-    excused: 0,
-    rate: 100, // (4 + 1) / (5 - 0) * 100%
-  };
-
-  const chartData = [
-    { week: "សប្តាហ៍ទី១", present: 2, late: 0, absent: 0 },
-    { week: "សប្តាហ៍ទី២", present: 1, late: 1, absent: 0 },
-    { week: "សប្តាហ៍ទី៣", present: 1, late: 0, absent: 0 },
-  ];
-
-  const myCourses = [
-    {
-      code: "PROG101",
-      titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
-      leader: "លាង ជីងហេង (LEANG JINGHENG - I3 GTI)",
-      schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 10:00",
-      room: "បន្ទប់ A-204, ITC Campus 1",
-      role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត (Assigned Tutor)",
-      status: "សកម្ម (Active)",
-    },
-  ];
-
-  const upcomingSessions = [
-    {
-      id: "us-1",
-      course: "PROG101 - Programming",
-      title: "វគ្គទី៤៖ Binary Search Trees & Recursion Mechanics",
-      date: "សៅរ៍ ០៧ វិច្ឆិកា ២០២៦",
-      time: "08:00 - 10:00",
-      room: "Campus 1, Building A, Room 204",
-      leader: "លាង ជីងហេង",
-    },
-  ];
-
-  const recentAnnouncements = [
-    {
-      id: "ann-1",
-      title: "កាលវិភាគពិនិត្យកូដ C++ និងអនុវត្តជាក់ស្តែងក្នុងបន្ទប់កុំព្យូទ័រ",
-      date: "២០ តុលា ២០២៦",
-      category: "PROG101",
-    },
-    {
-      id: "ann-2",
-      title: "ការចែករំលែកវិញ្ញាសាប្រឡងឆមាសឆ្នាំមុនសម្រាប់និស្សិត I2",
-      date: "១៨ តុលា ២០២៦",
-      category: "STJ General",
-    },
-  ];
+  const u = data?.user;
+  const m = data?.member;
+  const stats = m?.stats || { present: 0, late: 0, absent: 0, excused: 0, total: 0, rate: 0 };
+  const name = u?.displayName || u?.fullNameEn || "";
 
   return (
     <PortalLayout
       portalType="portal"
-      userRole="STJ Member"
-      userName={studentNameKh}
-      userMemberId={memberId}
-      userEmail={profile?.email || "peak.brosmao@itc.edu.kh"}
+      userRole="STJ Team Tutor"
+      userName={u?.fullNameKh || ""}
+      userMemberId={u?.memberId || undefined}
+      userEmail={u?.email}
     >
       <div className="space-y-6">
-        {/* Welcome Banner */}
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Student & Member Dashboard • STJ 2026-2027</span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
-              សូមស្វាគមន៍ការវិលត្រឡប់មកវិញ, {studentNameKh}
-            </h1>
-            <p className="text-xs text-muted-foreground">
-              {studentNameEn} • អត្តសញ្ញាណ: {studentId} • {department} ({year}) • សមាជិកលេខ: {memberId}
+        <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
+          <div className="inline-flex items-center space-x-2 text-xs font-semibold text-primary mb-1">
+            <UserCircle className="w-4 h-4" />
+            <span>STJ Member Portal</span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+            សូមស្វាគមន៍ត្រឡប់មកវិញ (Welcome back){name ? `, ${name}` : ""}
+          </h1>
+          {u && (
+            <p className="text-xs text-muted-foreground mt-1">
+              {u.memberId} · {u.studentId} · {u.academicYear?.code}-{u.department?.code}
             </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Link href="/portal/attendance">
-              <Button size="sm" className="space-x-1.5 text-xs">
-                <CalendarCheck className="w-3.5 h-3.5" />
-                <span>ពិនិត្យវត្តមានរបស់ខ្ញុំ</span>
-              </Button>
-            </Link>
-            <Link href="/portal/profile">
-              <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
-                <User className="w-3.5 h-3.5" />
-                <span>ព័ត៌មានផ្ទាល់ខ្លួន</span>
-              </Button>
-            </Link>
-          </div>
+          )}
         </div>
 
-        {/* Academic Card & KPI Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {!loading && !m && (
           <Card>
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">មុខវិជ្ជាកំពុងរៀន</span>
-              <p className="text-2xl font-extrabold text-foreground mt-1">2</p>
-              <span className="text-[10px] text-primary">Enrolled Courses</span>
+            <CardContent className="p-6 text-xs text-muted-foreground">
+              គណនីនេះមិនទាន់ភ្ជាប់ជាមួយសមាជិកក្រុមបង្រៀនទេ។ (This account is not linked to a team member record.)
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">វគ្គបង្រៀនសរុប</span>
-              <p className="text-2xl font-extrabold text-foreground mt-1">{attendanceSummary.totalSessions}</p>
-              <span className="text-[10px] text-muted-foreground">Total Sessions</span>
-            </CardContent>
-          </Card>
-          <Card className="border-emerald-500/30 bg-emerald-500/5">
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">វត្តមាន (Present)</span>
-              <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">{attendanceSummary.present}</p>
-              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">ចូលរួមពេញលេញ</span>
-            </CardContent>
-          </Card>
-          <Card className="border-amber-500/30 bg-amber-500/5">
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">មកយឺត (Late)</span>
-              <p className="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">{attendanceSummary.late}</p>
-              <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80">រាប់ជាវត្តមាន</span>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">អវត្តមាន (Absent)</span>
-              <p className="text-2xl font-extrabold text-foreground mt-1">{attendanceSummary.absent}</p>
-              <span className="text-[10px] text-muted-foreground">គ្មានការអនុញ្ញាត</span>
-            </CardContent>
-          </Card>
-          <Card className="border-primary/40 bg-primary/10">
-            <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-primary font-bold">អត្រាវត្តមាន</span>
-              <p className="text-2xl font-extrabold text-primary mt-1">{attendanceSummary.rate}%</p>
-              <span className="text-[10px] text-primary font-medium">Attendance Rate</span>
-            </CardContent>
-          </Card>
-        </div>
+        )}
 
-        {/* Grid: Attendance Chart & Upcoming Sessions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Chart */}
-          <Card>
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-semibold">
-                និន្នាការវត្តមានតាមសប្តាហ៍ (Weekly Attendance Trend)
-              </CardTitle>
-              <Badge variant="success">អត្រាវត្តមានល្អប្រសើរ 100%</Badge>
-            </CardHeader>
-            <CardContent>
-              <div className="h-56 w-full pt-4">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
-                    <XAxis dataKey="week" tick={{ fontSize: 11 }} />
-                    <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-                    <Tooltip />
-                    <Bar dataKey="present" fill="#10b981" name="វត្តមាន (Present)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="late" fill="#f59e0b" name="មកយឺត (Late)" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="absent" fill="#ef4444" name="អវត្តមាន (Absent)" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Upcoming Sessions */}
-          <Card>
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                <CalendarDays className="w-4 h-4 text-primary" />
-                <span>កាលវិភាគវគ្គបង្រៀនបន្ទាប់ (Upcoming Sessions)</span>
-              </CardTitle>
-              <Link href="/portal/schedule" className="text-xs text-primary hover:underline flex items-center space-x-1">
-                <span>កាលវិភាគពេញលេញ</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </Link>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {upcomingSessions.map((session) => (
-                <div
-                  key={session.id}
-                  className="p-3.5 rounded-xl border border-border bg-card/50 hover:border-primary/40 transition-all space-y-2"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                        {session.course}
-                      </span>
-                      <h4 className="font-bold text-xs text-foreground mt-1">{session.title}</h4>
-                    </div>
-                    <Badge variant="secondary" className="text-[10px]">
-                      {session.date}
-                    </Badge>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground pt-1 border-t border-border/50">
-                    <span className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3 text-primary" />
-                      <span>{session.time}</span>
-                    </span>
-                    <span>•</span>
-                    <span>{session.room}</span>
-                    <span>•</span>
-                    <span>បង្រៀនដោយ៖ <strong className="text-foreground">{session.leader}</strong></span>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* My Enrolled Courses & Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Courses */}
-          <div className="lg:col-span-2 space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-sm text-foreground flex items-center space-x-2">
-                <BookOpen className="w-4 h-4 text-primary" />
-                <span>មុខវិជ្ជាកំពុងសិក្សា (My Courses)</span>
-              </h3>
-              <Link href="/portal/courses" className="text-xs text-primary hover:underline">
-                មើលមុខវិជ្ជាទាំងអស់
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {myCourses.map((c) => (
-                <Card key={c.code} className="hover:border-primary/40 transition-all">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                        {c.code}
-                      </span>
-                      <Badge variant="success">{c.status}</Badge>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-foreground">{c.titleKh}</h4>
-                      <p className="text-xs text-muted-foreground mt-1">រៀមច្បង៖ {c.leader}</p>
-                    </div>
-                    <div className="text-[11px] text-muted-foreground pt-2 border-t border-border flex items-center justify-between">
-                      <span>{c.room}</span>
-                      <Link href={`/portal/courses/${c.code.toLowerCase()}`} className="text-primary hover:underline font-medium">
-                        ចូលមើលមេរៀន
-                      </Link>
-                    </div>
+        {m && (
+          <>
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+              {[
+                { label: "មុខវិជ្ជា (Courses)", value: m.courses.length, icon: BookOpen },
+                { label: "មេរៀនសរុប (Lessons)", value: m.totalLessons, icon: CalendarDays },
+                { label: "មានវត្តមាន (Present)", value: stats.present, icon: CheckCircle2 },
+                { label: "យឺត (Late)", value: stats.late, icon: Clock },
+                { label: "អវត្តមាន (Absent)", value: stats.absent, icon: CalendarCheck },
+                { label: "អត្រាវត្តមាន (Rate)", value: stats.total > 0 ? `${stats.rate}%` : "-", icon: Percent },
+              ].map((c) => (
+                <Card key={c.label}>
+                  <CardContent className="p-4">
+                    <c.icon className="w-4 h-4 text-primary mb-2" />
+                    <p className="text-2xl font-extrabold text-foreground">{c.value}</p>
+                    <span className="text-[10px] text-muted-foreground">{c.label}</span>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          </div>
 
-          {/* Quick Actions & Recent Notices */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-semibold">សកម្មភាពរហ័ស (Quick Actions)</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Link href="/portal/profile/edit" className="block">
-                  <Button variant="outline" size="sm" className="w-full justify-start space-x-2 text-xs">
-                    <User className="w-3.5 h-3.5 text-primary" />
-                    <span>កែសម្រួលព័ត៌មានផ្ទាល់ខ្លួន</span>
-                  </Button>
-                </Link>
-                <Link href="/portal/attendance" className="block">
-                  <Button variant="outline" size="sm" className="w-full justify-start space-x-2 text-xs">
-                    <CalendarCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>មើលកំណត់ត្រាវត្តមាន</span>
-                  </Button>
-                </Link>
-                <Link href="/portal/correction-requests" className="block">
-                  <Button variant="outline" size="sm" className="w-full justify-start space-x-2 text-xs">
-                    <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                    <span>ដាក់ពាក្យស្នើសុំកែវត្តមាន</span>
-                  </Button>
-                </Link>
-                <Link href="/portal/security" className="block">
-                  <Button variant="outline" size="sm" className="w-full justify-start space-x-2 text-xs">
-                    <Lock className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span>ប្តូរលេខកូដសម្ងាត់គណនី</span>
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">វត្តមានតាមខែ (Monthly attendance)</CardTitle>
+                </CardHeader>
+                <CardContent className="h-56">
+                  {m.monthly.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">មិនទាន់មានវត្តមានត្រូវបានកត់ត្រាទេ។ (No attendance recorded yet.)</p>
+                  ) : (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={m.monthly}>
+                        <XAxis dataKey="month" fontSize={10} />
+                        <YAxis allowDecimals={false} fontSize={10} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="present" name="Present" fill="#16a34a" />
+                        <Bar dataKey="late" name="Late" fill="#f59e0b" />
+                        <Bar dataKey="absent" name="Absent" fill="#dc2626" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-semibold flex items-center space-x-2">
-                  <Bell className="w-4 h-4 text-primary" />
-                  <span>សេចក្តីជូនដំណឹងថ្មីៗ</span>
-                </CardTitle>
-                <Link href="/portal/announcements" className="text-xs text-primary hover:underline">
-                  ទាំងអស់
-                </Link>
-              </CardHeader>
-              <CardContent className="space-y-2.5">
-                {recentAnnouncements.map((ann) => (
-                  <div key={ann.id} className="text-xs space-y-1 pb-2 border-b border-border last:border-0 last:pb-0">
-                    <span className="text-[10px] font-semibold text-primary">{ann.category} • {ann.date}</span>
-                    <p className="font-medium text-foreground hover:text-primary transition-colors cursor-pointer">
-                      {ann.title}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">មេរៀនត្រូវបង្រៀន (Upcoming lessons)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {m.upcoming.length === 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      ប្រធានក្រុមមិនទាន់បង្កើតមេរៀនថ្មីទេ។ (Your Leader has not created upcoming lessons yet.)
                     </p>
-                  </div>
+                  )}
+                  {m.upcoming.map((l) => (
+                    <div key={l.id} className="p-3 rounded-lg border border-border bg-muted/30 text-xs space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-foreground">{l.title}</span>
+                        <Badge variant="info">{l.courseCode}</Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                        <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{l.date} {l.startTime}-{l.endTime}</span>
+                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{l.room}</span>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">មុខវិជ្ជារបស់ខ្ញុំ (My courses)</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {m.courses.map((c) => (
+                  <Link key={c.id} href={`/portal/courses/${c.slug}`} className="p-3 rounded-lg border border-border hover:border-primary/50 transition-colors text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-bold text-primary">{c.code}</span>
+                      <span className="text-muted-foreground">{c.totalLessons} មេរៀន</span>
+                    </div>
+                    <p className="font-semibold text-foreground mt-1">{c.titleKh}</p>
+                    <p className="text-muted-foreground mt-0.5">
+                      ប្រធានក្រុម៖ {c.leaders.map((l) => l.nameKh).join(", ") || "-"}
+                    </p>
+                  </Link>
                 ))}
               </CardContent>
             </Card>
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">វត្តមានថ្មីៗ (Recent attendance)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {m.recent.length === 0 && <p className="text-xs text-muted-foreground">មិនទាន់មាន។ (None yet.)</p>}
+                  {m.recent.map((r) => (
+                    <div key={r.id} className="flex items-center justify-between text-xs p-2 rounded-lg border border-border">
+                      <div>
+                        <p className="font-medium text-foreground">{r.title}</p>
+                        <p className="text-muted-foreground">{r.courseCode} · {r.date}</p>
+                      </div>
+                      <Badge variant={STATUS_BADGE[r.status]?.v || "info"}>{STATUS_BADGE[r.status]?.t || r.status}</Badge>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold">សេចក្តីជូនដំណឹង (Announcements)</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {(data?.announcements || []).length === 0 && <p className="text-xs text-muted-foreground">មិនទាន់មាន។ (None yet.)</p>}
+                  {(data?.announcements || []).map((a) => (
+                    <div key={a.id} className="text-xs p-2 rounded-lg border border-border">
+                      <p className="font-medium text-foreground">{a.titleKh}</p>
+                      <p className="text-muted-foreground">{new Date(a.publishedAt).toISOString().split("T")[0]}</p>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Link href="/portal/attendance"><Button size="sm" variant="outline" className="text-xs">មើលវត្តមាន (View attendance)</Button></Link>
+              <Link href="/portal/correction-requests"><Button size="sm" variant="outline" className="text-xs">ស្នើកែវត្តមាន (Correction request)</Button></Link>
+              <Link href="/portal/profile/edit"><Button size="sm" variant="outline" className="text-xs">កែប្រែប្រវត្តិរូប (Edit profile)</Button></Link>
+              <Link href="/portal/security"><Button size="sm" variant="outline" className="text-xs">ប្តូរពាក្យសម្ងាត់ (Password)</Button></Link>
+            </div>
+          </>
+        )}
       </div>
     </PortalLayout>
   );
 }
-

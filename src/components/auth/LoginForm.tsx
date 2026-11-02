@@ -17,10 +17,8 @@ interface LoginFormProps {
 export function LoginForm({ portalType }: LoginFormProps) {
   const router = useRouter();
   const { t } = useI18n();
-  const [email, setEmail] = useState(
-    portalType === "system" ? "admin@itc.edu.kh" : "leang.jingheng@itc.edu.kh"
-  );
-  const [password, setPassword] = useState("ITC@STJ2026!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -133,17 +131,6 @@ export function LoginForm({ portalType }: LoginFormProps) {
               <ArrowRight className="w-4 h-4" />
             </Button>
           </form>
-
-          {/* Seed accounts helper banner */}
-          <div className="mt-6 pt-5 border-t border-border">
-            <p className="text-[11px] font-medium text-muted-foreground mb-2">
-              Default Credentials (Seeded for ITC Evaluation):
-            </p>
-            <div className="p-2.5 rounded-lg bg-muted/50 text-[11px] text-muted-foreground space-y-1 font-mono">
-              <p>Email: <span className="text-foreground">{isSystem ? "admin@itc.edu.kh" : "leang.jingheng@itc.edu.kh"}</span></p>
-              <p>Password: <span className="text-foreground">ITC@STJ2026!</span></p>
-            </div>
-          </div>
         </div>
 
         {/* Portal switch link */}

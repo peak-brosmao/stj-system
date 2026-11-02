@@ -72,7 +72,7 @@ export default function PortalNotificationsPage() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName="ពាក់ ប្រុសម៉ៅ"
+      userName="ពៀក ប្រុសម៉ៅ"
       userMemberId="STJ033"
     >
       <div className="space-y-6 max-w-4xl mx-auto">

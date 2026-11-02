@@ -68,13 +68,24 @@ export default function AccountSecurityPage() {
     }
 
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      setSuccessMsg("លេខកូដសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ");
+    try {
+      const res = await fetch("/api/portal/security/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "ការផ្លាស់ប្តូរលេខកូដសម្ងាត់មិនជោគជ័យ");
+
+      setSuccessMsg("លេខកូដសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ (Password changed)");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-    }, 1000);
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : "កំហុសក្នុងការប្តូរពាក្យសម្ងាត់");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleRevokeOtherSessions = () => {
@@ -87,7 +98,7 @@ export default function AccountSecurityPage() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName="ពាក់ ប្រុសម៉ៅ"
+      userName="ពៀក ប្រុសម៉ៅ"
       userMemberId="STJ033"
     >
       <div className="space-y-6 max-w-4xl mx-auto">

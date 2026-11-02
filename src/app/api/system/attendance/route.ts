@@ -1,186 +1,183 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAttendanceAdmin, getSession } from "@/lib/auth";
-import { AttendanceStatus } from "@/types";
+import {
+  requireTeamManager,
+  getManageableCourseIds,
+  assertCourseAccess,
+} from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 /**
- * GET: Retrieve sessions and attendance sheet for a given session or course.
- * All data comes from the SQLite database — no static array fallbacks.
+ * Shared attendance endpoint (one database, one process) for the Leader portal
+ * and the System portal.
+ *  - STJ President / admins: any course
+ *  - Course Leader: only members of the course they lead
+ * Reading the roster and saving/editing attendance both happen here.
  */
+
+const saveSchema = z.object({
+  sessionId: z.string().min(1),
+  finalize: z.boolean().optional(),
+  records: z
+    .array(
+      z.object({
+        memberId: z.string().min(1),
+        status: z.enum(["PRESENT", "LATE", "ABSENT", "EXCUSED"]),
+        remarks: z.string().optional().nullable(),
+      })
+    )
+    .min(1),
+});
+
+function errorResponse(err: unknown, fallback: string) {
+  const msg = err instanceof Error ? err.message : fallback;
+  const status = msg.includes("FORBIDDEN") ? 403 : msg.includes("UNAUTHORIZED") ? 401 : 500;
+  return NextResponse.json({ error: msg }, { status });
+}
+
 export async function GET(req: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
+    const user = await requireTeamManager();
+    const manageable = await getManageableCourseIds(user);
     const { searchParams } = new URL(req.url);
     const sessionId = searchParams.get("sessionId");
     const courseId = searchParams.get("courseId");
 
-    // Load all active courses with their sessions
     const courses = await prisma.course.findMany({
-      where: { status: "ACTIVE" },
+      where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
       orderBy: { code: "asc" },
-      include: {
-        sessions: {
-          orderBy: { sessionDate: "desc" },
-        },
-      },
+      include: { sessions: { orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }] } },
     });
 
-    let sessions: Array<{
-      id: string;
-      title: string;
-      courseId: string;
-      sessionDate: Date;
-      status: string;
-    }> = [];
-
-    let attendanceRecords: Array<{
-      id: string;
-      memberId: string;
-      status: string;
-      remarks?: string | null;
-    }> = [];
-
-    let enrolledMembers: Array<{
-      id: string;
-      memberId: string;
-      fullNameKh: string;
-      fullNameEn: string;
-      department: { code: string };
-      academicYear: { code: string };
-    }> = [];
-
     if (sessionId) {
-      // Load the specific session's enrolled members and existing attendance records
-      const targetSession = await prisma.teachingSession.findUnique({
+      const target = await prisma.teachingSession.findUnique({
         where: { id: sessionId },
         include: {
           course: {
             include: {
               enrollments: {
-                orderBy: { enrolledAt: "asc" },
-                include: {
-                  member: {
-                    include: {
-                      department: true,
-                      academicYear: true,
-                    },
-                  },
-                },
+                include: { member: { include: { department: true, academicYear: true } } },
               },
             },
           },
           attendance: true,
         },
       });
+      if (!target) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+      await assertCourseAccess(user, target.courseId);
 
-      if (targetSession) {
-        enrolledMembers = targetSession.course.enrollments.map((e) => ({
+      const enrolledMembers = target.course.enrollments
+        .map((e) => ({
           id: e.member.id,
           memberId: e.member.memberId,
           fullNameKh: e.member.fullNameKh,
           fullNameEn: e.member.fullNameEn,
           department: { code: e.member.department?.code ?? "" },
           academicYear: { code: e.member.academicYear?.code ?? "" },
-        }));
+        }))
+        .sort((a, b) => a.memberId.localeCompare(b.memberId));
 
-        attendanceRecords = targetSession.attendance.map((a) => ({
+      return NextResponse.json({
+        courses,
+        sessions: [],
+        session: {
+          id: target.id,
+          title: target.title,
+          courseId: target.courseId,
+          sessionDate: target.sessionDate,
+          startTime: target.startTime,
+          endTime: target.endTime,
+          room: target.room,
+          status: target.status,
+        },
+        enrolledMembers,
+        attendanceRecords: target.attendance.map((a) => ({
           id: a.id,
           memberId: a.memberId,
           status: a.status,
           remarks: a.remarks,
-        }));
-      }
-    } else if (courseId) {
-      // Load sessions for a specific course
-      sessions = await prisma.teachingSession.findMany({
-        where: { courseId },
-        orderBy: { sessionDate: "desc" },
+        })),
       });
     }
 
-    return NextResponse.json({
-      courses,
-      sessions,
-      enrolledMembers,
-      attendanceRecords,
-    });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Error fetching attendance";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    if (courseId && manageable !== null && !manageable.includes(courseId)) {
+      return NextResponse.json({ error: "FORBIDDEN: Not your course" }, { status: 403 });
+    }
+
+    const sessions = courseId
+      ? await prisma.teachingSession.findMany({
+          where: { courseId },
+          orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }],
+        })
+      : [];
+
+    return NextResponse.json({ courses, sessions, enrolledMembers: [], attendanceRecords: [] });
+  } catch (err) {
+    return errorResponse(err, "Error fetching attendance");
   }
 }
 
-/**
- * POST: Mark or save attendance for an entire session.
- * Only Super Admin, STJ Admin, and STJ President can use this endpoint.
- * Course Leaders use /api/leader/attendance instead.
- */
 export async function POST(req: NextRequest) {
   try {
-    const adminUser = await requireAttendanceAdmin();
-    const body = await req.json();
-
-    const { sessionId, records, finalize } = body as {
-      sessionId: string;
-      records: Array<{ memberId: string; status: AttendanceStatus; remarks?: string }>;
-      finalize?: boolean;
-    };
-
-    if (!sessionId || !Array.isArray(records)) {
+    const user = await requireTeamManager();
+    const parsed = saveSchema.safeParse(await req.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid request payload. sessionId and records are required." },
+        { error: "Invalid payload. sessionId and records are required.", details: parsed.error.flatten() },
         { status: 400 }
+      );
+    }
+    const { sessionId, records, finalize } = parsed.data;
+
+    const target = await prisma.teachingSession.findUnique({
+      where: { id: sessionId },
+      select: { courseId: true },
+    });
+    if (!target) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    await assertCourseAccess(user, target.courseId);
+
+    // Only members enrolled in this course may receive attendance
+    const enrolled = await prisma.courseEnrollment.findMany({
+      where: { courseId: target.courseId },
+      select: { memberId: true },
+    });
+    const enrolledIds = new Set(enrolled.map((e) => e.memberId));
+    const invalid = records.filter((r) => !enrolledIds.has(r.memberId));
+    if (invalid.length > 0) {
+      return NextResponse.json(
+        { error: "FORBIDDEN: Some members are not part of this course team" },
+        { status: 403 }
       );
     }
 
     await prisma.$transaction(async (tx) => {
       for (const r of records) {
         await tx.attendanceRecord.upsert({
-          where: {
-            sessionId_memberId: {
-              sessionId,
-              memberId: r.memberId,
-            },
-          },
-          update: {
-            status: r.status,
-            remarks: r.remarks,
-            lastUpdatedById: adminUser.id,
-          },
+          where: { sessionId_memberId: { sessionId, memberId: r.memberId } },
+          update: { status: r.status, remarks: r.remarks || null, lastUpdatedById: user.id },
           create: {
             sessionId,
             memberId: r.memberId,
             status: r.status,
-            remarks: r.remarks,
-            markedById: adminUser.id,
+            remarks: r.remarks || null,
+            markedById: user.id,
           },
         });
       }
 
       if (finalize) {
-        await tx.teachingSession.update({
-          where: { id: sessionId },
-          data: { status: "COMPLETED" },
-        });
+        await tx.teachingSession.update({ where: { id: sessionId }, data: { status: "COMPLETED" } });
       }
 
       await tx.auditLog.create({
         data: {
-          userId: adminUser.id,
+          userId: user.id,
           action: finalize ? "ATTENDANCE_FINALIZED" : "ATTENDANCE_SAVED",
           entityType: "ATTENDANCE",
           entityId: sessionId,
-          details: JSON.stringify({
-            count: records.length,
-            markedBy: adminUser.fullNameEn,
-            finalized: !!finalize,
-          }),
+          details: JSON.stringify({ count: records.length, markedBy: user.fullNameEn, finalized: !!finalize }),
         },
       });
     });
@@ -188,12 +185,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: finalize
-        ? "Attendance successfully saved and session marked as completed."
-        : "Attendance records saved successfully.",
+        ? "Attendance saved and lesson marked as completed."
+        : "Attendance saved successfully.",
     });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Error saving attendance";
-    const status = msg.includes("FORBIDDEN") ? 403 : msg.includes("UNAUTHORIZED") ? 401 : 500;
-    return NextResponse.json({ error: msg }, { status });
+  } catch (err) {
+    return errorResponse(err, "Error saving attendance");
   }
 }

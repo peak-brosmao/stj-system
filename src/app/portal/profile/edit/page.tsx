@@ -56,9 +56,9 @@ export default function ProfileEditPage() {
         if (data.profile) {
           const p = data.profile;
           setProfile(p);
-          setDisplayName(p.displayName || "Brosmao");
-          setPhone(p.phone || "099661460");
-          setTelegram(p.telegram || "@brosmao_peak");
+          setDisplayName(p.displayName || "");
+          setPhone(p.phone || "");
+          setTelegram(p.telegram || "");
           setBio(p.bio || "");
           setAddress(p.address || "");
           setPreferredLanguage(p.preferredLanguage || "km");
@@ -188,8 +188,8 @@ export default function ProfileEditPage() {
     <PortalLayout
       portalType="portal"
       userRole="STJ Member"
-      userName={profile?.fullNameKh || "ពាក់ ប្រុសម៉ៅ"}
-      userMemberId={profile?.member?.memberId || "STJ033"}
+      userName={profile?.fullNameKh || profile?.fullNameEn || ""}
+      userMemberId={profile?.member?.memberId || undefined}
     >
       <div className="space-y-6 max-w-4xl mx-auto">
         <div className="flex items-center justify-between pb-2">
@@ -294,7 +294,7 @@ export default function ProfileEditPage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                    placeholder="e.g. Brosmao"
+                    placeholder="ឧ. ភ្នំពេញ"
                   />
                 </div>
                 <div>

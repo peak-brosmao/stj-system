@@ -1,177 +1,130 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import {
-  BookOpen,
-  ArrowLeft,
-  Users,
-  Calendar,
-  Clock,
-  MapPin,
-  Megaphone,
-  CheckCircle2,
-  CalendarDays,
-  UserCheck,
-} from "lucide-react";
+import { ArrowLeft, BookOpen, Clock, MapPin, UserCheck, Users } from "lucide-react";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+
+interface CourseDetail {
+  code: string;
+  titleKh: string;
+  titleEn: string;
+  descriptionKh: string;
+  academicTerm: string;
+  leaders: Array<{ fullNameKh: string; fullNameEn: string; email: string; phone: string }>;
+  sessions: Array<{ id: string; title: string; date: string; time: string; room: string; status: string }>;
+  enrolledMembers: Array<{ memberId: string; fullNameKh: string; fullNameEn: string }>;
+}
+
+const STATUS: Record<string, { v: "info" | "warning" | "success" | "destructive"; t: string }> = {
+  SCHEDULED: { v: "info", t: "តាមកាលវិភាគ (Scheduled)" },
+  IN_PROGRESS: { v: "warning", t: "កំពុងបង្រៀន (In progress)" },
+  COMPLETED: { v: "success", t: "បានបញ្ចប់ (Completed)" },
+  CANCELLED: { v: "destructive", t: "បានលុបចោល (Cancelled)" },
+};
 
 export default function CourseDetailPage() {
   const params = useParams();
-  const slug = (params?.courseId as string) || "programming";
+  const slug = (params?.courseId as string) || "";
+  const [course, setCourse] = useState<CourseDetail | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const isMath = slug.includes("math");
-  const isPhys = slug.includes("phys");
-  const isChem = slug.includes("chem");
-
-  const courseInfo = {
-    code: isMath ? "MATH101" : isPhys ? "PHYS101" : isChem ? "CHEM101" : "PROG101",
-    titleKh: isMath
-      ? "គណិតវិទ្យាវិស្វកម្ម (Engineering Mathematics)"
-      : isPhys
-      ? "រូបវិទ្យាវិស្វកម្ម (Engineering Physics)"
-      : isChem
-      ? "គីមីវិទ្យាទូទៅ (General Chemistry)"
-      : "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
-    titleEn: isMath
-      ? "Engineering Mathematics & Calculus"
-      : isPhys
-      ? "Engineering Physics: Mechanics & Waves"
-      : isChem
-      ? "General & Engineering Chemistry"
-      : "Programming & Algorithmic Thinking",
-    term: "ឆមាសទី១ ឆ្នាំសិក្សា ២០២៦~២០២៧",
-    leader: isMath
-      ? "គឹម រតនៈ (KIM Ratanak) - I5 GIM (010650202)"
-      : isPhys
-      ? "គ្រុយ អីុខាង (KRUY Ykhang) - I3 GIM (0968925682)"
-      : isChem
-      ? "ខេង លីឧស្សាហ៍ (KHENG Lyussa) - I3 GCI (0974253117)"
-      : "លាង ជីងហេង (LEANG JINGHENG) - I3 GTI (0976355500)",
-    schedule: isMath
-      ? "រៀងរាល់ថ្ងៃចន្ទ ម៉ោង 14:00 - 16:00"
-      : isPhys
-      ? "រៀងរាល់ថ្ងៃពុធ ម៉ោង 14:00 - 16:00"
-      : isChem
-      ? "រៀងរាល់ថ្ងៃព្រហស្បតិ៍ ម៉ោង 14:00 - 16:00"
-      : "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 10:00",
-    room: isMath ? "បន្ទប់ B-108, ITC Campus 1" : "បន្ទប់ A-204, ITC Campus 1",
-    description: isMath
-      ? "សិក្សាស៊ីជម្រៅអំពី Calculus, Linear Algebra, Matrix Diagonalization, Differential Equations សម្រាប់ការដោះស្រាយបញ្ហាជាក់ស្តែងក្នុងវិស្វកម្ម។"
-      : "ពង្រឹងមូលដ្ឋានគ្រឹះភាសា C, C++, Pointer Memory Architecture, Structs, Dynamic Memory, Linked Lists, Stack, Queue និងក្បួនដោះស្រាយ (Algorithms)។",
-  };
-
-  const sessions = [
-    { num: 1, title: "Pointers & Memory Architecture", date: "10 តុលា ២០២៦", status: "COMPLETED" },
-    { num: 2, title: "Structs & Dynamic Memory Allocation", date: "17 តុលា ២០២៦", status: "COMPLETED" },
-    { num: 3, title: "Linked List Implementation", date: "24 តុលា ២០២៦", status: "COMPLETED" },
-    { num: 4, title: "Stack & Queue Data Structures", date: "07 វិច្ឆិកា ២០២៦", status: "UPCOMING" },
-    { num: 5, title: "Recursion & Trees", date: "14 វិច្ឆិកា ២០២៦", status: "UPCOMING" },
-  ];
+  useEffect(() => {
+    if (!slug) return;
+    fetch(`/api/portal/courses?id=${encodeURIComponent(slug)}`)
+      .then((r) => r.json())
+      .then((d) => d.course && setCourse(d.course))
+      .finally(() => setLoading(false));
+  }, [slug]);
 
   return (
-    <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
-      userName="ពាក់ ប្រុសម៉ៅ"
-      userMemberId="STJ033"
-    >
-      <div className="space-y-6 max-w-5xl mx-auto">
-        <div>
-          <Link
-            href="/portal/courses"
-            className="inline-flex items-center space-x-1.5 text-xs text-muted-foreground hover:text-foreground mb-2"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>ត្រឡប់ទៅកាន់មុខវិជ្ជារបស់ខ្ញុំ</span>
-          </Link>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <PortalLayout portalType="portal" userRole="STJ Team Tutor" userName="">
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <Link href="/portal/courses" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>ថយក្រោយ (Back)</span>
+        </Link>
+
+        {!course && (
+          <p className="text-xs text-muted-foreground">
+            {loading ? "កំពុងដំណើរការ..." : "រកមិនឃើញមុខវិជ្ជាឡើយ (Course not found.)"}
+          </p>
+        )}
+
+        {course && (
+          <>
             <div>
-              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                {courseInfo.code} • {courseInfo.term}
-              </span>
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground mt-1.5">
-                {courseInfo.titleKh}
-              </h1>
-              <p className="text-xs text-muted-foreground font-sans">{courseInfo.titleEn}</p>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary mb-1">
+                <BookOpen className="w-4 h-4" />
+                <span className="font-mono">{course.code}</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">{course.titleKh}</h1>
+              <p className="text-xs text-muted-foreground mt-1">{course.descriptionKh}</p>
             </div>
-            <Badge variant="success">សកម្មភាពសិក្សាកំពុងដំណើរការ</Badge>
-          </div>
-        </div>
 
-        {/* Overview cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card>
-            <CardContent className="p-4 space-y-1">
-              <span className="text-[11px] text-muted-foreground flex items-center space-x-1.5">
-                <UserCheck className="w-3.5 h-3.5 text-primary" />
-                <span>ប្រធានក្រុមទទួលបន្ទុក:</span>
-              </span>
-              <p className="font-bold text-xs text-foreground mt-1">{courseInfo.leader}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 space-y-1">
-              <span className="text-[11px] text-muted-foreground flex items-center space-x-1.5">
-                <Clock className="w-3.5 h-3.5 text-primary" />
-                <span>កាលវិភាគសិក្សា:</span>
-              </span>
-              <p className="font-bold text-xs text-foreground mt-1">{courseInfo.schedule}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 space-y-1">
-              <span className="text-[11px] text-muted-foreground flex items-center space-x-1.5">
-                <MapPin className="w-3.5 h-3.5 text-primary" />
-                <span>បន្ទប់រៀនផ្លូវការ:</span>
-              </span>
-              <p className="font-bold text-xs text-foreground mt-1">{courseInfo.room}</p>
-            </CardContent>
-          </Card>
-        </div>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
+                  <UserCheck className="w-4 h-4 text-primary" />
+                  ប្រធានក្រុមបង្រៀន (Course Leaders)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1 text-xs">
+                {course.leaders.length === 0 && <p className="text-muted-foreground">ពុំទាន់បានចាត់តាំង (Not assigned yet.)</p>}
+                {course.leaders.map((l) => (
+                  <p key={l.email} className="text-foreground">
+                    {l.fullNameKh} ({l.fullNameEn}) • {l.phone}
+                  </p>
+                ))}
+              </CardContent>
+            </Card>
 
-        {/* Description & Curriculum */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">ពិពណ៌នាសង្ខេបមុខវិជ្ជា (Course Syllabus)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              {courseInfo.description}
-            </p>
-
-            <div className="pt-3 border-t border-border">
-              <h4 className="font-bold text-xs text-foreground mb-3">កាលវិភាគវគ្គបង្រៀន (Teaching Sessions):</h4>
-              <div className="space-y-2">
-                {sessions.map((s) => (
-                  <div
-                    key={s.num}
-                    className="p-3 rounded-xl border border-border flex items-center justify-between text-xs"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-[11px]">
-                        {s.num}
-                      </span>
-                      <div>
-                        <p className="font-semibold text-foreground">{s.title}</p>
-                        <span className="text-[11px] text-muted-foreground">{s.date}</span>
-                      </div>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold">មេរៀន (Lessons)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {course.sessions.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet.)
+                  </p>
+                )}
+                {course.sessions.map((s) => (
+                  <div key={s.id} className="p-3 rounded-lg border border-border bg-muted/30 text-xs space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-foreground">{s.title}</span>
+                      <Badge variant={STATUS[s.status]?.v || "info"}>{STATUS[s.status]?.t || s.status}</Badge>
                     </div>
-                    <Badge variant={s.status === "COMPLETED" ? "secondary" : "default"}>
-                      {s.status === "COMPLETED" ? "បានបញ្ចប់" : "ខាងមុខ"}
-                    </Badge>
+                    <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                      <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{s.date} {s.time}</span>
+                      <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{s.room}</span>
+                    </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
+                  <Users className="w-4 h-4 text-primary" />
+                  ក្រុមគ្រូបង្រៀន (Team) - {course.enrolledMembers.length}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
+                {course.enrolledMembers.map((m) => (
+                  <p key={m.memberId} className="text-foreground">
+                    <span className="font-mono text-muted-foreground">{m.memberId}</span> {m.fullNameKh} ({m.fullNameEn})
+                  </p>
+                ))}
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </PortalLayout>
   );
 }
-

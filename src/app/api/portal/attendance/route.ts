@@ -5,6 +5,14 @@ import { calculateAttendanceRate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Member view (read-only). Everything comes from the same SQLite database that
+ * Course Leaders write to:
+ *  - records:  attendance already recorded by my Course Leader
+ *  - upcoming: lessons my Course Leader created that have not been taught yet
+ *  - pending:  lessons whose date has passed but attendance is not recorded yet
+ * A lesson is invisible to members until a Leader / the President creates it.
+ */
 export async function GET(req: NextRequest) {
   try {
     const session = await getSession();
@@ -16,180 +24,108 @@ export async function GET(req: NextRequest) {
     const courseFilter = searchParams.get("course") || "ALL";
     const statusFilter = searchParams.get("status") || "ALL";
 
-    let records: any[] = [];
-    try {
-      // Find Member record linked to this user
-      const user = await prisma.user.findUnique({
-        where: { id: session.id },
-        include: {
-          member: true,
-        },
+    const user = await prisma.user.findUnique({
+      where: { id: session.id },
+      include: { member: { include: { enrollments: true } } },
+    });
+    const member = user?.member;
+
+    if (!member) {
+      return NextResponse.json({
+        success: true,
+        records: [],
+        upcoming: [],
+        pending: [],
+        stats: { total: 0, present: 0, late: 0, absent: 0, excused: 0, rate: 0 },
+        monthlyStats: [],
       });
-
-      const memberId = user?.member?.id;
-
-      if (memberId) {
-        const whereClause: any = { memberId };
-        if (courseFilter !== "ALL") {
-          whereClause.session = { courseId: courseFilter };
-        }
-        if (statusFilter !== "ALL") {
-          whereClause.status = statusFilter;
-        }
-
-        records = await prisma.attendanceRecord.findMany({
-          where: whereClause,
-          include: {
-            session: {
-              include: {
-                course: true,
-              },
-            },
-          },
-          orderBy: { session: { sessionDate: "desc" } },
-        });
-      }
-    } catch {
-      // Offline/fallback mode
     }
 
-    // Comprehensive fallback data if DB is offline or records empty
-    if (records.length === 0) {
-      records = [
-        {
-          id: "rec-1",
-          session: {
-            id: "sess-1",
-            title: "វគ្គទី១៖ Data Structures - Pointer & Dynamic Memory in C/C++",
-            sessionDate: new Date("2026-10-10"),
-            startTime: "08:00",
-            endTime: "10:00",
-            room: "Campus 1, Building A, Room 204",
-            course: {
-              id: "c-prog",
-              code: "PROG101",
-              titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
-              titleEn: "Programming & Algorithmic Thinking",
-            },
-          },
-          status: "PRESENT",
-          remarks: "បានចូលរួមទាន់ពេលវេលា និងសកម្មក្នុងការធ្វើលំហាត់ជាក់ស្តែង",
-          markedAt: new Date("2026-10-10T08:05:00"),
+    const courseIds = member.enrollments.map((e) => e.courseId);
+    const courseWhere =
+      courseFilter !== "ALL"
+        ? { OR: [{ courseId: courseFilter }, { course: { code: courseFilter } }] }
+        : {};
+
+    const sessionInclude = { course: true } as const;
+
+    const [records, lessons] = await Promise.all([
+      prisma.attendanceRecord.findMany({
+        where: {
+          memberId: member.id,
+          ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
+          session: { is: { courseId: { in: courseIds }, ...courseWhere } },
         },
-        {
-          id: "rec-2",
-          session: {
-            id: "sess-2",
-            title: "វគ្គទី២៖ Algorithm Complexity - Big O Notation & Sorting",
-            sessionDate: new Date("2026-10-17"),
-            startTime: "08:00",
-            endTime: "10:00",
-            room: "Campus 1, Building A, Room 204",
-            course: {
-              id: "c-prog",
-              code: "PROG101",
-              titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
-              titleEn: "Programming & Algorithmic Thinking",
-            },
-          },
-          status: "PRESENT",
-          remarks: null,
-          markedAt: new Date("2026-10-17T08:02:00"),
+        include: { session: { include: sessionInclude } },
+        orderBy: { session: { sessionDate: "desc" } },
+      }),
+      prisma.teachingSession.findMany({
+        where: {
+          courseId: { in: courseIds },
+          status: { not: "CANCELLED" },
+          ...courseWhere,
         },
-        {
-          id: "rec-3",
-          session: {
-            id: "sess-3",
-            title: "វគ្គទី១៖ Linear Algebra - Eigenvalues & Matrix Diagonalization",
-            sessionDate: new Date("2026-10-12"),
-            startTime: "14:00",
-            endTime: "16:00",
-            room: "Campus 1, Building B, Room 108",
-            course: {
-              id: "c-math",
-              code: "MATH101",
-              titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
-              titleEn: "Engineering Mathematics",
-            },
-          },
-          status: "LATE",
-          remarks: "មកយឺត ១០ នាទី ដោយសារជាប់បេសកកម្មនៅមន្ទីរពិសោធន៍",
-          markedAt: new Date("2026-10-12T14:12:00"),
-        },
-        {
-          id: "rec-4",
-          session: {
-            id: "sess-4",
-            title: "វគ្គទី៣៖ Linked List Implementation & Memory Leaks",
-            sessionDate: new Date("2026-10-24"),
-            startTime: "08:00",
-            endTime: "10:00",
-            room: "Campus 1, Building A, Room 204",
-            course: {
-              id: "c-prog",
-              code: "PROG101",
-              titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
-              titleEn: "Programming & Algorithmic Thinking",
-            },
-          },
-          status: "PRESENT",
-          remarks: null,
-          markedAt: new Date("2026-10-24T08:01:00"),
-        },
-        {
-          id: "rec-5",
-          session: {
-            id: "sess-5",
-            title: "វគ្គទី២៖ Differential Equations for Engineering Dynamics",
-            sessionDate: new Date("2026-10-26"),
-            startTime: "14:00",
-            endTime: "16:00",
-            room: "Campus 1, Building B, Room 108",
-            course: {
-              id: "c-math",
-              code: "MATH101",
-              titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
-              titleEn: "Engineering Mathematics",
-            },
-          },
-          status: "EXCUSED",
-          remarks: "សុំច្បាប់ផ្លូវការបំពេញកិច្ចការដេប៉ាតឺម៉ង់ GIC",
-          markedAt: new Date("2026-10-26T14:00:00"),
-        },
-      ];
-    }
+        include: { ...sessionInclude, attendance: { where: { memberId: member.id }, select: { id: true } } },
+        orderBy: [{ sessionDate: "asc" }, { startTime: "asc" }],
+      }),
+    ]);
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const unrecorded = lessons.filter((l) => l.attendance.length === 0);
+    const shape = (l: (typeof lessons)[number]) => ({
+      id: l.id,
+      title: l.title,
+      sessionDate: l.sessionDate,
+      startTime: l.startTime,
+      endTime: l.endTime,
+      room: l.room,
+      status: l.status,
+      course: { id: l.course.id, code: l.course.code, titleKh: l.course.titleKh, titleEn: l.course.titleEn },
+    });
+
+    const upcoming = unrecorded
+      .filter((l) => l.status !== "COMPLETED" && l.sessionDate >= startOfToday)
+      .map(shape);
+    const pending = unrecorded
+      .filter((l) => l.status === "COMPLETED" || l.sessionDate < startOfToday)
+      .map(shape);
 
     let present = 0;
     let late = 0;
     let absent = 0;
     let excused = 0;
+    const monthMap = new Map<string, { month: string; present: number; late: number; absent: number }>();
 
-    records.forEach((r) => {
+    for (const r of records) {
       if (r.status === "PRESENT") present++;
       else if (r.status === "LATE") late++;
       else if (r.status === "ABSENT") absent++;
       else if (r.status === "EXCUSED") excused++;
-    });
 
-    const rate = calculateAttendanceRate(present, late, records.length, excused);
+      const d = new Date(r.session.sessionDate);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const label = d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+      const entry = monthMap.get(key) || { month: label, present: 0, late: 0, absent: 0 };
+      if (r.status === "PRESENT") entry.present++;
+      else if (r.status === "LATE") entry.late++;
+      else if (r.status === "ABSENT") entry.absent++;
+      monthMap.set(key, entry);
+    }
 
-    // Monthly chart stats
-    const monthlyStats = [
-      { month: "Sep 2026", present: 2, late: 0, absent: 0 },
-      { month: "Oct 2026", present: 3, late: 1, absent: 0 },
-    ];
+    const monthlyStats = Array.from(monthMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([, v]) => v);
+
+    const rate = records.length > 0 ? calculateAttendanceRate(present, late, records.length, excused) : 0;
 
     return NextResponse.json({
       success: true,
       records,
-      stats: {
-        total: records.length,
-        present,
-        late,
-        absent,
-        excused,
-        rate,
-      },
+      upcoming,
+      pending,
+      stats: { total: records.length, present, late, absent, excused, rate },
       monthlyStats,
     });
   } catch (error: unknown) {
@@ -197,4 +133,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
-

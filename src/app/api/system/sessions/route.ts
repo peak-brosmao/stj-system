@@ -1,142 +1,212 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireRole } from "@/lib/auth";
+import {
+  requireTeamManager,
+  getManageableCourseIds,
+  assertCourseAccess,
+} from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Shared lesson (teaching session) management endpoint.
+ * Used by BOTH the Leader portal and the System portal against the same database.
+ *  - STJ President / admins: every course
+ *  - Course Leader: only the course they lead
+ * Members never use this endpoint; they only see lessons through /api/portal/*.
+ */
+
+const STATUSES = ["SCHEDULED", "IN_PROGRESS", "COMPLETED", "CANCELLED"] as const;
+
+const createSchema = z.object({
+  courseId: z.string().min(1),
+  title: z.string().min(2),
+  sessionDate: z.string().min(8),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/),
+  room: z.string().min(1),
+  notes: z.string().optional().nullable(),
+  status: z.enum(STATUSES).optional(),
+});
+
+const updateSchema = createSchema.partial().extend({ id: z.string().min(1) });
+
+function errorResponse(err: unknown, fallback: string) {
+  const msg = err instanceof Error ? err.message : fallback;
+  const status = msg.includes("FORBIDDEN") ? 403 : msg.includes("UNAUTHORIZED") ? 401 : 500;
+  return NextResponse.json({ error: msg }, { status });
+}
+
 export async function GET(req: NextRequest) {
   try {
+    const user = await requireTeamManager();
+    const manageable = await getManageableCourseIds(user);
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("courseId");
 
-    let sessions;
-    try {
-      sessions = await prisma.teachingSession.findMany({
-        where: courseId ? { courseId } : {},
-        include: {
-          course: true,
-          _count: {
-            select: { attendance: true },
-          },
-        },
-        orderBy: { sessionDate: "desc" },
-      });
-      if (!sessions || sessions.length === 0) {
-        throw new Error("No database sessions, using official defaults");
-      }
-    } catch {
-      sessions = [
-        {
-          id: "session-prog-1",
-          title: "សប្តាហ៍ទី១៖ សេចក្តីផ្តើមអំពី C++ និង Pointer Mechanics",
-          sessionDate: new Date("2026-10-15T08:00:00Z"),
-          startTime: "08:00",
-          endTime: "10:30",
-          room: "បន្ទប់ A-204, ITC Campus 1",
-          status: "COMPLETED",
-          course: { id: "c-prog", code: "PROG101", titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)" },
-          _count: { attendance: 9 },
-        },
-        {
-          id: "session-prog-2",
-          title: "សប្តាហ៍ទី២៖ Dynamic Memory Allocation & Linked Structures",
-          sessionDate: new Date("2026-10-22T08:00:00Z"),
-          startTime: "08:00",
-          endTime: "10:30",
-          room: "បន្ទប់ A-204, ITC Campus 1",
-          status: "COMPLETED",
-          course: { id: "c-prog", code: "PROG101", titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)" },
-          _count: { attendance: 9 },
-        },
-        {
-          id: "session-math-1",
-          title: "សប្តាហ៍ទី១៖ Linear Algebra & Matrix Diagonalization",
-          sessionDate: new Date("2026-10-17T08:00:00Z"),
-          startTime: "08:00",
-          endTime: "10:30",
-          room: "បន្ទប់ B-102, ITC Campus 1",
-          status: "COMPLETED",
-          course: { id: "c-math", code: "MATH101", titleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)" },
-          _count: { attendance: 7 },
-        },
-        {
-          id: "session-phys-1",
-          title: "សប្តាហ៍ទី១៖ Classical Mechanics & Wave Phenomena",
-          sessionDate: new Date("2026-10-18T14:00:00Z"),
-          startTime: "14:00",
-          endTime: "16:30",
-          room: "បន្ទប់ A-301, ITC Campus 1",
-          status: "COMPLETED",
-          course: { id: "c-phys", code: "PHYS101", titleKh: "រូបវិទ្យាវិស្វកម្ម (Physics)" },
-          _count: { attendance: 10 },
-        },
-        {
-          id: "session-chem-1",
-          title: "សប្តាហ៍ទី១៖ Molecular Structure & Thermodynamics",
-          sessionDate: new Date("2026-10-19T14:00:00Z"),
-          startTime: "14:00",
-          endTime: "16:30",
-          room: "បន្ទប់ C-205, ITC Campus 1",
-          status: "COMPLETED",
-          course: { id: "c-chem", code: "CHEM101", titleKh: "គីមីវិទ្យាទូទៅ (Chemistry)" },
-          _count: { attendance: 11 },
-        },
-      ];
+    if (courseId && manageable !== null && !manageable.includes(courseId)) {
+      return NextResponse.json({ error: "FORBIDDEN: Not your course" }, { status: 403 });
     }
 
-    return NextResponse.json({ sessions });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Error fetching sessions";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    const where = courseId
+      ? { courseId }
+      : manageable === null
+      ? {}
+      : { courseId: { in: manageable } };
+
+    const [sessions, courses] = await Promise.all([
+      prisma.teachingSession.findMany({
+        where,
+        include: {
+          course: true,
+          _count: { select: { attendance: true } },
+        },
+        orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }],
+      }),
+      prisma.course.findMany({
+        where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
+        orderBy: { code: "asc" },
+        select: { id: true, code: true, titleKh: true, titleEn: true },
+      }),
+    ]);
+
+    return NextResponse.json({ sessions, courses });
+  } catch (err) {
+    return errorResponse(err, "Failed to load sessions");
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await requireRole(["SUPER_ADMIN", "STJ_ADMIN"]);
-    const body = await req.json();
-
-    const { courseId, title, sessionDate, startTime, endTime, room, notes } = body;
-
-    if (!courseId || !title || !sessionDate || !startTime || !endTime || !room) {
+    const user = await requireTeamManager();
+    const parsed = createSchema.safeParse(await req.json());
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "All required session fields must be provided." },
+        { error: "Validation failed", details: parsed.error.flatten() },
         { status: 400 }
       );
     }
+    const data = parsed.data;
+    await assertCourseAccess(user, data.courseId);
 
     const created = await prisma.teachingSession.create({
       data: {
-        courseId,
-        title,
-        sessionDate: new Date(sessionDate),
-        startTime,
-        endTime,
-        room,
-        notes,
-        status: "SCHEDULED",
-        createdById: session.id,
+        courseId: data.courseId,
+        title: data.title,
+        sessionDate: new Date(data.sessionDate),
+        startTime: data.startTime,
+        endTime: data.endTime,
+        room: data.room,
+        notes: data.notes || null,
+        status: data.status || "SCHEDULED",
+        createdById: user.id,
       },
     });
 
-    try {
-      await prisma.auditLog.create({
-        data: {
-          userId: session.id,
-          action: "SESSION_CREATED",
-          entityType: "SESSION",
-          entityId: created.id,
-          details: JSON.stringify({ title, courseId, room }),
-        },
-      });
-    } catch {
-      // non-blocking
-    }
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "SESSION_CREATED",
+        entityType: "SESSION",
+        entityId: created.id,
+        details: JSON.stringify({ courseId: data.courseId, title: data.title }),
+      },
+    });
 
-    return NextResponse.json({ success: true, session: created });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Error creating session";
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ success: true, session: created }, { status: 201 });
+  } catch (err) {
+    return errorResponse(err, "Failed to create session");
   }
 }
 
+export async function PATCH(req: NextRequest) {
+  try {
+    const user = await requireTeamManager();
+    const parsed = updateSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const { id, ...fields } = parsed.data;
+
+    const existing = await prisma.teachingSession.findUnique({ where: { id } });
+    if (!existing) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    await assertCourseAccess(user, existing.courseId);
+    // A leader cannot move a lesson into another course
+    if (fields.courseId && fields.courseId !== existing.courseId) {
+      await assertCourseAccess(user, fields.courseId);
+    }
+
+    const updated = await prisma.teachingSession.update({
+      where: { id },
+      data: {
+        ...(fields.courseId ? { courseId: fields.courseId } : {}),
+        ...(fields.title ? { title: fields.title } : {}),
+        ...(fields.sessionDate ? { sessionDate: new Date(fields.sessionDate) } : {}),
+        ...(fields.startTime ? { startTime: fields.startTime } : {}),
+        ...(fields.endTime ? { endTime: fields.endTime } : {}),
+        ...(fields.room ? { room: fields.room } : {}),
+        ...(fields.notes !== undefined ? { notes: fields.notes || null } : {}),
+        ...(fields.status ? { status: fields.status } : {}),
+      },
+    });
+
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "SESSION_UPDATED",
+        entityType: "SESSION",
+        entityId: id,
+        details: JSON.stringify(fields),
+      },
+    });
+
+    return NextResponse.json({ success: true, session: updated });
+  } catch (err) {
+    return errorResponse(err, "Failed to update session");
+  }
+}
+
+/**
+ * Lessons that already have attendance recorded are never deleted (history is
+ * preserved). Use PATCH with status CANCELLED instead.
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const user = await requireTeamManager();
+    const id = new URL(req.url).searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "id is required" }, { status: 400 });
+
+    const existing = await prisma.teachingSession.findUnique({
+      where: { id },
+      include: { _count: { select: { attendance: true } } },
+    });
+    if (!existing) return NextResponse.json({ error: "Session not found" }, { status: 404 });
+    await assertCourseAccess(user, existing.courseId);
+
+    if (existing._count.attendance > 0) {
+      return NextResponse.json(
+        { error: "This lesson already has attendance records. Mark it as CANCELLED instead of deleting." },
+        { status: 409 }
+      );
+    }
+
+    await prisma.teachingSession.delete({ where: { id } });
+    await prisma.auditLog.create({
+      data: {
+        userId: user.id,
+        action: "SESSION_DELETED",
+        entityType: "SESSION",
+        entityId: id,
+        details: JSON.stringify({ title: existing.title }),
+      },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    return errorResponse(err, "Failed to delete session");
+  }
+}

@@ -11,7 +11,6 @@ import {
   Mail,
   ArrowRight,
   AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
 import { useI18n } from "@/components/i18n/I18nProvider";
 import { LanguageSelector } from "@/components/i18n/LanguageSelector";
@@ -30,21 +29,14 @@ function LoginContent() {
     initialRole === "leader" ? "leader" : initialRole === "system" ? "system" : "member"
   );
 
-  const [email, setEmail] = useState("peak.brosmao@itc.edu.kh");
-  const [password, setPassword] = useState("ITC@STJ2026!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleTabChange = (tab: "member" | "leader" | "system") => {
     setActiveTab(tab);
     setError(null);
-    if (tab === "member") {
-      setEmail("peak.brosmao@itc.edu.kh");
-    } else if (tab === "leader") {
-      setEmail("leang.jingheng@itc.edu.kh");
-    } else {
-      setEmail("admin@itc.edu.kh");
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -205,37 +197,6 @@ function LoginContent() {
               <ArrowRight className="w-4 h-4" />
             </Button>
           </form>
-
-          {/* Real Credentials Card */}
-          <div className="mt-6 pt-5 border-t border-border">
-            <p className="text-[11px] font-semibold text-foreground mb-1.5 flex items-center space-x-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
-              <span>គណនីផ្លូវការសម្រាប់ចូលតេស្ត (STJ 2026-2027 Roster):</span>
-            </p>
-            <div className="p-3 rounded-lg bg-muted/60 text-[11px] text-muted-foreground space-y-1.5 font-mono">
-              {activeTab === "member" && (
-                <>
-                  <p>ឈ្មោះ: <span className="text-foreground font-sans font-medium">ពាក់ ប្រុសម៉ៅ (PEAK BROSMAO)</span></p>
-                  <p>អត្តសញ្ញាណ: <span className="text-foreground">e20251455 • STJ033 • I2-GIC</span></p>
-                  <p>Email: <span className="text-foreground">peak.brosmao@itc.edu.kh</span></p>
-                </>
-              )}
-              {activeTab === "leader" && (
-                <>
-                  <p>ឈ្មោះ: <span className="text-foreground font-sans font-medium">លាង ជីងហេង (LEANG JINGHENG)</span></p>
-                  <p>តួនាទី: <span className="text-foreground">Programming Leader • I3-GTI</span></p>
-                  <p>Email: <span className="text-foreground">leang.jingheng@itc.edu.kh</span></p>
-                </>
-              )}
-              {activeTab === "system" && (
-                <>
-                  <p>តួនាទី: <span className="text-foreground font-sans font-medium">គណៈគ្រប់គ្រង STJ កណ្តាល (Super Admin)</span></p>
-                  <p>Email: <span className="text-foreground">admin@itc.edu.kh</span></p>
-                </>
-              )}
-              <p>Password: <span className="text-foreground">ITC@STJ2026!</span></p>
-            </div>
-          </div>
         </div>
 
         {/* Home link */}

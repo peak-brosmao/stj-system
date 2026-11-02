@@ -72,36 +72,17 @@ export default function SystemDashboardPage() {
   }, [selectedAcademicYear]);
 
   const summary = data?.summary || {
-    totalMembers: 39,
-    activeMembers: 39,
-    totalLeaders: 6,
-    totalCourses: 4,
-    totalSessions: 12,
-    attendanceRate: 91.4,
+    totalMembers: 0,
+    activeMembers: 0,
+    totalLeaders: 0,
+    totalCourses: 0,
+    totalSessions: 0,
+    attendanceRate: 0,
   };
 
-  const deptData = data?.charts?.deptDistribution && data.charts.deptDistribution.length > 0
-    ? data.charts.deptDistribution
-    : [
-        { name: "GIC", count: 8 },
-        { name: "GIM", count: 8 },
-        { name: "GCI", count: 6 },
-        { name: "GEE", count: 5 },
-        { name: "AMS", count: 4 },
-        { name: "GAR", count: 4 },
-        { name: "GCA", count: 2 },
-        { name: "GTI", count: 1 },
-        { name: "GTR", count: 1 },
-      ];
+  const deptData = data?.charts?.deptDistribution || [];
 
-  const yearData = data?.charts?.yearDistribution && data.charts.yearDistribution.length > 0
-    ? data.charts.yearDistribution
-    : [
-        { name: "I2", count: 17 },
-        { name: "I3", count: 16 },
-        { name: "I4", count: 3 },
-        { name: "I5", count: 3 },
-      ];
+  const yearData = data?.charts?.yearDistribution || [];
 
   return (
     <PortalLayout portalType="system" userRole="Super Admin" userName="គណៈគ្រប់គ្រងកណ្តាល">
@@ -320,15 +301,7 @@ export default function SystemDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {(data?.recentSessions || [
-                    {
-                      id: "session-1",
-                      title: "សប្តាហ៍ទី១៖ សេចក្តីផ្តើមអំពី C++ និង Pointer Mechanics",
-                      course: "PROG101",
-                      date: "2026-10-15",
-                      status: "COMPLETED",
-                    },
-                  ]).map((s) => (
+                  {(data?.recentSessions || []).map((s) => (
                     <tr key={s.id} className="hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4 font-medium text-foreground">{s.title}</td>
                       <td className="py-3 px-4 font-mono font-semibold text-primary">{s.course}</td>
@@ -347,6 +320,13 @@ export default function SystemDashboardPage() {
                       </td>
                     </tr>
                   ))}
+                  {(data?.recentSessions || []).length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="py-6 px-4 text-center text-muted-foreground">
+                        ??????????????????????????????? (No lessons created yet)
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

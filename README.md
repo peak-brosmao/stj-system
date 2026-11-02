@@ -157,14 +157,19 @@ Open `http://localhost:3000` in your web browser.
 
 ---
 
-## 7. Default Evaluation Credentials
+## 7. Official STJ 2026-2027 Evaluation Credentials
 
-| Role | Portal URL | Email | Password |
-| :--- | :--- | :--- | :--- |
-| **Super Admin** | `/system/login` | `admin@itc.edu.kh` | `ITC@STJ2026!` |
-| **STJ Coordinator** | `/system/login` | `coordinator@itc.edu.kh` | `ITC@STJ2026!` |
-| **Course Leader (Programming)** | `/leader/login` | `leader.prog@itc.edu.kh` | `ITC@STJ2026!` |
-| **Course Leader (Mathematics)** | `/leader/login` | `leader.math@itc.edu.kh` | `ITC@STJ2026!` |
+| Role | Name | Portal URL | Email / Student ID | Default Password |
+| :--- | :--- | :--- | :--- | :--- |
+| **STJ President (ប្រធាន STJ)** | ផល ដាវីត (PHAL David) | `/system/login` | `e20221334@itc.edu.kh` | `e20221334@ITC!` |
+| **Student Association** | សុខ សេងលី (SOK SENGLY) | `/system/login` | `e20230969@itc.edu.kh` | `e20230969@ITC!` |
+| **Course Leader (Programming)** | លាង ជីងហេង (LEANG JINGHENG) | `/leader/login` | `e20240704@itc.edu.kh` | `e20240704@ITC!` |
+| **Course Leader (Mathematics)** | គឹម រតនៈ (KIM Ratanak) | `/leader/login` | `e20221423@itc.edu.kh` | `e20221423@ITC!` |
+| **Senior Tutor Member (STJ033)** | ពៀក ប្រុសម៉ៅ (PEAK BROSMAO) | `/portal/login` | `e20251455@itc.edu.kh` | `e20251455@ITC!` |
+
+All 39 official senior tutors follow the standard pattern:
+- **Email:** `e202xxxxx@itc.edu.kh` (or Student ID `e202xxxxx`)
+- **Default Password:** `e202xxxxx@ITC!`
 
 ---
 

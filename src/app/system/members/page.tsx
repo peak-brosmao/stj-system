@@ -88,6 +88,17 @@ export default function SystemMembersPage() {
     loadMembers();
   }, []);
 
+  const openAddModal = async () => {
+    setIsAddModalOpen(true);
+    try {
+      const res = await fetch("/api/system/members?action=next-id");
+      const data = await res.json();
+      if (data.nextMemberId) {
+        setNewMember((prev) => ({ ...prev, memberId: data.nextMemberId }));
+      }
+    } catch {}
+  };
+
   const handleCreateMember = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -188,7 +199,7 @@ export default function SystemMembersPage() {
             <Button
               variant="default"
               size="sm"
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={openAddModal}
               className="text-xs space-x-1.5"
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -287,6 +298,28 @@ export default function SystemMembersPage() {
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end space-x-1.5">
                         <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={async () => {
+                            if (!confirm(`តើលោកអ្នកចង់កំណត់ពាក្យសម្ងាត់សមាជិក ${m.fullNameKh} ឡើងវិញមែនទេ?`)) return;
+                            try {
+                              const res = await fetch("/api/system/members/reset-password", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ memberId: m.id }),
+                              });
+                              const data = await res.json();
+                              if (!res.ok) throw new Error(data.error || "Reset failed");
+                              alert(`ពាក្យសម្ងាត់របស់ ${m.fullNameKh} ត្រូវបានកំណត់ឡើងវិញជោគជ័យ: ${data.defaultPassword}`);
+                            } catch (err: unknown) {
+                              alert(err instanceof Error ? err.message : "Error resetting password");
+                            }
+                          }}
+                          className="h-7 text-[11px] px-2 text-primary hover:bg-primary/10"
+                        >
+                          Reset Pass
+                        </Button>
+                        <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleToggleArchive(m)}
@@ -329,24 +362,23 @@ export default function SystemMembersPage() {
                 <form onSubmit={handleCreateMember} className="space-y-3 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">អត្តលេខ STJ *</label>
+                      <label className="block font-medium mb-1">អត្តលេខ STJ (Auto-Redeem ស្វ័យប្រវត្ត)</label>
                       <input
                         type="text"
-                        required
-                        placeholder="STJ009"
-                        value={newMember.memberId}
-                        onChange={(e) => setNewMember({ ...newMember, memberId: e.target.value })}
-                        className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
+                        readOnly
+                        value={newMember.memberId || "ស្វ័យប្រវត្ត (Auto-Generated)"}
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-muted/60 font-mono font-bold text-primary cursor-not-allowed"
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">អត្តលេខនិស្សិត ITC</label>
+                      <label className="block font-medium mb-1">អត្តលេខនិស្សិត ITC (Student ID) *</label>
                       <input
                         type="text"
-                        placeholder="e20240350"
+                        required
+                        placeholder="e2025xxxx"
                         value={newMember.studentId}
                         onChange={(e) => setNewMember({ ...newMember, studentId: e.target.value })}
-                        className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
+                        className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background font-mono"
                       />
                     </div>
                   </div>

@@ -30,7 +30,7 @@ export default function SystemAuditLogsPage() {
       id: "log-3",
       action: "LOGIN_SUCCESS",
       entityType: "USER",
-      user: "admin@itc.edu.kh",
+      user: "e20221334@itc.edu.kh",
       details: "Successful authenticated login into System Administration Portal",
       ipAddress: "127.0.0.1",
       timestamp: "2026-10-30 14:02:18",

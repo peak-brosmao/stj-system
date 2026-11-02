@@ -50,6 +50,7 @@ model User {
   reviewedProfileRequests ProfileChangeRequest[] @relation("AdminReviewedProfileRequests")
   notificationPreferences NotificationPreference?
   loginHistories    LoginHistory[]
+  mandates          StjMandate[]
 }
 
 model Role {
@@ -138,6 +139,7 @@ model Member {
   departmentId     String
   academicYearId   String
   status           String                 @default("ACTIVE") // ACTIVE, ARCHIVED, SUSPENDED
+  cohortYear       String?                @default("2026-2027")
   notes            String?
   registrationDate DateTime               @default(now())
   createdAt        DateTime               @default(now())
@@ -451,3 +453,24 @@ model LoginHistory {
 
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model StjMandate {
+  id                 String    @id @default(cuid())
+  academicYear       String    @unique // e.g. "2026-2027", "2027-2028"
+  titleKh            String    // អាណត្តិដឹកនាំ STJ ឆ្នាំសិក្សា ២០២៦-២០២៧
+  presidentId        String    // User ID of the STJ President
+  presidentNameKh    String    // ផល ដាវីត
+  presidentStudentId String    // e20221334
+  status             String    @default("ACTIVE") // ACTIVE, ARCHIVED, HANDED_OVER
+  isLocked           Boolean   @default(false)    // When archived/locked, previous year data cannot be mutated
+  startDate          DateTime  @default(now())
+  endDate            DateTime?
+  handoverDate       DateTime?
+  handoverNotes      String?
+  successorId        String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  president          User      @relation(fields: [presidentId], references: [id])
+}
+

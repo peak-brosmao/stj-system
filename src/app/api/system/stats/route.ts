@@ -19,9 +19,7 @@ export async function GET() {
     try {
       totalMembers = await prisma.member.count();
       activeMembers = await prisma.member.count({ where: { status: "ACTIVE" } });
-      totalLeaders = await prisma.userRole.count({
-        where: { role: { name: "COURSE_LEADER" } },
-      });
+      totalLeaders = await prisma.courseLeader.count();
       totalCourses = await prisma.course.count({ where: { status: "ACTIVE" } });
       totalSessions = await prisma.teachingSession.count();
 
@@ -72,61 +70,8 @@ export async function GET() {
         date: new Date(s.sessionDate).toISOString().split("T")[0],
         status: s.status,
       }));
-    } catch {
-      // Real Official STJ 2026-2027 Roster Data (39 Senior Volunteers, 6 Leaders, 4 Courses)
-      totalMembers = 39;
-      activeMembers = 39;
-      totalLeaders = 6;
-      totalCourses = 4;
-      totalSessions = 12;
-      attendanceRate = 91.4;
-      deptDistribution = [
-        { name: "GIC", count: 8 },
-        { name: "GIM", count: 8 },
-        { name: "GCI", count: 6 },
-        { name: "GEE", count: 5 },
-        { name: "AMS", count: 4 },
-        { name: "GAR", count: 4 },
-        { name: "GCA", count: 2 },
-        { name: "GTI", count: 1 },
-        { name: "GTR", count: 1 },
-      ];
-      yearDistribution = [
-        { name: "I2", count: 17 },
-        { name: "I3", count: 16 },
-        { name: "I4", count: 3 },
-        { name: "I5", count: 3 },
-      ];
-      recentSessions = [
-        {
-          id: "session-1",
-          title: "សប្តាហ៍ទី១៖ សេចក្តីផ្តើមអំពី C++ និង Pointer Mechanics",
-          course: "PROG101",
-          date: "2026-10-15",
-          status: "COMPLETED",
-        },
-        {
-          id: "session-2",
-          title: "សប្តាហ៍ទី១៖ Linear Algebra - Eigenvalues & Matrix Diagonalization",
-          course: "MATH101",
-          date: "2026-10-17",
-          status: "COMPLETED",
-        },
-        {
-          id: "session-3",
-          title: "សប្តាហ៍ទី១៖ Classical Mechanics & Wave Phenomena",
-          course: "PHYS101",
-          date: "2026-10-18",
-          status: "COMPLETED",
-        },
-        {
-          id: "session-4",
-          title: "សប្តាហ៍ទី១៖ Molecular Structure & Thermodynamics",
-          course: "CHEM101",
-          date: "2026-10-19",
-          status: "COMPLETED",
-        },
-      ];
+    } finally {
+      // nothing to clean up
     }
 
     return NextResponse.json({
