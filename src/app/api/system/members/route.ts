@@ -37,6 +37,11 @@ export async function GET(req: NextRequest) {
 
     const departments = await prisma.department.findMany({ where: { isActive: true } });
     const academicYears = await prisma.academicYear.findMany({ where: { isActive: true }, orderBy: { order: "asc" } });
+    const courses = await prisma.course.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { code: "asc" },
+      select: { id: true, code: true, titleKh: true, titleEn: true },
+    });
 
     const whereClause: Record<string, unknown> = {};
     if (status && status !== "ALL") {
@@ -91,7 +96,7 @@ export async function GET(req: NextRequest) {
       orderBy: { memberId: "asc" },
     });
 
-    return NextResponse.json({ members, departments, academicYears });
+    return NextResponse.json({ members, departments, academicYears, courses });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Error fetching members";
     return NextResponse.json({ error: msg }, { status: 500 });
@@ -263,7 +268,20 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, status, notes, phone, email } = body;
+    const {
+      id,
+      status,
+      notes,
+      phone,
+      email,
+      fullNameKh,
+      fullNameEn,
+      gender,
+      departmentId,
+      academicYearId,
+      courseId,
+      assignedCourse,
+    } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Member ID required" }, { status: 400 });
@@ -288,7 +306,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const isPresident = session.roles.includes("SUPER_ADMIN") || session.roles.includes("STJ_PRESIDENT");
+    const isPresident = session.roles.includes("SUPER_ADMIN") || session.roles.includes("STJ_PRESIDENT") || session.roles.includes("STJ_ADMIN");
     const isCourseLeader = session.roles.includes("COURSE_LEADER");
 
     if (!isPresident && !isCourseLeader) {
@@ -312,15 +330,80 @@ export async function PUT(req: NextRequest) {
       }
     }
 
+    // Reassign course if requested (STJ President privilege)
+    const targetCourseInput = courseId || assignedCourse;
+    if (targetCourseInput && isPresident) {
+      const targetCourse = await prisma.course.findFirst({
+        where: {
+          OR: [
+            { id: targetCourseInput },
+            { code: targetCourseInput },
+            { slug: targetCourseInput },
+          ],
+        },
+      });
+
+      if (targetCourse) {
+        // Delete previous enrollments for this member to move them to the new course cleanly
+        await prisma.courseEnrollment.deleteMany({
+          where: { memberId: id },
+        });
+
+        // Create new enrollment
+        await prisma.courseEnrollment.create({
+          data: {
+            courseId: targetCourse.id,
+            memberId: id,
+            status: "ACTIVE",
+          },
+        });
+      }
+    }
+
+    const updateData: Record<string, unknown> = {
+      ...(status && isPresident ? { status } : {}),
+      ...(notes !== undefined ? { notes } : {}),
+      ...(phone !== undefined ? { phone } : {}),
+      ...(email !== undefined && isPresident ? { email } : {}),
+    };
+
+    if (isPresident) {
+      if (fullNameKh) updateData.fullNameKh = fullNameKh;
+      if (fullNameEn) updateData.fullNameEn = fullNameEn;
+      if (gender) updateData.gender = gender;
+      if (departmentId) updateData.departmentId = departmentId;
+      if (academicYearId) updateData.academicYearId = academicYearId;
+    }
+
     const updated = await prisma.member.update({
       where: { id },
-      data: {
-        ...(status && isPresident ? { status } : {}),
-        ...(notes !== undefined ? { notes } : {}),
-        ...(phone !== undefined ? { phone } : {}),
-        ...(email !== undefined && isPresident ? { email } : {}),
+      data: updateData,
+      include: {
+        department: true,
+        academicYear: true,
+        enrollments: { include: { course: true } },
       },
     });
+
+    // Also sync user profile if exists
+    if (isPresident && (fullNameKh || fullNameEn || email || phone)) {
+      try {
+        const linkedUser = await prisma.user.findFirst({ where: { memberRecordId: id } });
+        if (linkedUser) {
+          await prisma.user.update({
+            where: { id: linkedUser.id },
+            data: {
+              ...(fullNameKh ? { fullNameKh } : {}),
+              ...(fullNameEn ? { fullNameEn } : {}),
+              ...(email ? { email } : {}),
+              ...(phone !== undefined ? { phone } : {}),
+            },
+          });
+        }
+      } catch {
+        // Non-blocking
+      }
+    }
 
     try {
       await prisma.auditLog.create({
@@ -329,7 +412,7 @@ export async function PUT(req: NextRequest) {
           action: "MEMBER_UPDATED",
           entityType: "MEMBER",
           entityId: updated.id,
-          details: JSON.stringify({ status, notes, phone }),
+          details: JSON.stringify({ status, notes, phone, course: targetCourseInput }),
         },
       });
     } catch {

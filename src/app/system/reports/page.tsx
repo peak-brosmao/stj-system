@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { FileBarChart, Download, Printer, Filter, Calendar, Award, ShieldCheck, RefreshCw } from "lucide-react";
+import { FileBarChart, Download, RefreshCw, BookOpen } from "lucide-react";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +10,7 @@ import * as XLSX from "xlsx";
 
 interface ReportItem {
   no: number;
+  id: string;
   memberId: string;
   studentId: string;
   nameKh: string;
@@ -23,6 +24,15 @@ interface ReportItem {
   excused: number;
   total: number;
   rate: number;
+  hasSessions: boolean;
+}
+
+interface SummaryData {
+  totalMembers: number;
+  totalSessions: number;
+  averageRate: number;
+  highPerformers: number;
+  membersWithSessionsCount: number;
 }
 
 export default function SystemReportsPage() {
@@ -30,47 +40,24 @@ export default function SystemReportsPage() {
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [deptFilter, setDeptFilter] = useState("ALL");
   const [reportData, setReportData] = useState<ReportItem[]>([]);
+  const [courses, setCourses] = useState<Array<{ id: string; code: string; titleKh: string }>>([]);
+  const [summary, setSummary] = useState<SummaryData>({
+    totalMembers: 0,
+    totalSessions: 0,
+    averageRate: 0,
+    highPerformers: 0,
+    membersWithSessionsCount: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   const loadData = () => {
     setLoading(true);
-    fetch("/api/system/members")
+    fetch(`/api/system/reports?academicYear=${selectedAcademicYear}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.members) {
-          const recs: ReportItem[] = data.members.map((m: any, idx: number) => {
-            const isExcused = idx % 7 === 6;
-            const isLate = idx % 5 === 3;
-            const present = isExcused ? 4 : isLate ? 4 : 5;
-            const late = isLate ? 1 : 0;
-            const excused = isExcused ? 1 : 0;
-            const absent = 0;
-            const total = 5;
-            const rate = Math.round(((present + late * 0.5) / (total - excused)) * 100);
-
-            const courseCode = m.enrollments && m.enrollments.length > 0
-              ? m.enrollments[0].course.code
-              : (m.notes?.includes("PROG101") ? "PROG101" : m.notes?.includes("MATH101") ? "MATH101" : m.notes?.includes("PHYS101") ? "PHYS101" : m.notes?.includes("CHEM101") ? "CHEM101" : "PROG101");
-
-            return {
-              no: idx + 1,
-              memberId: m.memberId,
-              studentId: m.studentId || "-",
-              nameKh: m.fullNameKh,
-              nameEn: m.fullNameEn,
-              dept: m.department?.code || "-",
-              yr: m.academicYear?.code || "-",
-              course: courseCode,
-              present,
-              late,
-              absent,
-              excused,
-              total,
-              rate,
-            };
-          });
-          setReportData(recs);
-        }
+        if (data.members) setReportData(data.members);
+        if (data.summary) setSummary(data.summary);
+        if (data.courses) setCourses(data.courses);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
@@ -78,7 +65,7 @@ export default function SystemReportsPage() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedAcademicYear]);
 
   const filteredData = reportData.filter((r) => {
     const matchesCourse = courseFilter === "ALL" || r.course === courseFilter;
@@ -101,32 +88,28 @@ export default function SystemReportsPage() {
       "Absent Sessions": r.absent,
       "Excused Sessions": r.excused,
       "Total Sessions": r.total,
-      "Attendance Rate (%)": `${r.rate}%`,
+      "Attendance Rate (%)": r.total > 0 ? `${r.rate}%` : "No Sessions",
     }));
 
     const ws = XLSX.utils.json_to_sheet(worksheetData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "STJ Attendance Report");
-    XLSX.writeFile(wb, `STJ_Central_Attendance_Report_${selectedAcademicYear}.xlsx`);
+    XLSX.writeFile(wb, `STJ_Official_Attendance_Report_${selectedAcademicYear}.xlsx`);
   };
 
   const exportCSV = () => {
     const headers = ["No.,Member ID,Student ID,Name Kh,Name En,Dept,Year,Course,Present,Late,Absent,Excused,Total,Rate%\n"];
     const rows = filteredData.map(
-      (r) => `${r.no},"${r.memberId}","${r.studentId}","${r.nameKh}","${r.nameEn}","${r.dept}","${r.yr}","${r.course}",${r.present},${r.late},${r.absent},${r.excused},${r.total},${r.rate}%\n`
+      (r) =>
+        `${r.no},"${r.memberId}","${r.studentId}","${r.nameKh}","${r.nameEn}","${r.dept}","${r.yr}","${r.course}",${r.present},${r.late},${r.absent},${r.excused},${r.total},${r.total > 0 ? `${r.rate}%` : "0%"}\n`
     );
-    const blob = new Blob([...headers, ...rows], { type: "text/csv;charset=utf-8;" });
+    const blob = new Blob(["\uFEFF" + headers + rows.join("")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `STJ_Central_Attendance_Report_${selectedAcademicYear}.csv`;
+    a.download = `STJ_Official_Attendance_Report_${selectedAcademicYear}.csv`;
     a.click();
   };
-
-  const totalMembers = filteredData.length;
-  const avgRate = totalMembers > 0
-    ? Math.round(filteredData.reduce((acc, cur) => acc + cur.rate, 0) / totalMembers)
-    : 0;
 
   return (
     <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
@@ -135,13 +118,13 @@ export default function SystemReportsPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <FileBarChart className="w-4 h-4" />
-              <span>Official Institutional Reports & Export</span>
+              <span>Official Institutional Reports &amp; Export</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
               របាយការណ៍ និងស្ថិតិវត្តមានទូទាំងប្រព័ន្ធ
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ ផ្លូវការ
+              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • ស្រង់តាមវត្តមានជាក់ស្តែងដែលបានកត់ត្រា
             </p>
           </div>
 
@@ -177,13 +160,14 @@ export default function SystemReportsPage() {
               <select
                 value={courseFilter}
                 onChange={(e) => setCourseFilter(e.target.value)}
-                className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
+                className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground font-medium"
               >
                 <option value="ALL">គ្រប់មុខវិជ្ជាទាំង ៤ (All Courses)</option>
-                <option value="PROG101">PROG101 - Programming</option>
-                <option value="MATH101">MATH101 - Mathematics</option>
-                <option value="PHYS101">PHYS101 - Physics</option>
-                <option value="CHEM101">CHEM101 - Chemistry</option>
+                {courses.map((c) => (
+                  <option key={c.id} value={c.code}>
+                    [{c.code}] {c.titleKh}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -198,12 +182,12 @@ export default function SystemReportsPage() {
                 <option value="GIC">GIC (Computer Engineering)</option>
                 <option value="GTI">GTI (Information Technology)</option>
                 <option value="AMS">AMS (Applied Mathematics)</option>
-                <option value="GIM">GIM (Industrial & Mechanical)</option>
+                <option value="GIM">GIM (Industrial &amp; Mechanical)</option>
                 <option value="GCI">GCI (Civil Engineering)</option>
-                <option value="GTR">GTR (Telecomm & Network)</option>
-                <option value="GEE">GEE (Electrical & Energy)</option>
+                <option value="GTR">GTR (Telecomm &amp; Network)</option>
+                <option value="GEE">GEE (Electrical &amp; Energy)</option>
                 <option value="GAR">GAR (Rural Engineering)</option>
-                <option value="GCA">GCA (Civil & Agronomy)</option>
+                <option value="GCA">GCA (Civil &amp; Agronomy)</option>
               </select>
             </div>
           </div>
@@ -227,28 +211,42 @@ export default function SystemReportsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-muted-foreground">សមាជិករៀមច្បងបង្រៀន</div>
-              <div className="text-2xl font-bold text-foreground mt-1">{totalMembers} នាក់</div>
+              <div className="text-[11px] text-muted-foreground">សមាជិករៀមច្បងបង្រៀនសរុប</div>
+              <div className="text-2xl font-bold text-foreground mt-1">{summary.totalMembers} នាក់</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">
+                {summary.membersWithSessionsCount} នាក់បានចាប់ផ្តើមបង្រៀន
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-primary">អត្រាវត្តមានមធ្យម</div>
-              <div className="text-2xl font-bold text-primary mt-1">{avgRate}%</div>
+              <div className="text-[11px] text-primary font-medium">អត្រាវត្តមានមធ្យមជាក់ស្តែង</div>
+              <div className="text-2xl font-bold text-primary mt-1">{summary.averageRate}%</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">
+                គិតលើចំនួនមេរៀនដែលបានបង្រៀន
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <div className="text-[11px] text-emerald-600 dark:text-emerald-400">អត្រាអនុវត្តល្អ (90%+)</div>
               <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-                {filteredData.filter((r) => r.rate >= 90).length} នាក់
+                {summary.highPerformers} នាក់
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">
+                គណនាពីទិន្នន័យស្រង់ជាក់ស្តែង
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-amber-600 dark:text-amber-400">ប្រភពទិន្នន័យ</div>
-              <div className="text-sm font-bold text-foreground mt-1.5 font-mono">prisma/stj.db</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400">ចំនួនមេរៀនសរុបក្នុងប្រព័ន្ធ</div>
+              <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
+                {summary.totalSessions} មេរៀន
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-0.5 font-mono">
+                prisma/stj.db
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -267,15 +265,23 @@ export default function SystemReportsPage() {
                   <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
                   <th className="py-3 px-4 font-semibold text-center">វត្តមាន</th>
                   <th className="py-3 px-4 font-semibold text-center">យឺត</th>
+                  <th className="py-3 px-4 font-semibold text-center">អវត្តមាន</th>
                   <th className="py-3 px-4 font-semibold text-center">ច្បាប់</th>
+                  <th className="py-3 px-4 font-semibold text-center">សរុបមេរៀន</th>
                   <th className="py-3 px-4 font-semibold text-center">ភាគរយវត្តមាន</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
-                    <td colSpan={10} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យរបាយការណ៍ពី SQLite Database (stj.db)...
+                    <td colSpan={12} className="py-8 text-center text-muted-foreground text-xs">
+                      កំពុងទាញយកទិន្នន័យរបាយការណ៍ជាក់ស្តែងពី Database...
+                    </td>
+                  </tr>
+                ) : filteredData.length === 0 ? (
+                  <tr>
+                    <td colSpan={12} className="py-8 text-center text-muted-foreground text-xs">
+                      ពុំមានទិន្នន័យត្រូវបង្ហាញឡើយ
                     </td>
                   </tr>
                 ) : (
@@ -292,17 +298,29 @@ export default function SystemReportsPage() {
                         <span className="font-semibold text-foreground">{r.dept}</span>
                         <span className="text-muted-foreground ml-1">({r.yr})</span>
                       </td>
-                      <td className="py-3 px-4 font-mono text-xs font-semibold text-primary">{r.course}</td>
+                      <td className="py-3 px-4">
+                        <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                          {r.course}
+                        </span>
+                      </td>
                       <td className="py-3 px-4 text-center font-semibold text-emerald-600">{r.present}</td>
                       <td className="py-3 px-4 text-center text-amber-600 font-semibold">{r.late}</td>
+                      <td className="py-3 px-4 text-center text-rose-600 font-semibold">{r.absent}</td>
                       <td className="py-3 px-4 text-center text-blue-600 font-semibold">{r.excused}</td>
+                      <td className="py-3 px-4 text-center font-mono font-medium">{r.total}</td>
                       <td className="py-3 px-4 text-center">
-                        <Badge
-                          variant={r.rate >= 90 ? "success" : r.rate >= 75 ? "warning" : "destructive"}
-                          className="text-[10px]"
-                        >
-                          {r.rate}%
-                        </Badge>
+                        {r.total === 0 ? (
+                          <Badge variant="outline" className="text-[10px] text-muted-foreground font-normal">
+                            មិនទាន់បង្រៀន
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant={r.rate >= 90 ? "success" : r.rate >= 75 ? "warning" : "destructive"}
+                            className="text-[10px]"
+                          >
+                            {r.rate}%
+                          </Badge>
+                        )}
                       </td>
                     </tr>
                   ))

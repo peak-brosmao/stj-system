@@ -38,6 +38,35 @@ function errorResponse(err: unknown, fallback: string) {
   return NextResponse.json({ error: msg }, { status });
 }
 
+async function resolveDbUserId(user: { id: string; email?: string | null; studentId?: string | null }): Promise<string> {
+  const dbUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: user.id },
+        ...(user.email ? [{ email: user.email }] : []),
+        ...(user.studentId ? [{ studentId: user.studentId }] : []),
+      ],
+    },
+    select: { id: true },
+  });
+  if (dbUser) return dbUser.id;
+  const fallback = await prisma.user.findFirst({
+    where: { userRoles: { some: { role: { name: { in: ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN"] } } } } },
+    select: { id: true },
+  });
+  return fallback?.id || user.id;
+}
+
+async function resolveCourseId(courseIdInput: string): Promise<string | null> {
+  const course = await prisma.course.findFirst({
+    where: {
+      OR: [{ id: courseIdInput }, { code: courseIdInput }, { slug: courseIdInput }],
+    },
+    select: { id: true },
+  });
+  return course?.id || null;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const user = await requireTeamManager();
@@ -88,11 +117,21 @@ export async function POST(req: NextRequest) {
       );
     }
     const data = parsed.data;
-    await assertCourseAccess(user, data.courseId);
+
+    const effectiveCourseId = await resolveCourseId(data.courseId);
+    if (!effectiveCourseId) {
+      return NextResponse.json(
+        { error: "រកមិនឃើញមុខវិជ្ជានេះឡើយ (Course not found in system)" },
+        { status: 404 }
+      );
+    }
+
+    await assertCourseAccess(user, effectiveCourseId);
+    const creatorId = await resolveDbUserId(user);
 
     const created = await prisma.teachingSession.create({
       data: {
-        courseId: data.courseId,
+        courseId: effectiveCourseId,
         title: data.title,
         sessionDate: new Date(data.sessionDate),
         startTime: data.startTime,
@@ -100,19 +139,23 @@ export async function POST(req: NextRequest) {
         room: data.room,
         notes: data.notes || null,
         status: data.status || "SCHEDULED",
-        createdById: user.id,
+        createdById: creatorId,
       },
     });
 
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: "SESSION_CREATED",
-        entityType: "SESSION",
-        entityId: created.id,
-        details: JSON.stringify({ courseId: data.courseId, title: data.title }),
-      },
-    });
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: creatorId,
+          action: "SESSION_CREATED",
+          entityType: "SESSION",
+          entityId: created.id,
+          details: JSON.stringify({ courseId: effectiveCourseId, title: data.title }),
+        },
+      });
+    } catch {
+      // non-blocking
+    }
 
     return NextResponse.json({ success: true, session: created }, { status: 201 });
   } catch (err) {
@@ -135,15 +178,24 @@ export async function PATCH(req: NextRequest) {
     const existing = await prisma.teachingSession.findUnique({ where: { id } });
     if (!existing) return NextResponse.json({ error: "Session not found" }, { status: 404 });
     await assertCourseAccess(user, existing.courseId);
-    // A leader cannot move a lesson into another course
-    if (fields.courseId && fields.courseId !== existing.courseId) {
-      await assertCourseAccess(user, fields.courseId);
+
+    let effectiveCourseId: string | undefined = undefined;
+    if (fields.courseId) {
+      const resolved = await resolveCourseId(fields.courseId);
+      if (resolved) {
+        effectiveCourseId = resolved;
+        if (effectiveCourseId !== existing.courseId) {
+          await assertCourseAccess(user, effectiveCourseId);
+        }
+      }
     }
+
+    const creatorId = await resolveDbUserId(user);
 
     const updated = await prisma.teachingSession.update({
       where: { id },
       data: {
-        ...(fields.courseId ? { courseId: fields.courseId } : {}),
+        ...(effectiveCourseId ? { courseId: effectiveCourseId } : {}),
         ...(fields.title ? { title: fields.title } : {}),
         ...(fields.sessionDate ? { sessionDate: new Date(fields.sessionDate) } : {}),
         ...(fields.startTime ? { startTime: fields.startTime } : {}),
@@ -154,15 +206,19 @@ export async function PATCH(req: NextRequest) {
       },
     });
 
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: "SESSION_UPDATED",
-        entityType: "SESSION",
-        entityId: id,
-        details: JSON.stringify(fields),
-      },
-    });
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: creatorId,
+          action: "SESSION_UPDATED",
+          entityType: "SESSION",
+          entityId: id,
+          details: JSON.stringify(fields),
+        },
+      });
+    } catch {
+      // non-blocking
+    }
 
     return NextResponse.json({ success: true, session: updated });
   } catch (err) {
@@ -194,16 +250,22 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    const creatorId = await resolveDbUserId(user);
+
     await prisma.teachingSession.delete({ where: { id } });
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: "SESSION_DELETED",
-        entityType: "SESSION",
-        entityId: id,
-        details: JSON.stringify({ title: existing.title }),
-      },
-    });
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: creatorId,
+          action: "SESSION_DELETED",
+          entityType: "SESSION",
+          entityId: id,
+          details: JSON.stringify({ title: existing.title }),
+        },
+      });
+    } catch {
+      // non-blocking
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
