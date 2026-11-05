@@ -8,7 +8,34 @@ const { execSync } = require("child_process");
 
 function ensureDatabase() {
   const cwd = process.cwd();
-  const prismaDb = path.join(cwd, "prisma", "stj.db");
+
+  // 1. Ensure .env file exists for Prisma CLI in clean deployment environments
+  const envPath = path.join(cwd, ".env");
+  const envProd = path.join(cwd, ".env.production");
+  if (!fs.existsSync(envPath)) {
+    if (fs.existsSync(envProd)) {
+      console.log("[ensure-db] Creating .env from .env.production...");
+      fs.copyFileSync(envProd, envPath);
+    } else {
+      console.log("[ensure-db] Creating fallback .env...");
+      fs.writeFileSync(
+        envPath,
+        'DATABASE_URL="file:./prisma/stj.db"\nJWT_SECRET="stj_jwt_secret_production_key_itc_cambodia_random_secure_hex_2026"\n'
+      );
+    }
+  }
+
+  // 2. Set environment variables in process
+  if (!process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = "file:./prisma/stj.db";
+  }
+
+  const prismaDir = path.join(cwd, "prisma");
+  if (!fs.existsSync(prismaDir)) {
+    fs.mkdirSync(prismaDir, { recursive: true });
+  }
+
+  const prismaDb = path.join(prismaDir, "stj.db");
   const rootDb = path.join(cwd, "stj.db");
 
   const hasPrismaDb = fs.existsSync(prismaDb) && fs.statSync(prismaDb).size > 1024;
@@ -32,8 +59,12 @@ function ensureDatabase() {
   } else {
     console.log("[ensure-db] Initializing brand new database with prisma db push & seed...");
     try {
-      execSync("npx prisma db push --skip-generate", { stdio: "inherit" });
-      execSync("node prisma/seed.js", { stdio: "inherit" });
+      const execEnv = {
+        ...process.env,
+        DATABASE_URL: "file:./prisma/stj.db",
+      };
+      execSync("npx prisma db push --skip-generate", { stdio: "inherit", env: execEnv });
+      execSync("node prisma/seed.js", { stdio: "inherit", env: execEnv });
       if (fs.existsSync(prismaDb) && !fs.existsSync(rootDb)) {
         fs.copyFileSync(prismaDb, rootDb);
       }
@@ -46,4 +77,3 @@ function ensureDatabase() {
 }
 
 ensureDatabase();
-
