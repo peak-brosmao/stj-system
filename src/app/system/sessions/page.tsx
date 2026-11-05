@@ -3,5 +3,5 @@
 import { SessionManager } from "@/components/manage/SessionManager";
 
 export default function Page() {
-  return <SessionManager portalType="system" userRole="STJ Administration" userName="???????????? STJ" />;
+  return <SessionManager portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត" />;
 }
