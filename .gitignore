@@ -30,7 +30,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Prisma local database
-dev.db
-dev.db-journal
+# Prisma database files (PROTECTED - Never commit or overwrite production data)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+prisma/*.db
+prisma/*.db-journal
+prisma/*.db-shm
+prisma/*.db-wal
+*.backup
 
