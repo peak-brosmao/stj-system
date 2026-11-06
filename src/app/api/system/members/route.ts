@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,15 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
+    if (LARAVEL_API_BASE && !searchParams.get("action")) {
+      const remote = await fetchFromLaravel("members");
+      if (remote && remote.ok) {
+        const remoteData = await remote.json();
+        if (remoteData && remoteData.members) {
+          return NextResponse.json(remoteData);
+        }
+      }
+    }
     if (searchParams.get("action") === "next-id") {
       const allMembers = await prisma.member.findMany({
         select: { memberId: true },

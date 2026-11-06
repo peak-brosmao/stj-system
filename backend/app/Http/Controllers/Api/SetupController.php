@@ -11,6 +11,7 @@ class SetupController extends Controller
 {
     /**
      * Browser-based 1-click Database Initializer for Hostinger File Manager users
+     * Creates database.sqlite file inside database/ folder if using SQLite
      * Access: GET /api/setup?key=stj2026
      */
     public function setup(Request $request)
@@ -23,6 +24,26 @@ class SetupController extends Controller
         }
 
         try {
+            $dbConnection = config('database.default', 'sqlite');
+            $dbPath = null;
+
+            if ($dbConnection === 'sqlite') {
+                $dbPath = config('database.connections.sqlite.database');
+                if (empty($dbPath) || $dbPath === ':memory:') {
+                    $dbPath = database_path('database.sqlite');
+                }
+
+                $dir = dirname($dbPath);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+
+                if (!file_exists($dbPath)) {
+                    touch($dbPath);
+                    chmod($dbPath, 0666);
+                }
+            }
+
             Artisan::call('migrate', ['--force' => true]);
             $migrateOutput = Artisan::output();
 
@@ -36,6 +57,11 @@ class SetupController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'STJ Database Migration & Seeding ជោគជ័យ ១០០%!',
+                'database' => [
+                    'connection' => $dbConnection,
+                    'file_path' => $dbPath ? basename($dbPath) . ' (ស្ថិតក្នុង folder: database/)' : 'MySQL Hostinger',
+                    'backup_instruction' => 'លោកអ្នកអាច Download ឯកសារ database.sqlite ក្នុង folder database/ មកកុំព្យូទ័របានគ្រប់ពេលដើម្បីធ្វើ Backup',
+                ],
                 'summary' => [
                     'members_seeded' => $memberCount,
                     'courses_seeded' => $courseCount,
@@ -56,4 +82,3 @@ class SetupController extends Controller
         }
     }
 }
-

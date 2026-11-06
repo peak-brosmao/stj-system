@@ -17,8 +17,7 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: [
-          "var(--font-khmer)",
-          "var(--font-inter)",
+          "'Kantumruy Pro'",
           "'Noto Sans Khmer'",
           "Inter",
           "-apple-system",
@@ -26,7 +25,7 @@ module.exports = {
           "sans-serif",
         ],
         khmer: [
-          "var(--font-khmer)",
+          "'Kantumruy Pro'",
           "'Noto Sans Khmer'",
           "-apple-system",
           "BlinkMacSystemFont",
