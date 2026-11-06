@@ -110,7 +110,7 @@ class StjDatabaseSeeder extends Seeder
             ['STJ014', 'e20221678', 'ប៊ុន សុខបញ្ញា', 'BUN Sokpanha', 'M', 'GCI', 'I5', '0767821209', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ015', 'e20241028', 'ឡេង ច័ន្ទវង្សា', 'LENG Vongsa', 'M', 'GAR', 'I3', '016594999', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ016', 'e20250175', 'ជាតិ វិសាល', 'CHEAT Visal', 'M', 'GAR', 'I2', '017724617', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
-            ['STJ017', 'e20251044', 'អិន សុជាតិ', 'ORN Socheat', 'M', 'GEE', 'I2', '0976442857', 'សមាជិក', 'course-phys101', false, 'MEMBER'],
+            ['STJ017', 'e20251044', 'អិន សុជាតិ', 'ORN Socheat', 'M', 'GEE', 'I2', '0976442857', 'សមាជិក', 'course-math101', false, 'MEMBER'],
             ['STJ018', 'e20251246', 'ម៉ឹង ហាក់', 'MOEUNG Hak', 'M', 'GAR', 'I2', '0968445445', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ019', 'e20250345', 'សុំ សុធាវី', 'SOM Sotheavy', 'F', 'GCA', 'I2', '011703261', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ020', 'e20250687', 'ហង់ សុជាតា', 'HANG Socheata', 'F', 'GCA', 'I2', '016735656', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
@@ -123,11 +123,12 @@ class StjDatabaseSeeder extends Seeder
             ['STJ028', 'e20240672', 'ស៊ឹង វិច្ឆិកា', 'SOUNG VICHKA', 'M', 'GIC', 'I3', '010814529', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ029', 'e20240232', 'សេង ម៉ិញហាវ', 'SENG MINGHAO', 'M', 'GIC', 'I3', '017968212', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ030', 'e20250475', 'ណាំ ម៉េងហួត', 'NAM MENGHOUT', 'M', 'GIC', 'I2', '099998951', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
-            ['STJ031', 'e20250731', 'ចៃ ជីជូ', 'CHAI CHICHOU', 'M', 'AMS', 'I2', '090249820', 'សមាជិក', 'course-math101', false, 'MEMBER'],
+            ['STJ031', 'e20250731', 'ចៃ ជីជូ', 'CHAI CHICHOU', 'M', 'AMS', 'I2', '090249820', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ032', 'e20251399', 'ហាក់ ដូនីឡា', 'HAK DONYLA', 'M', 'GIC', 'I2', '089926734', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ033', 'e20251455', 'ពៀក ប្រុសម៉ៅ', 'PEAK BROSMAO', 'M', 'GIC', 'I2', '099661460', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ034', 'e20250414', 'ចំរើន ដែន', 'CHAMROEN DEN', 'M', 'GIC', 'I2', '0963221116', 'សមាជិក', 'course-prog101', false, 'MEMBER'],
             ['STJ035', 'e20240046', 'ខេង លីឧស្សាហ៍', 'KHENG Lyussa', 'F', 'GCI', 'I3', '0974253117', 'ប្រធានក្រុម គីមីវិទ្យា', 'course-chem101', true, 'COURSE_LEADER'],
+            ['STJ036', 'e20240156', 'ឈិត សុធារិទ្ធ', 'CHHIT SOTHEARITH', 'M', 'AMS', 'I3', '012345678', 'សមាជិក', 'course-math101', false, 'MEMBER'],
             ['STJ037', 'e20240945', 'ឯល មូហាម៉ាត់សាហ្វី', 'EL Muhammadshafi', 'M', 'GAR', 'I3', '093696794', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ038', 'e20240561', 'ឈឿន ធារី', 'KHOEUN Theary', 'F', 'GCI', 'I3', '069944087', 'សមាជិក', 'course-chem101', false, 'MEMBER'],
             ['STJ039', 'e20240670', 'ហាប់ ស៊ីឈាង', 'HAB Sychheang', 'M', 'GIM', 'I3', '093202727', 'សមាជិក', 'course-phys101', false, 'MEMBER'],
@@ -207,6 +208,12 @@ class StjDatabaseSeeder extends Seeder
                 DB::table('course_enrollments')->where('member_id', $memberUuid)->delete();
             }
         }
+
+        // STJ008 (PEOU CHUMRATTANAK) teaches both MATH101 and PHYS101
+        DB::table('course_enrollments')->updateOrInsert(
+            ['course_id' => 'course-phys101', 'member_id' => 'member-stj008'],
+            ['enrolled_at' => now()]
+        );
 
         // 5. Course Leaders Assignment
         $leaderAssignments = [

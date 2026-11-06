@@ -56,6 +56,25 @@ export async function GET(req: NextRequest) {
   }
 }
 
+async function resolveDbUserId(user: { id: string; email?: string | null; studentId?: string | null }): Promise<string> {
+  const dbUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: user.id },
+        ...(user.email ? [{ email: user.email }] : []),
+        ...(user.studentId ? [{ studentId: user.studentId }] : []),
+      ],
+    },
+    select: { id: true },
+  });
+  if (dbUser) return dbUser.id;
+  const fallback = await prisma.user.findFirst({
+    where: { userRoles: { some: { role: { name: { in: ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN"] } } } } },
+    select: { id: true },
+  });
+  return fallback?.id || user.id;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const user = await requireAuth();
@@ -117,6 +136,8 @@ export async function POST(req: NextRequest) {
       passwordHash = await bcrypt.hash(password.trim(), 10);
     }
 
+    const dbUserId = await resolveDbUserId(user);
+
     const created = await prisma.shareLink.create({
       data: {
         token,
@@ -127,7 +148,7 @@ export async function POST(req: NextRequest) {
         passwordHash,
         expiresAt: expiresAt ? new Date(expiresAt) : null,
         showStats: showStats ?? true,
-        createdById: user.id,
+        createdById: dbUserId,
       },
     });
 

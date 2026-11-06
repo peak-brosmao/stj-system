@@ -118,18 +118,20 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
     }
     setShareLoading(true);
     try {
+      const courseCode = s.course?.code || s.courseCode || "";
+      const courseId = s.courseId || s.course?.id || courseCode;
       const res = await fetch("/api/system/share-links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          courseId: s.courseId,
+          courseId,
           sessionId: s.id,
-          title: `របាយការណ៍មេរៀន ${s.title} (${s.course.code})`,
+          title: `របាយការណ៍មេរៀន ${s.title || ""}${courseCode ? ` (${courseCode})` : ""}`,
           showStats: true,
         }),
       });
       const data = await res.json();
-      const tok = data.token || data.shareLink?.token;
+      const tok = data.token || data.shareLink?.token || (data.shareUrl ? data.shareUrl.replace("/share/", "") : null);
       if (tok) {
         setShareToken(tok);
         s.shareToken = tok;

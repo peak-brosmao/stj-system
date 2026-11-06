@@ -45,3 +45,10 @@ prisma/*.db-wal
 
 # Deployment Archives
 *.zip
+
+# Credentials & Confidential PDF Reports
+*Credentials*
+*credentials*
+database_backups/
+prisma/prisma/
+

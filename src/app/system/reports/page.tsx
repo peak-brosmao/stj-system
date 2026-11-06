@@ -18,6 +18,7 @@ interface ReportItem {
   dept: string;
   yr: string;
   course: string;
+  courses?: string[];
   isExecutive?: boolean;
   executiveRoleTitle?: string | null;
   present: number;
@@ -71,7 +72,10 @@ export default function SystemReportsPage() {
   }, [selectedAcademicYear]);
 
   const filteredData = reportData.filter((r) => {
-    const matchesCourse = courseFilter === "ALL" || r.course === courseFilter;
+    const matchesCourse =
+      courseFilter === "ALL" ||
+      (r.courses && r.courses.includes(courseFilter)) ||
+      r.course === courseFilter;
     const matchesDept = deptFilter === "ALL" || r.dept === deptFilter;
     return matchesCourse && matchesDept;
   });
@@ -307,9 +311,16 @@ export default function SystemReportsPage() {
                             {r.course}
                           </span>
                         ) : (
-                          <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                            {r.course}
-                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {(r.courses && r.courses.length > 0 ? r.courses : [r.course]).map((c) => (
+                              <span
+                                key={c}
+                                className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20"
+                              >
+                                {c}
+                              </span>
+                            ))}
+                          </div>
                         )}
                       </td>
                       <td className="py-3 px-4 text-center font-semibold text-emerald-600">
