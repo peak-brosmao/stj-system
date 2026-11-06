@@ -232,16 +232,16 @@ async function main() {
     const member = await prisma.member.upsert({
       where: { memberId },
       update: {
+        // 🔐 DATA PROTECTION: Only update identity fields (name, email, phone).
+        // Do NOT touch: status, departmentId, academicYearId — admin may have changed these.
         fullNameKh: m.nameKh,
         fullNameEn: m.nameEn,
         studentId: m.studentId,
         email: studentEmail,
         phone: m.phone,
         gender: m.gender,
-        departmentId: deptId,
-        academicYearId: yrId,
         cohortYear: "2026-2027",
-        notes: `មុខវិជ្ជាទទួលខុសត្រូវ៖ ${m.assignedCourse} | តួនាទី៖ ${m.role}`,
+        // notes intentionally omitted — admin may have written custom notes
       },
       create: {
         id: `member-${memberId.toLowerCase()}`,
@@ -277,11 +277,23 @@ async function main() {
     });
 
     if (userAccount) {
+      // 🔐 DATA PROTECTION: Never overwrite fields the user/admin may have customised.
+      // We only update structural fields (email linkage, name, phone) and NEVER
+      // reset the password or erase the profileImage that was uploaded after seed.
       userAccount = await prisma.user.update({
         where: { id: userAccount.id },
         data: {
+          // Keep email in sync with studentId convention
           email: studentEmail,
-          passwordHash,
+          // Only reset password if it still matches the factory default
+          // (i.e., the user has not yet changed it). We achieve this by
+          // comparing the stored hash against the seed password.
+          // If the hash doesn't match the seed password we leave it alone.
+          // NOTE: bcrypt.compare is async — we do it inline here.
+          ...(await (async () => {
+            const stillDefault = await require("bcryptjs").compare(studentPassword, userAccount.passwordHash);
+            return stillDefault ? { passwordHash } : {};
+          })()),
           fullNameKh: m.nameKh,
           fullNameEn: m.nameEn,
           studentId: m.studentId,
@@ -289,6 +301,7 @@ async function main() {
           gender: m.gender,
           status: "ACTIVE",
           memberRecordId: member.id,
+          // ⚠️  profileImage intentionally NOT updated — preserves uploaded avatars
         },
       });
     } else {
@@ -350,12 +363,21 @@ async function main() {
     }
 
     // Enrollments
+    // 🔐 DATA PROTECTION: Only create the seed enrollment if the member has
+    // NO existing enrollment at all. If an admin has already re-assigned this
+    // member to a different course, we must NOT overwrite their decision.
     if (m.assignedCourse !== "EXECUTIVE" && coursesByCode[m.assignedCourse]) {
-      await prisma.courseEnrollment.upsert({
-        where: { courseId_memberId: { courseId: coursesByCode[m.assignedCourse], memberId: member.id } },
-        update: {},
-        create: { courseId: coursesByCode[m.assignedCourse], memberId: member.id },
+      const existingEnrollments = await prisma.courseEnrollment.findMany({
+        where: { memberId: member.id },
       });
+      if (existingEnrollments.length === 0) {
+        // Brand-new member — create the seed enrollment
+        await prisma.courseEnrollment.create({
+          data: { courseId: coursesByCode[m.assignedCourse], memberId: member.id },
+        });
+      }
+      // If enrollments already exist, leave them untouched — the admin's
+      // assignments are the source of truth.
     }
   }
 

@@ -165,10 +165,13 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
   const openCreate = () => {
     setError("");
+    // If a specific course is filtered, default to that course.
+    // Otherwise, do NOT auto-select courses[0] (wrong course bug) —
+    // leave the form courseId empty so the user must explicitly pick.
     const defaultCourse =
       courseFilter !== "ALL"
-        ? courses.find((c) => c.code === courseFilter || c.id === courseFilter)?.id || courses[0]?.id || ""
-        : courses[0]?.id || "";
+        ? courses.find((c) => c.code === courseFilter || c.id === courseFilter)?.id || ""
+        : "";
     setForm(emptyForm(defaultCourse));
   };
 
@@ -190,6 +193,11 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form) return;
+    // Guard: course MUST be explicitly selected (never fall through to a wrong default)
+    if (!form.courseId) {
+      setError("សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវមុនសិន (Please select a course before saving)");
+      return;
+    }
     setSaving(true);
     setError("");
     try {
@@ -393,19 +401,35 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                 <form onSubmit={submit} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-medium mb-1">មុខវិជ្ជា (Course)</label>
+                    <label className="block font-medium mb-1">
+                      មុខវិជ្ជា (Course) <span className="text-destructive">*</span>
+                    </label>
                     <select
                       value={form.courseId}
+                      required
                       onChange={(e) => setForm({ ...form, courseId: e.target.value })}
-                      className="w-full p-2 rounded-lg border border-input bg-background"
+                      className={`w-full p-2 rounded-lg border bg-background ${
+                        !form.courseId ? "border-destructive/60 text-muted-foreground" : "border-input"
+                      }`}
                       disabled={courses.length === 1}
                     >
+                      {/* Placeholder option: forces user to actively pick a course */}
+                      {!form.courseId && (
+                        <option value="" disabled>
+                          — សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវ —
+                        </option>
+                      )}
                       {courses.map((c) => (
                         <option key={c.id} value={c.id}>
                           [{c.code}] {c.titleKh}
                         </option>
                       ))}
                     </select>
+                    {!form.courseId && (
+                      <p className="text-[10px] text-destructive mt-1">
+                        ⚠️ ត្រូវតែជ្រើសរើសមុខវិជ្ជាមុនពេលបង្កើតមេរៀន
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -497,7 +521,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     <Button type="button" variant="outline" size="sm" onClick={() => setForm(null)}>
                       បោះបង់
                     </Button>
-                    <Button type="submit" size="sm" disabled={saving}>
+                    <Button type="submit" size="sm" disabled={saving || !form.courseId}>
                       {saving ? "កំពុងរក្សាទុក..." : "រក្សាទុក (Save)"}
                     </Button>
                   </div>
