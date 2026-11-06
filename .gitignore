@@ -41,3 +41,6 @@ prisma/*.db-shm
 prisma/*.db-wal
 *.backup
 
+
+# Deployment Archives
+*.zip
