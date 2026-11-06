@@ -215,12 +215,12 @@ model TeachingSession {
   room        String             // Campus 1, Building A, Room 204
   status      String             @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
   notes       String?
-  createdById String
+  createdById String?
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 
   course      Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  createdBy   User               @relation("CreatedSessions", fields: [createdById], references: [id])
+  createdBy   User?              @relation("CreatedSessions", fields: [createdById], references: [id])
   attendance  AttendanceRecord[]
   shareLinks  ShareLink[]
 }

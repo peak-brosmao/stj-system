@@ -38,7 +38,7 @@ function errorResponse(err: unknown, fallback: string) {
   return NextResponse.json({ error: msg }, { status });
 }
 
-async function resolveDbUserId(user: { id: string; email?: string | null; studentId?: string | null }): Promise<string> {
+async function resolveDbUserId(user: { id: string; email?: string | null; studentId?: string | null }): Promise<string | null> {
   const dbUser = await prisma.user.findFirst({
     where: {
       OR: [
@@ -50,11 +50,12 @@ async function resolveDbUserId(user: { id: string; email?: string | null; studen
     select: { id: true },
   });
   if (dbUser) return dbUser.id;
+  // Fallback: find any president/admin user in the DB
   const fallback = await prisma.user.findFirst({
     where: { userRoles: { some: { role: { name: { in: ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN"] } } } } },
     select: { id: true },
   });
-  return fallback?.id || user.id;
+  return fallback?.id ?? null;
 }
 
 async function resolveCourseId(courseIdInput: string): Promise<string | null> {
@@ -139,7 +140,7 @@ export async function POST(req: NextRequest) {
         room: data.room,
         notes: data.notes || null,
         status: data.status || "SCHEDULED",
-        createdById: creatorId,
+        ...(creatorId ? { createdById: creatorId } : {}),
       },
     });
 
