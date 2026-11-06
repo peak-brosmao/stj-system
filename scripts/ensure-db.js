@@ -37,6 +37,7 @@ function ensureDatabase() {
 
   const prismaDb = path.join(prismaDir, "stj.db");
   const rootDb = path.join(cwd, "stj.db");
+  const templateDb = path.join(prismaDir, "template.sqlite");
 
   const hasPrismaDb = fs.existsSync(prismaDb) && fs.statSync(prismaDb).size > 1024;
   const hasRootDb = fs.existsSync(rootDb) && fs.statSync(rootDb).size > 1024;
@@ -57,19 +58,26 @@ function ensureDatabase() {
       fs.copyFileSync(rootDb, prismaDb);
     }
   } else {
-    console.log("[ensure-db] Initializing brand new database with prisma db push & seed...");
-    try {
-      const execEnv = {
-        ...process.env,
-        DATABASE_URL: "file:./prisma/stj.db",
-      };
-      execSync("npx prisma db push --skip-generate", { stdio: "inherit", env: execEnv });
-      execSync("node prisma/seed.js", { stdio: "inherit", env: execEnv });
-      if (fs.existsSync(prismaDb) && !fs.existsSync(rootDb)) {
-        fs.copyFileSync(prismaDb, rootDb);
+    // Neither exists: initialize from template.sqlite if available
+    if (fs.existsSync(templateDb) && fs.statSync(templateDb).size > 1024) {
+      console.log("[ensure-db] Initializing stj.db from template.sqlite...");
+      fs.copyFileSync(templateDb, prismaDb);
+      fs.copyFileSync(templateDb, rootDb);
+    } else {
+      console.log("[ensure-db] Initializing brand new database with prisma db push & seed...");
+      try {
+        const execEnv = {
+          ...process.env,
+          DATABASE_URL: "file:./prisma/stj.db",
+        };
+        execSync("npx prisma db push --skip-generate", { stdio: "inherit", env: execEnv });
+        execSync("node prisma/seed.js", { stdio: "inherit", env: execEnv });
+        if (fs.existsSync(prismaDb) && !fs.existsSync(rootDb)) {
+          fs.copyFileSync(prismaDb, rootDb);
+        }
+      } catch (e) {
+        console.error("[ensure-db] Warning during db push:", e.message);
       }
-    } catch (e) {
-      console.error("[ensure-db] Warning during db push:", e.message);
     }
   }
 
