@@ -31,3 +31,4 @@ class AcademicYearController extends Controller
         }
     }
 }
+
