@@ -199,8 +199,11 @@ function CorrectionRequestsContent() {
 
         {/* Submission Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-            <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl">
+          <div
+            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}
+          >
+            <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between pb-2 border-b border-border">
                 <h3 className="font-bold text-base text-foreground">
                   ដាក់ពាក្យស្នើសុំកែតម្រូវវត្តមាន

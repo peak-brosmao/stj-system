@@ -209,7 +209,7 @@ export function PortalLayout({
   const isActive = (href: string) => pathname === href || (href !== `/${portalType}/dashboard` && pathname.startsWith(href));
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300 relative">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 border-b border-border bg-card">
         <Logo
@@ -340,7 +340,7 @@ export function PortalLayout({
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         {/* Top Breadcrumb & Quick Bar */}
         <header className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">

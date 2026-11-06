@@ -89,3 +89,22 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* ============================================================
+   Modal / Dialog Overlay — ការពារ modal ត្រូវបង្ហាញពេញ Screen
+   ============================================================ */
+/* Ensure fixed-positioned modals always cover full viewport */
+.modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem;
+}
+
+/* Prevent body scroll when modal open */
+body.modal-open {
+  overflow: hidden;
+}
