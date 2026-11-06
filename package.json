@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/ensure-db.js && npx prisma generate && next build",
+    "build": "npx prisma generate && next build",
     "start": "node scripts/ensure-db.js && next start",
     "lint": "next lint",
     "postinstall": "node -e \"const fs=require('fs'); if(!fs.existsSync('.env')&&fs.existsSync('.env.production')) fs.copyFileSync('.env.production','.env')\" && npx prisma generate",

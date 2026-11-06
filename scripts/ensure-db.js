@@ -1,6 +1,10 @@
 /**
  * Hostinger & Local Self-Healing Database Synchronizer
  * Guarantees that stj.db exists, has all tables, and is synced across prisma/stj.db and root stj.db
+ *
+ * PRODUCTION SAFETY:
+ *   - ពេល NODE_ENV=production: Script នឹង NEVER seed/reset database
+ *   - ពេល DB មិនមាននៅ production: បង្ហាញ error ហើយ exit(1) ជាជាង silent reset
  */
 const fs = require("fs");
 const path = require("path");
@@ -8,6 +12,9 @@ const { execSync } = require("child_process");
 
 function ensureDatabase() {
   const cwd = process.cwd();
+
+  // 🔐 Production Guard — ការពារ Data Reset ពេល Auto-deploy
+  const isProduction = process.env.NODE_ENV === "production";
 
   // 1. Ensure .env file exists for Prisma CLI in clean deployment environments
   const envPath = path.join(cwd, ".env");
@@ -59,6 +66,15 @@ function ensureDatabase() {
     }
   } else {
     // Neither exists: initialize from template.sqlite if available
+    if (isProduction) {
+      // 🔴 PRODUCTION SAFETY: ហាមប្លាយ! កុំ seed/reset ពេល production
+      console.error("[ensure-db] ❌ CRITICAL: No database found on production server!");
+      console.error("[ensure-db]    Please upload stj.db manually via File Manager.");
+      console.error("[ensure-db]    Path: prisma/stj.db  OR  stj.db (at project root)");
+      process.exit(1);
+    }
+
+    // LOCAL DEV ONLY: seed ដំណើរការ
     if (fs.existsSync(templateDb) && fs.statSync(templateDb).size > 1024) {
       console.log("[ensure-db] Initializing stj.db from template.sqlite...");
       fs.copyFileSync(templateDb, prismaDb);
