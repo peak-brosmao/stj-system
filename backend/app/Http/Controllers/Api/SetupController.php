@@ -30,7 +30,7 @@ class SetupController extends Controller
             if ($dbConnection === 'sqlite') {
                 $dbPath = config('database.connections.sqlite.database');
                 if (empty($dbPath) || $dbPath === ':memory:') {
-                    $dbPath = database_path('database.sqlite');
+                    $dbPath = database_path('stj.db');
                 }
 
                 $dir = dirname($dbPath);
