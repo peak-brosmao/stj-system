@@ -4,6 +4,7 @@ import path from "path";
 import crypto from "crypto";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { LARAVEL_API_BASE } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -87,13 +88,41 @@ export async function POST(req: NextRequest) {
     const randomHex = crypto.randomBytes(16).toString("hex");
     const safeFileName = `avatar_${session.id.slice(-6)}_${Date.now()}_${randomHex}${extension}`;
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "avatars");
-    await fs.mkdir(uploadDir, { recursive: true });
+    let publicUrl = `/uploads/avatars/${safeFileName}`;
 
-    const filePath = path.join(uploadDir, safeFileName);
-    await fs.writeFile(filePath, buffer);
+    // Upload directly to datastj.peakbrosmao.me central storage
+    if (LARAVEL_API_BASE) {
+      try {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", file);
+        if (session.id) uploadFormData.append("userId", session.id);
+        if (session.studentId) uploadFormData.append("studentId", session.studentId);
+        if (session.email) uploadFormData.append("email", session.email);
 
-    const publicUrl = `/uploads/avatars/${safeFileName}`;
+        const remoteRes = await fetch(`${LARAVEL_API_BASE}/upload/profile-photo`, {
+          method: "POST",
+          body: uploadFormData,
+        });
+
+        if (remoteRes.ok) {
+          const remoteJson = await remoteRes.json();
+          if (remoteJson.url) {
+            publicUrl = remoteJson.url;
+          }
+        }
+      } catch (err) {
+        console.warn("[Remote Upload Warning]", err);
+      }
+    }
+
+    try {
+      const uploadDir = path.join(process.cwd(), "public", "uploads", "avatars");
+      await fs.mkdir(uploadDir, { recursive: true });
+      const filePath = path.join(uploadDir, safeFileName);
+      await fs.writeFile(filePath, buffer);
+    } catch {
+      // Non-blocking in serverless environments
+    }
 
     try {
       await prisma.user.update({

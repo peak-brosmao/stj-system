@@ -9,6 +9,14 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   outputFileTracingRoot: __dirname,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "datastj.peakbrosmao.me",
+      },
+    ],
+  },
   headers: async () => {
     return [
       {

@@ -12,12 +12,15 @@ use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\AcademicYearController;
 use App\Http\Controllers\Api\AnnouncementController;
 use App\Http\Controllers\Api\SessionController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\UploadController;
 
 // 1. One-click Setup & Migration (For Hostinger File Manager users - creates SQLite .db in database/ folder)
 Route::get('/setup', [SetupController::class, 'setup']);
 
-// 2. System Dashboard Stats
+// 2. System Dashboard Stats & Reports
 Route::get('/stats', [StatsController::class, 'index']);
+Route::get('/reports', [ReportController::class, 'index']);
 
 // 3. Members List & Management
 Route::get('/members', [MemberController::class, 'index']);
@@ -64,7 +67,10 @@ Route::post('/share/{token}', [ShareLinkController::class, 'show']);
 Route::get('/share-links', [ShareLinkController::class, 'index']);
 Route::post('/share-links', [ShareLinkController::class, 'store']);
 
-// 10. Health Check
+// 10. File Uploads (Profile Photos stored directly on datastj.peakbrosmao.me)
+Route::post('/upload/profile-photo', [UploadController::class, 'uploadProfilePhoto']);
+
+// 11. Health Check
 Route::get('/health', function () {
     return response()->json([
         'status' => 'UP',

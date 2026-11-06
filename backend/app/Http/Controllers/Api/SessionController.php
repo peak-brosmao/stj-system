@@ -16,12 +16,20 @@ class SessionController extends Controller
     public function index(Request $request)
     {
         $query = DB::table('teaching_sessions')
-            ->join('courses', 'teaching_sessions.course_id', '=', 'courses.id')
+            ->leftJoin('courses', function ($join) {
+                $join->on('teaching_sessions.course_id', '=', 'courses.id')
+                     ->orOn('teaching_sessions.course_id', '=', 'courses.code');
+            })
             ->select(
                 'teaching_sessions.id',
                 'teaching_sessions.course_id as courseId',
-                'courses.code as courseCode',
-                'courses.title_kh as courseTitleKh',
+                DB::raw('COALESCE(courses.code, CASE 
+                    WHEN teaching_sessions.course_id LIKE "%math%" OR teaching_sessions.course_id = "cmw4d2517000vt2ds65qa00jv" THEN "MATH101"
+                    WHEN teaching_sessions.course_id LIKE "%prog%" OR teaching_sessions.course_id = "cmw4d2511000ut2dszz7renau" THEN "PROG101"
+                    WHEN teaching_sessions.course_id LIKE "%phys%" OR teaching_sessions.course_id = "cmw4d251c000wt2ds8b4t09p2" THEN "PHYS101"
+                    WHEN teaching_sessions.course_id LIKE "%chem%" OR teaching_sessions.course_id = "cmw4d251i000xt2ds0xxgbubp" THEN "CHEM101"
+                    ELSE teaching_sessions.course_id END) as courseCode'),
+                DB::raw('COALESCE(courses.title_kh, "មុខវិជ្ជា STJ") as courseTitleKh'),
                 'teaching_sessions.title',
                 'teaching_sessions.session_date as sessionDate',
                 'teaching_sessions.start_time as startTime',
@@ -33,8 +41,12 @@ class SessionController extends Controller
             );
 
         if ($request->has('course') && $request->query('course') !== 'ALL') {
-            $query->where('courses.code', $request->query('course'))
-                  ->orWhere('courses.id', $request->query('course'));
+            $filter = $request->query('course');
+            $query->where(function ($q) use ($filter) {
+                $q->where('courses.code', $filter)
+                  ->orWhere('courses.id', $filter)
+                  ->orWhere('teaching_sessions.course_id', $filter);
+            });
         }
 
         $sessions = $query->orderBy('teaching_sessions.session_date', 'desc')->get();

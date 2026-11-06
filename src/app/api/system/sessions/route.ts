@@ -80,6 +80,26 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "FORBIDDEN: Not your course" }, { status: 403 });
     }
 
+    // 0. Primary: Fetch live sessions from Central Backend (datastj.peakbrosmao.me)
+    if (LARAVEL_API_BASE) {
+      try {
+        const remoteRes = await fetchFromLaravel(courseId ? `sessions?course=${encodeURIComponent(courseId)}` : "sessions");
+        if (remoteRes && remoteRes.ok) {
+          const remoteData = await remoteRes.json();
+          if (remoteData && remoteData.sessions && remoteData.sessions.length > 0) {
+            const remoteCourses = await fetchFromLaravel("courses");
+            const coursesData = remoteCourses && remoteCourses.ok ? await remoteCourses.json() : null;
+            return NextResponse.json({
+              sessions: remoteData.sessions,
+              courses: coursesData?.courses || [],
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("[Laravel Sessions Fetch Warning]", err);
+      }
+    }
+
     const where = courseId
       ? { OR: [{ courseId }, { course: { code: courseId } }, { course: { id: courseId } }] }
       : manageable === null

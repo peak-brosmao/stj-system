@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,21 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const academicYearTerm = searchParams.get("academicYear") || "2026-2027";
+
+    // 0. Primary: Fetch live calculations directly from Central Backend (datastj.peakbrosmao.me)
+    if (LARAVEL_API_BASE) {
+      try {
+        const remoteRes = await fetchFromLaravel(`reports?academicYear=${encodeURIComponent(academicYearTerm)}`);
+        if (remoteRes && remoteRes.ok) {
+          const remoteData = await remoteRes.json();
+          if (remoteData && remoteData.members && remoteData.members.length > 0) {
+            return NextResponse.json(remoteData);
+          }
+        }
+      } catch (err) {
+        console.warn("[Laravel Reports Fetch Warning]", err);
+      }
+    }
 
     // 1. Fetch all active courses
     const courses = await prisma.course.findMany({
@@ -26,6 +42,7 @@ export async function GET(req: NextRequest) {
         courseId: true,
         sessionDate: true,
         title: true,
+        course: { select: { code: true } },
       },
       orderBy: { sessionDate: "asc" },
     });
@@ -106,7 +123,10 @@ export async function GET(req: NextRequest) {
       // - CHAI CHICHOU (enrolled in PROG101) -> 1 Prog session total
       // - ORN Socheat (enrolled in MATH101) -> 2 Math sessions total
       // - Chemistry tutors (enrolled in CHEM101) -> 0 sessions total
-      const memberSessions = sessions.filter((s) => enrolledCourseIds.includes(s.courseId));
+      const memberSessions = sessions.filter((s) => {
+        const sCode = s.course?.code;
+        return (sCode && enrolledCourses.includes(sCode)) || enrolledCourseIds.includes(s.courseId);
+      });
       const totalExpected = memberSessions.length;
 
       // Index this member's recorded attendances by sessionId
