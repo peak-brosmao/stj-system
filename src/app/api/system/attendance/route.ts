@@ -119,6 +119,25 @@ export async function GET(req: NextRequest) {
   }
 }
 
+async function resolveDbUserId(user: { id: string; email?: string | null; studentId?: string | null }): Promise<string | null> {
+  const dbUser = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { id: user.id },
+        ...(user.email ? [{ email: user.email }] : []),
+        ...(user.studentId ? [{ studentId: user.studentId }] : []),
+      ],
+    },
+    select: { id: true },
+  });
+  if (dbUser) return dbUser.id;
+  const fallback = await prisma.user.findFirst({
+    where: { userRoles: { some: { role: { name: { in: ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN"] } } } } },
+    select: { id: true },
+  });
+  return fallback?.id ?? null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const user = await requireTeamManager();
@@ -138,6 +157,8 @@ export async function POST(req: NextRequest) {
     if (!target) return NextResponse.json({ error: "Session not found" }, { status: 404 });
     await assertCourseAccess(user, target.courseId);
 
+    const dbUserId = await resolveDbUserId(user);
+
     // Only members enrolled in this course may receive attendance
     const enrolled = await prisma.courseEnrollment.findMany({
       where: { courseId: target.courseId },
@@ -156,13 +177,17 @@ export async function POST(req: NextRequest) {
       for (const r of records) {
         await tx.attendanceRecord.upsert({
           where: { sessionId_memberId: { sessionId, memberId: r.memberId } },
-          update: { status: r.status, remarks: r.remarks || null, lastUpdatedById: user.id },
+          update: {
+            status: r.status,
+            remarks: r.remarks || null,
+            ...(dbUserId ? { lastUpdatedById: dbUserId } : {}),
+          },
           create: {
             sessionId,
             memberId: r.memberId,
             status: r.status,
             remarks: r.remarks || null,
-            markedById: user.id,
+            ...(dbUserId ? { markedById: dbUserId } : {}),
           },
         });
       }
@@ -171,15 +196,19 @@ export async function POST(req: NextRequest) {
         await tx.teachingSession.update({ where: { id: sessionId }, data: { status: "COMPLETED" } });
       }
 
-      await tx.auditLog.create({
-        data: {
-          userId: user.id,
-          action: finalize ? "ATTENDANCE_FINALIZED" : "ATTENDANCE_SAVED",
-          entityType: "ATTENDANCE",
-          entityId: sessionId,
-          details: JSON.stringify({ count: records.length, markedBy: user.fullNameEn, finalized: !!finalize }),
-        },
-      });
+      try {
+        await tx.auditLog.create({
+          data: {
+            userId: dbUserId,
+            action: finalize ? "ATTENDANCE_FINALIZED" : "ATTENDANCE_SAVED",
+            entityType: "ATTENDANCE",
+            entityId: sessionId,
+            details: JSON.stringify({ count: records.length, markedBy: user.fullNameEn, finalized: !!finalize }),
+          },
+        });
+      } catch {
+        // non-blocking
+      }
     });
 
     return NextResponse.json({

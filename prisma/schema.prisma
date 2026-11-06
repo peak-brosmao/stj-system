@@ -231,14 +231,14 @@ model AttendanceRecord {
   memberId        String
   status          String                 // PRESENT, LATE, ABSENT, EXCUSED
   remarks         String?
-  markedById      String
+  markedById      String?
   markedAt        DateTime               @default(now())
   lastUpdatedById String?
   updatedAt       DateTime               @updatedAt
 
   session         TeachingSession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   member          Member                 @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  markedBy        User                   @relation("MarkedAttendances", fields: [markedById], references: [id])
+  markedBy        User?                  @relation("MarkedAttendances", fields: [markedById], references: [id])
   lastUpdatedBy   User?                  @relation("UpdatedAttendances", fields: [lastUpdatedById], references: [id])
   corrections     AttendanceCorrection[]
 

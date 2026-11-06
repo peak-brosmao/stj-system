@@ -74,10 +74,10 @@ export function PortalLayout({
 
   const initialMemberId = userMemberId || rosterMatch?.memberId;
   const initialRole = rosterMatch?.isLeader
-    ? "ប្រធានក្រុម (Course Leader)"
+    ? "ប្រធានក្រុម"
     : rosterMatch?.studentId === "e20221334"
-    ? "ប្រធាន STJ (President)"
-    : rosterMatch?.role || userRole || "សមាជិក STJ (Member)";
+    ? "ប្រធាន STJ"
+    : (rosterMatch?.role || userRole || "សមាជិក STJ").replace(/\s*\([^)]*\)/g, "").trim();
 
   const [currentUser, setCurrentUser] = useState({
     name: initialName,
@@ -97,15 +97,15 @@ export function PortalLayout({
         const u = data?.profile || data?.user;
         if (u) {
           const userRoles: string[] = u.roles || u.userRoles?.map((r: any) => r.role?.name || r) || [];
-          let resolvedRole = "សមាជិក STJ (Member)";
+          let resolvedRole = "សមាជិក STJ";
           if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT")) {
-            resolvedRole = "ប្រធាន STJ (President)";
+            resolvedRole = "ប្រធាន STJ";
           } else if (userRoles.includes("COURSE_LEADER")) {
-            resolvedRole = "ប្រធានក្រុម (Course Leader)";
+            resolvedRole = "ប្រធានក្រុម";
           } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION")) {
-            resolvedRole = "គណៈគ្រប់គ្រង (Admin)";
+            resolvedRole = "គណៈគ្រប់គ្រង";
           } else if (u.member?.role) {
-            resolvedRole = u.member.role;
+            resolvedRole = u.member.role.replace(/\s*\([^)]*\)/g, "").trim();
           }
 
           setCurrentUser({
@@ -121,49 +121,45 @@ export function PortalLayout({
   }, [userEmail, initialName, initialMemberId]);
 
   const systemNavItems = [
-    { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
-    { href: "/system/attendance", label: "ស្រង់វត្តមាន (Attendance)", icon: CalendarCheck },
-    { href: "/system/sessions", label: "វគ្គបង្រៀន (Sessions)", icon: CalendarDays },
-    { href: "/system/members", label: "សមាជិក (Members)", icon: Users },
-    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
-    { href: "/system/leaders", label: "ប្រធានមុខវិជ្ជា (Leaders)", icon: UserCheck },
-    { href: "/system/courses", label: "មុខវិជ្ជា (Courses)", icon: BookOpen },
-    { href: "/system/departments", label: "ដេប៉ាតឺម៉ង់ (Departments)", icon: Building2 },
-    { href: "/system/academic-years", label: "កម្រិតសិក្សា (Academic Years)", icon: GraduationCap },
-    { href: "/system/reports", label: "របាយការណ៍ (Reports)", icon: FileBarChart },
-    { href: "/system/share-links", label: "តំណភ្ជាប់ចែករំលែក (Share Links)", icon: Share2 },
-    { href: "/system/announcements", label: "សេចក្តីជូនដំណឹង (Notices)", icon: Megaphone },
-    { href: "/system/profile-requests", label: "សំណើកែព័ត៌មាន (Profile Requests)", icon: FileText },
-    { href: "/system/roles", label: "តួនាទី & សិទ្ធិ (RBAC Roles)", icon: Shield },
-    { href: "/system/audit-logs", label: "កំណត់ហេតុសុវត្ថិភាព (Audit Logs)", icon: History },
-    { href: "/system/settings", label: "ការកំណត់ប្រព័ន្ធ (Settings)", icon: Settings },
-    { href: "/system/profile", label: "គណនីផ្ទាល់ខ្លួន (Profile)", icon: User },
+    { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង", icon: LayoutDashboard },
+    { href: "/system/attendance", label: "ស្រង់វត្តមាន", icon: CalendarCheck },
+    { href: "/system/sessions", label: "វគ្គបង្រៀន", icon: CalendarDays },
+    { href: "/system/members", label: "សមាជិក", icon: Users },
+    { href: "/system/leaders", label: "ប្រធានមុខវិជ្ជា", icon: UserCheck },
+    { href: "/system/courses", label: "មុខវិជ្ជា", icon: BookOpen },
+    { href: "/system/departments", label: "ដេប៉ាតឺម៉ង់", icon: Building2 },
+    { href: "/system/academic-years", label: "កម្រិតសិក្សា", icon: GraduationCap },
+    { href: "/system/reports", label: "របាយការណ៍", icon: FileBarChart },
+    { href: "/system/share-links", label: "តំណភ្ជាប់ចែករំលែក", icon: Share2 },
+    { href: "/system/announcements", label: "សេចក្តីជូនដំណឹង", icon: Megaphone },
+    { href: "/system/profile-requests", label: "សំណើកែព័ត៌មាន", icon: FileText },
+    { href: "/system/audit-logs", label: "កំណត់ហេតុសុវត្ថិភាព", icon: History },
+    { href: "/system/settings", label: "ការកំណត់ប្រព័ន្ធ", icon: Settings },
+    { href: "/system/profile", label: "គណនីផ្ទាល់ខ្លួន", icon: User },
   ];
 
   const leaderNavItems = [
-    { href: "/leader/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
-    { href: "/leader/members", label: "សមាជិកក្នុងបន្ទុក (Assigned Members)", icon: Users },
-    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
-    { href: "/leader/attendance", label: "មើលវត្តមាន (View Attendance)", icon: CalendarCheck },
-    { href: "/leader/sessions", label: "កាលវិភាគបង្រៀន (Teaching Schedule)", icon: CalendarDays },
-    { href: "/leader/reports", label: "របាយការណ៍មុខវិជ្ជា (Course Reports)", icon: FileBarChart },
-    { href: "/leader/share-links", label: "ចែករំលែកវត្តមាន (Share Links)", icon: Share2 },
-    { href: "/leader/announcements", label: "សេចក្តីជូនដំណឹង (Announcements)", icon: Megaphone },
-    { href: "/portal/profile", label: "គណនីផ្ទាល់ខ្លួន (My Profile)", icon: User },
+    { href: "/leader/dashboard", label: "ផ្ទាំងគ្រប់គ្រង", icon: LayoutDashboard },
+    { href: "/leader/members", label: "សមាជិកក្នុងបន្ទុក", icon: Users },
+    { href: "/leader/attendance", label: "មើលវត្តមាន", icon: CalendarCheck },
+    { href: "/leader/sessions", label: "កាលវិភាគបង្រៀន", icon: CalendarDays },
+    { href: "/leader/reports", label: "របាយការណ៍មុខវិជ្ជា", icon: FileBarChart },
+    { href: "/leader/share-links", label: "ចែករំលែកវត្តមាន", icon: Share2 },
+    { href: "/leader/announcements", label: "សេចក្តីជូនដំណឹង", icon: Megaphone },
+    { href: "/portal/profile", label: "គណនីផ្ទាល់ខ្លួន", icon: User },
   ];
 
   const portalNavItems = [
-    { href: "/portal/dashboard", label: "ផ្ទាំងគ្រប់គ្រង (Dashboard)", icon: LayoutDashboard },
-    { href: "/portal/profile", label: "គណនីផ្ទាល់ខ្លួន (My Profile)", icon: User },
-    { href: "/structure", label: "មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)", icon: Layers },
-    { href: "/portal/attendance", label: "វត្តមានរបស់ខ្ញុំ (My Attendance)", icon: CalendarCheck },
-    { href: "/portal/courses", label: "មុខវិជ្ជារបស់ខ្ញុំ (My Courses)", icon: BookOpen },
-    { href: "/portal/schedule", label: "កាលវិភាគសិក្សា (My Schedule)", icon: CalendarDays },
-    { href: "/portal/announcements", label: "សេចក្តីជូនដំណឹង (Announcements)", icon: Megaphone },
-    { href: "/portal/notifications", label: "ការជូនដំណឹង (Notifications)", icon: Bell },
-    { href: "/portal/correction-requests", label: "សំណើកែតម្រូវ (Correction Requests)", icon: FileText },
-    { href: "/portal/security", label: "សុវត្ថិភាពគណនី (Security)", icon: Lock },
-    { href: "/portal/settings", label: "ការកំណត់ (Settings)", icon: Sliders },
+    { href: "/portal/dashboard", label: "ផ្ទាំងគ្រប់គ្រង", icon: LayoutDashboard },
+    { href: "/portal/profile", label: "គណនីផ្ទាល់ខ្លួន", icon: User },
+    { href: "/portal/attendance", label: "វត្តមានរបស់ខ្ញុំ", icon: CalendarCheck },
+    { href: "/portal/courses", label: "មុខវិជ្ជារបស់ខ្ញុំ", icon: BookOpen },
+    { href: "/portal/schedule", label: "កាលវិភាគសិក្សា", icon: CalendarDays },
+    { href: "/portal/announcements", label: "សេចក្តីជូនដំណឹង", icon: Megaphone },
+    { href: "/portal/notifications", label: "ការជូនដំណឹង", icon: Bell },
+    { href: "/portal/correction-requests", label: "សំណើកែតម្រូវ", icon: FileText },
+    { href: "/portal/security", label: "សុវត្ថិភាពគណនី", icon: Lock },
+    { href: "/portal/settings", label: "ការកំណត់", icon: Sliders },
   ];
 
   const items =
@@ -194,10 +190,10 @@ export function PortalLayout({
           size="sm"
           subtitle={
             portalType === "system"
-              ? "STJ System Portal"
+              ? "ច្រកគ្រប់គ្រងប្រព័ន្ធ"
               : portalType === "leader"
-              ? "STJ Leader Portal"
-              : "STJ Member Portal"
+              ? "ច្រកប្រធានមុខវិជ្ជា"
+              : "ច្រកសមាជិក"
           }
         />
         <div className="flex items-center space-x-2">
@@ -233,10 +229,10 @@ export function PortalLayout({
             size="sm"
             subtitle={
               portalType === "system"
-                ? "Administration"
+                ? "ច្រកគ្រប់គ្រងប្រព័ន្ធ"
                 : portalType === "leader"
-                ? "Leader Desk"
-                : "Member Portal"
+                ? "ច្រកប្រធានមុខវិជ្ជា"
+                : "ច្រកសមាជិក"
             }
           />
           <button
