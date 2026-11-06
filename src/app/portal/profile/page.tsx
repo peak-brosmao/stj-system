@@ -76,7 +76,12 @@ export default function MyProfilePage() {
   const address = profile?.address || "-";
   const bio = profile?.bio || "មិនទាន់មានជីវប្រវត្តិសង្ខេបនៅឡើយ (No biography added yet)";
   const gender = profile?.gender === "M" ? "ប្រុស (Male)" : profile?.gender === "F" ? "ស្រី (Female)" : "-";
-  const userRole = profile?.userRoles?.[0]?.role?.name || (isMember ? "STJ Member" : "Administrator");
+  const isPresident = profile?.userRoles?.some((r: any) => r.role?.name === "SUPER_ADMIN" || r.role?.name === "STJ_PRESIDENT") || memberId === "STJ002";
+  const userRole = isPresident
+    ? "ប្រធាន STJ"
+    : profile?.userRoles?.some((r: any) => r.role?.name === "COURSE_LEADER")
+    ? "ប្រធានក្រុម"
+    : (isMember ? "សមាជិក STJ" : "គណៈគ្រប់គ្រង");
 
   const enrolledCourses = profile?.member?.enrollments?.map((e: any) => `${e.course?.code} - ${e.course?.titleKh}`).join(", ");
 

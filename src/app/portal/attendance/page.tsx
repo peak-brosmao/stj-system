@@ -45,10 +45,31 @@ export default function MyAttendancePage() {
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("stj_user_profile");
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return null;
+  });
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
-  const [isExecutive, setIsExecutive] = useState(false);
+  const [isExecutive, setIsExecutive] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("stj_user_profile");
+        if (cached) {
+          const u = JSON.parse(cached);
+          if (u.memberId === "STJ001" || u.memberId === "STJ002" || u.role === "ប្រធាន STJ" || u.role === "គណៈគ្រប់គ្រង") {
+            return true;
+          }
+        }
+      } catch {}
+    }
+    return false;
+  });
   const [executiveCourses, setExecutiveCourses] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [overallStats, setOverallStats] = useState({
@@ -292,8 +313,8 @@ export default function MyAttendancePage() {
   return (
     <PortalLayout
       portalType="portal"
-      userRole="STJ Member"
-      userName={currentUser?.fullNameKh || ""}
+      userRole={currentUser?.role || undefined}
+      userName={currentUser?.fullNameKh || currentUser?.name || ""}
       userMemberId={currentUser?.memberId || undefined}
     >
       <div className="space-y-6">

@@ -31,12 +31,7 @@ export default function PortalSettingsPage() {
   };
 
   return (
-    <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
-      userName="ពៀក ប្រុសម៉ៅ"
-      userMemberId="STJ033"
-    >
+    <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">

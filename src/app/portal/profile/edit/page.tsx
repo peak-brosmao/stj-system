@@ -185,12 +185,7 @@ export default function ProfileEditPage() {
   };
 
   return (
-    <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
-      userName={profile?.fullNameKh || profile?.fullNameEn || ""}
-      userMemberId={profile?.member?.memberId || undefined}
-    >
+    <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
         <div className="flex items-center justify-between pb-2">
           <div className="space-y-1">

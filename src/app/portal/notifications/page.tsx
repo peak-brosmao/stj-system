@@ -69,12 +69,7 @@ export default function PortalNotificationsPage() {
   });
 
   return (
-    <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
-      userName="ពៀក ប្រុសម៉ៅ"
-      userMemberId="STJ033"
-    >
+    <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
           <div>

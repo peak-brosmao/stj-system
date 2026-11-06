@@ -43,6 +43,40 @@ function LoginContent() {
         throw new Error(data.error || t("auth.errorInvalid"));
       }
 
+      if (data.user) {
+        try {
+          const userRoles = data.user.roles || [];
+          let role = "សមាជិក STJ";
+          if (
+            userRoles.includes("SUPER_ADMIN") ||
+            userRoles.includes("STJ_PRESIDENT") ||
+            data.user.memberId === "STJ002" ||
+            data.user.studentId === "e20221334"
+          ) {
+            role = "ប្រធាន STJ";
+          } else if (userRoles.includes("COURSE_LEADER")) {
+            role = "ប្រធានក្រុម";
+          } else if (
+            userRoles.includes("STJ_ADMIN") ||
+            userRoles.includes("STUDENT_ASSOCIATION") ||
+            data.user.memberId === "STJ001"
+          ) {
+            role = "គណៈគ្រប់គ្រង";
+          }
+
+          localStorage.setItem(
+            "stj_user_profile",
+            JSON.stringify({
+              name: data.user.fullNameKh || data.user.fullNameEn || "សមាជិក STJ",
+              role,
+              email: data.user.email,
+              memberId: data.user.memberId,
+              avatar: data.user.profileImage || "",
+            })
+          );
+        } catch {}
+      }
+
       // Dynamic automatic redirect based on verified server-side role
       const redirectTarget = data.redirectUrl || "/portal/member";
       router.push(redirectTarget);

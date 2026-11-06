@@ -62,29 +62,48 @@ export function PortalLayout({
   const rosterMatch = React.useMemo(() => {
     return OFFICIAL_STJ_ROSTER.find(
       (m) =>
-        (userEmail && m.email.toLowerCase() === userEmail.toLowerCase()) ||
+        (userEmail && userEmail !== "user@itc.edu.kh" && m.email.toLowerCase() === userEmail.toLowerCase()) ||
         (userMemberId && m.memberId.toLowerCase() === userMemberId.toLowerCase()) ||
-        (userName && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
+        (userName && userName !== "STJ Academic Staff" && userName !== "សមាជិក STJ" && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
     );
   }, [userEmail, userMemberId, userName]);
 
-  const initialName = userName && userName !== "STJ Academic Staff"
+  const initialName = userName && userName !== "STJ Academic Staff" && userName !== "សមាជិក STJ"
     ? userName
-    : rosterMatch?.nameKh || "សមាជិក STJ";
+    : rosterMatch?.nameKh || "";
 
   const initialMemberId = userMemberId || rosterMatch?.memberId;
   const initialRole = rosterMatch?.isLeader
     ? "ប្រធានក្រុម"
     : rosterMatch?.studentId === "e20221334"
     ? "ប្រធាន STJ"
-    : (rosterMatch?.role || userRole || "សមាជិក STJ").replace(/\s*\([^)]*\)/g, "").trim();
+    : (rosterMatch?.role || (userRole && userRole !== "STJ Member" ? userRole : "")).replace(/\s*\([^)]*\)/g, "").trim();
 
-  const [currentUser, setCurrentUser] = useState({
-    name: initialName,
-    role: initialRole,
-    email: userEmail,
-    memberId: initialMemberId,
-    avatar: "" as string | undefined,
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem("stj_user_profile");
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && (parsed.name || parsed.fullNameKh)) {
+            return {
+              name: parsed.name || parsed.fullNameKh,
+              role: parsed.role || (portalType === "system" ? "ប្រធាន STJ" : "សមាជិក STJ"),
+              email: parsed.email || userEmail,
+              memberId: parsed.memberId || initialMemberId || (portalType === "system" ? "STJ002" : undefined),
+              avatar: parsed.avatar || parsed.profileImage || "",
+            };
+          }
+        }
+      } catch {}
+    }
+    return {
+      name: initialName || (portalType === "system" ? "ផល ដាវីត" : "សមាជិក STJ"),
+      role: initialRole || (portalType === "system" ? "ប្រធាន STJ" : "សមាជិក STJ"),
+      email: userEmail,
+      memberId: initialMemberId || (portalType === "system" ? "STJ002" : undefined),
+      avatar: "" as string | undefined,
+    };
   });
 
   React.useEffect(() => {
@@ -98,27 +117,32 @@ export function PortalLayout({
         if (u) {
           const userRoles: string[] = u.roles || u.userRoles?.map((r: any) => r.role?.name || r) || [];
           let resolvedRole = "សមាជិក STJ";
-          if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT")) {
+          if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT") || u.member?.memberId === "STJ002" || u.studentId === "e20221334") {
             resolvedRole = "ប្រធាន STJ";
           } else if (userRoles.includes("COURSE_LEADER")) {
             resolvedRole = "ប្រធានក្រុម";
-          } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION")) {
+          } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION") || u.member?.memberId === "STJ001") {
             resolvedRole = "គណៈគ្រប់គ្រង";
           } else if (u.member?.role) {
             resolvedRole = u.member.role.replace(/\s*\([^)]*\)/g, "").trim();
           }
 
-          setCurrentUser({
-            name: u.fullNameKh || u.fullNameEn || initialName,
+          const resolvedUser = {
+            name: u.fullNameKh || u.fullNameEn || initialName || (portalType === "system" ? "ផល ដាវីត" : "សមាជិក STJ"),
             role: resolvedRole,
             email: u.email || userEmail,
-            memberId: u.member?.memberId || u.studentId || initialMemberId,
-            avatar: u.profileImage,
-          });
+            memberId: u.member?.memberId || u.studentId || initialMemberId || (portalType === "system" ? "STJ002" : undefined),
+            avatar: u.profileImage || "",
+          };
+
+          setCurrentUser(resolvedUser);
+          try {
+            localStorage.setItem("stj_user_profile", JSON.stringify(resolvedUser));
+          } catch {}
         }
       })
       .catch(() => {});
-  }, [userEmail, initialName, initialMemberId]);
+  }, [userEmail, initialName, initialMemberId, portalType]);
 
   const systemNavItems = [
     { href: "/system/dashboard", label: "ផ្ទាំងគ្រប់គ្រង", icon: LayoutDashboard },
@@ -171,6 +195,9 @@ export function PortalLayout({
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("stj_user_profile");
+      }
       await fetch("/api/auth/logout", { method: "POST" });
     } catch {
       // ignore

@@ -24,7 +24,7 @@ export default function LeaderProfilePage() {
   };
 
   return (
-    <PortalLayout portalType="leader" userRole="Course Leader" userName="លាង ជីងហេង" userEmail="leang.jingheng@itc.edu.kh">
+    <PortalLayout portalType="leader">
       <div className="space-y-6 max-w-4xl">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">

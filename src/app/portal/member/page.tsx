@@ -67,7 +67,7 @@ export default function MemberDashboardPage() {
   return (
     <PortalLayout
       portalType="portal"
-      userRole="សមាជិក (Member)"
+      userRole={u?.memberId === "STJ002" ? "ប្រធាន STJ" : undefined}
       userName={u?.fullNameKh || ""}
       userMemberId={u?.memberId || undefined}
       userEmail={u?.email}

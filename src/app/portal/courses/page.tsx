@@ -33,12 +33,7 @@ export default function MyCoursesPage() {
   }, []);
 
   return (
-    <PortalLayout
-      portalType="portal"
-      userRole="STJ Member"
-      userName="ពៀក ប្រុសម៉ៅ"
-      userMemberId="STJ033"
-    >
+    <PortalLayout portalType="portal">
       <div className="space-y-6">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
