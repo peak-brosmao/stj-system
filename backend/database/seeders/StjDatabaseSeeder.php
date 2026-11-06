@@ -183,3 +183,4 @@ class StjDatabaseSeeder extends Seeder
         );
     }
 }
+

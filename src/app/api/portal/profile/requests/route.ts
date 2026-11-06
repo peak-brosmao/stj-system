@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { sanitizeString } from "@/lib/sanitize";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +70,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const ip = getClientIp(req.headers);
+    const rateLimit = checkRateLimit(`profile-req:${session.id}:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: "អ្នកបានផ្ញើសំណើច្រើនដងពេកហើយ សូមរង់ចាំមួយរយៈសិន" },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const validated = requestSchema.safeParse(body);
 
@@ -79,6 +90,9 @@ export async function POST(req: NextRequest) {
     }
 
     const { field, oldValue, requestedValue, reason } = validated.data;
+    const cleanRequestedValue = sanitizeString(requestedValue);
+    const cleanReason = sanitizeString(reason);
+    const cleanOldValue = oldValue ? sanitizeString(oldValue) : null;
 
     let newRequest;
     try {
@@ -86,9 +100,9 @@ export async function POST(req: NextRequest) {
         data: {
           userId: session.id,
           field,
-          oldValue: oldValue || null,
-          requestedValue,
-          reason,
+          oldValue: cleanOldValue,
+          requestedValue: cleanRequestedValue,
+          reason: cleanReason,
           status: "PENDING",
         },
       });
@@ -99,8 +113,8 @@ export async function POST(req: NextRequest) {
           action: "PROFILE_CHANGE_REQUESTED",
           entityType: "USER",
           entityId: session.id,
-          details: JSON.stringify({ field, oldValue, requestedValue, reason }),
-          ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
+          details: JSON.stringify({ field, oldValue: cleanOldValue, requestedValue: cleanRequestedValue, reason: cleanReason }),
+          ipAddress: ip,
           userAgent: req.headers.get("user-agent"),
         },
       });

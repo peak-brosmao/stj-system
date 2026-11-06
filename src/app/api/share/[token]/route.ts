@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { calculateAttendanceRate } from "@/lib/utils";
 import { AttendanceStatus } from "@/types";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,15 @@ export async function POST(
   { params }: { params: Promise<{ token: string }> }
 ) {
   try {
+    const ip = getClientIp(req.headers);
+    const rateCheck = checkRateLimit(`share-link:${ip}`, { limit: 45, windowMs: 60 * 1000 });
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: "សំណើច្រើនហួសកំណត់ សូមរង់ចាំមួយរយៈខ្លីសិន (Too many requests)" },
+        { status: 429 }
+      );
+    }
+
     const { token } = await params;
     const body = await req.json().catch(() => ({}));
     const { password } = body;

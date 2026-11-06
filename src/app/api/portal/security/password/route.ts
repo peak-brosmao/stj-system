@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -44,11 +45,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const passwordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
-    const studentIdNorm = (user.studentId || "").toLowerCase();
-    const isDefaultFallback = studentIdNorm && currentPassword === `${studentIdNorm}@ITC!`;
+    const ip = getClientIp(req.headers);
+    const rateLimit = checkRateLimit(`pwd-change:${session.id}:${ip}`, { limit: 5, windowMs: 15 * 60 * 1000 });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: "អ្នកបានព្យាយាមផ្លាស់ប្តូរពាក្យសម្ងាត់ច្រើនដងពេកហើយ សូមរង់ចាំ ១៥ នាទីសិន" },
+        { status: 429 }
+      );
+    }
 
-    if (!passwordMatches && !isDefaultFallback) {
+    const passwordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
+
+    if (!passwordMatches) {
       return NextResponse.json(
         { error: "ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវឡើយ (Incorrect current password)" },
         { status: 401 }

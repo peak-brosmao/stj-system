@@ -78,3 +78,4 @@ class ShareLinkController extends Controller
         ]);
     }
 }
+

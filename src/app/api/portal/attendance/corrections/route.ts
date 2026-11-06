@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { sanitizeString } from "@/lib/sanitize";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +45,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const ip = getClientIp(req.headers);
+    const rateLimit = checkRateLimit(`att-corr:${session.id}:${ip}`, { limit: 10, windowMs: 60 * 60 * 1000 });
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: "អ្នកបានផ្ញើសំណើច្រើនដងពេកហើយ សូមរង់ចាំមួយរយៈសិន" },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const validated = correctionSchema.safeParse(body);
 
@@ -54,6 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { recordId, requestedStatus, reason, attachmentUrl } = validated.data;
+    const cleanReason = sanitizeString(reason);
 
     // The record must belong to the requesting member (own attendance only)
     const owner = await prisma.user.findUnique({
@@ -74,7 +86,7 @@ export async function POST(req: NextRequest) {
         requestedById: session.id,
         previousStatus: record.status,
         requestedStatus,
-        reason,
+        reason: cleanReason,
         attachmentUrl: attachmentUrl || null,
         reviewStatus: "PENDING",
       },
@@ -86,8 +98,8 @@ export async function POST(req: NextRequest) {
         action: "ATTENDANCE_CORRECTION_REQUESTED",
         entityType: "ATTENDANCE",
         entityId: recordId,
-        details: JSON.stringify({ previousStatus: record.status, requestedStatus, reason }),
-        ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
+        details: JSON.stringify({ previousStatus: record.status, requestedStatus, reason: cleanReason }),
+        ipAddress: ip,
         userAgent: req.headers.get("user-agent"),
       },
     });

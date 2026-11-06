@@ -56,3 +56,4 @@ class SetupController extends Controller
         }
     }
 }
+

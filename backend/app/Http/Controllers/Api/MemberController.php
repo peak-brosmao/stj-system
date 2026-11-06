@@ -45,3 +45,4 @@ class MemberController extends Controller
         ]);
     }
 }
+
