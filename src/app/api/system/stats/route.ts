@@ -7,12 +7,34 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    // Recent sessions from Prisma database
+    let prismaRecentSessions: Array<{ id: string; title: string; course: string; date: string; status: string }> = [];
+    try {
+      const sessions = await prisma.teachingSession.findMany({
+        take: 5,
+        orderBy: { sessionDate: "desc" },
+        include: { course: true },
+      });
+      prismaRecentSessions = sessions.map((s) => ({
+        id: s.id,
+        title: s.title,
+        course: s.course.code,
+        date: new Date(s.sessionDate).toISOString().split("T")[0],
+        status: s.status,
+      }));
+    } catch {
+      // ignore
+    }
+
     // 1. If backend API is configured, prioritize pulling live from datastj.peakbrosmao.me
     if (LARAVEL_API_BASE) {
       const remoteRes = await fetchFromLaravel("stats");
       if (remoteRes && remoteRes.ok) {
         const remoteData = await remoteRes.json();
         if (remoteData && remoteData.summary) {
+          if (!remoteData.recentSessions || remoteData.recentSessions.length === 0) {
+            remoteData.recentSessions = prismaRecentSessions;
+          }
           return NextResponse.json(remoteData);
         }
       }

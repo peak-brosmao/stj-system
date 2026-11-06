@@ -323,7 +323,7 @@ export default function SystemDashboardPage() {
                   {(data?.recentSessions || []).length === 0 && (
                     <tr>
                       <td colSpan={5} className="py-6 px-4 text-center text-muted-foreground">
-                        ??????????????????????????????? (No lessons created yet)
+                        មិនទាន់មានវគ្គបង្រៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet)
                       </td>
                     </tr>
                   )}
