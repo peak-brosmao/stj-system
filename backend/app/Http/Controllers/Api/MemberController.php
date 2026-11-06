@@ -113,6 +113,64 @@ class MemberController extends Controller
     }
 
     /**
+     * Resolve department ID from code, id, or CUID
+     */
+    protected function resolveDepartmentId($deptInput)
+    {
+        if (empty($deptInput)) return null;
+        $clean = strtoupper(trim(preg_replace('/^dept[-_]?/i', '', $deptInput)));
+        $dept = DB::table('departments')
+            ->where('id', $deptInput)
+            ->orWhere('id', 'dept-' . strtolower($clean))
+            ->orWhere('code', $clean)
+            ->orWhere('code', $deptInput)
+            ->first();
+        return $dept ? $dept->id : null;
+    }
+
+    /**
+     * Resolve academic year ID from code, id, or CUID
+     */
+    protected function resolveAcademicYearId($yearInput)
+    {
+        if (empty($yearInput)) return null;
+        $clean = strtoupper(trim(preg_replace('/^year[-_]?/i', '', $yearInput)));
+        $yr = DB::table('academic_years')
+            ->where('id', $yearInput)
+            ->orWhere('id', 'year-' . strtolower($clean))
+            ->orWhere('code', $clean)
+            ->orWhere('code', $yearInput)
+            ->first();
+        return $yr ? $yr->id : null;
+    }
+
+    /**
+     * Resolve course IDs from code, slug, id, or string
+     */
+    protected function resolveCourseIds(array $courseInputs)
+    {
+        if (empty($courseInputs)) return [];
+        $ids = [];
+        foreach ($courseInputs as $c) {
+            if (!$c) continue;
+            $cleanCode = strtoupper(trim(preg_replace('/^course[-_]?/i', '', $c)));
+            $cleanSlug = strtolower(trim(preg_replace('/^course[-_]?/i', '', $c)));
+            $found = DB::table('courses')
+                ->where('id', $c)
+                ->orWhere('id', 'course-' . strtolower($cleanCode))
+                ->orWhere('code', $cleanCode)
+                ->orWhere('code', $c)
+                ->orWhere('slug', $cleanSlug)
+                ->orWhere('slug', $c)
+                ->first();
+            if ($found && !in_array($found->id, $ids)) {
+                $ids[] = $found->id;
+            }
+        }
+        return $ids;
+    }
+
+    /**
      * Update member courses and details
      * POST /api/members/{id} or PUT
      */
@@ -139,28 +197,38 @@ class MemberController extends Controller
         if (isset($validated['fullNameEn'])) $updateData['full_name_en'] = $validated['fullNameEn'];
         if (isset($validated['phone'])) $updateData['phone'] = $validated['phone'];
         if (isset($validated['email'])) $updateData['email'] = $validated['email'];
-        if (isset($validated['departmentId'])) $updateData['department_id'] = $validated['departmentId'];
-        if (isset($validated['academicYearId'])) $updateData['academic_year_id'] = $validated['academicYearId'];
         if (isset($validated['status'])) $updateData['status'] = $validated['status'];
+
+        if (!empty($validated['departmentId'])) {
+            $resolvedDept = $this->resolveDepartmentId($validated['departmentId']);
+            if ($resolvedDept) {
+                $updateData['department_id'] = $resolvedDept;
+            }
+        }
+
+        if (!empty($validated['academicYearId'])) {
+            $resolvedYear = $this->resolveAcademicYearId($validated['academicYearId']);
+            if ($resolvedYear) {
+                $updateData['academic_year_id'] = $resolvedYear;
+            }
+        }
+
         $updateData['updated_at'] = now();
 
-        DB::table('members')->where('id', $member->id)->update($updateData);
+        if (!empty($updateData)) {
+            DB::table('members')->where('id', $member->id)->update($updateData);
+        }
 
         // Update multi-course enrollments
         if (isset($validated['courseIds'])) {
+            $validCourseIds = $this->resolveCourseIds($validated['courseIds']);
             DB::table('course_enrollments')->where('member_id', $member->id)->delete();
-            foreach ($validated['courseIds'] as $cId) {
-                if (!empty($cId)) {
-                    DB::table('course_enrollments')->insert([
-                        'id' => (string) Str::uuid(),
-                        'course_id' => $cId,
-                        'member_id' => $member->id,
-                        'enrolled_at' => now(),
-                        'status' => 'ACTIVE',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
+            foreach ($validCourseIds as $cId) {
+                DB::table('course_enrollments')->insert([
+                    'course_id' => $cId,
+                    'member_id' => $member->id,
+                    'enrolled_at' => now(),
+                ]);
             }
         }
 
@@ -200,6 +268,9 @@ class MemberController extends Controller
         $uuid = 'member-' . Str::uuid();
         $email = strtolower(trim($validated['studentId'])) . '@itc.edu.kh';
 
+        $resolvedDept = $this->resolveDepartmentId($validated['departmentId']) ?? 'dept-gic';
+        $resolvedYear = $this->resolveAcademicYearId($validated['academicYearId']) ?? 'year-i2';
+
         DB::table('members')->insert([
             'id' => $uuid,
             'member_id' => $memberId,
@@ -208,9 +279,9 @@ class MemberController extends Controller
             'full_name_en' => $validated['fullNameEn'],
             'email' => $email,
             'phone' => $validated['phone'] ?? null,
-            'gender' => $validated['gender'] ?? null,
-            'department_id' => $validated['departmentId'],
-            'academic_year_id' => $validated['academicYearId'],
+            'gender' => $validated['gender'] ?? 'M',
+            'department_id' => $resolvedDept,
+            'academic_year_id' => $resolvedYear,
             'status' => 'ACTIVE',
             'notes' => $validated['notes'] ?? null,
             'created_at' => now(),
@@ -226,25 +297,20 @@ class MemberController extends Controller
             'student_id' => $validated['studentId'],
             'role' => 'MEMBER',
             'member_id' => $memberId,
-            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'password' => \Illuminate\Support\Facades\Hash::make(strtolower(trim($validated['studentId'])) . '@ITC!'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
         // Enroll in courses
         if (!empty($validated['courseIds'])) {
-            foreach ($validated['courseIds'] as $cId) {
-                if (!empty($cId)) {
-                    DB::table('course_enrollments')->insert([
-                        'id' => (string) Str::uuid(),
-                        'course_id' => $cId,
-                        'member_id' => $uuid,
-                        'enrolled_at' => now(),
-                        'status' => 'ACTIVE',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
+            $validCourseIds = $this->resolveCourseIds($validated['courseIds']);
+            foreach ($validCourseIds as $cId) {
+                DB::table('course_enrollments')->insert([
+                    'course_id' => $cId,
+                    'member_id' => $uuid,
+                    'enrolled_at' => now(),
+                ]);
             }
         }
 

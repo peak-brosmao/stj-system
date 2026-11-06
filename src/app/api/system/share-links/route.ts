@@ -3,13 +3,18 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
     const user = await requireAuth();
-    const isSuperOrAdmin = user.roles.includes("SUPER_ADMIN") || user.roles.includes("STJ_ADMIN");
+    const isSuperOrAdmin =
+      user.roles.includes("SUPER_ADMIN") ||
+      user.roles.includes("STJ_ADMIN") ||
+      user.roles.includes("STJ_PRESIDENT") ||
+      user.roles.includes("STUDENT_ASSOCIATION");
 
     let links;
     try {
@@ -65,16 +70,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // If course leader, verify assignment to this course
-    const isSuperOrAdmin = user.roles.includes("SUPER_ADMIN") || user.roles.includes("STJ_ADMIN");
-    if (!isSuperOrAdmin && !user.courseIds?.includes(courseId)) {
+    const isSuperOrAdmin =
+      user.roles.includes("SUPER_ADMIN") ||
+      user.roles.includes("STJ_ADMIN") ||
+      user.roles.includes("STJ_PRESIDENT") ||
+      user.roles.includes("STUDENT_ASSOCIATION");
+
+    // Resolve course by code or id to ensure foreign key validity
+    const courseRecord = await prisma.course.findFirst({
+      where: {
+        OR: [{ id: courseId }, { code: courseId }],
+      },
+    });
+
+    const resolvedCourseId = courseRecord?.id || courseId;
+
+    if (!isSuperOrAdmin && !user.courseIds?.includes(resolvedCourseId) && !user.courseIds?.includes(courseId)) {
       return NextResponse.json(
         { error: "Forbidden: Leaders can only generate share links for assigned courses." },
         { status: 403 }
       );
     }
 
-    // Generate random secure token
+    // Reuse existing active share link for this session if one exists
+    if (sessionId) {
+      const existingLink = await prisma.shareLink.findFirst({
+        where: { sessionId, isRevoked: false },
+        orderBy: { createdAt: "desc" },
+      });
+      if (existingLink) {
+        return NextResponse.json({
+          success: true,
+          token: existingLink.token,
+          shareLink: existingLink,
+          shareUrl: `/share/${existingLink.token}`,
+        });
+      }
+    }
+
+    // Generate random secure token (32 hex characters)
     const token = crypto.randomBytes(16).toString("hex");
     const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
@@ -87,7 +121,7 @@ export async function POST(req: NextRequest) {
       data: {
         token,
         tokenHash,
-        courseId,
+        courseId: resolvedCourseId,
         sessionId: sessionId || null,
         title,
         passwordHash,
@@ -97,6 +131,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Also persist to Laravel API backend if configured
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel("share-links", {
+          method: "POST",
+          body: JSON.stringify({
+            courseId: resolvedCourseId,
+            sessionId: sessionId || null,
+            title,
+            showStats: showStats ?? true,
+          }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Share Link Sync Warning]", err);
+      }
+    }
+
     try {
       await prisma.auditLog.create({
         data: {
@@ -104,7 +155,7 @@ export async function POST(req: NextRequest) {
           action: "SHARE_LINK_CREATED",
           entityType: "SHARE_LINK",
           entityId: created.id,
-          details: JSON.stringify({ token, courseId, sessionId }),
+          details: JSON.stringify({ token, courseId: resolvedCourseId, sessionId }),
         },
       });
     } catch {
@@ -113,6 +164,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      token: created.token,
       shareLink: created,
       shareUrl: `/share/${token}`,
     });
@@ -137,7 +189,12 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Share link not found." }, { status: 404 });
     }
 
-    const isSuperOrAdmin = user.roles.includes("SUPER_ADMIN") || user.roles.includes("STJ_ADMIN");
+    const isSuperOrAdmin =
+      user.roles.includes("SUPER_ADMIN") ||
+      user.roles.includes("STJ_ADMIN") ||
+      user.roles.includes("STJ_PRESIDENT") ||
+      user.roles.includes("STUDENT_ASSOCIATION");
+
     if (!isSuperOrAdmin && existing.createdById !== user.id) {
       return NextResponse.json({ error: "Forbidden: You can only revoke your own share links." }, { status: 403 });
     }

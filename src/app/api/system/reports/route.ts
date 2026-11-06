@@ -55,6 +55,7 @@ export async function GET(req: NextRequest) {
     let highPerformersCount = 0;
 
     const reportItems = members.map((m, idx) => {
+      const isExecutive = m.memberId === "STJ001" || m.memberId === "STJ002";
       let present = 0;
       let late = 0;
       let absent = 0;
@@ -71,7 +72,7 @@ export async function GET(req: NextRequest) {
       const eligible = total - excused;
       let rate = 0;
 
-      if (total > 0) {
+      if (!isExecutive && total > 0) {
         membersWithSessionsCount++;
         rate = eligible > 0 ? Math.round(((present + late * 0.5) / eligible) * 100) : 100;
         totalAttendedCount += (present + late * 0.5);
@@ -79,7 +80,15 @@ export async function GET(req: NextRequest) {
         if (rate >= 90) highPerformersCount++;
       }
 
-      const assignedCourseCode = m.enrollments?.[0]?.course.code || "Unassigned";
+      let assignedCourseCode = m.enrollments?.[0]?.course.code || "Unassigned";
+      let executiveRoleTitle: string | null = null;
+      if (m.memberId === "STJ001") {
+        assignedCourseCode = "សមាគមនិស្សិត";
+        executiveRoleTitle = "គណៈកម្មាធិការសមាគមនិស្សិត";
+      } else if (m.memberId === "STJ002") {
+        assignedCourseCode = "ប្រធាន STJ";
+        executiveRoleTitle = "ប្រធានក្រុមដឹកនាំ STJ";
+      }
 
       return {
         no: idx + 1,
@@ -91,6 +100,8 @@ export async function GET(req: NextRequest) {
         dept: m.department?.code || "-",
         yr: m.academicYear?.code || "-",
         course: assignedCourseCode,
+        isExecutive,
+        executiveRoleTitle,
         present,
         late,
         absent,
@@ -103,12 +114,13 @@ export async function GET(req: NextRequest) {
 
     const averageRate = totalEligibleCount > 0
       ? Math.round((totalAttendedCount / totalEligibleCount) * 100)
-      : 0;
+      : 100;
 
     return NextResponse.json({
       success: true,
       summary: {
         totalMembers: members.length,
+        totalTutors: members.length - 2,
         totalSessions: totalSessionsCount,
         averageRate,
         highPerformers: highPerformersCount,

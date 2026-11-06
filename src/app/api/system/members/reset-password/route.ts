@@ -29,8 +29,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Member ID required" }, { status: 400 });
     }
 
-    const member = await prisma.member.findUnique({
-      where: { id: memberId },
+    const member = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { id: memberId },
+          { memberId },
+          { memberId: memberId.replace(/^member-/i, "").toUpperCase() },
+          { studentId: memberId },
+        ],
+      },
       include: {
         enrollments: { include: { course: true } },
         user: true,

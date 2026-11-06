@@ -32,6 +32,28 @@ interface Member {
   fullNameEn: string;
   department: { code: string };
   academicYear: { code: string };
+  isLeader?: boolean;
+}
+
+function sortRoster(list: Member[]): Member[] {
+  const getYearRank = (code: string) => {
+    const m = code.match(/(\d+)/);
+    return m ? parseInt(m[1], 10) : 99;
+  };
+
+  return [...list].sort((a, b) => {
+    // 1. Course Leader always on top
+    if (a.isLeader && !b.isLeader) return -1;
+    if (!a.isLeader && b.isLeader) return 1;
+
+    // 2. Academic Year (I1 < I2 < I3 < I4 < I5)
+    const yearA = getYearRank(a.academicYear?.code || "");
+    const yearB = getYearRank(b.academicYear?.code || "");
+    if (yearA !== yearB) return yearA - yearB;
+
+    // 3. Alphabetical English name (A-Z)
+    return (a.fullNameEn || "").localeCompare(b.fullNameEn || "");
+  });
 }
 
 const OPTIONS: { value: Status; label: string; active: string }[] = [
@@ -99,7 +121,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
       setMessage({ kind: "err", text: d.error || "Failed to load" });
       return;
     }
-    setMembers(d.enrolledMembers || []);
+    setMembers(sortRoster(d.enrolledMembers || []));
     const m: Record<string, Status> = {};
     const r: Record<string, string> = {};
     for (const rec of d.attendanceRecords || []) {
@@ -248,9 +270,16 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                             {idx + 1}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-xs font-semibold text-foreground truncate">
-                              {m.fullNameKh} ({m.fullNameEn})
-                            </p>
+                            <div className="flex items-center space-x-1.5 flex-wrap">
+                              <p className="text-xs font-semibold text-foreground truncate">
+                                {m.fullNameKh} ({m.fullNameEn})
+                              </p>
+                              {m.isLeader && (
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 border border-amber-300">
+                                  ប្រធានក្រុម
+                                </span>
+                              )}
+                            </div>
                             <p className="text-[10px] text-muted-foreground">
                               {m.memberId} · {m.academicYear.code}-{m.department.code}
                             </p>

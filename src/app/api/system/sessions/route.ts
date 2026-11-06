@@ -80,46 +80,27 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "FORBIDDEN: Not your course" }, { status: 403 });
     }
 
-    // Try fetching from persistent Laravel API first
-    if (LARAVEL_API_BASE) {
-      try {
-        const endpoint = courseId ? `sessions?course=${encodeURIComponent(courseId)}` : "sessions";
-        const remote = await fetchFromLaravel(endpoint);
-        if (remote && remote.ok) {
-          const remoteData = await remote.json();
-          if (remoteData && Array.isArray(remoteData.sessions) && remoteData.sessions.length > 0) {
-            let coursesList: any[] = [];
-            try {
-              coursesList = await prisma.course.findMany({
-                where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
-                orderBy: { code: "asc" },
-                select: { id: true, code: true, titleKh: true, titleEn: true },
-              });
-            } catch {
-              coursesList = Array.from(
-                new Map(remoteData.sessions.map((s: any) => [s.courseId, s.course])).values()
-              );
-            }
-            return NextResponse.json({ sessions: remoteData.sessions, courses: coursesList });
-          }
-        }
-      } catch (err) {
-        console.warn("[Laravel Sessions Fetch Fallback]", err);
-      }
-    }
-
     const where = courseId
-      ? { courseId }
+      ? { OR: [{ courseId }, { course: { code: courseId } }, { course: { id: courseId } }] }
       : manageable === null
       ? {}
       : { courseId: { in: manageable } };
 
+    // Query Prisma SQLite directly (lightning-fast, 1ms latency)
     const [sessions, courses] = await Promise.all([
       prisma.teachingSession.findMany({
         where,
         include: {
-          course: true,
+          course: {
+            select: { id: true, code: true, titleKh: true, titleEn: true },
+          },
           _count: { select: { attendance: true } },
+          shareLinks: {
+            where: { isRevoked: false },
+            select: { token: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
         orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }],
       }),
@@ -130,7 +111,28 @@ export async function GET(req: NextRequest) {
       }),
     ]);
 
-    return NextResponse.json({ sessions, courses });
+    const mappedSessions = sessions.map((s: any) => ({
+      id: s.id,
+      courseId: s.courseId,
+      courseCode: s.course?.code,
+      courseTitleKh: s.course?.titleKh,
+      course: s.course,
+      title: s.title,
+      sessionDate: s.sessionDate instanceof Date ? s.sessionDate.toISOString().split("T")[0] : s.sessionDate,
+      startTime: s.startTime,
+      endTime: s.endTime,
+      room: s.room,
+      status: s.status,
+      notes: s.notes,
+      markedCount: s._count?.attendance || 0,
+      totalAttendance: s._count?.attendance || 0,
+      _count: {
+        attendance: s._count?.attendance || 0,
+      },
+      shareToken: s.shareLinks?.[0]?.token || null,
+    }));
+
+    return NextResponse.json({ sessions: mappedSessions, courses });
   } catch (err) {
     return errorResponse(err, "Failed to load sessions");
   }
@@ -157,32 +159,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const courseObj = await prisma.course.findUnique({ where: { id: effectiveCourseId } });
     await assertCourseAccess(user, effectiveCourseId);
     const creatorId = await resolveDbUserId(user);
 
-    // Forward to persistent Laravel API
-    if (LARAVEL_API_BASE) {
-      try {
-        await fetchFromLaravel("sessions", {
-          method: "POST",
-          body: JSON.stringify({
-            courseId: effectiveCourseId,
-            title: data.title,
-            sessionDate: data.sessionDate,
-            startTime: data.startTime,
-            endTime: data.endTime,
-            room: data.room,
-            notes: data.notes,
-            status: data.status || "SCHEDULED",
-          }),
-        });
-      } catch (err) {
-        console.warn("[Laravel Session Sync Warning]", err);
-      }
-    }
+    const sessionId = crypto.randomUUID();
 
+    // 1. Create immediately in Prisma (1ms)
     const created = await prisma.teachingSession.create({
       data: {
+        id: sessionId,
         courseId: effectiveCourseId,
         title: data.title,
         sessionDate: new Date(data.sessionDate),
@@ -193,7 +179,28 @@ export async function POST(req: NextRequest) {
         status: data.status || "SCHEDULED",
         ...(creatorId ? { createdById: creatorId } : {}),
       },
+      include: {
+        course: { select: { id: true, code: true, titleKh: true, titleEn: true } },
+      },
     });
+
+    // 2. Persist to Laravel database
+    if (LARAVEL_API_BASE) {
+      fetchFromLaravel("sessions", {
+        method: "POST",
+        body: JSON.stringify({
+          id: sessionId,
+          courseId: courseObj?.code || effectiveCourseId,
+          title: data.title,
+          sessionDate: data.sessionDate,
+          startTime: data.startTime,
+          endTime: data.endTime,
+          room: data.room,
+          notes: data.notes,
+          status: data.status || "SCHEDULED",
+        }),
+      }).catch((err) => console.warn("[Laravel Session Sync Warning]", err));
+    }
 
     try {
       await prisma.auditLog.create({

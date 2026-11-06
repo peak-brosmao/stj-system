@@ -83,6 +83,7 @@ export async function GET(req: NextRequest) {
         include: {
           course: {
             include: {
+              leaders: { include: { user: true } },
               enrollments: {
                 include: { member: { include: { department: true, academicYear: true } } },
               },
@@ -94,16 +95,49 @@ export async function GET(req: NextRequest) {
       if (!target) return NextResponse.json({ error: "Session not found" }, { status: 404 });
       await assertCourseAccess(user, target.courseId);
 
+      const leaderStudentIds = (target.course.leaders || []).map((l: any) => l.user?.studentId).filter(Boolean);
+      const officialLeaderMap: Record<string, string> = {
+        PROG101: "e20240704", // LEANG JINGHENG
+        MATH101: "e20221423", // KIM Ratanak
+        PHYS101: "e20240096", // KRUY Ykhang
+        CHEM101: "e20240046", // KHENG Lyussa
+      };
+      const officialLeader = officialLeaderMap[target.course.code];
+      if (officialLeader && !leaderStudentIds.includes(officialLeader)) {
+        leaderStudentIds.push(officialLeader);
+      }
+
+      const getYearRank = (code: string) => {
+        const m = (code || "").match(/(\d+)/);
+        return m ? parseInt(m[1], 10) : 99;
+      };
+
       const enrolledMembers = target.course.enrollments
-        .map((e) => ({
-          id: e.member.id,
-          memberId: e.member.memberId,
-          fullNameKh: e.member.fullNameKh,
-          fullNameEn: e.member.fullNameEn,
-          department: { code: e.member.department?.code ?? "" },
-          academicYear: { code: e.member.academicYear?.code ?? "" },
-        }))
-        .sort((a, b) => a.memberId.localeCompare(b.memberId));
+        .map((e) => {
+          const isLeader =
+            leaderStudentIds.includes(e.member.studentId) ||
+            (e.member.notes && e.member.notes.includes("ប្រធានក្រុម"));
+          return {
+            id: e.member.id,
+            memberId: e.member.memberId,
+            studentId: e.member.studentId,
+            fullNameKh: e.member.fullNameKh,
+            fullNameEn: e.member.fullNameEn,
+            department: { code: e.member.department?.code ?? "" },
+            academicYear: { code: e.member.academicYear?.code ?? "" },
+            isLeader: !!isLeader,
+          };
+        })
+        .sort((a, b) => {
+          if (a.isLeader && !b.isLeader) return -1;
+          if (!a.isLeader && b.isLeader) return 1;
+
+          const yearA = getYearRank(a.academicYear?.code || "");
+          const yearB = getYearRank(b.academicYear?.code || "");
+          if (yearA !== yearB) return yearA - yearB;
+
+          return (a.fullNameEn || "").localeCompare(b.fullNameEn || "");
+        });
 
       return NextResponse.json({
         courses,

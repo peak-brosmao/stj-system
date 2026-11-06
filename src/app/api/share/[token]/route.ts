@@ -26,26 +26,30 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const { password } = body;
 
-    // 1. Try Laravel API first if configured
-    if (LARAVEL_API_BASE) {
-      const remote = await fetchFromLaravel(`share/${token}`, {
-        method: "POST",
-        body: JSON.stringify({ password }),
-      });
-      if (remote && remote.ok) {
-        const remoteData = await remote.json();
-        return NextResponse.json(remoteData);
-      }
-    }
-
-    // 2. Query Prisma database
-    const shareLink = await prisma.shareLink.findUnique({
+    // 1. Query Prisma database directly (Primary single-source-of-truth)
+    let shareLink = await prisma.shareLink.findUnique({
       where: { token },
       include: {
         course: true,
         session: true,
       },
     });
+
+    // If not found in Prisma, try Laravel API
+    if (!shareLink && LARAVEL_API_BASE) {
+      try {
+        const remote = await fetchFromLaravel(`share/${token}`, {
+          method: "POST",
+          body: JSON.stringify({ password }),
+        });
+        if (remote && remote.ok) {
+          const remoteData = await remote.json();
+          return NextResponse.json(remoteData);
+        }
+      } catch (err) {
+        console.warn("[Laravel Share Fallback Warning]", err);
+      }
+    }
 
     if (!shareLink) {
       return NextResponse.json({ error: "Share link not found or expired." }, { status: 404 });

@@ -2,7 +2,21 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Plus, Clock, MapPin, CalendarCheck, X, Pencil, Trash2, Ban } from "lucide-react";
+import {
+  CalendarDays,
+  Plus,
+  Clock,
+  MapPin,
+  CalendarCheck,
+  X,
+  Pencil,
+  Trash2,
+  Ban,
+  Share2,
+  Copy,
+  Check,
+  ExternalLink,
+} from "lucide-react";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +32,7 @@ interface CourseOption {
 interface SessionItem {
   id: string;
   courseId: string;
+  courseCode?: string;
   title: string;
   sessionDate: string;
   startTime: string;
@@ -25,8 +40,11 @@ interface SessionItem {
   room: string;
   status: string;
   notes: string | null;
-  course: { code: string; titleKh: string };
+  course: { id?: string; code: string; titleKh: string };
   _count?: { attendance: number };
+  shareToken?: string | null;
+  markedCount?: number;
+  totalAttendance?: number;
 }
 
 interface FormState {
@@ -59,8 +77,8 @@ const emptyForm = (courseId: string): FormState => ({
   courseId,
   title: "",
   sessionDate: new Date().toISOString().split("T")[0],
-  startTime: "08:00",
-  endTime: "10:00",
+  startTime: "11:30",
+  endTime: "13:00",
   room: "",
   notes: "",
   status: "SCHEDULED",
@@ -86,6 +104,43 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  const [shareSession, setShareSession] = useState<SessionItem | null>(null);
+  const [shareToken, setShareToken] = useState<string | null>(null);
+  const [shareLoading, setShareLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const openShareModal = async (s: SessionItem) => {
+    setShareSession(s);
+    setCopied(false);
+    if (s.shareToken) {
+      setShareToken(s.shareToken);
+      return;
+    }
+    setShareLoading(true);
+    try {
+      const res = await fetch("/api/system/share-links", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId: s.courseId,
+          sessionId: s.id,
+          title: `របាយការណ៍មេរៀន ${s.title} (${s.course.code})`,
+          showStats: true,
+        }),
+      });
+      const data = await res.json();
+      const tok = data.token || data.shareLink?.token;
+      if (tok) {
+        setShareToken(tok);
+        s.shareToken = tok;
+      }
+    } catch (err) {
+      console.error("Failed to generate share link", err);
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
@@ -108,7 +163,10 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
   const openCreate = () => {
     setError("");
-    const defaultCourse = courseFilter !== "ALL" ? courseFilter : courses[0]?.id || "";
+    const defaultCourse =
+      courseFilter !== "ALL"
+        ? courses.find((c) => c.code === courseFilter || c.id === courseFilter)?.id || courses[0]?.id || ""
+        : courses[0]?.id || "";
     setForm(emptyForm(defaultCourse));
   };
 
@@ -169,7 +227,22 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
     load();
   };
 
-  const visible = sessions.filter((s) => courseFilter === "ALL" || s.courseId === courseFilter);
+  const visible = sessions.filter((s) => {
+    if (courseFilter === "ALL") return true;
+    const selected = courses.find((c) => c.id === courseFilter || c.code === courseFilter);
+    const targetCode = selected ? selected.code : courseFilter;
+    const targetId = selected ? selected.id : courseFilter;
+    return (
+      s.courseId === targetId ||
+      s.courseId === courseFilter ||
+      s.course?.id === targetId ||
+      s.course?.id === courseFilter ||
+      s.courseCode === targetCode ||
+      s.course?.code === targetCode ||
+      s.courseCode === courseFilter ||
+      s.course?.code === courseFilter
+    );
+  });
   const attendanceHref = (id: string) => `/${portalType}/attendance?sessionId=${id}`;
 
   return (
@@ -197,19 +270,23 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
         {courses.length > 1 && (
           <div className="flex flex-wrap gap-2">
-            {[{ id: "ALL", code: "ALL" }, ...courses].map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setCourseFilter(c.id)}
-                className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
-                  courseFilter === c.id
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {c.code === "ALL" ? "ទាំងអស់ (All)" : c.code}
-              </button>
-            ))}
+            {[{ id: "ALL", code: "ALL" }, ...courses].map((c) => {
+              const code = c.code === "ALL" ? "ALL" : c.code;
+              const isSelected = courseFilter === code || courseFilter === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setCourseFilter(code)}
+                  className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {code === "ALL" ? "ទាំងអស់ (All)" : code}
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -250,9 +327,22 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                 <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-[11px] text-muted-foreground">
-                    វត្តមានកត់ត្រារួច៖ <strong className="text-foreground">{s._count?.attendance || 0}</strong>
+                    វត្តមានកត់ត្រារួច៖{" "}
+                    <strong className="text-foreground font-semibold">
+                      {s._count?.attendance ?? (s as any).totalAttendance ?? (s as any).markedCount ?? 0}
+                    </strong>
                   </span>
                   <div className="flex items-center gap-1.5">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openShareModal(s)}
+                      className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
+                      title="ចែករំលែកតំណភ្ជាប់វត្តមានដល់សមាជិក (Share attendance link with members)"
+                    >
+                      <Share2 className="w-3 h-3 text-primary" />
+                      <span>តំណភ្ជាប់ (Share)</span>
+                    </Button>
                     <Link href={attendanceHref(s.id)}>
                       <Button variant="outline" size="sm" className="h-7 text-xs space-x-1">
                         <CalendarCheck className="w-3 h-3 text-primary" />
@@ -410,6 +500,109 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     </Button>
                   </div>
                 </form>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Share Attendance Link Modal */}
+        {shareSession && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <Card className="max-w-md w-full shadow-2xl border-primary/30">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                      <Share2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-sm text-foreground">
+                        តំណភ្ជាប់ចែករំលែកវត្តមាន (Share Attendance Link)
+                      </h3>
+                      <p className="text-[11px] text-muted-foreground">
+                        {shareSession.course.code} • {shareSession.title}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShareSession(null);
+                      setShareToken(null);
+                    }}
+                    className="p-1 rounded text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {shareLoading ? (
+                  <div className="py-8 text-center text-xs text-muted-foreground space-y-2">
+                    <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent"></div>
+                    <p>កំពុងបង្កើតតំណភ្ជាប់ចែករំលែក...</p>
+                  </div>
+                ) : shareToken ? (
+                  <div className="space-y-3 pt-1">
+                    <div className="p-3 rounded-xl bg-muted/40 border border-border space-y-2">
+                      <label className="block text-[11px] font-semibold text-foreground">
+                        តំណភ្ជាប់សាធារណៈសម្រាប់សមាជិក (Public Attendance URL)
+                      </label>
+                      <div className="flex items-center space-x-1.5">
+                        <input
+                          type="text"
+                          readOnly
+                          value={typeof window !== "undefined" ? `${window.location.origin}/share/${shareToken}` : `/share/${shareToken}`}
+                          className="w-full text-xs font-mono px-2.5 py-1.5 rounded-lg border border-input bg-background select-all"
+                        />
+                        <Button
+                          size="sm"
+                          variant={copied ? "default" : "outline"}
+                          onClick={() => {
+                            const url = `${window.location.origin}/share/${shareToken}`;
+                            navigator.clipboard.writeText(url);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2500);
+                          }}
+                          className="h-8 text-xs shrink-0 space-x-1"
+                        >
+                          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copied ? "បានចម្លង!" : "ចម្លង"}</span>
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs pt-1">
+                      <span className="text-[11px] text-muted-foreground">
+                        សមាជិកអាចបើកមើលបានភ្លាមៗដោយមិនបាច់ Login
+                      </span>
+                      <a
+                        href={`/share/${shareToken}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center space-x-1 text-primary hover:underline font-semibold text-xs"
+                      >
+                        <span>បើកមើលផ្ទាល់</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="py-6 text-center text-xs text-destructive">
+                    មិនអាចទាញយកតំណភ្ជាប់បានឡើយ។ សូមសាកល្បងម្តងទៀត។
+                  </div>
+                )}
+
+                <div className="pt-3 border-t border-border flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setShareSession(null);
+                      setShareToken(null);
+                    }}
+                  >
+                    បិទ
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

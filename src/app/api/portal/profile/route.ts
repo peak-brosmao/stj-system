@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -152,8 +153,24 @@ export async function PUT(req: NextRequest) {
 
     const { displayName, phone, telegram, bio, address, gender, preferredLanguage } = validated.data;
 
+    // Find the user safely using ID, email, or studentId
+    const targetUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { id: session.id },
+          ...(session.email ? [{ email: session.email }] : []),
+          ...(session.studentId ? [{ studentId: session.studentId }] : []),
+        ],
+      },
+      include: { member: true },
+    });
+
+    if (!targetUser) {
+      return NextResponse.json({ error: "រកមិនឃើញគណនីអ្នកប្រើប្រាស់ (User not found)" }, { status: 404 });
+    }
+
     await prisma.user.update({
-      where: { id: session.id },
+      where: { id: targetUser.id },
       data: {
         displayName,
         phone,
@@ -165,17 +182,49 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    await prisma.auditLog.create({
-      data: {
-        userId: session.id,
-        action: "PROFILE_UPDATED",
-        entityType: "USER",
-        entityId: session.id,
-        details: JSON.stringify({ displayName, phone, telegram, preferredLanguage }),
-        ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
-        userAgent: req.headers.get("user-agent"),
-      },
-    });
+    // Update Member table phone if exists
+    if (targetUser.memberRecordId || targetUser.studentId || targetUser.member?.memberId) {
+      await prisma.member.updateMany({
+        where: {
+          OR: [
+            ...(targetUser.memberRecordId ? [{ id: targetUser.memberRecordId }] : []),
+            ...(targetUser.member?.memberId ? [{ memberId: targetUser.member.memberId }] : []),
+            ...(targetUser.studentId ? [{ studentId: targetUser.studentId }] : []),
+          ],
+        },
+        data: {
+          ...(phone ? { phone } : {}),
+        },
+      });
+    }
+
+    // Direct persistence in Laravel database (stj.db)
+    const targetMemberIdentifier =
+      targetUser.member?.id || targetUser.member?.memberId || targetUser.studentId || session.studentId;
+    if (targetMemberIdentifier && LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel(`members/${targetMemberIdentifier}`, {
+          method: "PUT",
+          body: JSON.stringify({ phone }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Member Sync Warning]", err);
+      }
+    }
+
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: targetUser.id,
+          action: "PROFILE_UPDATED",
+          entityType: "USER",
+          entityId: targetUser.id,
+          details: JSON.stringify({ displayName, phone, telegram, preferredLanguage }),
+          ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
+          userAgent: req.headers.get("user-agent"),
+        },
+      });
+    } catch {}
 
     return NextResponse.json({
       success: true,

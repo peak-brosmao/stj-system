@@ -139,21 +139,44 @@ export default function SystemMembersPage() {
   };
 
   const openEditModal = (m: MemberItem) => {
-    const existingCourseIds = (m.enrollments || []).map((e) => e.courseId || e.course?.id).filter(Boolean);
-    if ((m as any).courses && existingCourseIds.length === 0) {
-      for (const c of (m as any).courses) {
-        if (c.id) existingCourseIds.push(c.id);
+    const existingCourseCodes: string[] = [];
+    if (m.enrollments && Array.isArray(m.enrollments)) {
+      for (const e of m.enrollments) {
+        if (e.course?.code) existingCourseCodes.push(e.course.code);
+        if (e.course?.id) existingCourseCodes.push(e.course.id);
+        if (e.courseId) existingCourseCodes.push(e.courseId);
       }
     }
+    if ((m as any).courses && Array.isArray((m as any).courses)) {
+      for (const c of (m as any).courses) {
+        if (c.code) existingCourseCodes.push(c.code);
+        if (c.id) existingCourseCodes.push(c.id);
+      }
+    }
+    if ((m as any).courseCodes && Array.isArray((m as any).courseCodes)) {
+      for (const code of (m as any).courseCodes) {
+        existingCourseCodes.push(code);
+      }
+    }
+    if ((m as any).courseCode) {
+      existingCourseCodes.push((m as any).courseCode);
+    }
+
+    const mDeptCode = (m.department?.code || (m as any).departmentCode || (m.departmentId ? m.departmentId.replace(/^dept-/i, "").toUpperCase() : "")).toUpperCase();
+    const matchedDept = departments.find((d) => d.id === m.departmentId || d.code.toUpperCase() === mDeptCode);
+
+    const mYearCode = (m.academicYear?.code || (m as any).yearCode || (m.academicYearId ? m.academicYearId.replace(/^year-/i, "").toUpperCase() : "")).toUpperCase();
+    const matchedYear = academicYears.find((y) => y.id === m.academicYearId || y.code.toUpperCase() === mYearCode);
+
     setEditingMember({
-      id: m.id,
+      id: m.id || m.memberId,
       memberId: m.memberId,
       studentId: m.studentId || "",
       fullNameKh: m.fullNameKh,
       fullNameEn: m.fullNameEn,
-      departmentId: m.departmentId || m.department?.id || "",
-      academicYearId: m.academicYearId || m.academicYear?.id || "",
-      courseIds: existingCourseIds,
+      departmentId: matchedDept?.id || m.departmentId || (departments[0]?.id || ""),
+      academicYearId: matchedYear?.id || m.academicYearId || (academicYears[0]?.id || ""),
+      courseIds: Array.from(new Set(existingCourseCodes)),
       phone: m.phone || "",
       email: m.email || "",
       status: m.status,
@@ -570,12 +593,18 @@ export default function SystemMembersPage() {
                         មុខវិជ្ជាទទួលបន្ទុកបង្រៀន (ជ្រើសរើសបានច្រើនមុខវិជ្ជា)
                       </label>
                       <span className="text-[10px] text-muted-foreground font-mono">
-                        {editingMember.courseIds.length} មុខវិជ្ជា
+                        {courses.filter((c) =>
+                          editingMember.courseIds.some(
+                            (item) => item === c.id || item === c.code || item.toUpperCase().includes(c.code.toUpperCase())
+                          )
+                        ).length} មុខវិជ្ជា
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       {courses.map((c) => {
-                        const isChecked = editingMember.courseIds.includes(c.id) || editingMember.courseIds.includes(c.code);
+                        const isChecked = editingMember.courseIds.some(
+                          (item) => item === c.id || item === c.code || item.toUpperCase().includes(c.code.toUpperCase())
+                        );
                         return (
                           <label
                             key={c.id}
@@ -592,12 +621,14 @@ export default function SystemMembersPage() {
                                 if (e.target.checked) {
                                   setEditingMember({
                                     ...editingMember,
-                                    courseIds: [...editingMember.courseIds, c.id],
+                                    courseIds: Array.from(new Set([...editingMember.courseIds, c.code, c.id])),
                                   });
                                 } else {
                                   setEditingMember({
                                     ...editingMember,
-                                    courseIds: editingMember.courseIds.filter((id) => id !== c.id && id !== c.code),
+                                    courseIds: editingMember.courseIds.filter(
+                                      (item) => item !== c.id && item !== c.code && !item.toUpperCase().includes(c.code.toUpperCase())
+                                    ),
                                   });
                                 }
                               }}

@@ -39,8 +39,14 @@ class SessionController extends Controller
 
         $sessions = $query->orderBy('teaching_sessions.session_date', 'desc')->get();
 
-        // Attach attendance count to each session
-        $formatted = $sessions->map(function ($s) {
+        // Fetch active share links mapped by session_id
+        $shareLinks = DB::table('share_links')
+            ->where('is_revoked', false)
+            ->whereNotNull('session_id')
+            ->pluck('token', 'session_id');
+
+        // Attach attendance count and shareToken to each session
+        $formatted = $sessions->map(function ($s) use ($shareLinks) {
             $markedCount = DB::table('attendance_records')
                 ->where('session_id', $s->id)
                 ->whereIn('status', ['PRESENT', 'LATE'])
@@ -69,6 +75,10 @@ class SessionController extends Controller
                 'notes' => $s->notes,
                 'markedCount' => $markedCount,
                 'totalAttendance' => $totalRecords,
+                '_count' => [
+                    'attendance' => $totalRecords,
+                ],
+                'shareToken' => $shareLinks[$s->id] ?? null,
             ];
         });
 

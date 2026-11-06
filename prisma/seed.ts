@@ -181,7 +181,7 @@ async function main() {
     { num: 14, nameKh: "ប៊ុន សុខបញ្ញា", nameEn: "BUN Sokpanha", gender: "M", studentId: "e20221678", yr: "I5", dept: "GCI", phone: "0767821209", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
     { num: 15, nameKh: "វង្ស ច័ន្ទវង្សា", nameEn: "VONG Sa", gender: "M", studentId: "e20241028", yr: "I3", dept: "GAR", phone: "016594999", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
     { num: 16, nameKh: "ជាតិ វិសាល", nameEn: "CHEAT Visal", gender: "M", studentId: "e20250175", yr: "I2", dept: "GAR", phone: "017724617", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
-    { num: 17, nameKh: "អន សុជាតិ", nameEn: "ORN Socheat", gender: "M", studentId: "e20251044", yr: "I2", dept: "GEE", phone: "0976442857", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
+    { num: 17, nameKh: "អិន សុជាតិ", nameEn: "ORN Socheat", gender: "M", studentId: "e20251044", yr: "I2", dept: "GEE", phone: "0976442857", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
     { num: 18, nameKh: "ម៉ឹង ហាក់", nameEn: "MOEUNG Hak", gender: "M", studentId: "e20251246", yr: "I2", dept: "GAR", phone: "0968445445", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
     { num: 19, nameKh: "សុំ សុធាវី", nameEn: "SOM Sotheavy", gender: "F", studentId: "e20250345", yr: "I2", dept: "GCA", phone: "011703261", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCA)" },
     { num: 20, nameKh: "ហង់ សុជាតា", nameEn: "HANG Socheata", gender: "F", studentId: "e20250687", yr: "I2", dept: "GCA", phone: "016735656", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCA)" },

@@ -96,6 +96,92 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    const isExecutive =
+      session.roles.some((r) => ["SUPER_ADMIN", "STJ_PRESIDENT", "STUDENT_ASSOCIATION", "STJ_ADMIN"].includes(r)) ||
+      userInfo.memberId === "STJ001" ||
+      userInfo.memberId === "STJ002" ||
+      userInfo.studentId === "e20221334" ||
+      userInfo.studentId === "e20230969";
+
+    if (isExecutive) {
+      // 1. Fetch all courses with leaders and enrollments count
+      const allCourses = await prisma.course.findMany({
+        where: { status: "ACTIVE" },
+        include: {
+          leaders: { include: { user: true } },
+          enrollments: true,
+          sessions: {
+            include: {
+              _count: { select: { attendance: true } },
+              shareLinks: { where: { isRevoked: false }, select: { token: true }, take: 1 },
+            },
+          },
+        },
+        orderBy: { code: "asc" },
+      });
+
+      const totalMembers = await prisma.member.count({ where: { status: "ACTIVE" } });
+      const totalSessions = allCourses.reduce((acc, c) => acc + c.sessions.length, 0);
+      const totalAttendance = allCourses.reduce(
+        (acc, c) => acc + c.sessions.reduce((sAcc, s) => sAcc + s._count.attendance, 0),
+        0
+      );
+
+      const executiveCourses = allCourses.map((c) => {
+        const leader = c.leaders[0]?.user;
+        const leaderRoster = OFFICIAL_STJ_ROSTER.find(
+          (m) => leader && (m.studentId === leader.studentId || m.email === leader.email)
+        );
+        return {
+          id: c.id,
+          code: c.code,
+          titleKh: c.titleKh,
+          titleEn: c.titleEn,
+          leaderName: leader ? `${leader.fullNameKh} (${leader.fullNameEn})` : leaderRoster ? `${leaderRoster.nameKh} (${leaderRoster.nameEn})` : "មិនទាន់កំណត់",
+          leaderDept: leaderRoster ? `${leaderRoster.year}-${leaderRoster.dept}` : "",
+          memberCount: c.enrollments.length,
+          sessionCount: c.sessions.length,
+        };
+      });
+
+      const allSessions = await prisma.teachingSession.findMany({
+        include: {
+          course: { select: { code: true, titleKh: true } },
+          _count: { select: { attendance: true } },
+          shareLinks: { where: { isRevoked: false }, select: { token: true }, take: 1 },
+        },
+        orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }],
+      });
+
+      const formattedSessions = allSessions.map((s) => ({
+        id: s.id,
+        courseCode: s.course.code,
+        courseTitleKh: s.course.titleKh,
+        title: s.title,
+        sessionDate: s.sessionDate.toISOString().split("T")[0],
+        startTime: s.startTime,
+        endTime: s.endTime,
+        room: s.room,
+        status: s.status,
+        markedCount: s._count.attendance,
+        shareToken: s.shareLinks[0]?.token || null,
+      }));
+
+      return NextResponse.json({
+        success: true,
+        isExecutive: true,
+        user: userInfo,
+        executiveCourses,
+        sessions: formattedSessions,
+        overallStats: {
+          totalSessions,
+          totalAttendance,
+          totalMembers,
+          averageRate: totalSessions > 0 ? 100 : 0,
+        },
+      });
+    }
+
     if (!member) {
       return NextResponse.json({
         success: true,

@@ -40,6 +40,14 @@ class ShareLinkController extends Controller
         DB::table('share_links')->where('id', $link->id)->increment('access_count');
 
         // 1. Fetch all members enrolled in this course
+        $leader = DB::table('course_leaders')
+            ->join('users', 'course_leaders.user_id', '=', 'users.id')
+            ->where('course_leaders.course_id', $link->course_id)
+            ->select('users.student_id')
+            ->first();
+        $leaderStudentId = $leader ? $leader->student_id : null;
+        $officialLeaders = ['e20240704', 'e20221423', 'e20240096', 'e20240046'];
+
         $enrolledMembers = DB::table('course_enrollments')
             ->join('members', 'course_enrollments.member_id', '=', 'members.id')
             ->join('departments', 'members.department_id', '=', 'departments.id')
@@ -54,8 +62,22 @@ class ShareLinkController extends Controller
                 'departments.code as department',
                 'academic_years.code as year'
             )
-            ->orderBy('members.member_id', 'asc')
-            ->get();
+            ->get()
+            ->sort(function ($a, $b) use ($leaderStudentId, $officialLeaders) {
+                $isLeaderA = ($a->studentId === $leaderStudentId) || in_array($a->studentId, $officialLeaders);
+                $isLeaderB = ($b->studentId === $leaderStudentId) || in_array($b->studentId, $officialLeaders);
+                if ($isLeaderA && !$isLeaderB) return -1;
+                if (!$isLeaderA && $isLeaderB) return 1;
+
+                preg_match('/(\d+)/', $a->year ?? '', $mA);
+                preg_match('/(\d+)/', $b->year ?? '', $mB);
+                $yearA = isset($mA[1]) ? (int)$mA[1] : 99;
+                $yearB = isset($mB[1]) ? (int)$mB[1] : 99;
+                if ($yearA !== $yearB) return $yearA - $yearB;
+
+                return strcasecmp($a->fullNameEn, $b->fullNameEn);
+            })
+            ->values();
 
         // 2. Fetch recorded attendance for this session or course
         $attendanceMap = [];
@@ -170,7 +192,23 @@ class ShareLinkController extends Controller
             'showStats' => 'nullable|boolean',
         ]);
 
-        $token = 'stj-' . \Illuminate\Support\Str::random(12);
+        if (!empty($validated['sessionId'])) {
+            $existing = DB::table('share_links')
+                ->where('session_id', $validated['sessionId'])
+                ->where('is_revoked', false)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            if ($existing) {
+                return response()->json([
+                    'success' => true,
+                    'token' => $existing->token,
+                    'url' => url('/share/' . $existing->token),
+                    'message' => 'តំណភ្ជាប់ចែករំលែកមានរួចហើយ',
+                ]);
+            }
+        }
+
+        $token = bin2hex(random_bytes(16));
         $id = 'sl-' . \Illuminate\Support\Str::uuid();
 
         // Resolve course ID if code passed

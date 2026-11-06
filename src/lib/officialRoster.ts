@@ -54,7 +54,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 3,
     memberId: "STJ003",
-    nameKh: "គ្រុយ អីុខាង",
+    nameKh: "គ្រុយ អ៊ីខាង",
     nameEn: "KRUY Ykhang",
     gender: "M",
     studentId: "e20240096",
@@ -115,7 +115,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 9,
     memberId: "STJ009",
-    nameKh: "សុង ស្រីពេជ្រ",
+    nameKh: "សុង ស្រីពេជ",
     nameEn: "SONG SREYPICH",
     gender: "F",
     studentId: "e20250220",
@@ -130,7 +130,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 10,
     memberId: "STJ010",
-    nameKh: "សុខា អ៊ីអ៊ីង",
+    nameKh: "សុខា អឺអឺង",
     nameEn: "SOKHA EEING",
     gender: "F",
     studentId: "e20251192",
@@ -145,7 +145,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 11,
     memberId: "STJ011",
-    nameKh: "តឹក ឈាវវីសាល",
+    nameKh: "តឹក ឈាវវិសាល",
     nameEn: "TEK CHHEAVVISAL",
     gender: "M",
     studentId: "e20251185",
@@ -160,7 +160,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 17,
     memberId: "STJ017",
-    nameKh: "អន សុជាតិ",
+    nameKh: "អិន សុជាតិ",
     nameEn: "ORN Socheat",
     gender: "M",
     studentId: "e20251044",
@@ -236,16 +236,46 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
   },
   {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
+  {
     num: 12,
     memberId: "STJ012",
-    nameKh: "អេង សូអ៊ី",
-    nameEn: "ENG SOU Y",
+    nameKh: "អេង ស៊ូ យី",
+    nameEn: "Eng Sou Y",
     gender: "F",
     studentId: "e20250642",
     year: "I2",
     dept: "AMS",
     phone: "0963012386",
     email: "eng.souy@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
+  {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
     role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
     assignedCourse: "MATH101",
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
@@ -266,6 +296,21 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
   },
   {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
+  {
     num: 22,
     memberId: "STJ022",
     nameKh: "ឈុំ បញ្ញា",
@@ -276,6 +321,21 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
     dept: "AMS",
     phone: "068620824",
     email: "chhum.panha@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
+  {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
     role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
     assignedCourse: "MATH101",
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
@@ -325,12 +385,27 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
     assignedCourse: "MATH101",
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
   },
+  {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
 
   // 4. Programming Team (PROG101 - 9 Tutors)
   {
     num: 25,
     memberId: "STJ025",
-    nameKh: "លាង ជីងហេង",
+    nameKh: "លាង ជឹងហេង",
     nameEn: "LEANG JINGHENG",
     gender: "M",
     studentId: "e20240704",
@@ -346,7 +421,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 26,
     memberId: "STJ026",
-    nameKh: "ឃន វិទ្យ័រ",
+    nameKh: "ឃន វ៉ិចទ័រ",
     nameEn: "KHORN VICTOR",
     gender: "M",
     studentId: "e20230078",
@@ -361,14 +436,14 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 27,
     memberId: "STJ027",
-    nameKh: "ប៊ិន បុណ្ណាកា",
-    nameEn: "PEN BUNNAKA",
+    nameKh: "ប៊ុន បុណ្ណាកា",
+    nameEn: "BUN BUNNAKA",
     gender: "M",
     studentId: "e20230757",
     year: "I4",
     dept: "GIC",
     phone: "0966677569",
-    email: "pen.bunnaka@itc.edu.kh",
+    email: "bun.bunnaka@itc.edu.kh",
     role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming",
     assignedCourse: "PROG101",
     courseTitleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
@@ -451,7 +526,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 34,
     memberId: "STJ034",
-    nameKh: "ចំរើន ដេន",
+    nameKh: "ចំរើន ដែន",
     nameEn: "CHAMROEN DEN",
     gender: "M",
     studentId: "e20250414",
@@ -514,14 +589,14 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 15,
     memberId: "STJ015",
-    nameKh: "វង្ស ច័ន្ទវង្សា",
-    nameEn: "VONG Sa",
+    nameKh: "ឡេង ច័ន្ទវង្សា",
+    nameEn: "LENG Vongsa",
     gender: "M",
     studentId: "e20241028",
     year: "I3",
     dept: "GAR",
     phone: "016594999",
-    email: "vong.sa@itc.edu.kh",
+    email: "leng.vongsa@itc.edu.kh",
     role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គីមីវិទ្យា",
     assignedCourse: "CHEM101",
     courseTitleKh: "គីមីវិទ្យាទូទៅ (Chemistry)",
@@ -589,7 +664,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 37,
     memberId: "STJ037",
-    nameKh: "ឯល មូហាំម៉ាត់សាហ្វី",
+    nameKh: "ឯល មូហាម៉ាត់សាហ្វី",
     nameEn: "EL Muhammadshafi",
     gender: "M",
     studentId: "e20240945",
@@ -604,7 +679,7 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
   {
     num: 38,
     memberId: "STJ038",
-    nameKh: "ខឿន ធារី",
+    nameKh: "ឈឿន ធារី",
     nameEn: "KHOEUN Theary",
     gender: "F",
     studentId: "e20240561",
@@ -648,20 +723,3 @@ export function getMembersByCourse(courseCode: string): OfficialMember[] {
   if (courseCode === "CHEM101") return CHEMISTRY_MEMBERS;
   return OFFICIAL_STJ_ROSTER;
 }
-
-export const OFFICIAL_METRICS = {
-  totalMembers: OFFICIAL_STJ_ROSTER.length, // 40
-  totalCourses: 4,
-  corePrograms: ["Programming", "Mathematics", "Physics", "Chemistry"],
-  totalLeaders: OFFICIAL_COURSE_LEADERS.length, // 6
-  departmentsCount: 9, // GIC, GTI, AMS, GIM, GCI, GTR, GEE, GAR, GCA
-  academicYearsCount: 4, // I2, I3, I4, I5
-  academicYearTerm: "២០២៦~២០២៧",
-  courseTeamsCount: {
-    programming: PROGRAMMING_MEMBERS.length, // 9
-    mathematics: MATHEMATICS_MEMBERS.length, // 8
-    physics: PHYSICS_MEMBERS.length,         // 10
-    chemistry: CHEMISTRY_MEMBERS.length,     // 11
-    executive: EXECUTIVE_MEMBERS.length,     // 2
-  },
-};

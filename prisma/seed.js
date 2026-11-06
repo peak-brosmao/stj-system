@@ -53,7 +53,7 @@ async function main() {
     });
   }
 
-  // 3. Departments
+  // 3. Departments (ITC Departments)
   const departments = [
     { code: "GIC", nameKh: "ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង", nameEn: "Information and Communication Engineering", nameFr: "Génie Informatique et Communication" },
     { code: "AMS", nameKh: "ដេប៉ាតឺម៉ង់ គណិតវិទ្យាអនុវត្ត និងស្ថិតិ", nameEn: "Applied Mathematics and Statistics", nameFr: "Mathématiques Appliquées et Statistique" },
@@ -62,8 +62,10 @@ async function main() {
     { code: "GEE", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មអគ្គិសនី និងថាមពល", nameEn: "Electrical and Energy Engineering", nameFr: "Génie Électrique et Énergétique" },
     { code: "GTI", nameKh: "ដេប៉ាតឺម៉ង់ បច្ចេកវិទ្យាព័ត៌មាន", nameEn: "Information Technology", nameFr: "Génie Télécommunications et Réseaux" },
     { code: "GAR", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មជនបទ", nameEn: "Rural Engineering", nameFr: "Génie Rural" },
-    { code: "GCA", nameKh: "ដេប៉ាតឺម៉ង់ វិស្វកម្មសំណង់ស៊ីវិល និងក្សេត្រសាស្រ្ត", nameEn: "Agricultural Engineering", nameFr: "Génie Chimique et Alimentaire" },
+    { code: "GCA", nameKh: "ដេប៉ាតឺម៉ង់ គីមី និងចំណីអាហារ", nameEn: "Chemical and Food Engineering", nameFr: "Génie Chimique et Alimentaire" },
     { code: "GTR", nameKh: "ដេប៉ាតឺម៉ង់ ទូរគមនាគមន៍ និងបណ្តាញ", nameEn: "Telecommunications and Network Engineering", nameFr: "Génie Télécommunication" },
+    { code: "GGG", nameKh: "ដេប៉ាតឺម៉ង់ ធនធានរ៉ែ និងភូគព្ភសាស្ត្រ", nameEn: "Geo-resources and Geotechnical Engineering", nameFr: "Génie Géologique et Géotechnique" },
+    { code: "GRH", nameKh: "ដេប៉ាតឺម៉ង់ ធនធានទឹក និងបរិស្ថាន", nameEn: "Water and Environmental Engineering", nameFr: "Génie Rural et Hydrologique" },
   ];
 
   const departmentsMap = {};
@@ -103,7 +105,7 @@ async function main() {
       titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
       titleEn: "Programming & Algorithmic Thinking",
       titleFr: "Programmation et Algorithmique",
-      descriptionKh: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Algorithms ដឹកនាំដោយនិស្សិតរៀមច្បង លាង ជីងហេង (I3-GTI)។ ក្រុមបង្រៀនមកពីដេប៉ាតឺម៉ង់ GIC & GTI ចំនួន ៩ នាក់។",
+      descriptionKh: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Algorithms ដឹកនាំដោយនិស្សិតរៀមច្បង លាង ជឹងហេង (I3-GTI)។ ក្រុមបង្រៀនមកពីដេប៉ាតឺម៉ង់ GIC & GTI ចំនួន ៩ នាក់។",
       descriptionEn: "Mastering C/C++, memory management and practical problem solving by GIC/GTI mentors.",
       descriptionFr: "Structures de données, pointeurs et algorithmes avancés.",
       category: "Engineering Foundation",
@@ -129,7 +131,7 @@ async function main() {
       titleKh: "រូបវិទ្យាវិស្វកម្ម (Physics)",
       titleEn: "Engineering Physics: Mechanics & Waves",
       titleFr: "Physique pour l'Ingénieur",
-      descriptionKh: "មេកានិកបុរាណ ថាមពល និងចលនារលក ដឹកនាំដោយ គ្រុយ អីុខាង (I3-GIM)។ ក្រុមបង្រៀនមកពីដេប៉ាតឺម៉ង់ GIM & GEE ចំនួន ១០ នាក់។",
+      descriptionKh: "មេកានិកបុរាណ ថាមពល និងចលនារលក ដឹកនាំដោយ គ្រុយ អ៊ីខាង (I3-GIM)។ ក្រុមបង្រៀនមកពីដេប៉ាតឺម៉ង់ GIM & GEE ចំនួន ១០ នាក់។",
       descriptionEn: "Classical mechanics and wave motion by GIM/GEE mentors.",
       descriptionFr: "Mécanique générale et phénomènes ondulatoires.",
       category: "Natural Sciences",
@@ -163,45 +165,44 @@ async function main() {
     coursesByCode[c.code] = course.id;
   }
 
-  // 6. Complete Official STJ 2026-2027 Roster (All 39 Official Senior Members)
+  // 6. Complete Official STJ 2026-2027 Roster (39 Official Senior Members)
   const officialRoster = [
     { num: 1, nameKh: "សុខ សេងលី", nameEn: "SOK SENGLY", gender: "F", studentId: "e20230969", yr: "I4", dept: "GCI", phone: "015399209", assignedCourse: "EXECUTIVE", role: "គណៈកម្មាធិការសមាគមនិស្សិត" },
     { num: 2, nameKh: "ផល ដាវីត", nameEn: "PHAL David", gender: "M", studentId: "e20221334", yr: "I5", dept: "GTR", phone: "086439191", assignedCourse: "EXECUTIVE", role: "ប្រធានក្រុមដឹកនាំ STJ (Overall President)" },
-    { num: 3, nameKh: "គ្រុយ អីុខាង", nameEn: "KRUY Ykhang", gender: "M", studentId: "e20240096", yr: "I3", dept: "GIM", phone: "0968925682", assignedCourse: "PHYS101", role: "ប្រធានក្រុម រូបវិទ្យា (Physics Leader)" },
+    { num: 3, nameKh: "គ្រុយ អ៊ីខាង", nameEn: "KRUY Ykhang", gender: "M", studentId: "e20240096", yr: "I3", dept: "GIM", phone: "0968925682", assignedCourse: "PHYS101", role: "ប្រធានក្រុម រូបវិទ្យា (Physics Leader)" },
     { num: 4, nameKh: "ឈិន តុលា", nameEn: "CHHIN TOLA", gender: "M", studentId: "e20240866", yr: "I3", dept: "GIM", phone: "0969720656", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
     { num: 5, nameKh: "ឡាន បូរិន", nameEn: "LAN BORIN", gender: "F", studentId: "e20240662", yr: "I3", dept: "GEE", phone: "070981465", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
     { num: 6, nameKh: "ប៉ាក់ ច័ន្ទបូរី", nameEn: "PAK CHANBOREY", gender: "M", studentId: "e20241183", yr: "I3", dept: "GCI", phone: "093271850", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
     { num: 7, nameKh: "វី ពិទូរ្យ", nameEn: "VY PITOU", gender: "M", studentId: "e20241143", yr: "I3", dept: "GIM", phone: "078564295", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
     { num: 8, nameKh: "ពៅ ជុំរតនៈ", nameEn: "PEOU CHUMRATTANAK", gender: "M", studentId: "e20250861", yr: "I2", dept: "GIM", phone: "087535899", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (GIM)" },
-    { num: 9, nameKh: "សុង ស្រីពេជ្រ", nameEn: "SONG SREYPICH", gender: "F", studentId: "e20250220", yr: "I2", dept: "GEE", phone: "085468553", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
-    { num: 10, nameKh: "សុខា អ៊ីអ៊ីង", nameEn: "SOKHA EEING", gender: "F", studentId: "e20251192", yr: "I2", dept: "GIM", phone: "015691428", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
-    { num: 11, nameKh: "តឹក ឈាវវីសាល", nameEn: "TEK CHHEAVVISAL", gender: "M", studentId: "e20251185", yr: "I2", dept: "GEE", phone: "012734562", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
-    { num: 12, nameKh: "អេង សូអ៊ី", nameEn: "ENG SOU Y", gender: "F", studentId: "e20250642", yr: "I2", dept: "AMS", phone: "0963012386", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
+    { num: 9, nameKh: "សុង ស្រីពេជ", nameEn: "SONG SREYPICH", gender: "F", studentId: "e20250220", yr: "I2", dept: "GEE", phone: "085468553", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
+    { num: 10, nameKh: "សុខា អឺអឺង", nameEn: "SOKHA EEING", gender: "F", studentId: "e20251192", yr: "I2", dept: "GIM", phone: "015691428", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
+    { num: 11, nameKh: "តឹក ឈាវវិសាល", nameEn: "TEK CHHEAVVISAL", gender: "M", studentId: "e20251185", yr: "I2", dept: "GEE", phone: "012734562", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
+    { num: 12, nameKh: "អេង ស៊ូ យី", nameEn: "Eng Sou Y", gender: "F", studentId: "e20250642", yr: "I2", dept: "AMS", phone: "0963012386", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 13, nameKh: "គឹម រតនៈ", nameEn: "KIM Ratanak", gender: "M", studentId: "e20221423", yr: "I5", dept: "GIM", phone: "010650202", assignedCourse: "MATH101", role: "ប្រធានក្រុម គណិតវិទ្យា (Math Leader)" },
     { num: 14, nameKh: "ប៊ុន សុខបញ្ញា", nameEn: "BUN Sokpanha", gender: "M", studentId: "e20221678", yr: "I5", dept: "GCI", phone: "0767821209", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
-    { num: 15, nameKh: "វង្ស ច័ន្ទវង្សា", nameEn: "VONG Sa", gender: "M", studentId: "e20241028", yr: "I3", dept: "GAR", phone: "016594999", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
+    { num: 15, nameKh: "ឡេង ច័ន្ទវង្សា", nameEn: "LENG Vongsa", gender: "M", studentId: "e20241028", yr: "I3", dept: "GAR", phone: "016594999", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
     { num: 16, nameKh: "ជាតិ វិសាល", nameEn: "CHEAT Visal", gender: "M", studentId: "e20250175", yr: "I2", dept: "GAR", phone: "017724617", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
-    { num: 17, nameKh: "អន សុជាតិ", nameEn: "ORN Socheat", gender: "M", studentId: "e20251044", yr: "I2", dept: "GEE", phone: "0976442857", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
+    { num: 17, nameKh: "អិន សុជាតិ", nameEn: "ORN Socheat", gender: "M", studentId: "e20251044", yr: "I2", dept: "GEE", phone: "0976442857", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
     { num: 18, nameKh: "ម៉ឹង ហាក់", nameEn: "MOEUNG Hak", gender: "M", studentId: "e20251246", yr: "I2", dept: "GAR", phone: "0968445445", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
     { num: 19, nameKh: "សុំ សុធាវី", nameEn: "SOM Sotheavy", gender: "F", studentId: "e20250345", yr: "I2", dept: "GCA", phone: "011703261", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCA)" },
     { num: 20, nameKh: "ហង់ សុជាតា", nameEn: "HANG Socheata", gender: "F", studentId: "e20250687", yr: "I2", dept: "GCA", phone: "016735656", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCA)" },
     { num: 21, nameKh: "ជាលី អមរិន្ទ", nameEn: "CHEALY Amrin", gender: "M", studentId: "e20250258", yr: "I2", dept: "GIM", phone: "077606122", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (GIM)" },
     { num: 22, nameKh: "ឈុំ បញ្ញា", nameEn: "CHHUM Panha", gender: "M", studentId: "e20251290", yr: "I2", dept: "AMS", phone: "068620824", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 24, nameKh: "លៀងលី សុខឡេង", nameEn: "LEANGLY Sokleng", gender: "M", studentId: "e20241375", yr: "I3", dept: "GEE", phone: "0887045133", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GEE)" },
-    { num: 25, nameKh: "លាង ជីងហេង", nameEn: "LEANG JINGHENG", gender: "M", studentId: "e20240704", yr: "I3", dept: "GTI", phone: "0976355500", assignedCourse: "PROG101", role: "ប្រធានក្រុម Programming (Leader)" },
-    { num: 26, nameKh: "ឃន វិទ្យ័រ", nameEn: "KHORN VICTOR", gender: "M", studentId: "e20230078", yr: "I4", dept: "GIC", phone: "081323442", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
-    { num: 27, nameKh: "ប៊ិន បុណ្ណាកា", nameEn: "PEN BUNNAKA", gender: "M", studentId: "e20230757", yr: "I4", dept: "GIC", phone: "0966677569", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
+    { num: 25, nameKh: "លាង ជឹងហេង", nameEn: "LEANG JINGHENG", gender: "M", studentId: "e20240704", yr: "I3", dept: "GTI", phone: "0976355500", assignedCourse: "PROG101", role: "ប្រធានក្រុម Programming (Leader)" },
+    { num: 26, nameKh: "ឃន វ៉ិចទ័រ", nameEn: "KHORN VICTOR", gender: "M", studentId: "e20230078", yr: "I4", dept: "GIC", phone: "081323442", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
+    { num: 27, nameKh: "ប៊ុន បុណ្ណាកា", nameEn: "BUN BUNNAKA", gender: "M", studentId: "e20230757", yr: "I4", dept: "GIC", phone: "0966677569", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 28, nameKh: "ស៊ឹង វិច្ឆិកា", nameEn: "SOUNG VICHKA", gender: "M", studentId: "e20240672", yr: "I3", dept: "GIC", phone: "010814529", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 29, nameKh: "សេង ម៉ិញហាវ", nameEn: "SENG MINGHAO", gender: "M", studentId: "e20240232", yr: "I3", dept: "GIC", phone: "017968212", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 30, nameKh: "ណាំ ម៉េងហួត", nameEn: "NAM MENGHOUT", gender: "M", studentId: "e20250475", yr: "I2", dept: "GIC", phone: "099998951", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 31, nameKh: "ចៃ ជីជូ", nameEn: "CHAI CHICHOU", gender: "M", studentId: "e20250731", yr: "I2", dept: "AMS", phone: "090249820", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 32, nameKh: "ហាក់ ដូនីឡា", nameEn: "HAK DONYLA", gender: "M", studentId: "e20251399", yr: "I2", dept: "GIC", phone: "089926734", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 33, nameKh: "ពៀក ប្រុសម៉ៅ", nameEn: "PEAK BROSMAO", gender: "M", studentId: "e20251455", yr: "I2", dept: "GIC", phone: "099661460", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
-    { num: 34, nameKh: "ចំរើន ដេន", nameEn: "CHAMROEN DEN", gender: "M", studentId: "e20250414", yr: "I2", dept: "GIC", phone: "0963221116", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
+    { num: 34, nameKh: "ចំរើន ដែន", nameEn: "CHAMROEN DEN", gender: "M", studentId: "e20250414", yr: "I2", dept: "GIC", phone: "0963221116", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 35, nameKh: "ខេង លីឧស្សាហ៍", nameEn: "KHENG Lyussa", gender: "F", studentId: "e20240046", yr: "I3", dept: "GCI", phone: "0974253117", assignedCourse: "CHEM101", role: "ប្រធានក្រុម គីមីវិទ្យា (Chemistry Leader)" },
-    { num: 36, nameKh: "ឈិត សុធារិទ្ធ", nameEn: "CHHIT SOTHEARITH", gender: "M", studentId: "e20240156", yr: "I3", dept: "AMS", phone: "012345678", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
-    { num: 37, nameKh: "ឯល មូហាំម៉ាត់សាហ្វី", nameEn: "EL Muhammadshafi", gender: "M", studentId: "e20240945", yr: "I3", dept: "GAR", phone: "093696794", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
-    { num: 38, nameKh: "ខឿន ធារី", nameEn: "KHOEUN Theary", gender: "F", studentId: "e20240561", yr: "I3", dept: "GCI", phone: "069944087", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
+    { num: 37, nameKh: "ឯល មូហាម៉ាត់សាហ្វី", nameEn: "EL Muhammadshafi", gender: "M", studentId: "e20240945", yr: "I3", dept: "GAR", phone: "093696794", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
+    { num: 38, nameKh: "ឈឿន ធារី", nameEn: "KHOEUN Theary", gender: "F", studentId: "e20240561", yr: "I3", dept: "GCI", phone: "069944087", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
     { num: 39, nameKh: "ហាប់ ស៊ីឈាង", nameEn: "HAB Sychheang", gender: "M", studentId: "e20240670", yr: "I3", dept: "GIM", phone: "093202727", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
     { num: 40, nameKh: "ឌិន ម៉េងហុង", nameEn: "DIN Menghong", gender: "M", studentId: "e20241214", yr: "I3", dept: "AMS", phone: "081687375", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 41, nameKh: "ហួត សំណាង", nameEn: "HOUT Samnang", gender: "M", studentId: "e20240124", yr: "I3", dept: "GCI", phone: "0966224473", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
@@ -243,6 +244,7 @@ async function main() {
         notes: `មុខវិជ្ជាទទួលខុសត្រូវ៖ ${m.assignedCourse} | តួនាទី៖ ${m.role}`,
       },
       create: {
+        id: `member-${memberId.toLowerCase()}`,
         memberId,
         studentId: m.studentId,
         fullNameKh: m.nameKh,
@@ -270,7 +272,6 @@ async function main() {
           { memberRecordId: member.id },
           { studentId: m.studentId },
           { email: studentEmail },
-          { email: `${m.nameEn.toLowerCase().replace(/\s+/g, ".")}@itc.edu.kh` },
         ],
       },
     });
@@ -360,9 +361,9 @@ async function main() {
 
   // 7. Course Leader Assignments
   const davidUser = createdUsers["e20221334"];
-  const progLeaderUser = createdUsers["e20240704"]; // លាង ជីងហេង
+  const progLeaderUser = createdUsers["e20240704"]; // លាង ជឹងហេង
   const mathLeaderUser = createdUsers["e20221423"]; // គឹម រតនៈ
-  const physLeaderUser = createdUsers["e20240096"]; // គ្រុយ អីុខាង
+  const physLeaderUser = createdUsers["e20240096"]; // គ្រុយ អ៊ីខាង
   const chemLeaderUser = createdUsers["e20240046"]; // ខេង លីឧស្សាហ៍
 
   await prisma.courseLeader.upsert({
@@ -551,12 +552,11 @@ async function main() {
   console.log(`  * Default Password Format: e202xxxxx@ITC!`);
   console.log(`- Top Authority / STJ President: ផល ដាវីត (e20221334@itc.edu.kh)`);
   console.log(`- Student Association: សុខ សេងលី (e20230969@itc.edu.kh)`);
-  console.log(`- Programming Leader: លាង ជីងហេង (e20240704@itc.edu.kh)`);
+  console.log(`- Programming Leader: លាង ជឹងហេង (e20240704@itc.edu.kh)`);
   console.log(`- Mathematics Leader: គឹម រតនៈ (e20221423@itc.edu.kh)`);
-  console.log(`- Physics Leader: គ្រុយ អីុខាង (e20240096@itc.edu.kh)`);
+  console.log(`- Physics Leader: គ្រុយ អ៊ីខាង (e20240096@itc.edu.kh)`);
   console.log(`- Chemistry Leader: ខេង លីឧស្សាហ៍ (e20240046@itc.edu.kh)`);
   console.log(`- Active Mandate: 2026-2027 (Under ផល ដាវីត)`);
-  console.log(`- Generic admin@itc.edu.kh eliminated completely.`);
 }
 
 main()

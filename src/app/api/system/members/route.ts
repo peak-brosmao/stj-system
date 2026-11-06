@@ -54,18 +54,28 @@ export async function GET(req: NextRequest) {
               code: m.yearCode || "I4",
               label: m.yearCode || "I4",
             },
-            enrollments: m.enrollments || (m.courseCode ? [
-              {
-                id: `enr-${m.memberId}`,
-                courseId: m.courseId || "c-1",
-                course: {
-                  id: m.courseId || "c-1",
-                  code: m.courseCode,
-                  titleKh: m.courseTitleKh || m.courseCode,
-                  titleEn: m.courseCode,
-                },
-              }
-            ] : []),
+            courses: m.courses || [],
+            courseCodes: m.courseCodes || (m.courses ? m.courses.map((c: any) => c.code) : []),
+            enrollments: (m.enrollments && m.enrollments.length > 0)
+              ? m.enrollments
+              : ((m.courses && m.courses.length > 0)
+                ? m.courses.map((c: any) => ({
+                    id: `enr-${m.memberId}-${c.code}`,
+                    courseId: c.id || c.code,
+                    course: c,
+                  }))
+                : (m.courseCode ? [
+                    {
+                      id: `enr-${m.memberId}`,
+                      courseId: m.courseId || "c-1",
+                      course: {
+                        id: m.courseId || "c-1",
+                        code: m.courseCode,
+                        titleKh: m.courseTitleKh || m.courseCode,
+                        titleEn: m.courseCode,
+                      },
+                    }
+                  ] : [])),
           }));
 
           return NextResponse.json({
@@ -382,12 +392,21 @@ export async function PUT(req: NextRequest) {
       assignedCourse,
     } = body;
 
-    if (!id) {
+    if (!id && !body.memberId && !body.studentId) {
       return NextResponse.json({ error: "Member ID required" }, { status: 400 });
     }
 
-    const targetMember = await prisma.member.findUnique({
-      where: { id },
+    const memberLookup = id || body.memberId || body.studentId;
+    const targetMember = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { id: memberLookup },
+          { memberId: memberLookup },
+          { memberId: memberLookup.replace(/^member-/i, "").toUpperCase() },
+          ...(body.studentId ? [{ studentId: body.studentId }] : []),
+          ...(body.memberId ? [{ memberId: body.memberId }] : []),
+        ],
+      },
       include: { enrollments: true },
     });
     if (!targetMember) {
@@ -438,20 +457,30 @@ export async function PUT(req: NextRequest) {
       ? [body.assignedCourse]
       : undefined;
 
+    let validCourses: any[] = [];
     if (courseIdsInput !== undefined && isPresident) {
-      const validCourses = await prisma.course.findMany({
+      const normalizedCourseCodes = courseIdsInput
+        .map((c: string) => (typeof c === "string" ? c.replace(/^course[-_]?/i, "").toUpperCase() : ""))
+        .filter(Boolean);
+      const normalizedCourseSlugs = courseIdsInput
+        .map((c: string) => (typeof c === "string" ? c.replace(/^course[-_]?/i, "").toLowerCase() : ""))
+        .filter(Boolean);
+
+      validCourses = await prisma.course.findMany({
         where: {
           OR: [
             { id: { in: courseIdsInput } },
             { code: { in: courseIdsInput } },
+            { code: { in: normalizedCourseCodes } },
             { slug: { in: courseIdsInput } },
+            { slug: { in: normalizedCourseSlugs } },
           ],
         },
       });
 
       // Delete previous enrollments
       await prisma.courseEnrollment.deleteMany({
-        where: { memberId: id },
+        where: { memberId: targetMember.id },
       });
 
       // Insert all selected courses
@@ -459,10 +488,46 @@ export async function PUT(req: NextRequest) {
         await prisma.courseEnrollment.create({
           data: {
             courseId: targetCourse.id,
-            memberId: id,
+            memberId: targetMember.id,
             status: "ACTIVE",
           },
         });
+      }
+    }
+
+    let resolvedDeptId: string | undefined = undefined;
+    let resolvedDeptCode: string | undefined = undefined;
+    if (departmentId) {
+      const dept = await prisma.department.findFirst({
+        where: {
+          OR: [
+            { id: departmentId },
+            { code: departmentId },
+            { code: departmentId.replace(/^dept[-_]?/i, "").toUpperCase() },
+          ],
+        },
+      });
+      if (dept) {
+        resolvedDeptId = dept.id;
+        resolvedDeptCode = dept.code;
+      }
+    }
+
+    let resolvedYearId: string | undefined = undefined;
+    let resolvedYearCode: string | undefined = undefined;
+    if (academicYearId) {
+      const yr = await prisma.academicYear.findFirst({
+        where: {
+          OR: [
+            { id: academicYearId },
+            { code: academicYearId },
+            { code: academicYearId.replace(/^year[-_]?/i, "").toUpperCase() },
+          ],
+        },
+      });
+      if (yr) {
+        resolvedYearId = yr.id;
+        resolvedYearCode = yr.code;
       }
     }
 
@@ -477,12 +542,12 @@ export async function PUT(req: NextRequest) {
       if (fullNameKh) updateData.fullNameKh = fullNameKh;
       if (fullNameEn) updateData.fullNameEn = fullNameEn;
       if (gender) updateData.gender = gender;
-      if (departmentId) updateData.departmentId = departmentId;
-      if (academicYearId) updateData.academicYearId = academicYearId;
+      if (resolvedDeptId) updateData.departmentId = resolvedDeptId;
+      if (resolvedYearId) updateData.academicYearId = resolvedYearId;
     }
 
     const updated = await prisma.member.update({
-      where: { id },
+      where: { id: targetMember.id },
       data: updateData,
       include: {
         department: true,
@@ -494,7 +559,7 @@ export async function PUT(req: NextRequest) {
     // Also sync user profile if exists
     if (isPresident && (fullNameKh || fullNameEn || email || phone)) {
       try {
-        const linkedUser = await prisma.user.findFirst({ where: { memberRecordId: id } });
+        const linkedUser = await prisma.user.findFirst({ where: { memberRecordId: targetMember.id } });
         if (linkedUser) {
           await prisma.user.update({
             where: { id: linkedUser.id },
@@ -508,6 +573,30 @@ export async function PUT(req: NextRequest) {
         }
       } catch {
         // Non-blocking
+      }
+    }
+
+    // Sync to Laravel API Backend if active
+    if (LARAVEL_API_BASE) {
+      try {
+        const laravelMemberId = targetMember.memberId || targetMember.id;
+        const forwardCourseCodes = validCourses.map((c) => c.code);
+
+        await fetchFromLaravel(`members/${laravelMemberId}`, {
+          method: "POST",
+          body: JSON.stringify({
+            fullNameKh: fullNameKh || targetMember.fullNameKh,
+            fullNameEn: fullNameEn || targetMember.fullNameEn,
+            phone: phone !== undefined ? phone : targetMember.phone,
+            email: email !== undefined ? email : targetMember.email,
+            departmentId: resolvedDeptCode || departmentId,
+            academicYearId: resolvedYearCode || academicYearId,
+            courseIds: forwardCourseCodes.length > 0 ? forwardCourseCodes : (courseIdsInput || []),
+            status: status || targetMember.status,
+          }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Member Update Sync Warning]", err);
       }
     }
 
@@ -553,7 +642,16 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Member ID required" }, { status: 400 });
     }
 
-    const member = await prisma.member.findUnique({ where: { id } });
+    const member = await prisma.member.findFirst({
+      where: {
+        OR: [
+          { id },
+          { memberId: id },
+          { memberId: id.replace(/^member-/i, "").toUpperCase() },
+          { studentId: id },
+        ],
+      },
+    });
     if (!member) {
       return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
@@ -571,16 +669,27 @@ export async function DELETE(req: NextRequest) {
 
     // Soft archive member & disable login account
     await prisma.member.update({
-      where: { id },
+      where: { id: member.id },
       data: { status: "ARCHIVED" },
     });
 
-    const user = await prisma.user.findFirst({ where: { memberRecordId: id } });
+    const user = await prisma.user.findFirst({ where: { memberRecordId: member.id } });
     if (user) {
       await prisma.user.update({
         where: { id: user.id },
         data: { status: "SUSPENDED", isSuspended: true },
       });
+    }
+
+    // Sync to Laravel API Backend if active
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel(`members/${member.memberId || member.id}`, {
+          method: "DELETE",
+        });
+      } catch (err) {
+        console.warn("[Laravel Member Delete Sync Warning]", err);
+      }
     }
 
     try {
@@ -589,7 +698,7 @@ export async function DELETE(req: NextRequest) {
           userId: session.id,
           action: "MEMBER_ARCHIVED",
           entityType: "MEMBER",
-          entityId: id,
+          entityId: member.id,
           details: JSON.stringify({ memberId: member.memberId, studentId: member.studentId }),
         },
       });

@@ -26,8 +26,12 @@ Route::post('/members/{id}', [MemberController::class, 'update']);
 Route::put('/members/{id}', [MemberController::class, 'update']);
 Route::delete('/members/{id}', [MemberController::class, 'destroy']);
 
-// 4. Courses Directory
+// 4. Courses Directory & Management
 Route::get('/courses', [CourseController::class, 'index']);
+Route::post('/courses', [CourseController::class, 'store']);
+Route::post('/courses/{id}', [CourseController::class, 'update']);
+Route::put('/courses/{id}', [CourseController::class, 'update']);
+Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
 
 // 5. Course Leaders
 Route::get('/leaders', [LeaderController::class, 'index']);

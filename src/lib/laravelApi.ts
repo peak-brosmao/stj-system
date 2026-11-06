@@ -6,7 +6,9 @@
 export const LARAVEL_API_BASE =
   process.env.LARAVEL_API_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://datastj.peakbrosmao.me/api";
+  (process.env.NODE_ENV === "development"
+    ? "http://127.0.0.1:8000/api"
+    : "https://datastj.peakbrosmao.me/api");
 
 export async function fetchFromLaravel(endpoint: string, options: RequestInit = {}) {
   const url = `${LARAVEL_API_BASE}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;

@@ -125,6 +125,13 @@ export default function SharedAttendancePage() {
             <span>ច្បាប់ (Excused)</span>
           </Badge>
         );
+      case "PENDING":
+        return (
+          <Badge variant="outline" className="space-x-1 border-amber-300 bg-amber-500/10 text-amber-700 dark:text-amber-400">
+            <Clock className="w-3 h-3" />
+            <span>រង់ចាំស្រង់ (Pending)</span>
+          </Badge>
+        );
       case "ABSENT":
       default:
         return (
@@ -171,16 +178,6 @@ export default function SharedAttendancePage() {
             </Button>
           </div>
         </div>
-
-        {/* Security / Read-only Alert */}
-        <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-xs flex items-center justify-between text-primary print:hidden">
-          <div className="flex items-center space-x-2">
-            <ShieldCheck className="w-4 h-4 shrink-0" />
-            <span>របាយការណ៍នេះសម្រាប់មើលតែប៉ុណ្ណោះ (Read-Only)។ គ្មានសិទ្ធិកែប្រែទិន្នន័យឡើយ។</span>
-          </div>
-          <span className="text-[10px] font-mono opacity-80">VERIFIED HASH</span>
-        </div>
-
         {/* Password Screen */}
         {requiresPassword && (
           <Card className="max-w-md mx-auto my-12">
@@ -346,9 +343,6 @@ export default function SharedAttendancePage() {
 
             {/* Report Footer */}
             <div className="text-center pt-4 text-[11px] text-muted-foreground space-y-1">
-              <p>
-                រូបមន្តគណនាអត្រាវត្តមាន៖ (វត្តមាន + មកយឺត) ÷ (ចំនួនសរុប - ច្បាប់) × 100%
-              </p>
               <p>© {new Date().getFullYear()} Senior Teaching Junior (STJ) - Institute of Technology of Cambodia.</p>
             </div>
           </div>

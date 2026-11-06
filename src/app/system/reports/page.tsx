@@ -18,6 +18,8 @@ interface ReportItem {
   dept: string;
   yr: string;
   course: string;
+  isExecutive?: boolean;
+  executiveRoleTitle?: string | null;
   present: number;
   late: number;
   absent: number;
@@ -29,6 +31,7 @@ interface ReportItem {
 
 interface SummaryData {
   totalMembers: number;
+  totalTutors?: number;
   totalSessions: number;
   averageRate: number;
   highPerformers: number;
@@ -211,10 +214,10 @@ export default function SystemReportsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-muted-foreground">សមាជិករៀមច្បងបង្រៀនសរុប</div>
+              <div className="text-[11px] text-muted-foreground">សមាជិកបង្រៀនស្ម័គ្រចិត្តសរុប</div>
               <div className="text-2xl font-bold text-foreground mt-1">{summary.totalMembers} នាក់</div>
               <div className="text-[10px] text-muted-foreground mt-0.5">
-                {summary.membersWithSessionsCount} នាក់បានចាប់ផ្តើមបង្រៀន
+                គ្រូបង្រៀនស្ម័គ្រចិត្ត {summary.totalMembers > 2 ? summary.totalMembers - 2 : summary.totalMembers} នាក់ • ថ្នាក់ដឹកនាំ ២ នាក់
               </div>
             </CardContent>
           </Card>
@@ -223,7 +226,7 @@ export default function SystemReportsPage() {
               <div className="text-[11px] text-primary font-medium">អត្រាវត្តមានមធ្យមជាក់ស្តែង</div>
               <div className="text-2xl font-bold text-primary mt-1">{summary.averageRate}%</div>
               <div className="text-[10px] text-muted-foreground mt-0.5">
-                គិតលើចំនួនមេរៀនដែលបានបង្រៀន
+                គិតលើ {summary.membersWithSessionsCount} នាក់ដែលមានវត្តមានកត់ត្រា
               </div>
             </CardContent>
           </Card>
@@ -245,7 +248,7 @@ export default function SystemReportsPage() {
                 {summary.totalSessions} មេរៀន
               </div>
               <div className="text-[10px] text-muted-foreground mt-0.5 font-mono">
-                prisma/stj.db
+                ប្រព័ន្ធទិន្នន័យ SQLite
               </div>
             </CardContent>
           </Card>
@@ -299,17 +302,37 @@ export default function SystemReportsPage() {
                         <span className="text-muted-foreground ml-1">({r.yr})</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                          {r.course}
-                        </span>
+                        {r.isExecutive ? (
+                          <span className="font-semibold text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                            {r.course}
+                          </span>
+                        ) : (
+                          <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                            {r.course}
+                          </span>
+                        )}
                       </td>
-                      <td className="py-3 px-4 text-center font-semibold text-emerald-600">{r.present}</td>
-                      <td className="py-3 px-4 text-center text-amber-600 font-semibold">{r.late}</td>
-                      <td className="py-3 px-4 text-center text-rose-600 font-semibold">{r.absent}</td>
-                      <td className="py-3 px-4 text-center text-blue-600 font-semibold">{r.excused}</td>
-                      <td className="py-3 px-4 text-center font-mono font-medium">{r.total}</td>
+                      <td className="py-3 px-4 text-center font-semibold text-emerald-600">
+                        {r.isExecutive ? <span className="text-muted-foreground font-normal">-</span> : r.present}
+                      </td>
+                      <td className="py-3 px-4 text-center text-amber-600 font-semibold">
+                        {r.isExecutive ? <span className="text-muted-foreground font-normal">-</span> : r.late}
+                      </td>
+                      <td className="py-3 px-4 text-center text-rose-600 font-semibold">
+                        {r.isExecutive ? <span className="text-muted-foreground font-normal">-</span> : r.absent}
+                      </td>
+                      <td className="py-3 px-4 text-center text-blue-600 font-semibold">
+                        {r.isExecutive ? <span className="text-muted-foreground font-normal">-</span> : r.excused}
+                      </td>
+                      <td className="py-3 px-4 text-center font-mono font-medium">
+                        {r.isExecutive ? <span className="text-muted-foreground font-normal">-</span> : r.total}
+                      </td>
                       <td className="py-3 px-4 text-center">
-                        {r.total === 0 ? (
+                        {r.isExecutive ? (
+                          <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20 font-medium">
+                            ថ្នាក់ដឹកនាំ
+                          </Badge>
+                        ) : r.total === 0 ? (
                           <Badge variant="outline" className="text-[10px] text-muted-foreground font-normal">
                             មិនទាន់បង្រៀន
                           </Badge>

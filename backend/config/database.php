@@ -35,7 +35,11 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('stj.db')),
+            'database' => env('DB_DATABASE')
+                ? (str_starts_with(env('DB_DATABASE'), '/') || str_contains(env('DB_DATABASE'), ':')
+                    ? env('DB_DATABASE')
+                    : base_path(env('DB_DATABASE')))
+                : database_path('stj.db'),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,

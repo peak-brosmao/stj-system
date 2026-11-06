@@ -315,7 +315,7 @@ export function PortalLayout({
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Top Breadcrumb & Quick Bar */}
-        <header className="hidden md:flex h-14 border-b border-border bg-card/60 backdrop-blur items-center justify-between px-6">
+        <header className="p-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center space-x-2 text-xs text-muted-foreground">
             <span>STJ</span>
             <ChevronRight className="w-3.5 h-3.5" />

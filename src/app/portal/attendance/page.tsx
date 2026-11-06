@@ -48,11 +48,27 @@ export default function MyAttendancePage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
+  const [isExecutive, setIsExecutive] = useState(false);
+  const [executiveCourses, setExecutiveCourses] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<any[]>([]);
+  const [overallStats, setOverallStats] = useState({
+    totalSessions: 0,
+    totalAttendance: 0,
+    totalMembers: 0,
+    averageRate: 0,
+  });
+
   useEffect(() => {
     fetch(`/api/portal/attendance?course=${courseFilter}&status=${statusFilter}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.user) setCurrentUser(data.user);
+        if (data.isExecutive) {
+          setIsExecutive(true);
+          setExecutiveCourses(data.executiveCourses || []);
+          setSessions(data.sessions || []);
+          if (data.overallStats) setOverallStats(data.overallStats);
+        }
         if (data.courses) setEnrolledCourses(data.courses);
         if (data.records) setRecords(data.records);
         if (data.stats) setStats(data.stats);
@@ -103,6 +119,175 @@ export default function MyAttendancePage() {
         return <Badge variant="destructive">អវត្តមាន (Absent)</Badge>;
     }
   };
+
+  if (isExecutive) {
+    return (
+      <PortalLayout
+        portalType="portal"
+        userRole={currentUser?.memberId === "STJ002" ? "ប្រធាន STJ" : "គណៈគ្រប់គ្រង"}
+        userName={currentUser?.fullNameKh || ""}
+        userMemberId={currentUser?.memberId || undefined}
+      >
+        <div className="space-y-6">
+          {/* Executive Header Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+            <div>
+              <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
+                <CalendarCheck className="w-3.5 h-3.5" />
+                <span>Executive STJ Attendance Oversight</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
+                ការត្រួតពិនិត្យ និងតាមដានវត្តមានទូទៅ (Attendance Oversight)
+              </h1>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                សម្រាប់ប្រធាន STJ និងគណៈកម្មាធិការសមាគមនិស្សិត • គ្រប់គ្រង និងតាមដានវត្តមានគ្រប់មុខវិជ្ជា
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Link href="/system/attendance">
+                <Button size="sm" className="space-x-1.5 text-xs">
+                  <CalendarCheck className="w-3.5 h-3.5" />
+                  <span>ស្រង់វត្តមានប្រព័ន្ធ</span>
+                </Button>
+              </Link>
+              <Link href="/system/sessions">
+                <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>គ្រប់គ្រងវគ្គបង្រៀន</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Executive KPI Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Card>
+              <CardContent className="p-4 text-center">
+                <span className="text-[11px] text-muted-foreground font-medium">វគ្គបង្រៀនសរុប (STJ)</span>
+                <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalSessions}</p>
+                <span className="text-[10px] text-muted-foreground">Across All Subjects</span>
+              </CardContent>
+            </Card>
+            <Card className="border-emerald-500/30 bg-emerald-500/5">
+              <CardContent className="p-4 text-center">
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">វត្តមានកត់ត្រារួច</span>
+                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{overallStats.totalAttendance}</p>
+                <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">Total Attended</span>
+              </CardContent>
+            </Card>
+            <Card className="border-primary/30 bg-primary/5">
+              <CardContent className="p-4 text-center">
+                <span className="text-[11px] text-primary font-medium">អត្រាវត្តមានរួម</span>
+                <p className="text-2xl font-bold text-primary mt-1">{overallStats.averageRate}%</p>
+                <span className="text-[10px] text-muted-foreground">High Participation</span>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <span className="text-[11px] text-muted-foreground font-medium">គ្រូបង្រៀនស្ម័គ្រចិត្ត</span>
+                <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalMembers}</p>
+                <span className="text-[10px] text-muted-foreground">Active Tutors</span>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Courses Overview */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-foreground">
+              សង្ខេបតាមមុខវិជ្ជា (Courses Overview)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              {executiveCourses.map((c) => (
+                <Card key={c.id} className="hover:border-primary/40 transition-colors">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
+                        {c.code}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground">
+                        {c.sessionCount} វគ្គបង្រៀន
+                      </span>
+                    </div>
+                    <h4 className="font-bold text-sm text-foreground truncate">{c.titleKh}</h4>
+                    <div className="pt-1 text-[11px] text-muted-foreground border-t border-border space-y-0.5">
+                      <div>ប្រធានក្រុម៖ <span className="font-medium text-foreground">{c.leaderName}</span></div>
+                      <div>សមាជិកចុះឈ្មោះ៖ <span className="font-semibold text-primary">{c.memberCount} នាក់</span></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Sessions Overview Table */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center justify-between">
+                <span>វគ្គបង្រៀន និងកំណត់ត្រាវត្តមានថ្មីៗ (Recent Lessons & Attendance)</span>
+                <Link href="/system/sessions" className="text-xs text-primary hover:underline font-normal">
+                  មើលទាំងអស់ →
+                </Link>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-y border-border">
+                    <tr>
+                      <th className="py-2.5 px-4 font-semibold">មុខវិជ្ជា</th>
+                      <th className="py-2.5 px-4 font-semibold">ចំណងជើងមេរៀន</th>
+                      <th className="py-2.5 px-4 font-semibold">កាលបរិច្ឆេទ</th>
+                      <th className="py-2.5 px-4 font-semibold">បន្ទប់</th>
+                      <th className="py-2.5 px-4 font-semibold text-center">វត្តមាន</th>
+                      <th className="py-2.5 px-4 font-semibold text-right">សកម្មភាព</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {sessions.map((s) => (
+                      <tr key={s.id} className="hover:bg-muted/30">
+                        <td className="py-3 px-4 font-mono font-bold text-primary">
+                          {s.courseCode}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-foreground">
+                          {s.title}
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground">
+                          {s.sessionDate} ({s.startTime} - {s.endTime})
+                        </td>
+                        <td className="py-3 px-4 text-muted-foreground">
+                          {s.room}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+                            {s.markedCount} នាក់
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right space-x-2">
+                          <Link href={`/system/attendance?sessionId=${s.id}`}>
+                            <Button size="sm" variant="outline" className="h-7 text-[11px] px-2.5">
+                              ស្រង់វត្តមាន
+                            </Button>
+                          </Link>
+                          {s.shareToken && (
+                            <Link href={`/share/${s.shareToken}`} target="_blank">
+                              <Button size="sm" variant="ghost" className="h-7 text-[11px] px-2 text-primary">
+                                តំណចែករំលែក ↗
+                              </Button>
+                            </Link>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </PortalLayout>
+    );
+  }
 
   return (
     <PortalLayout
