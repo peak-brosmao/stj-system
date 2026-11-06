@@ -562,8 +562,8 @@ export default function SystemMembersPage() {
 
         {/* Edit Member & Course Reassignment Modal */}
         {isEditModalOpen && editingMember && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <Card className="max-w-lg w-full">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={(e) => { if (e.target === e.currentTarget) { setIsEditModalOpen(false); setEditingMember(null); } }}>
+            <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <div>
@@ -747,8 +747,8 @@ export default function SystemMembersPage() {
 
         {/* Add Member Modal */}
         {isAddModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <Card className="max-w-lg w-full">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={(e) => { if (e.target === e.currentTarget) setIsAddModalOpen(false); }}>
+            <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <h3 className="font-bold text-sm">បញ្ចូលសមាជិកសិក្សាថ្មី (Add Member)</h3>
