@@ -46,6 +46,10 @@ Route::post('/sessions', [SessionController::class, 'store']);
 Route::put('/sessions/{id}', [SessionController::class, 'update']);
 Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
 
+// 8. Teaching Sessions (Lessons)
+Route::get('/sessions', [SessionController::class, 'index']);
+Route::post('/sessions', [SessionController::class, 'store']);
+
 // 8. Attendance Management
 Route::get('/attendance/{sessionId}', [AttendanceController::class, 'getBySession']);
 Route::post('/attendance', [AttendanceController::class, 'save']);

@@ -162,6 +162,25 @@ class StjDatabaseSeeder extends Seeder
             }
         }
 
+        // 5.5 Assign 4 Official Course Leaders
+        $leaderAssignments = [
+            ['course-prog101', 'e20240704'], // លាង ជីងហេង (Programming)
+            ['course-math101', 'e20240409'], // គឹម រតនៈ (Mathematics)
+            ['course-phys101', 'e20240096'], // គ្រុយ អ៊ីងខាង (Physics)
+            ['course-chem101', 'e20241699'], // ប៉ាក់ ច័ន្ទបុរី (Chemistry)
+        ];
+
+        foreach ($leaderAssignments as $idx => [$cId, $stdId]) {
+            $u = DB::table('users')->where('student_id', $stdId)->first();
+            if ($u) {
+                DB::table('users')->where('id', $u->id)->update(['role' => 'COURSE_LEADER']);
+                DB::table('course_leaders')->updateOrInsert(
+                    ['course_id' => $cId, 'user_id' => $u->id],
+                    ['assigned_at' => now()]
+                );
+            }
+        }
+
         // 6. Teaching Sessions from user's live system
         $sessionMath = 'session-math-complexe';
         DB::table('teaching_sessions')->updateOrInsert(

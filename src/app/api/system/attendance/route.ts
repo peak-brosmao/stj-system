@@ -6,6 +6,7 @@ import {
   getManageableCourseIds,
   assertCourseAccess,
 } from "@/lib/auth";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -45,11 +46,36 @@ export async function GET(req: NextRequest) {
     const sessionId = searchParams.get("sessionId");
     const courseId = searchParams.get("courseId");
 
-    const courses = await prisma.course.findMany({
-      where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
-      orderBy: { code: "asc" },
-      include: { sessions: { orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }] } },
-    });
+    let courses: any[] = [];
+    try {
+      courses = await prisma.course.findMany({
+        where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
+        orderBy: { code: "asc" },
+        include: { sessions: { orderBy: [{ sessionDate: "desc" }, { startTime: "desc" }] } },
+      });
+    } catch (err) {
+      console.warn("[Prisma Course Fetch Warning]", err);
+    }
+
+    if (courses.length === 0 && LARAVEL_API_BASE) {
+      try {
+        const remoteCourses = await fetchFromLaravel("courses");
+        const remoteSessions = await fetchFromLaravel("sessions");
+        if (remoteCourses && remoteCourses.ok) {
+          const cData = await remoteCourses.json();
+          const sData = (remoteSessions && remoteSessions.ok) ? await remoteSessions.json() : { sessions: [] };
+          const sessionsList = Array.isArray(sData.sessions) ? sData.sessions : [];
+          courses = (cData.courses || []).map((c: any) => ({
+            id: c.id,
+            code: c.code,
+            titleKh: c.titleKh,
+            sessions: sessionsList.filter((s: any) => s.courseId === c.id || s.courseCode === c.code),
+          }));
+        }
+      } catch (err) {
+        console.warn("[Laravel Courses Fallback Warning]", err);
+      }
+    }
 
     if (sessionId) {
       const target = await prisma.teachingSession.findUnique({
@@ -171,6 +197,18 @@ export async function POST(req: NextRequest) {
         { error: "FORBIDDEN: Some members are not part of this course team" },
         { status: 403 }
       );
+    }
+
+    // Forward to persistent Laravel API
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel("attendance", {
+          method: "POST",
+          body: JSON.stringify({ sessionId, records, finalize }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Attendance Forward Warning]", err);
+      }
     }
 
     await prisma.$transaction(async (tx) => {

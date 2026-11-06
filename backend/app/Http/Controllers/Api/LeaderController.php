@@ -18,7 +18,7 @@ class LeaderController extends Controller
             $leaders = DB::table('course_leaders')
                 ->join('users', 'course_leaders.user_id', '=', 'users.id')
                 ->join('courses', 'course_leaders.course_id', '=', 'courses.id')
-                ->leftJoin('members', 'users.member_id', '=', 'members.id')
+                ->leftJoin('members', 'users.student_id', '=', 'members.student_id')
                 ->leftJoin('departments', 'members.department_id', '=', 'departments.id')
                 ->leftJoin('academic_years', 'members.academic_year_id', '=', 'academic_years.id')
                 ->select(
@@ -27,7 +27,7 @@ class LeaderController extends Controller
                     'users.full_name_kh as nameKh',
                     'users.full_name_en as nameEn',
                     'users.email',
-                    'users.phone',
+                    'members.phone as phone',
                     'users.student_id as studentId',
                     'courses.id as courseId',
                     'courses.code as courseCode',

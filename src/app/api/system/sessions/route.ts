@@ -88,12 +88,19 @@ export async function GET(req: NextRequest) {
         if (remote && remote.ok) {
           const remoteData = await remote.json();
           if (remoteData && Array.isArray(remoteData.sessions) && remoteData.sessions.length > 0) {
-            const courses = await prisma.course.findMany({
-              where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
-              orderBy: { code: "asc" },
-              select: { id: true, code: true, titleKh: true, titleEn: true },
-            });
-            return NextResponse.json({ sessions: remoteData.sessions, courses });
+            let coursesList: any[] = [];
+            try {
+              coursesList = await prisma.course.findMany({
+                where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
+                orderBy: { code: "asc" },
+                select: { id: true, code: true, titleKh: true, titleEn: true },
+              });
+            } catch {
+              coursesList = Array.from(
+                new Map(remoteData.sessions.map((s: any) => [s.courseId, s.course])).values()
+              );
+            }
+            return NextResponse.json({ sessions: remoteData.sessions, courses: coursesList });
           }
         }
       } catch (err) {
