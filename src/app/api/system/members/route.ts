@@ -206,9 +206,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check if studentId already exists
+    const existingStudent = await prisma.member.findFirst({
+      where: { studentId: studentId.trim() },
+    });
+    if (existingStudent) {
+      return NextResponse.json(
+        { error: `អត្តលេខនិស្សិត ${studentId} មានក្នុងប្រព័ន្ធរួចហើយ (${existingStudent.fullNameKh} - ${existingStudent.memberId})` },
+        { status: 400 }
+      );
+    }
+
     // Auto-redeem non-colliding STJ Member ID even across 10+ years
-    let effectiveMemberId = memberId?.trim();
-    if (!effectiveMemberId) {
+    let candidateId = memberId?.trim();
+    if (!candidateId || (await prisma.member.findUnique({ where: { memberId: candidateId } }))) {
       const allMembers = await prisma.member.findMany({
         select: { memberId: true },
       });
@@ -221,12 +232,34 @@ export async function POST(req: NextRequest) {
         }
       }
       let candidateNum = maxSeq + 1;
-      let candidateId = `STJ${String(candidateNum).padStart(3, "0")}`;
+      candidateId = `STJ${String(candidateNum).padStart(3, "0")}`;
       while (await prisma.member.findUnique({ where: { memberId: candidateId } })) {
         candidateNum++;
         candidateId = `STJ${String(candidateNum).padStart(3, "0")}`;
       }
-      effectiveMemberId = candidateId;
+    }
+    const effectiveMemberId = candidateId;
+
+    // Forward to persistent Laravel API
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel("members", {
+          method: "POST",
+          body: JSON.stringify({
+            studentId,
+            fullNameKh,
+            fullNameEn,
+            phone,
+            gender,
+            departmentId,
+            academicYearId,
+            courseIds: assignedCourse ? [assignedCourse] : [],
+            notes,
+          }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Member Sync Warning]", err);
+      }
     }
 
     // Check mandate lock: only active mandate allows member creation
@@ -396,26 +429,33 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // Reassign course if requested (STJ President privilege)
-    const targetCourseInput = courseId || assignedCourse;
-    if (targetCourseInput && isPresident) {
-      const targetCourse = await prisma.course.findFirst({
+    // Multi-course support: assign multiple courses or clear for leadership
+    const courseIdsInput = Array.isArray(body.courseIds)
+      ? body.courseIds
+      : body.courseId
+      ? [body.courseId]
+      : body.assignedCourse
+      ? [body.assignedCourse]
+      : undefined;
+
+    if (courseIdsInput !== undefined && isPresident) {
+      const validCourses = await prisma.course.findMany({
         where: {
           OR: [
-            { id: targetCourseInput },
-            { code: targetCourseInput },
-            { slug: targetCourseInput },
+            { id: { in: courseIdsInput } },
+            { code: { in: courseIdsInput } },
+            { slug: { in: courseIdsInput } },
           ],
         },
       });
 
-      if (targetCourse) {
-        // Delete previous enrollments for this member to move them to the new course cleanly
-        await prisma.courseEnrollment.deleteMany({
-          where: { memberId: id },
-        });
+      // Delete previous enrollments
+      await prisma.courseEnrollment.deleteMany({
+        where: { memberId: id },
+      });
 
-        // Create new enrollment
+      // Insert all selected courses
+      for (const targetCourse of validCourses) {
         await prisma.courseEnrollment.create({
           data: {
             courseId: targetCourse.id,
@@ -478,7 +518,7 @@ export async function PUT(req: NextRequest) {
           action: "MEMBER_UPDATED",
           entityType: "MEMBER",
           entityId: updated.id,
-          details: JSON.stringify({ status, notes, phone, course: targetCourseInput }),
+          details: JSON.stringify({ status, notes, phone, course: courseIdsInput }),
         },
       });
     } catch {

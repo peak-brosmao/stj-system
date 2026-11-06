@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\LeaderController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\AcademicYearController;
 use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\Api\SessionController;
 
 // 1. One-click Setup & Migration (For Hostinger File Manager users - creates SQLite .db in database/ folder)
 Route::get('/setup', [SetupController::class, 'setup']);
@@ -20,6 +21,10 @@ Route::get('/stats', [StatsController::class, 'index']);
 
 // 3. Members List & Management
 Route::get('/members', [MemberController::class, 'index']);
+Route::post('/members', [MemberController::class, 'store']);
+Route::post('/members/{id}', [MemberController::class, 'update']);
+Route::put('/members/{id}', [MemberController::class, 'update']);
+Route::delete('/members/{id}', [MemberController::class, 'destroy']);
 
 // 4. Courses Directory
 Route::get('/courses', [CourseController::class, 'index']);
@@ -35,6 +40,12 @@ Route::get('/academic-years', [AcademicYearController::class, 'index']);
 Route::get('/announcements', [AnnouncementController::class, 'index']);
 Route::post('/announcements', [AnnouncementController::class, 'store']);
 
+// 8. Teaching Sessions (Lessons)
+Route::get('/sessions', [SessionController::class, 'index']);
+Route::post('/sessions', [SessionController::class, 'store']);
+Route::put('/sessions/{id}', [SessionController::class, 'update']);
+Route::delete('/sessions/{id}', [SessionController::class, 'destroy']);
+
 // 8. Attendance Management
 Route::get('/attendance/{sessionId}', [AttendanceController::class, 'getBySession']);
 Route::post('/attendance', [AttendanceController::class, 'save']);
@@ -42,6 +53,8 @@ Route::post('/attendance', [AttendanceController::class, 'save']);
 // 9. Public Share Link Verification
 Route::get('/share/{token}', [ShareLinkController::class, 'show']);
 Route::post('/share/{token}', [ShareLinkController::class, 'show']);
+Route::get('/share-links', [ShareLinkController::class, 'index']);
+Route::post('/share-links', [ShareLinkController::class, 'store']);
 
 // 10. Health Check
 Route::get('/health', function () {

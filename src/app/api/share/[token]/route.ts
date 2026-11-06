@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { calculateAttendanceRate } from "@/lib/utils";
 import { AttendanceStatus } from "@/types";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,19 @@ export async function POST(
     const body = await req.json().catch(() => ({}));
     const { password } = body;
 
+    // 1. Try Laravel API first if configured
+    if (LARAVEL_API_BASE) {
+      const remote = await fetchFromLaravel(`share/${token}`, {
+        method: "POST",
+        body: JSON.stringify({ password }),
+      });
+      if (remote && remote.ok) {
+        const remoteData = await remote.json();
+        return NextResponse.json(remoteData);
+      }
+    }
+
+    // 2. Query Prisma database
     const shareLink = await prisma.shareLink.findUnique({
       where: { token },
       include: {
@@ -71,21 +85,17 @@ export async function POST(
       await prisma.shareLinkAccess.create({
         data: {
           shareLinkId: shareLink.id,
-          ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
+          ipAddress: ip,
           userAgent: req.headers.get("user-agent"),
         },
       });
     } catch {
-      // Non-blocking — access logging failure should not block the response
+      // Non-blocking
     }
 
-    // Retrieve attendance records from the database
-    const sessionWhere = shareLink.sessionId
-      ? { sessionId: shareLink.sessionId }
-      : { session: { courseId: shareLink.courseId } };
-
-    const records = await prisma.attendanceRecord.findMany({
-      where: sessionWhere,
+    // 1. Fetch all members enrolled in this course (excluding leadership members like STJ001 & STJ002 if non-teaching)
+    const enrollments = await prisma.courseEnrollment.findMany({
+      where: { courseId: shareLink.courseId },
       include: {
         member: {
           include: {
@@ -93,7 +103,6 @@ export async function POST(
             academicYear: true,
           },
         },
-        session: true,
       },
       orderBy: {
         member: {
@@ -102,42 +111,71 @@ export async function POST(
       },
     });
 
+    // 2. Fetch recorded attendance for this session or course
+    const sessionWhere = shareLink.sessionId
+      ? { sessionId: shareLink.sessionId }
+      : { session: { courseId: shareLink.courseId } };
+
+    const records = await prisma.attendanceRecord.findMany({
+      where: sessionWhere,
+      include: {
+        member: true,
+      },
+    });
+
+    const recordMap = new Map<string, string>();
+    for (const r of records) {
+      recordMap.set(r.memberId, r.status);
+    }
+
     let present = 0;
     let late = 0;
     let absent = 0;
     let excused = 0;
+    let pending = 0;
 
-    const formattedMembers = records.map((r, index) => {
-      const st = r.status as AttendanceStatus;
-      if (st === "PRESENT") present++;
-      else if (st === "LATE") late++;
-      else if (st === "ABSENT") absent++;
-      else if (st === "EXCUSED") excused++;
+    const formattedMembers = enrollments.map((enr, index) => {
+      const status = recordMap.get(enr.member.id) || (records.length > 0 ? "ABSENT" : "PENDING");
+      if (status === "PRESENT") present++;
+      else if (status === "LATE") late++;
+      else if (status === "ABSENT") absent++;
+      else if (status === "EXCUSED") excused++;
+      else pending++;
 
       return {
         no: index + 1,
-        memberId: r.member.memberId,
-        fullNameKh: r.member.fullNameKh,
-        fullNameEn: r.member.fullNameEn,
-        department: r.member.department?.code ?? "",
-        year: r.member.academicYear?.code ?? "",
-        status: r.status,
+        memberId: enr.member.memberId,
+        studentId: enr.member.studentId || null,
+        fullNameKh: enr.member.fullNameKh,
+        fullNameEn: enr.member.fullNameEn,
+        department: enr.member.department?.code ?? "",
+        year: enr.member.academicYear?.code ?? "",
+        status,
       };
     });
 
-    const total = records.length;
-    const rate = calculateAttendanceRate(present, late, total, excused);
+    const total = formattedMembers.length;
+    const markedTotal = present + late + absent + excused;
+    const effective = Math.max(0, markedTotal - excused);
+    const rate = effective > 0 ? calculateAttendanceRate(present, late, markedTotal, excused) : 100;
+
+    const reportType = shareLink.sessionId ? "SESSION" : "COURSE";
 
     return NextResponse.json({
       title: shareLink.title,
+      reportType,
       courseName: shareLink.course.titleKh,
       courseCode: shareLink.course.code,
       sessionTitle: shareLink.session?.title,
       sessionDate: shareLink.session?.sessionDate
         ? new Date(shareLink.session.sessionDate).toISOString().split("T")[0]
         : undefined,
+      sessionRoom: shareLink.session?.room || undefined,
+      sessionTime: shareLink.session?.startTime && shareLink.session?.endTime
+        ? `${shareLink.session.startTime} - ${shareLink.session.endTime}`
+        : undefined,
       showStats: shareLink.showStats,
-      stats: { total, present, late, absent, excused, rate },
+      stats: { total, present, late, absent, excused, pending, rate },
       members: formattedMembers,
     });
   } catch (err: unknown) {

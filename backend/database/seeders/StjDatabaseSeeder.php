@@ -50,23 +50,26 @@ class StjDatabaseSeeder extends Seeder
         }
 
         // 4. STJ President User
-        $presidentUserId = DB::table('users')->insertGetId([
-            'name' => 'PHAL David',
-            'full_name_kh' => 'ផល ដាវីត',
-            'full_name_en' => 'PHAL David',
-            'email' => 'e20221334@itc.edu.kh',
-            'student_id' => 'e20221334',
-            'role' => 'STJ_PRESIDENT',
-            'member_id' => 'STJ002',
-            'password' => Hash::make('password123'),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        DB::table('users')->updateOrInsert(
+            ['email' => 'e20221334@itc.edu.kh'],
+            [
+                'name' => 'PHAL David',
+                'full_name_kh' => 'ផល ដាវីត',
+                'full_name_en' => 'PHAL David',
+                'student_id' => 'e20221334',
+                'role' => 'STJ_PRESIDENT',
+                'member_id' => 'STJ002',
+                'password' => Hash::make('password123'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+        $presidentUserId = DB::table('users')->where('email', 'e20221334@itc.edu.kh')->value('id');
 
         // 5. Official Roster (39 members)
         $roster = [
-            ['STJ001', 'e20230969', 'សុខ សេងលី', 'SOK SENGLY', 'dept-gci', 'year-i4', 'course-prog101'],
-            ['STJ002', 'e20221334', 'ផល ដាវីត', 'PHAL David', 'dept-grh', 'year-i5', 'course-prog101'],
+            ['STJ001', 'e20230969', 'សុខ សេងលី', 'SOK SENGLY', 'dept-gci', 'year-i4', null], // គណៈកម្មាធិការសមាគមនិស្សិត (Non-teaching Leadership)
+            ['STJ002', 'e20221334', 'ផល ដាវីត', 'PHAL David', 'dept-grh', 'year-i5', null], // ប្រធានក្រុមដឹកនាំ STJ (Overall President - Non-teaching)
             ['STJ003', 'e20240096', 'គ្រុយ អ៊ីងខាង', 'KRUY Ykhang', 'dept-gim', 'year-i3', 'course-phys101'],
             ['STJ004', 'e20240866', 'ឈិន តុលា', 'CHHIN TOLA', 'dept-gim', 'year-i3', 'course-phys101'],
             ['STJ005', 'e20240662', 'ឡាន បូរិន', 'LAN BORIN', 'dept-gee', 'year-i3', 'course-phys101'],
@@ -104,6 +107,7 @@ class StjDatabaseSeeder extends Seeder
             ['STJ037', 'e20241031', 'ខេង សុខលីដា', 'KHENG SOKLYDA', 'dept-gca', 'year-i3', 'course-chem101'],
             ['STJ038', 'e20240155', 'ថោង ផានិត', 'THONG PHANITH', 'dept-gim', 'year-i3', 'course-phys101'],
             ['STJ039', 'e20240150', 'ហេង សំណាង', 'HENG SAMNANG', 'dept-gca', 'year-i3', 'course-chem101'],
+            ['STJ040', 'e20250731', 'ចៃ ជីជូ', 'CHAI CHICHOU', 'dept-ams', 'year-i2', 'course-prog101'],
         ];
 
         foreach ($roster as $r) {
@@ -125,11 +129,18 @@ class StjDatabaseSeeder extends Seeder
                 ]
             );
 
-            // Enroll member in course
-            DB::table('course_enrollments')->updateOrInsert(
-                ['course_id' => $r[6], 'member_id' => $memberUuid],
-                ['enrolled_at' => now()]
-            );
+            // Enroll member in course(s) - support multi-course teaching
+            if (!empty($r[6])) {
+                $coursesList = is_array($r[6]) ? $r[6] : [$r[6]];
+                foreach ($coursesList as $cId) {
+                    DB::table('course_enrollments')->updateOrInsert(
+                        ['course_id' => $cId, 'member_id' => $memberUuid],
+                        ['enrolled_at' => now()]
+                    );
+                }
+            } else {
+                DB::table('course_enrollments')->where('member_id', $memberUuid)->delete();
+            }
 
             // Create user account if not already exists
             if ($r[1] !== 'e20221334') {
@@ -151,7 +162,68 @@ class StjDatabaseSeeder extends Seeder
             }
         }
 
-        // 6. Share Links
+        // 6. Teaching Sessions from user's live system
+        $sessionMath = 'session-math-complexe';
+        DB::table('teaching_sessions')->updateOrInsert(
+            ['id' => $sessionMath],
+            [
+                'course_id' => 'course-math101',
+                'title' => 'Le Nombre Complexe',
+                'session_date' => '2026-11-05',
+                'start_time' => '11:30',
+                'end_time' => '13:00',
+                'room' => 'SF1 & SF2',
+                'status' => 'COMPLETED',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+
+        $sessionProg = 'session-prog-intro';
+        DB::table('teaching_sessions')->updateOrInsert(
+            ['id' => $sessionProg],
+            [
+                'course_id' => 'course-prog101',
+                'title' => 'C PROGRAMING',
+                'session_date' => '2026-11-04',
+                'start_time' => '11:30',
+                'end_time' => '13:00',
+                'room' => 'SF2',
+                'status' => 'COMPLETED',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
+
+        // Seed attendance records for PROG101 session (9 students present)
+        $progMembers = ['member-stj025', 'member-stj026', 'member-stj027', 'member-stj028', 'member-stj029', 'member-stj030', 'member-stj032', 'member-stj033', 'member-stj034'];
+        foreach ($progMembers as $mId) {
+            DB::table('attendance_records')->updateOrInsert(
+                ['session_id' => $sessionProg, 'member_id' => $mId],
+                [
+                    'id' => 'att-' . $sessionProg . '-' . $mId,
+                    'status' => 'PRESENT',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // Seed attendance records for MATH101 session (7 students present)
+        $mathMembers = ['member-stj007', 'member-stj012', 'member-stj019', 'member-stj022', 'member-stj024', 'member-stj031', 'member-stj036'];
+        foreach ($mathMembers as $mId) {
+            DB::table('attendance_records')->updateOrInsert(
+                ['session_id' => $sessionMath, 'member_id' => $mId],
+                [
+                    'id' => 'att-' . $sessionMath . '-' . $mId,
+                    'status' => 'PRESENT',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        // 7. Share Links
         DB::table('share_links')->updateOrInsert(
             ['token' => 'stj-official-2027'],
             [
@@ -159,7 +231,8 @@ class StjDatabaseSeeder extends Seeder
                 'token' => 'stj-official-2027',
                 'token_hash' => hash('sha256', 'stj-official-2027'),
                 'course_id' => 'course-prog101',
-                'title' => 'របាយការណ៍វត្តមាន STJ Programming ឆ្នាំសិក្សា ២០២៦-២០២៧',
+                'session_id' => null,
+                'title' => 'របាយការណ៍រួមមុខវិជ្ជា STJ Programming',
                 'show_stats' => true,
                 'created_by_id' => $presidentUserId,
                 'created_at' => now(),
@@ -174,7 +247,8 @@ class StjDatabaseSeeder extends Seeder
                 'token' => 'stj-demo-token-2026',
                 'token_hash' => hash('sha256', 'stj-demo-token-2026'),
                 'course_id' => 'course-prog101',
-                'title' => 'របាយការណ៍វត្តមាន STJ Programming ឆ្នាំសិក្សា ២០២៦-២០២៧',
+                'session_id' => $sessionProg,
+                'title' => 'របាយការណ៍មេរៀន C PROGRAMING (2026-11-04)',
                 'show_stats' => true,
                 'created_by_id' => $presidentUserId,
                 'created_at' => now(),

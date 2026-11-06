@@ -6,6 +6,7 @@ import {
   getManageableCourseIds,
   assertCourseAccess,
 } from "@/lib/auth";
+import { LARAVEL_API_BASE, fetchFromLaravel } from "@/lib/laravelApi";
 
 export const dynamic = "force-dynamic";
 
@@ -79,6 +80,27 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "FORBIDDEN: Not your course" }, { status: 403 });
     }
 
+    // Try fetching from persistent Laravel API first
+    if (LARAVEL_API_BASE) {
+      try {
+        const endpoint = courseId ? `sessions?course=${encodeURIComponent(courseId)}` : "sessions";
+        const remote = await fetchFromLaravel(endpoint);
+        if (remote && remote.ok) {
+          const remoteData = await remote.json();
+          if (remoteData && Array.isArray(remoteData.sessions) && remoteData.sessions.length > 0) {
+            const courses = await prisma.course.findMany({
+              where: manageable === null ? { status: "ACTIVE" } : { id: { in: manageable }, status: "ACTIVE" },
+              orderBy: { code: "asc" },
+              select: { id: true, code: true, titleKh: true, titleEn: true },
+            });
+            return NextResponse.json({ sessions: remoteData.sessions, courses });
+          }
+        }
+      } catch (err) {
+        console.warn("[Laravel Sessions Fetch Fallback]", err);
+      }
+    }
+
     const where = courseId
       ? { courseId }
       : manageable === null
@@ -110,7 +132,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const user = await requireTeamManager();
-    const parsed = createSchema.safeParse(await req.json());
+    const rawBody = await req.json();
+    const parsed = createSchema.safeParse(rawBody);
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Validation failed", details: parsed.error.flatten() },
@@ -129,6 +152,27 @@ export async function POST(req: NextRequest) {
 
     await assertCourseAccess(user, effectiveCourseId);
     const creatorId = await resolveDbUserId(user);
+
+    // Forward to persistent Laravel API
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel("sessions", {
+          method: "POST",
+          body: JSON.stringify({
+            courseId: effectiveCourseId,
+            title: data.title,
+            sessionDate: data.sessionDate,
+            startTime: data.startTime,
+            endTime: data.endTime,
+            room: data.room,
+            notes: data.notes,
+            status: data.status || "SCHEDULED",
+          }),
+        });
+      } catch (err) {
+        console.warn("[Laravel Session Sync Warning]", err);
+      }
+    }
 
     const created = await prisma.teachingSession.create({
       data: {
@@ -193,6 +237,17 @@ export async function PATCH(req: NextRequest) {
 
     const creatorId = await resolveDbUserId(user);
 
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel(`sessions/${id}`, {
+          method: "PUT",
+          body: JSON.stringify(fields),
+        });
+      } catch (err) {
+        console.warn("[Laravel Session Update Sync Warning]", err);
+      }
+    }
+
     const updated = await prisma.teachingSession.update({
       where: { id },
       data: {
@@ -252,6 +307,16 @@ export async function DELETE(req: NextRequest) {
     }
 
     const creatorId = await resolveDbUserId(user);
+
+    if (LARAVEL_API_BASE) {
+      try {
+        await fetchFromLaravel(`sessions/${id}`, {
+          method: "DELETE",
+        });
+      } catch (err) {
+        console.warn("[Laravel Session Delete Sync Warning]", err);
+      }
+    }
 
     await prisma.teachingSession.delete({ where: { id } });
     try {

@@ -199,6 +199,7 @@ async function main() {
     { num: 33, nameKh: "ពៀក ប្រុសម៉ៅ", nameEn: "PEAK BROSMAO", gender: "M", studentId: "e20251455", yr: "I2", dept: "GIC", phone: "099661460", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 34, nameKh: "ចំរើន ដេន", nameEn: "CHAMROEN DEN", gender: "M", studentId: "e20250414", yr: "I2", dept: "GIC", phone: "0963221116", assignedCourse: "PROG101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Programming (GIC)" },
     { num: 35, nameKh: "ខេង លីឧស្សាហ៍", nameEn: "KHENG Lyussa", gender: "F", studentId: "e20240046", yr: "I3", dept: "GCI", phone: "0974253117", assignedCourse: "CHEM101", role: "ប្រធានក្រុម គីមីវិទ្យា (Chemistry Leader)" },
+    { num: 36, nameKh: "ឈិត សុធារិទ្ធ", nameEn: "CHHIT SOTHEARITH", gender: "M", studentId: "e20240156", yr: "I3", dept: "AMS", phone: "012345678", assignedCourse: "MATH101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Mathematics (AMS)" },
     { num: 37, nameKh: "ឯល មូហាំម៉ាត់សាហ្វី", nameEn: "EL Muhammadshafi", gender: "M", studentId: "e20240945", yr: "I3", dept: "GAR", phone: "093696794", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GAR)" },
     { num: 38, nameKh: "ខឿន ធារី", nameEn: "KHOEUN Theary", gender: "F", studentId: "e20240561", yr: "I3", dept: "GCI", phone: "069944087", assignedCourse: "CHEM101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Chemistry (GCI)" },
     { num: 39, nameKh: "ហាប់ ស៊ីឈាង", nameEn: "HAB Sychheang", gender: "M", studentId: "e20240670", yr: "I3", dept: "GIM", phone: "093202727", assignedCourse: "PHYS101", role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត Physics (GIM)" },
@@ -406,6 +407,105 @@ async function main() {
       presidentStudentId: "e20221334",
       status: "ACTIVE",
       isLocked: false,
+    },
+  });
+
+  // 8.5 Live Teaching Sessions
+  const mathSession = await prisma.teachingSession.upsert({
+    where: { id: "session-math-complexe" },
+    update: {
+      title: "Le Nombre Complexe",
+      sessionDate: new Date("2026-11-05"),
+      startTime: "11:30",
+      endTime: "13:00",
+      room: "SF1 and SF2",
+      status: "COMPLETED",
+    },
+    create: {
+      id: "session-math-complexe",
+      courseId: coursesMap["mathematics"],
+      title: "Le Nombre Complexe",
+      sessionDate: new Date("2026-11-05"),
+      startTime: "11:30",
+      endTime: "13:00",
+      room: "SF1 and SF2",
+      status: "COMPLETED",
+      createdById: mathLeaderUser.id,
+    },
+  });
+
+  const progSession = await prisma.teachingSession.upsert({
+    where: { id: "session-prog-intro" },
+    update: {
+      title: "C PROGRAMING",
+      sessionDate: new Date("2026-11-04"),
+      startTime: "11:30",
+      endTime: "13:00",
+      room: "SF2",
+      status: "COMPLETED",
+    },
+    create: {
+      id: "session-prog-intro",
+      courseId: coursesMap["programming"],
+      title: "C PROGRAMING",
+      sessionDate: new Date("2026-11-04"),
+      startTime: "11:30",
+      endTime: "13:00",
+      room: "SF2",
+      status: "COMPLETED",
+      createdById: progLeaderUser.id,
+    },
+  });
+
+  // Seed attendance for prog session
+  const progEnrolled = await prisma.courseEnrollment.findMany({
+    where: { courseId: coursesMap["programming"] },
+  });
+  for (const enr of progEnrolled) {
+    await prisma.attendanceRecord.upsert({
+      where: { sessionId_memberId: { sessionId: progSession.id, memberId: enr.memberId } },
+      update: { status: "PRESENT" },
+      create: {
+        sessionId: progSession.id,
+        memberId: enr.memberId,
+        status: "PRESENT",
+      },
+    });
+  }
+
+  // Seed attendance for math session
+  const mathEnrolled = await prisma.courseEnrollment.findMany({
+    where: { courseId: coursesMap["mathematics"] },
+  });
+  for (const enr of mathEnrolled) {
+    await prisma.attendanceRecord.upsert({
+      where: { sessionId_memberId: { sessionId: mathSession.id, memberId: enr.memberId } },
+      update: { status: "PRESENT" },
+      create: {
+        sessionId: mathSession.id,
+        memberId: enr.memberId,
+        status: "PRESENT",
+      },
+    });
+  }
+
+  // Session share link
+  await prisma.shareLink.upsert({
+    where: { token: "stj-demo-token-2026" },
+    update: {
+      title: "របាយការណ៍មេរៀន C PROGRAMING (2026-11-04)",
+      sessionId: progSession.id,
+      courseId: coursesMap["programming"],
+      showStats: true,
+    },
+    create: {
+      token: "stj-demo-token-2026",
+      tokenHash: "sha256_hash_stj_demo_token_2026",
+      courseId: coursesMap["programming"],
+      sessionId: progSession.id,
+      title: "របាយការណ៍មេរៀន C PROGRAMING (2026-11-04)",
+      showStats: true,
+      createdById: progLeaderUser.id,
     },
   });
 

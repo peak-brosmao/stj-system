@@ -296,6 +296,21 @@ export const OFFICIAL_STJ_ROSTER: OfficialMember[] = [
     courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
   },
   {
+    num: 36,
+    memberId: "STJ036",
+    nameKh: "ឈិត សុធារិទ្ធ",
+    nameEn: "CHHIT SOTHEARITH",
+    gender: "M",
+    studentId: "e20240156",
+    year: "I3",
+    dept: "AMS",
+    phone: "012345678",
+    email: "chhit.sothearith@itc.edu.kh",
+    role: "គ្រូបង្រៀនស្ម័គ្រចិត្ត គណិតវិទ្យា",
+    assignedCourse: "MATH101",
+    courseTitleKh: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+  },
+  {
     num: 40,
     memberId: "STJ040",
     nameKh: "ឌិន ម៉េងហុង",
@@ -635,7 +650,7 @@ export function getMembersByCourse(courseCode: string): OfficialMember[] {
 }
 
 export const OFFICIAL_METRICS = {
-  totalMembers: OFFICIAL_STJ_ROSTER.length, // 39
+  totalMembers: OFFICIAL_STJ_ROSTER.length, // 40
   totalCourses: 4,
   corePrograms: ["Programming", "Mathematics", "Physics", "Chemistry"],
   totalLeaders: OFFICIAL_COURSE_LEADERS.length, // 6
@@ -644,7 +659,7 @@ export const OFFICIAL_METRICS = {
   academicYearTerm: "២០២៦~២០២៧",
   courseTeamsCount: {
     programming: PROGRAMMING_MEMBERS.length, // 9
-    mathematics: MATHEMATICS_MEMBERS.length, // 7
+    mathematics: MATHEMATICS_MEMBERS.length, // 8
     physics: PHYSICS_MEMBERS.length,         // 10
     chemistry: CHEMISTRY_MEMBERS.length,     // 11
     executive: EXECUTIVE_MEMBERS.length,     // 2

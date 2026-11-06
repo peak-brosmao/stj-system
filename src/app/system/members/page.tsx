@@ -16,6 +16,8 @@ import {
   X,
   FileSpreadsheet,
   BookOpen,
+  ShieldCheck,
+  Award,
 } from "lucide-react";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -72,7 +74,7 @@ export default function SystemMembersPage() {
     fullNameEn: string;
     departmentId: string;
     academicYearId: string;
-    courseId: string;
+    courseIds: string[];
     phone: string;
     email: string;
     status: string;
@@ -137,7 +139,12 @@ export default function SystemMembersPage() {
   };
 
   const openEditModal = (m: MemberItem) => {
-    const currentCourseId = m.enrollments?.[0]?.courseId || "";
+    const existingCourseIds = (m.enrollments || []).map((e) => e.courseId || e.course?.id).filter(Boolean);
+    if ((m as any).courses && existingCourseIds.length === 0) {
+      for (const c of (m as any).courses) {
+        if (c.id) existingCourseIds.push(c.id);
+      }
+    }
     setEditingMember({
       id: m.id,
       memberId: m.memberId,
@@ -146,7 +153,7 @@ export default function SystemMembersPage() {
       fullNameEn: m.fullNameEn,
       departmentId: m.departmentId || m.department?.id || "",
       academicYearId: m.academicYearId || m.academicYear?.id || "",
-      courseId: currentCourseId,
+      courseIds: existingCourseIds,
       phone: m.phone || "",
       email: m.email || "",
       status: m.status,
@@ -260,8 +267,13 @@ export default function SystemMembersPage() {
 
     const matchesStatus = statusFilter === "ALL" || m?.status === statusFilter;
 
-    const memberCourseCode = m?.enrollments?.[0]?.course?.code || (m as any)?.courseCode || "";
-    const matchesCourse = courseFilter === "ALL" || memberCourseCode === courseFilter;
+    const memberCourses = [
+      ...(m?.enrollments?.map((e) => e.course?.code) || []),
+      ...((m as any)?.courseCodes || []),
+      ...((m as any)?.courses?.map((c: any) => c.code) || []),
+      ...((m as any)?.courseCode ? [(m as any).courseCode] : []),
+    ];
+    const matchesCourse = courseFilter === "ALL" || memberCourses.includes(courseFilter);
 
     return matchesSearch && matchesDept && matchesYear && matchesStatus && matchesCourse;
   });
@@ -280,7 +292,7 @@ export default function SystemMembersPage() {
               គ្រប់គ្រងសមាជិកបង្រៀនស្ម័គ្រចិត្ត (Tutors &amp; Leaders)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              បញ្ជីសមាជិកផ្លូវការទាំង ៣៩ នាក់ នៃកម្មវិធី STJ ឆ្នាំសិក្សា ២០២៦-២០២៧
+              បញ្ជីសមាជិកផ្លូវការទាំង {members.length} នាក់ នៃកម្មវិធី STJ ឆ្នាំសិក្សា ២០២៦-២០២៧
             </p>
           </div>
 
@@ -406,13 +418,56 @@ export default function SystemMembersPage() {
                         <div className="text-[10px] text-muted-foreground">{m.fullNameEn}</div>
                       </td>
                       <td className="py-3 px-4">
-                        {courseBadge ? (
-                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded font-mono font-semibold text-[11px] bg-primary/10 text-primary border border-primary/20">
-                            <BookOpen className="w-3 h-3" />
-                            <span>{courseBadge}</span>
+                        {m.memberId === "STJ001" ? (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                            <ShieldCheck className="w-3 h-3" />
+                            <span>សមាគមនិស្សិត</span>
+                          </span>
+                        ) : m.memberId === "STJ002" ? (
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                            <Award className="w-3 h-3" />
+                            <span>ប្រធាន STJ</span>
                           </span>
                         ) : (
-                          <span className="text-[11px] text-muted-foreground italic">ពុំទាន់ចាត់តាំង</span>
+                          (() => {
+                            const memberCourseList: Array<{ code: string; titleKh?: string }> = [];
+                            if (m.enrollments && m.enrollments.length > 0) {
+                              for (const e of m.enrollments) {
+                                if (e.course && !memberCourseList.some(c => c.code === e.course.code)) {
+                                  memberCourseList.push(e.course);
+                                }
+                              }
+                            }
+                            if ((m as any).courses && (m as any).courses.length > 0) {
+                              for (const c of (m as any).courses) {
+                                if (!memberCourseList.some(item => item.code === c.code)) {
+                                  memberCourseList.push(c);
+                                }
+                              }
+                            }
+                            if (memberCourseList.length === 0 && (m as any).courseCode) {
+                              memberCourseList.push({ code: (m as any).courseCode });
+                            }
+
+                            if (memberCourseList.length === 0) {
+                              return <span className="text-[11px] text-muted-foreground italic">ពុំមានបង្រៀន</span>;
+                            }
+
+                            return (
+                              <div className="flex flex-wrap gap-1">
+                                {memberCourseList.map((c) => (
+                                  <span
+                                    key={c.code}
+                                    className="inline-flex items-center space-x-1 px-2 py-0.5 rounded font-mono font-semibold text-[11px] bg-primary/10 text-primary border border-primary/20"
+                                    title={c.titleKh || c.code}
+                                  >
+                                    <BookOpen className="w-3 h-3" />
+                                    <span>{c.code}</span>
+                                  </span>
+                                ))}
+                              </div>
+                            );
+                          })()
                         )}
                       </td>
                       <td className="py-3 px-4 font-medium">{deptBadge}</td>
@@ -508,26 +563,54 @@ export default function SystemMembersPage() {
                 </div>
 
                 <form onSubmit={handleUpdateMember} className="space-y-3 text-xs">
-                  {/* CRITICAL: COURSE ASSIGNMENT DROPDOWN */}
-                  <div className="p-3 rounded-xl bg-primary/5 border border-primary/20 space-y-1.5">
-                    <label className="block font-semibold text-primary">
-                      មុខវិជ្ជាទទួលបន្ទុកបង្រៀន (Assigned Course / Team) *
-                    </label>
-                    <select
-                      value={editingMember.courseId}
-                      onChange={(e) => setEditingMember({ ...editingMember, courseId: e.target.value })}
-                      className="w-full p-2 rounded-lg border border-primary/30 bg-background text-foreground font-semibold"
-                      required
-                    >
-                      <option value="">-- សូមជ្រើសរើសមុខវិជ្ជា --</option>
-                      {courses.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          [{c.code}] {c.titleKh}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-[10px] text-muted-foreground">
-                      នៅពេលប្តូរមុខវិជ្ជា ប្រព័ន្ធនឹងផ្ទេរសមាជិកនេះទៅកាន់ក្រុម និងតារាងស្រង់វត្តមាននៃមុខវិជ្ជាថ្មីភ្លាមៗ។
+                  {/* MULTI-COURSE ASSIGNMENT CHECKBOXES */}
+                  <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/20 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="block font-semibold text-primary">
+                        មុខវិជ្ជាទទួលបន្ទុកបង្រៀន (ជ្រើសរើសបានច្រើនមុខវិជ្ជា)
+                      </label>
+                      <span className="text-[10px] text-muted-foreground font-mono">
+                        {editingMember.courseIds.length} មុខវិជ្ជា
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {courses.map((c) => {
+                        const isChecked = editingMember.courseIds.includes(c.id) || editingMember.courseIds.includes(c.code);
+                        return (
+                          <label
+                            key={c.id}
+                            className={`flex items-center space-x-2 p-2 rounded-lg border text-xs cursor-pointer transition-colors ${
+                              isChecked
+                                ? "bg-primary/10 border-primary text-primary font-semibold"
+                                : "bg-background border-border text-foreground hover:bg-muted/30"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setEditingMember({
+                                    ...editingMember,
+                                    courseIds: [...editingMember.courseIds, c.id],
+                                  });
+                                } else {
+                                  setEditingMember({
+                                    ...editingMember,
+                                    courseIds: editingMember.courseIds.filter((id) => id !== c.id && id !== c.code),
+                                  });
+                                }
+                              }}
+                              className="rounded border-border text-primary focus:ring-primary w-3.5 h-3.5"
+                            />
+                            <span className="font-mono">[{c.code}]</span>
+                            <span className="truncate">{c.titleKh}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed pt-1">
+                      សមាជិកម្នាក់អាចទទួលបន្ទុកបង្រៀន ២ ទៅ ៣ មុខវិជ្ជាដំណាលគ្នាបាន។ ប្រសិនបើជាថ្នាក់ដឹកនាំមិនបង្រៀន (ដូចជា STJ001 ឬ STJ002) សូមដោះធីកទាំងអស់។
                     </p>
                   </div>
 
