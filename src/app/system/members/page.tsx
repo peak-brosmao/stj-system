@@ -226,8 +226,10 @@ export default function SystemMembersPage() {
   const exportCSV = () => {
     const headers = ["Member ID,Student ID,Full Name Kh,Full Name En,Department,Year,Course,Status\n"];
     const rows = filteredMembers.map((m) => {
-      const course = m.enrollments?.[0]?.course.code || "Unassigned";
-      return `"${m.memberId}","${m.studentId || ""}","${m.fullNameKh}","${m.fullNameEn}","${m.department.code}","${m.academicYear.code}","${course}","${m.status}"\n`;
+      const course = m.enrollments?.[0]?.course?.code || (m as any).courseCode || "Unassigned";
+      const dept = m.department?.code || (m as any).departmentCode || "-";
+      const year = m.academicYear?.code || (m as any).yearCode || "-";
+      return `"${m.memberId}","${m.studentId || ""}","${m.fullNameKh || ""}","${m.fullNameEn || ""}","${dept}","${year}","${course}","${m.status || "ACTIVE"}"\n`;
     });
     const blob = new Blob(["\uFEFF" + headers + rows.join("")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -240,16 +242,27 @@ export default function SystemMembersPage() {
   };
 
   const filteredMembers = members.filter((m) => {
+    const memberId = m?.memberId || "";
+    const studentId = m?.studentId || "";
+    const fullNameKh = m?.fullNameKh || "";
+    const fullNameEn = m?.fullNameEn || "";
     const matchesSearch =
-      m.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (m.studentId && m.studentId.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      m.fullNameKh.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.fullNameEn.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesDept = deptFilter === "ALL" || m.department.code === deptFilter;
-    const matchesYear = yearFilter === "ALL" || m.academicYear.code === yearFilter;
-    const matchesStatus = statusFilter === "ALL" || m.status === statusFilter;
-    const memberCourseCode = m.enrollments?.[0]?.course.code;
+      memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      fullNameKh.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      fullNameEn.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const deptCode = m?.department?.code || (m as any)?.departmentCode || "";
+    const matchesDept = deptFilter === "ALL" || deptCode === deptFilter;
+
+    const yearCode = m?.academicYear?.code || (m as any)?.yearCode || "";
+    const matchesYear = yearFilter === "ALL" || yearCode === yearFilter;
+
+    const matchesStatus = statusFilter === "ALL" || m?.status === statusFilter;
+
+    const memberCourseCode = m?.enrollments?.[0]?.course?.code || (m as any)?.courseCode || "";
     const matchesCourse = courseFilter === "ALL" || memberCourseCode === courseFilter;
+
     return matchesSearch && matchesDept && matchesYear && matchesStatus && matchesCourse;
   });
 
@@ -381,6 +394,9 @@ export default function SystemMembersPage() {
               <tbody className="divide-y divide-border">
                 {filteredMembers.map((m) => {
                   const assignedCourse = m.enrollments?.[0]?.course;
+                  const courseBadge = assignedCourse?.code || (m as any)?.courseCode;
+                  const deptBadge = m.department?.code || (m as any)?.departmentCode || "-";
+                  const yearBadge = m.academicYear?.code || (m as any)?.yearCode || "-";
                   return (
                     <tr key={m.id} className="hover:bg-muted/20 transition-colors">
                       <td className="py-3 px-4 font-mono font-bold text-primary">{m.memberId}</td>
@@ -390,17 +406,17 @@ export default function SystemMembersPage() {
                         <div className="text-[10px] text-muted-foreground">{m.fullNameEn}</div>
                       </td>
                       <td className="py-3 px-4">
-                        {assignedCourse ? (
+                        {courseBadge ? (
                           <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded font-mono font-semibold text-[11px] bg-primary/10 text-primary border border-primary/20">
                             <BookOpen className="w-3 h-3" />
-                            <span>{assignedCourse.code}</span>
+                            <span>{courseBadge}</span>
                           </span>
                         ) : (
                           <span className="text-[11px] text-muted-foreground italic">ពុំទាន់ចាត់តាំង</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 font-medium">{m.department.code}</td>
-                      <td className="py-3 px-4 font-medium">{m.academicYear.code}</td>
+                      <td className="py-3 px-4 font-medium">{deptBadge}</td>
+                      <td className="py-3 px-4 font-medium">{yearBadge}</td>
                       <td className="py-3 px-4">
                         <Badge variant={m.status === "ACTIVE" ? "success" : "secondary"}>
                           {m.status === "ACTIVE" ? "សកម្ម" : "បណ្ណសារ"}

@@ -18,8 +18,64 @@ export async function GET(req: NextRequest) {
       const remote = await fetchFromLaravel("members");
       if (remote && remote.ok) {
         const remoteData = await remote.json();
-        if (remoteData && remoteData.members) {
-          return NextResponse.json(remoteData);
+        if (remoteData && Array.isArray(remoteData.members)) {
+          let departments: any[] = [];
+          let academicYears: any[] = [];
+          let courses: any[] = [];
+          try {
+            departments = await prisma.department.findMany({ where: { isActive: true } });
+            academicYears = await prisma.academicYear.findMany({ where: { isActive: true }, orderBy: { order: "asc" } });
+            courses = await prisma.course.findMany({
+              where: { status: "ACTIVE" },
+              orderBy: { code: "asc" },
+              select: { id: true, code: true, titleKh: true, titleEn: true },
+            });
+          } catch {}
+
+          const normalizedMembers = remoteData.members.map((m: any) => ({
+            id: m.id || m.memberId,
+            memberId: m.memberId,
+            studentId: m.studentId || null,
+            fullNameKh: m.fullNameKh || "",
+            fullNameEn: m.fullNameEn || "",
+            email: m.email || null,
+            phone: m.phone || null,
+            gender: m.gender || "M",
+            status: m.status || "ACTIVE",
+            departmentId: m.departmentId || m.department_id || "",
+            academicYearId: m.academicYearId || m.academic_year_id || "",
+            department: m.department || {
+              id: m.department_id || "",
+              code: m.departmentCode || "ITC",
+              nameKh: m.departmentNameKh || "ITC",
+            },
+            academicYear: m.academicYear || {
+              id: m.academic_year_id || "",
+              code: m.yearCode || "I4",
+              label: m.yearCode || "I4",
+            },
+            enrollments: m.enrollments || (m.courseCode ? [
+              {
+                id: `enr-${m.memberId}`,
+                courseId: m.courseId || "c-1",
+                course: {
+                  id: m.courseId || "c-1",
+                  code: m.courseCode,
+                  titleKh: m.courseTitleKh || m.courseCode,
+                  titleEn: m.courseCode,
+                },
+              }
+            ] : []),
+          }));
+
+          return NextResponse.json({
+            success: true,
+            count: normalizedMembers.length,
+            members: normalizedMembers,
+            departments,
+            academicYears,
+            courses,
+          });
         }
       }
     }
