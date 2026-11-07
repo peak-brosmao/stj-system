@@ -168,17 +168,19 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            title: `${s.course?.code || s.courseCode || "STJ"} - ${s.title}`,
-            courseId: s.courseId || s.course?.id || s.course?.code,
+            title: `របាយការណ៍វត្តមាន ${s.course?.code || s.courseCode || "STJ"} - ${s.title}`,
+            courseId: s.courseId || s.course?.id || s.course?.code || s.courseCode,
             sessionId: s.id,
+            showStats: true,
           }),
         });
         const data = await res.json().catch(() => null);
-        if (!res.ok || !data?.link?.token) {
-          alert(data?.error || "មិនអាចបង្កើតតំណភ្ជាប់ចែករំលែកបានទេ");
+        const createdToken = data?.token || data?.link?.token;
+        if (!res.ok || !createdToken) {
+          alert(data?.error || "មិនអាចបង្កើតតំណភ្ជាប់ចែករំលែកវត្តមានបានទេ");
           return;
         }
-        token = data.link.token;
+        token = createdToken;
         setSessions((prev) =>
           prev.map((item) => (item.id === s.id ? { ...item, shareToken: token } : item))
         );
@@ -189,7 +191,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
       setCopiedId(s.id);
       setTimeout(() => setCopiedId(null), 2500);
     } catch {
-      alert("មានបញ្ហាក្នុងការចម្លងតំណភ្ជាប់ចែករំលែក");
+      alert("មានបញ្ហាក្នុងការចម្លងតំណភ្ជាប់ចែករំលែកវត្តមាន");
     } finally {
       setSharingId(null);
     }
@@ -383,12 +385,25 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     </div>
                   </div>
 
-                  {/* Render Rich Content & Cloudflare R2 Attachments for this lesson */}
-                  <RichContentViewer
-                    richContent={s.richContent}
-                    notes={s.notes || undefined}
-                    attachments={s.attachments}
-                  />
+                  {/* Summary indicator for Rich Content & Cloudflare R2 Attachments */}
+                  {(s.richContent ||
+                    s.notes ||
+                    (Array.isArray(s.attachments) && s.attachments.length > 0)) && (
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      {(s.richContent || s.notes) && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20">
+                          <FileText className="w-3 h-3" />
+                          <span>មានមាតិកាមេរៀន (Rich Text)</span>
+                        </span>
+                      )}
+                      {Array.isArray(s.attachments) && s.attachments.length > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                          <BookOpen className="w-3 h-3" />
+                          <span>{s.attachments.length} ឯកសារ PDF/Video (R2)</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
 
                   <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border">
                     <span className="text-[11px] text-muted-foreground">
@@ -401,18 +416,20 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                         disabled={sharingId === s.id}
                         onClick={() => handleShareSession(s)}
                         className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
-                        title="ចម្លងតំណភ្ជាប់សាធារណៈសម្រាប់មើលវត្តមាន (Public Share Link)"
+                        title="ចម្លងតំណភ្ជាប់សាធារណៈសម្រាប់មើលវត្តមានតែប៉ុណ្ណោះ (Public Attendance Share Link)"
                       >
                         {isCopied ? (
                           <>
                             <Check className="w-3 h-3 text-emerald-500" />
-                            <span className="text-emerald-500">បានចម្លង Link!</span>
+                            <span className="text-emerald-500">បានចម្លង Link វត្តមាន!</span>
                           </>
                         ) : (
                           <>
                             <Share2 className="w-3 h-3" />
                             <span>
-                              {sharingId === s.id ? "កំពុងបង្កើត..." : "តំណភ្ជាប់ (Share)"}
+                              {sharingId === s.id
+                                ? "កំពុងបង្កើត..."
+                                : "ចែករំលែកវត្តមាន (Share Attendance)"}
                             </span>
                           </>
                         )}

@@ -492,3 +492,4 @@ export function CourseContentStudio(props: StudioProps) {
     </Suspense>
   );
 }
+

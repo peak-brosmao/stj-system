@@ -1,10 +1,14 @@
 ﻿"use client";
 
 import React, { useEffect, useState } from "react";
-import { CalendarDays, Clock, MapPin } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Badge } from "@/ui/Badge";
+import { Button } from "@/ui/Button";
+import { RichContentViewer } from "@/ui/RichTextEditor";
+import type { CourseAttachment } from "@/lib/richContent";
 
 interface Lesson {
   id: string;
@@ -14,27 +18,51 @@ interface Lesson {
   endTime: string;
   room: string;
   status: string;
-  course: { code: string; titleKh: string };
+  notes?: string;
+  richContent?: string;
+  attachments?: CourseAttachment[];
+  course: { code: string; titleKh: string; slug?: string };
 }
 
 function LessonRow({ l, tag, variant }: { l: Lesson; tag: string; variant: "info" | "warning" }) {
+  const courseSlug = l.course?.slug || String(l.course?.code || "stj").toLowerCase();
   return (
-    <div className="p-3 rounded-lg border border-border bg-muted/30 text-xs space-y-1">
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-semibold text-foreground">{l.title}</span>
-        <Badge variant={variant}>{tag}</Badge>
+    <div className="p-4 rounded-xl border border-border bg-muted/30 text-xs space-y-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span className="font-bold text-sm text-foreground">{l.title}</span>
+          <p className="text-muted-foreground mt-0.5">
+            <span className="font-mono font-semibold text-primary">{l.course.code}</span> -{" "}
+            {l.course.titleKh}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge variant={variant}>{tag}</Badge>
+          <Link href={`/portal/courses/${courseSlug}`}>
+            <Button size="sm" variant="outline" className="h-7 text-[11px] space-x-1">
+              <span>មើលមុខវិជ្ជា &amp; មេរៀន</span>
+              <ArrowRight className="w-3 h-3" />
+            </Button>
+          </Link>
+        </div>
       </div>
-      <p className="text-muted-foreground">{l.course.code} - {l.course.titleKh}</p>
+
       <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
         <span className="inline-flex items-center gap-1">
-          <Clock className="w-3 h-3" />
-          {new Date(l.sessionDate).toISOString().split("T")[0]} {l.startTime}-{l.endTime}
+          <Clock className="w-3 h-3 text-primary" />
+          {new Date(l.sessionDate).toISOString().split("T")[0]} ({l.startTime}-{l.endTime})
         </span>
         <span className="inline-flex items-center gap-1">
-          <MapPin className="w-3 h-3" />
+          <MapPin className="w-3 h-3 text-primary" />
           {l.room}
         </span>
       </div>
+
+      <RichContentViewer
+        richContent={l.richContent}
+        notes={l.notes}
+        attachments={l.attachments}
+      />
     </div>
   );
 }

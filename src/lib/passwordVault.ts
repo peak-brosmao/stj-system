@@ -286,3 +286,4 @@ export async function clearVaultPasswordForReset(
     await persistToBackendSqlite(store);
   }
 }
+

@@ -2,22 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
 import { getSession } from "@/lib/auth";
 import { fetchLiveMembersLookup } from "@/lib/memberSync";
+import { decodeRichNotes, isSyllabusSession } from "@/lib/richContent";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const [session, res, membersLookup, attRes, reportsRes] = await Promise.all([
+    const [session, res, membersLookup, attRes, reportsRes, sessionsRes] = await Promise.all([
       getSession(),
       backendFetch("portal/overview"),
       fetchLiveMembersLookup(),
       backendFetch("portal/attendance").catch(() => null),
       backendFetch("reports").catch(() => null),
+      backendFetch("sessions").catch(() => null),
     ]);
 
     const data = await res.json().catch(() => null);
     const attData = attRes && attRes.ok ? await attRes.json().catch(() => null) : null;
     const reportsData = reportsRes && reportsRes.ok ? await reportsRes.json().catch(() => null) : null;
+    const sessionsData =
+      sessionsRes && sessionsRes.ok ? await sessionsRes.json().catch(() => null) : null;
+    const allBackendSessions: Record<string, any>[] = Array.isArray(sessionsData?.sessions)
+      ? sessionsData.sessions
+      : [];
+
+    const sessionLookup = new Map<string, Record<string, any>>();
+    const courseSyllabusMap = new Map<string, { notes: string; richContent: string; attachments: any[] }>();
+    for (const bs of allBackendSessions) {
+      const bCode = String(bs.course?.code || bs.courseCode || "").toUpperCase();
+      const decoded = decodeRichNotes(bs.notes);
+      if (isSyllabusSession(bs)) {
+        if (bCode && String(bs.title || "").trim() === "__STJ_COURSE_SYLLABUS__") {
+          courseSyllabusMap.set(bCode, decoded);
+        }
+        continue;
+      }
+      sessionLookup.set(String(bs.id), {
+        ...bs,
+        notes: decoded.notes,
+        richContent: decoded.richContent,
+        attachments: decoded.attachments,
+      });
+    }
 
     if (!res.ok || !data) {
       if (session) {
@@ -94,10 +120,22 @@ export async function GET() {
           fullNameEn: matched?.fullNameEn || l.fullNameEn || l.full_name_en || "",
         };
       });
+      const filteredSessions = (Array.isArray(c.sessions) ? c.sessions : []).filter(
+        (s: any) => !isSyllabusSession(s)
+      );
+      const cCodeUpper = String(c.code || "").toUpperCase();
       return {
         ...c,
+        slug: c.slug || String(c.code || "").toLowerCase(),
         leaderName: leaders[0]?.fullNameKh || leaders[0]?.fullNameEn || c.leaderName,
         leaders,
+        sessions: filteredSessions,
+        totalLessons: filteredSessions.length,
+        syllabus: courseSyllabusMap.get(cCodeUpper) || {
+          notes: "",
+          richContent: "",
+          attachments: [],
+        },
       };
     });
 
@@ -107,32 +145,48 @@ export async function GET() {
         : data.member?.stats || { present: 0, late: 0, absent: 0, excused: 0, total: 0, rate: 0 };
 
     const recentRecords = Array.isArray(attData?.records)
-      ? attData.records.slice(0, 5).map((r: any) => ({
-          id: r.id,
-          status: r.status,
-          remarks: r.remarks,
-          date: r.session?.sessionDate || "",
-          lesson: r.session?.title || "",
-          courseCode: r.session?.course?.code || "",
-        }))
+      ? attData.records
+          .filter((r: any) => !isSyllabusSession(r.session || {}))
+          .slice(0, 5)
+          .map((r: any) => ({
+            id: r.id,
+            status: r.status,
+            remarks: r.remarks,
+            date: r.session?.sessionDate || "",
+            lesson: r.session?.title || "",
+            title: r.session?.title || "",
+            courseCode: r.session?.course?.code || "",
+          }))
       : data.member?.recent || [];
 
     const upcomingSessions: any[] = [];
     for (const c of memberCourses) {
       const sessions = Array.isArray(c.sessions) ? c.sessions : [];
       for (const s of sessions) {
-        if (s.status !== "CANCELLED") {
+        if (!isSyllabusSession(s) && s.status !== "CANCELLED") {
           const [startTime = "", endTime = ""] = String(s.time || "").split(" - ");
+          const enriched = sessionLookup.get(String(s.id));
+          const decoded = enriched
+            ? {
+                notes: enriched.notes,
+                richContent: enriched.richContent,
+                attachments: enriched.attachments,
+              }
+            : decodeRichNotes(s.notes);
           upcomingSessions.push({
             id: s.id,
             title: s.title,
             courseCode: c.code,
+            courseSlug: c.slug || String(c.code || "").toLowerCase(),
             date: String(s.date || "").slice(0, 10),
             startTime,
             endTime,
             room: s.room || "SF1",
             status: s.status,
             marked: 0,
+            notes: decoded.notes,
+            richContent: decoded.richContent,
+            attachments: decoded.attachments,
           });
         }
       }

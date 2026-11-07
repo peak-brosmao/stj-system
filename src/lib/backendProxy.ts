@@ -26,6 +26,9 @@ function authHeaders(token: string | undefined, init: RequestInit): Headers {
   }
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
+  if (init.body && typeof init.body === "string" && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
   if (token) headers.set("Authorization", `Bearer ${token}`);
   return headers;
 }

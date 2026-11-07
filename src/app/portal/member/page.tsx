@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { BookOpen, CalendarCheck, CalendarDays, CheckCircle2, Clock, MapPin, Percent, UserCircle } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarCheck, CalendarDays, CheckCircle2, Clock, FileText, MapPin, Percent, UserCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
+import { RichContentViewer } from "@/ui/RichTextEditor";
+import type { CourseAttachment } from "@/lib/richContent";
 
 interface Overview {
   user: {
@@ -28,14 +30,31 @@ interface Overview {
       slug: string;
       titleKh: string;
       titleEn: string;
-      leaders: Array<{ nameKh: string; nameEn: string }>;
+      leaders: Array<{ nameKh?: string; nameEn?: string; fullNameKh?: string; fullNameEn?: string }>;
       totalLessons: number;
       rate: number;
+      syllabus?: {
+        notes?: string;
+        richContent?: string;
+        attachments?: CourseAttachment[];
+      };
     }>;
     stats: { present: number; late: number; absent: number; excused: number; total: number; rate: number };
     totalLessons: number;
     monthly: Array<{ month: string; present: number; late: number; absent: number }>;
-    upcoming: Array<{ id: string; title: string; courseCode: string; date: string; startTime: string; endTime: string; room: string }>;
+    upcoming: Array<{
+      id: string;
+      title: string;
+      courseCode: string;
+      courseSlug?: string;
+      date: string;
+      startTime: string;
+      endTime: string;
+      room: string;
+      notes?: string;
+      richContent?: string;
+      attachments?: CourseAttachment[];
+    }>;
     recent: Array<{ id: string; title: string; courseCode: string; date: string; status: string }>;
   } | null;
   announcements: Array<{ id: string; titleKh: string; titleEn: string; publishedAt: string }>;
@@ -142,25 +161,36 @@ export default function MemberDashboardPage() {
               </Card>
 
               <Card>
-                <CardHeader className="pb-2">
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
                   <CardTitle className="text-sm font-semibold">មេរៀនត្រូវបង្រៀន (Upcoming lessons)</CardTitle>
+                  <Link href="/portal/schedule" className="text-xs text-primary hover:underline inline-flex items-center gap-1">
+                    <span>មើលទាំងអស់</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
                 </CardHeader>
-                <CardContent className="space-y-2">
+                <CardContent className="space-y-2.5">
                   {m.upcoming.length === 0 && (
                     <p className="text-xs text-muted-foreground">
                       ប្រធានក្រុមមិនទាន់បង្កើតមេរៀនថ្មីទេ។ (Your Leader has not created upcoming lessons yet.)
                     </p>
                   )}
                   {m.upcoming.map((l) => (
-                    <div key={l.id} className="p-3 rounded-lg border border-border bg-muted/30 text-xs space-y-1">
+                    <div key={l.id} className="p-3 rounded-xl border border-border bg-muted/30 text-xs space-y-2">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-semibold text-foreground">{l.title}</span>
-                        <Badge variant="info">{l.courseCode}</Badge>
+                        <Link href={`/portal/courses/${l.courseSlug || String(l.courseCode || "stj").toLowerCase()}`}>
+                          <Badge variant="info">{l.courseCode}</Badge>
+                        </Link>
                       </div>
                       <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                        <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{l.date} {l.startTime}-{l.endTime}</span>
-                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{l.room}</span>
+                        <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3 text-primary" />{l.date} {l.startTime}-{l.endTime}</span>
+                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-primary" />{l.room}</span>
                       </div>
+                      <RichContentViewer
+                        richContent={l.richContent}
+                        notes={l.notes}
+                        attachments={l.attachments}
+                      />
                     </div>
                   ))}
                 </CardContent>
@@ -168,22 +198,47 @@ export default function MemberDashboardPage() {
             </div>
 
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">មុខវិជ្ជារបស់ខ្ញុំ (My courses)</CardTitle>
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-sm font-semibold">មុខវិជ្ជារបស់ខ្ញុំ (My Enrolled Courses)</CardTitle>
+                <Link href="/portal/courses" className="text-xs text-primary hover:underline inline-flex items-center gap-1">
+                  <span>ចូលមើលមុខវិជ្ជាទាំងអស់</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {m.courses.map((c) => (
-                  <Link key={c.id} href={`/portal/courses/${c.slug}`} className="p-3 rounded-lg border border-border hover:border-primary/50 transition-colors text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-primary">{c.code}</span>
-                      <span className="text-muted-foreground">{c.totalLessons} មេរៀន</span>
-                    </div>
-                    <p className="font-semibold text-foreground mt-1">{c.titleKh}</p>
-                    <p className="text-muted-foreground mt-0.5">
-                      ប្រធានក្រុម៖ {c.leaders.map((l) => l.nameKh).join(", ") || "-"}
-                    </p>
-                  </Link>
-                ))}
+                {m.courses.map((c) => {
+                  const hasCourseContent = Boolean(
+                    c.syllabus &&
+                      (c.syllabus.richContent ||
+                        c.syllabus.notes ||
+                        (Array.isArray(c.syllabus.attachments) && c.syllabus.attachments.length > 0))
+                  );
+                  return (
+                    <Link
+                      key={c.id}
+                      href={`/portal/courses/${c.slug || String(c.code || "stj").toLowerCase()}`}
+                      className="p-3.5 rounded-xl border border-border hover:border-primary/50 transition-colors text-xs space-y-1.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono font-bold text-primary">{c.code}</span>
+                        <div className="flex items-center gap-2">
+                          {hasCourseContent && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-primary/10 text-primary">
+                              <FileText className="w-3 h-3" />
+                              មានមាតិកា &amp; PDF/Video
+                            </span>
+                          )}
+                          <span className="text-muted-foreground">{c.totalLessons} មេរៀន</span>
+                        </div>
+                      </div>
+                      <p className="font-semibold text-foreground">{c.titleKh}</p>
+                      <p className="text-muted-foreground">
+                        ប្រធានក្រុម៖{" "}
+                        {c.leaders.map((l) => l.fullNameKh || l.nameKh || l.fullNameEn || l.nameEn).filter(Boolean).join(", ") || "-"}
+                      </p>
+                    </Link>
+                  );
+                })}
               </CardContent>
             </Card>
 

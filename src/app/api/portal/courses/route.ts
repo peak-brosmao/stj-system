@@ -101,28 +101,56 @@ function normalizeCourse(
   }
 
   const rawSessions = Array.isArray(raw.sessions) ? raw.sessions : [];
-  const sessions = rawSessions
-    .filter((s: Record<string, any>) => !isSyllabusSession(s))
-    .map((s: Record<string, any>) => {
-      const enriched = sessionMap.get(String(s.id));
-      const decoded = enriched
-        ? {
-            notes: enriched.notes,
-            richContent: enriched.richContent,
-            attachments: enriched.attachments,
-          }
-        : decodeRichNotes(s.notes);
+  const combinedSessionsMap = new Map<string, Record<string, any>>();
 
-      return {
-        ...s,
-        notes: decoded.notes,
-        richContent: decoded.richContent,
-        attachments: decoded.attachments,
-      };
-    });
+  for (const s of rawSessions) {
+    if (isSyllabusSession(s)) continue;
+    combinedSessionsMap.set(String(s.id), s);
+  }
+  for (const [id, bs] of sessionMap.entries()) {
+    if (!combinedSessionsMap.has(id)) {
+      combinedSessionsMap.set(id, {
+        id: bs.id,
+        title: bs.title,
+        date: String(bs.sessionDate || bs.date || "").slice(0, 10),
+        time:
+          bs.time ||
+          (bs.startTime && bs.endTime ? `${bs.startTime} - ${bs.endTime}` : "11:30 - 13:00"),
+        room: bs.room || "SF1 & SF2",
+        status: bs.status || "SCHEDULED",
+        notes: bs.notes,
+        richContent: bs.richContent,
+        attachments: bs.attachments,
+      });
+    }
+  }
+
+  const sessions = Array.from(combinedSessionsMap.values()).map((s: Record<string, any>) => {
+    const enriched = sessionMap.get(String(s.id));
+    const decoded = enriched
+      ? {
+          notes: enriched.notes,
+          richContent: enriched.richContent,
+          attachments: enriched.attachments,
+        }
+      : decodeRichNotes(s.notes);
+
+    return {
+      ...s,
+      date: String(s.date || s.sessionDate || "").slice(0, 10),
+      time:
+        s.time ||
+        (s.startTime && s.endTime ? `${s.startTime} - ${s.endTime}` : "11:30 - 13:00"),
+      room: s.room || "SF1 & SF2",
+      notes: decoded.notes,
+      richContent: decoded.richContent,
+      attachments: decoded.attachments,
+    };
+  });
 
   return {
     ...raw,
+    slug: raw.slug || courseCode.toLowerCase(),
     leaderName,
     leaders,
     enrolledMembers,
