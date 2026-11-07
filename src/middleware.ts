@@ -20,6 +20,7 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/organization") ||
     pathname.startsWith("/api/share") ||
+    pathname.startsWith("/api/blog") ||
     pathname === "/favicon.ico" ||
     pathname.startsWith("/images") ||
     pathname.startsWith("/logo") ||
@@ -27,8 +28,12 @@ export async function middleware(req: NextRequest) {
     pathname === "/about" ||
     pathname === "/contact" ||
     pathname === "/programs" ||
+    pathname.startsWith("/programs/") ||
     pathname === "/activities" ||
     pathname === "/news" ||
+    pathname.startsWith("/news/") ||
+    pathname === "/blog" ||
+    pathname.startsWith("/blog/") ||
     pathname === "/structure" ||
     pathname === "/privacy" ||
     pathname === "/terms" ||

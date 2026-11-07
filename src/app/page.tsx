@@ -24,6 +24,8 @@ import { Card, CardContent } from "@/ui/Card";
 import { LARAVEL_API_BASE } from "@/lib/laravelApi";
 import { HomeGallery } from "@/ui/home/HomeGallery";
 import { HeroAnimatedBackground } from "@/ui/home/HeroAnimatedBackground";
+import { getAllBlogAndLessonItems } from "@/lib/blogStore";
+import { extractPlainTextSnippet, getDefaultCourseThumbnail } from "@/lib/richContent";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +49,15 @@ export default async function HomePage() {
   } catch (err) {
     console.warn("[HomePage] Backend stats unavailable:", err);
   }
+
+  const allBlogItems = await getAllBlogAndLessonItems();
+  const publicBlogs = allBlogItems
+    .filter(
+      (item) =>
+        item.visibility === "PUBLIC" &&
+        (item.kind === "BLOG" || Boolean(item.richContent?.trim()) || item.attachments.length > 0)
+    )
+    .slice(0, 6);
 
   const stats = [
     { label: "សមាជិករៀមច្បងស្ម័គ្រចិត្ត (Active Members)", value: `${totalMembers}+`, icon: Users },
@@ -237,6 +248,100 @@ export default async function HomePage() {
                         </Link>
                       </div>
                     </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* STJ SENIOR BLOG & PUBLIC LESSONS SECTION (FOR JUNIOR STUDENTS) */}
+        <section className="py-16 md:py-20 border-b border-border bg-gradient-to-b from-card/40 via-background to-background">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+              <div className="space-y-2 max-w-2xl">
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>STJ Blog &amp; Public Senior Lessons</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                  អត្ថបទ &amp; មេរៀនចែករំលែកដោយរៀមច្បង STJ
+                </h2>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  សិស្សប្អូនអាចចូលអានមេរៀនសង្ខេប កូដគំរូ (VS Code C/C++, Python) និងរូបមន្តគណិត-រូបវិទ្យា-គីមីវិទ្យា (LaTeX) ដែលរៀបចំដោយសមាជិក និងប្រធានមុខវិជ្ជា STJ។
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Link href="/blog">
+                  <Button variant="outline" size="sm" className="text-xs space-x-1.5">
+                    <span>មើលអត្ថបទ &amp; មេរៀនទាំងអស់</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {publicBlogs.map((item) => {
+                const snippet = extractPlainTextSnippet(item.richContent, item.summary, 140);
+                const thumb =
+                  item.thumbnailUrl || getDefaultCourseThumbnail(item.courseCode);
+                return (
+                  <Card
+                    key={item.id}
+                    className="group overflow-hidden flex flex-col justify-between border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div>
+                      <Link
+                        href={`/blog/${encodeURIComponent(item.id)}`}
+                        className="block relative h-48 w-full bg-slate-900 overflow-hidden border-b border-border"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={thumb}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-transparent" />
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-primary text-primary-foreground font-mono text-[10px] font-bold shadow">
+                            {item.courseCode} • {item.category}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-500/90 text-white text-[10px] font-bold shadow">
+                            សាធារណៈ (Public)
+                          </span>
+                        </div>
+                        <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] text-slate-200">
+                          <span className="font-semibold truncate">{item.authorNameKh}</span>
+                          <span className="text-slate-300 shrink-0">{item.date}</span>
+                        </div>
+                      </Link>
+
+                      <CardContent className="p-5 space-y-2.5">
+                        <Link
+                          href={`/blog/${encodeURIComponent(item.id)}`}
+                          className="block font-bold text-base text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug"
+                        >
+                          {item.title}
+                        </Link>
+                        <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                          {snippet || item.summary}
+                        </p>
+                      </CardContent>
+                    </div>
+
+                    <div className="px-5 py-3.5 border-t border-border bg-muted/20 flex items-center justify-between">
+                      <span className="text-[11px] text-muted-foreground font-medium">
+                        {item.kind === "BLOG" ? "អត្ថបទចែករំលែក (Blog)" : "មេរៀនបង្រៀន (Lesson)"}
+                      </span>
+                      <Link
+                        href={`/blog/${encodeURIComponent(item.id)}`}
+                        className="inline-flex items-center space-x-1 text-xs font-bold text-primary hover:underline"
+                      >
+                        <span>អានមេរៀននេះ</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </Card>
                 );
               })}

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { hashPassword, verifyPassword } from "@/lib/auth";
-import { backendFetch } from "@/lib/backendProxy";
+import { backendFetch, getPublicShareReadToken } from "@/lib/backendProxy";
 import { LARAVEL_API_BASE } from "@/lib/laravelApi";
 import { isVaultSession, VAULT_MARKER_ROOM, VAULT_MARKER_TITLE } from "@/lib/richContent";
 
@@ -285,5 +285,31 @@ export async function clearVaultPasswordForReset(
     };
     await persistToBackendSqlite(store);
   }
+}
+
+export async function fetchSessionsWithServiceToken(): Promise<any[]> {
+  try {
+    let res = await backendFetch("sessions").catch(() => null);
+    if (!res || !res.ok) {
+      const local = readLocalStore();
+      const fallbackToken = local.serviceToken || getPublicShareReadToken();
+      if (fallbackToken) {
+        res = await fetch(`${LARAVEL_API_BASE}/sessions`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${fallbackToken}`,
+          },
+          cache: "no-store",
+        }).catch(() => null);
+      }
+    }
+    if (res && res.ok) {
+      const data = await res.json().catch(() => null);
+      return Array.isArray(data?.sessions) ? data.sessions : [];
+    }
+  } catch {
+    // ignore
+  }
+  return [];
 }
 

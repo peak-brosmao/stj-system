@@ -41,6 +41,13 @@ import {
   Eye,
   Edit3,
   FileCode,
+  Sigma,
+  Globe,
+  Lock,
+  QrCode,
+  Copy,
+  Check,
+  Share2,
   X,
 } from "lucide-react";
 import { Button } from "@/ui/Button";
@@ -81,6 +88,49 @@ const HIGHLIGHT_COLORS = [
   { label: "Cyan", color: "rgba(6, 182, 212, 0.28)" },
 ];
 
+const MATH_PRESETS = [
+  { label: "ប្រភាគ a/b", latex: "\\frac{a}{b}" },
+  { label: "ឫសការ៉េ √", latex: "\\sqrt{x^2 + y^2}" },
+  { label: "សមីការដឺក្រេទី២", latex: "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}" },
+  { label: "អាំងតេក្រាល ∫", latex: "\\int_{a}^{b} f(x)\\,dx = F(b) - F(a)" },
+  { label: "ផលបូក ∑", latex: "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}" },
+  { label: "លីមីត lim", latex: "\\lim_{x \\to 0} \\frac{\\sin(x)}{x} = 1" },
+  { label: "ដេរីវេ dy/dx", latex: "\\frac{df}{dx} = \\lim_{h \\to 0} \\frac{f(x+h) - f(x)}{h}" },
+  { label: "ម៉ាទ្រីស 2×2", latex: "\\begin{pmatrix} a_{11} & a_{12} \\\\ a_{21} & a_{22} \\end{pmatrix}" },
+];
+
+const PHYSICS_CHEM_PRESETS = [
+  { label: "ច្បាប់ទី២ ញូតុន", latex: "\\vec{F}_{\\text{net}} = m \\cdot \\vec{a}" },
+  { label: "ថាមពល E=mc²", latex: "E = m c^2" },
+  { label: "ទំនាញសកល", latex: "F = G \\frac{m_1 m_2}{r^2}" },
+  { label: "ចលនាស្មើ", latex: "x = x_0 + v_0 t + \\frac{1}{2} a t^2" },
+  { label: "ច្បាប់អូម & អគ្គិសនី", latex: "V = I \\cdot R \\quad , \\quad P = V \\cdot I" },
+  { label: "រលក & កង់ទិច", latex: "E = h f = \\frac{h c}{\\lambda}" },
+  { label: "ឧស្ម័នបរិសុទ្ធ", latex: "P V = n R T" },
+  { label: "គីមីវិទ្យា ΔG & pH", latex: "\\Delta G = \\Delta H - T \\Delta S \\quad , \\quad \\text{pH} = -\\log[\\text{H}^+]" },
+];
+
+const GREEK_SYMBOLS = [
+  { sym: "α", tex: "\\alpha" },
+  { sym: "β", tex: "\\beta" },
+  { sym: "γ", tex: "\\gamma" },
+  { sym: "θ", tex: "\\theta" },
+  { sym: "λ", tex: "\\lambda" },
+  { sym: "μ", tex: "\\mu" },
+  { sym: "π", tex: "\\pi" },
+  { sym: "ω", tex: "\\omega" },
+  { sym: "Δ", tex: "\\Delta" },
+  { sym: "Ω", tex: "\\Omega" },
+  { sym: "∞", tex: "\\infty" },
+  { sym: "±", tex: "\\pm" },
+  { sym: "≈", tex: "\\approx" },
+  { sym: "≠", tex: "\\neq" },
+  { sym: "≤", tex: "\\leq" },
+  { sym: "≥", tex: "\\geq" },
+  { sym: "→", tex: "\\rightarrow" },
+  { sym: "⇌", tex: "\\rightleftharpoons" },
+];
+
 export function detectAttachmentType(
   fileNameOrUrl: string,
   mimeType?: string
@@ -110,6 +160,277 @@ export function formatFileSize(bytes?: number): string {
 }
 
 /**
+ * Converts a LaTeX math/physics expression into crisp mathematical HTML
+ * (stacked fractions, square root vinculum, integral/sum limits, vectors, matrices, Greek symbols).
+ */
+export function renderLatexToMathHtml(rawLatex: string, displayMode = false): string {
+  if (!rawLatex || !rawLatex.trim()) return "";
+  let s = rawLatex
+    .trim()
+    .replace(/^\$\$|\$\$$/g, "")
+    .replace(/^\$|\$$/g, "")
+    .replace(/^\\\[|\\\]$/g, "")
+    .replace(/^\\\(|\\\)$/g, "")
+    .trim();
+
+  // Escape HTML special chars before transforming LaTeX commands
+  s = s
+    .replace(/&/g, "__AMP__")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+  // Matrices: \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+  s = s.replace(
+    /\\begin\{(p|b|v)?matrix\}([\s\S]*?)\\end\{\1?matrix\}/g,
+    (_m, bracketType: string, inner: string) => {
+      const rows = inner
+        .trim()
+        .split(/\\\\/)
+        .map((r) => r.trim())
+        .filter(Boolean);
+      const tableRows = rows
+        .map((r) => {
+          const cells = r
+            .split("__AMP__")
+            .map(
+              (c) =>
+                `<td style="padding:2px 8px;text-align:center;">${renderLatexToMathHtml(
+                  c.trim(),
+                  false
+                )}</td>`
+            )
+            .join("");
+          return `<tr>${cells}</tr>`;
+        })
+        .join("");
+      const leftBr = bracketType === "b" ? "[" : bracketType === "v" ? "|" : "(";
+      const rightBr = bracketType === "b" ? "]" : bracketType === "v" ? "|" : ")";
+      return `<span style="display:inline-flex;align-items:center;vertical-align:middle;margin:0 4px;"><span style="font-size:1.6em;font-weight:300;line-height:1;">${leftBr}</span><table style="border-collapse:collapse;display:inline-table;vertical-align:middle;"><tbody>${tableRows}</tbody></table><span style="font-size:1.6em;font-weight:300;line-height:1;">${rightBr}</span></span>`;
+    }
+  );
+  s = s.replace(/__AMP__/g, "&amp;");
+
+  // Text command: \text{...}
+  s = s.replace(/\\text\{([^{}]*)\}/g, '<span style="font-style:normal;font-family:sans-serif;">$1</span>');
+
+  // Vector arrow: \vec{F}
+  s = s.replace(
+    /\\vec\{([^{}]+)\}/g,
+    '<span style="display:inline-block;position:relative;padding-top:0.15em;"><span style="position:absolute;top:-0.45em;left:0;right:0;text-align:center;font-size:0.7em;">→</span><span>$1</span></span>'
+  );
+
+  // Square root: \sqrt{...}
+  for (let i = 0; i < 3; i++) {
+    s = s.replace(
+      /\\sqrt\{([^{}]+)\}/g,
+      '<span style="display:inline-flex;align-items:baseline;white-space:nowrap;"><span style="font-size:1.15em;line-height:1;margin-right:1px;">√</span><span style="border-top:1.5px solid currentColor;padding:0 3px;">$1</span></span>'
+    );
+  }
+
+  // Integrals, Sums, Limits with lower & upper bounds: \int_{a}^{b}, \sum_{i=1}^{n}, \lim_{x \to 0}
+  s = s.replace(
+    /\\(int|sum|prod)_\{([^{}]+)\}\^\{([^{}]+)\}/g,
+    (_m, op: string, sub: string, sup: string) => {
+      const symbol = op === "int" ? "∫" : op === "sum" ? "∑" : "∏";
+      return `<span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;line-height:1.05;"><span style="font-size:0.68em;">${sup}</span><span style="font-size:1.35em;">${symbol}</span><span style="font-size:0.68em;">${sub}</span></span>`;
+    }
+  );
+
+  s = s.replace(
+    /\\lim_\{([^{}]+)\}/g,
+    '<span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;line-height:1.05;"><span style="font-style:normal;font-weight:600;">lim</span><span style="font-size:0.68em;">$1</span></span>'
+  );
+
+  // Fractions (nested support up to 3 levels): \frac{num}{den}
+  for (let i = 0; i < 3; i++) {
+    s = s.replace(
+      /\\frac\{([^{}]+)\}\{([^{}]+)\}/g,
+      '<span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px;line-height:1.15;"><span style="border-bottom:1.5px solid currentColor;padding:0 5px 2px;text-align:center;">$1</span><span style="padding:2px 5px 0;text-align:center;">$2</span></span>'
+    );
+  }
+
+  // Subscripts and Superscripts: _{...}, ^{...}, _x, ^2
+  s = s.replace(/\^\{([^{}]+)\}/g, '<sup style="font-size:0.75em;">$1</sup>');
+  s = s.replace(/_\{([^{}]+)\}/g, '<sub style="font-size:0.75em;">$1</sub>');
+  s = s.replace(/\^([0-9a-zA-Z+-])/g, '<sup style="font-size:0.75em;">$1</sup>');
+  s = s.replace(/_([0-9a-zA-Z+-])/g, '<sub style="font-size:0.75em;">$1</sub>');
+
+  // Greek letters & math operators
+  const replacements: Array<[RegExp, string]> = [
+    [/\\alpha\b/g, "α"],
+    [/\\beta\b/g, "β"],
+    [/\\gamma\b/g, "γ"],
+    [/\\delta\b/g, "δ"],
+    [/\\epsilon\b/g, "ε"],
+    [/\\theta\b/g, "θ"],
+    [/\\lambda\b/g, "λ"],
+    [/\\mu\b/g, "μ"],
+    [/\\nu\b/g, "ν"],
+    [/\\pi\b/g, "π"],
+    [/\\rho\b/g, "ρ"],
+    [/\\sigma\b/g, "σ"],
+    [/\\tau\b/g, "τ"],
+    [/\\phi\b/g, "φ"],
+    [/\\omega\b/g, "ω"],
+    [/\\Delta\b/g, "Δ"],
+    [/\\Sigma\b/g, "∑"],
+    [/\\Omega\b/g, "Ω"],
+    [/\\Pi\b/g, "Π"],
+    [/\\infty\b/g, "∞"],
+    [/\\pm\b/g, "±"],
+    [/\\mp\b/g, "∓"],
+    [/\\times\b/g, "×"],
+    [/\\cdot\b/g, "·"],
+    [/\\div\b/g, "÷"],
+    [/\\approx\b/g, "≈"],
+    [/\\neq\b/g, "≠"],
+    [/\\leq\b/g, "≤"],
+    [/\\geq\b/g, "≥"],
+    [/\\to\b/g, "→"],
+    [/\\rightarrow\b/g, "→"],
+    [/\\leftarrow\b/g, "←"],
+    [/\\Rightarrow\b/g, "⇒"],
+    [/\\Leftrightarrow\b/g, "⇔"],
+    [/\\rightleftharpoons\b/g, "⇌"],
+    [/\\partial\b/g, "∂"],
+    [/\\nabla\b/g, "∇"],
+    [/\\int\b/g, "∫"],
+    [/\\sum\b/g, "∑"],
+    [/\\quad\b/g, "&nbsp;&nbsp;&nbsp;&nbsp;"],
+    [/\\,/g, "&nbsp;"],
+    [/\\(sin|cos|tan|log|ln|exp|max|min)\b/g, '<span style="font-style:normal;">$1</span>'],
+  ];
+
+  for (const [regex, rep] of replacements) {
+    s = s.replace(regex, rep);
+  }
+
+  if (displayMode) {
+    return `<div class="stj-latex-rendered" style="margin:14px 0;padding:14px 18px;border-radius:12px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.22);text-align:center;font-family:'Cambria Math','Times New Roman',serif;font-size:1.12rem;color:#e2e8f0;overflow-x:auto;">${s}</div>`;
+  }
+  return `<span class="stj-latex-rendered" style="font-family:'Cambria Math','Times New Roman',serif;font-size:1.05em;padding:0 3px;color:#93c5fd;">${s}</span>`;
+}
+
+/**
+ * VS Code Dark+ Syntax Highlighter for C, C++, Python, JavaScript, TypeScript, SQL, HTML, etc.
+ */
+export function highlightCodeToVSCodeWindow(rawCode: string, langHint = "C / C++"): string {
+  // Strip any existing HTML tags inside <pre> so we highlight pure source code cleanly
+  const decoded = rawCode
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/^\n+|\n+$/g, "");
+
+  if (!decoded.trim()) return "";
+
+  // Auto-detect language if not explicitly specified
+  let lang = langHint;
+  if (/^\s*#include\b|\bprintf\s*\(|\bscanf\s*\(|\bint\s+main\s*\(/.test(decoded)) {
+    lang = "C / C++";
+  } else if (/\bdef\s+\w+\s*\(|\bimport\s+\w+|\bprint\s*\(/.test(decoded) && !decoded.includes(";")) {
+    lang = "Python";
+  } else if (/\b(const|let|function|console\.log|=>)\b/.test(decoded)) {
+    lang = "JavaScript / TS";
+  } else if (/\b(SELECT|FROM|WHERE|INSERT\s+INTO|CREATE\s+TABLE)\b/i.test(decoded)) {
+    lang = "SQL";
+  }
+
+  const highlightLine = (line: string): string => {
+    // 1. Escape HTML
+    const escaped = line
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    // Check full-line comment
+    if (/^\s*(\/\/|#(?!(include|define|ifdef|ifndef|endif|pragma)))/.test(escaped)) {
+      return `<span style="color:#6a9955;font-style:italic;">${escaped}</span>`;
+    }
+
+    // Check C preprocessor directive (#include <stdio.h>)
+    const preprocMatch = escaped.match(/^(\s*#\s*(?:include|define|ifdef|ifndef|endif|pragma)\b)(.*)$/);
+    if (preprocMatch) {
+      const directive = `<span style="color:#c586c0;font-weight:600;">${preprocMatch[1]}</span>`;
+      const rest = preprocMatch[2].replace(
+        /(&lt;[^&]+&gt;|"[^"]*")/g,
+        '<span style="color:#ce9178;">$1</span>'
+      );
+      return directive + rest;
+    }
+
+    // Tokenize strings and comments first using placeholders
+    const tokens: string[] = [];
+    const saveToken = (html: string) => {
+      const idx = tokens.length;
+      tokens.push(html);
+      return `@@STJ_TOK_${idx}@@`;
+    };
+
+    let work = escaped;
+
+    // Trailing // comment
+    work = work.replace(/(\/\/.*)$/, (m) =>
+      saveToken(`<span style="color:#6a9955;font-style:italic;">${m}</span>`)
+    );
+
+    // Double & single quoted strings (with format specifiers & escapes highlighted inside)
+    work = work.replace(/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g, (str) => {
+      const coloredStr = str.replace(
+        /(\\[nrt0\\"']|%[-+0 #]*\d*(?:\.\d+)?[dfscxXulLfegp])/g,
+        '<span style="color:#d7ba7d;font-weight:600;">$1</span>'
+      );
+      return saveToken(`<span style="color:#ce9178;">${coloredStr}</span>`);
+    });
+
+    // Control flow keywords (VS Code Purple #c586c0)
+    work = work.replace(
+      /\b(return|if|else|elif|for|while|do|switch|case|break|continue|default|goto|try|catch|finally|throw|import|from|export|async|await|yield|in|pass)\b/g,
+      (kw) => saveToken(`<span style="color:#c586c0;font-weight:600;">${kw}</span>`)
+    );
+
+    // Type & storage keywords (VS Code Blue #569cd6)
+    work = work.replace(
+      /\b(int|float|double|char|void|long|short|unsigned|signed|bool|boolean|string|struct|union|enum|typedef|const|static|extern|let|var|function|def|class|interface|type|public|private|protected|new|this|self|true|false|null|NULL|None|True|False|SELECT|FROM|WHERE|JOIN|LEFT|INNER|GROUP|ORDER|BY|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE)\b/g,
+      (kw) => saveToken(`<span style="color:#569cd6;font-weight:600;">${kw}</span>`)
+    );
+
+    // Function calls (VS Code Yellow #dcdcaa)
+    work = work.replace(
+      /\b([a-zA-Z_]\w*)(?=\s*\()/g,
+      (fn) => saveToken(`<span style="color:#dcdcaa;">${fn}</span>`)
+    );
+
+    // Numbers (VS Code Light Green #b5cea8)
+    work = work.replace(
+      /\b(\d+(?:\.\d+)?(?:f|L|u|UL)?|0x[0-9a-fA-F]+)\b/g,
+      (num) => saveToken(`<span style="color:#b5cea8;">${num}</span>`)
+    );
+
+    // Restore tokens
+    work = work.replace(/@@STJ_TOK_(\d+)@@/g, (_m, idx) => tokens[Number(idx)] || "");
+    return work;
+  };
+
+  const lines = decoded.split("\n");
+  const rowsHtml = lines
+    .map((line, i) => {
+      const lineNum = i + 1;
+      const highlighted = highlightLine(line) || "&nbsp;";
+      return `<div style="display:flex;align-items:baseline;line-height:1.65;"><span style="user-select:none;width:2.5rem;padding-right:0.85rem;text-align:right;color:#6e7681;font-size:11px;flex-shrink:0;">${lineNum}</span><span style="flex:1;white-space:pre;color:#d4d4d4;">${highlighted}</span></div>`;
+    })
+    .join("");
+
+  return `<div class="stj-vscode-block" style="margin:16px 0;border-radius:12px;overflow:hidden;border:1px solid #2d2d30;background:#1e1e1e;box-shadow:0 8px 24px rgba(0,0,0,0.28);font-family:'JetBrains Mono','Fira Code','Cascadia Code',Consolas,monospace;"><div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#252526;border-bottom:1px solid #333337;"><div style="display:flex;align-items:center;gap:7px;"><span style="width:11px;height:11px;border-radius:999px;background:#ff5f56;display:inline-block;"></span><span style="width:11px;height:11px;border-radius:999px;background:#ffbd2e;display:inline-block;"></span><span style="width:11px;height:11px;border-radius:999px;background:#27c93f;display:inline-block;"></span><span style="margin-left:8px;font-size:11px;font-weight:600;color:#9cdcfe;">${lang}</span></div><span style="font-size:10px;color:#858585;letter-spacing:0.04em;">VS Code Dark+</span></div><div style="padding:12px 14px;overflow-x:auto;font-size:12.5px;">${rowsHtml}</div></div>`;
+}
+
+/**
  * Converts YouTube watch/short URLs, Google Drive links, or raw <iframe> strings into
  * a safe, responsive 16:9 embed HTML snippet.
  */
@@ -117,7 +438,6 @@ export function buildResponsiveEmbedHtml(rawInput: string, customTitle?: string)
   const trimmed = rawInput.trim();
   if (!trimmed) return "";
 
-  // 1. If the input is already an <iframe ...>...</iframe> tag
   if (/^<iframe[\s\S]*<\/iframe>$/i.test(trimmed)) {
     const srcMatch = trimmed.match(/src=["']([^"']+)["']/i);
     const titleMatch = trimmed.match(/title=["']([^"']+)["']/i);
@@ -128,7 +448,6 @@ export function buildResponsiveEmbedHtml(rawInput: string, customTitle?: string)
     }
   }
 
-  // 2. Check if it's a YouTube URL (watch?v=, youtu.be/, shorts/, embed/)
   const ytMatch = trimmed.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i
   );
@@ -139,12 +458,10 @@ export function buildResponsiveEmbedHtml(rawInput: string, customTitle?: string)
     return `<div class="stj-embed-wrapper" style="position:relative;width:100%;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin:14px 0;border:1px solid rgba(148,163,184,0.25);background:#0f172a;"><iframe src="${embedSrc}" title="${title}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p><br/></p>`;
   }
 
-  // 3. Direct MP4 / WebM / MOV video URL
   if (/\.(mp4|webm|mov)(\?|$)/i.test(trimmed)) {
     return `<div style="margin:14px 0;"><video src="${trimmed}" controls preload="metadata" style="width:100%;max-height:460px;border-radius:12px;background:#000;"></video></div><p><br/></p>`;
   }
 
-  // 4. Generic URL (Google Drive preview, PDF, Vimeo, etc.)
   let finalUrl = trimmed;
   const gdriveMatch = trimmed.match(/drive\.google\.com\/file\/d\/([^/]+)/i);
   if (gdriveMatch?.[1]) {
@@ -155,12 +472,14 @@ export function buildResponsiveEmbedHtml(rawInput: string, customTitle?: string)
 }
 
 /**
- * Unescapes any `&lt;iframe ...&gt;&lt;/iframe&gt;` that was accidentally pasted as literal text
- * so it renders as an interactive responsive video/iframe.
+ * Normalizes Rich HTML for viewing:
+ * 1. Unescapes any `&lt;iframe ...&gt;&lt;/iframe&gt;`
+ * 2. Renders `$$ ... $$` and `$ ... $` LaTeX math/physics formulas
+ * 3. Renders `<pre>...</pre>` blocks as VS Code Dark+ syntax-highlighted windows
  */
-export function normalizeRichHtml(html?: string | null): string {
+export function normalizeRichHtml(html?: string | null, forViewer = false): string {
   if (!html) return "";
-  return html.replace(
+  let out = html.replace(
     /&lt;iframe\b([\s\S]*?)&gt;([\s\S]*?)&lt;\/iframe&gt;/gi,
     (_full, attrsRaw: string) => {
       const unescapedAttrs = attrsRaw
@@ -171,6 +490,33 @@ export function normalizeRichHtml(html?: string | null): string {
       return buildResponsiveEmbedHtml(rawIframe);
     }
   );
+
+  if (forViewer) {
+    // Transform <pre>...</pre> into VS Code Dark+ highlighted windows
+    out = out.replace(/<pre\b([^>]*)>([\s\S]*?)<\/pre>/gi, (_full, attrs: string, inner: string) => {
+      const langMatch = attrs.match(/data-lang=["']([^"']+)["']/i);
+      return highlightCodeToVSCodeWindow(inner, langMatch?.[1] || "C / C++");
+    });
+
+    // Render block LaTeX $$ ... $$ or \[ ... \]
+    out = out.replace(/\$\$([\s\S]+?)\$\$/g, (_m, tex: string) =>
+      renderLatexToMathHtml(tex.replace(/<[^>]+>/g, ""), true)
+    );
+    out = out.replace(/\\\[([\s\S]+?)\\\]/g, (_m, tex: string) =>
+      renderLatexToMathHtml(tex.replace(/<[^>]+>/g, ""), true)
+    );
+
+    // Render inline LaTeX $ ... $ (avoiding currency like $100) or \( ... \)
+    out = out.replace(/\\\(([\s\S]+?)\\\)/g, (_m, tex: string) =>
+      renderLatexToMathHtml(tex.replace(/<[^>]+>/g, ""), false)
+    );
+    out = out.replace(/\$([^\n$<>]{2,120})\$/g, (full, tex: string) => {
+      if (/^\d+(\.\d+)?$/.test(tex.trim())) return full;
+      return renderLatexToMathHtml(tex, false);
+    });
+  }
+
+  return out;
 }
 
 /**
@@ -237,7 +583,6 @@ export async function uploadSingleFileToR2(
         uploadedUrl = directData.publicUrl;
         uploadedKey = directData.key;
       } else if (fileType.startsWith("image/") && file.size <= 4 * 1024 * 1024) {
-        // Fallback for inline images when R2 env keys are not yet configured
         uploadedUrl = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = () => resolve(String(reader.result || ""));
@@ -273,6 +618,327 @@ export async function uploadSingleFileToR2(
     mimeType: fileType,
     type: detectAttachmentType(file.name, fileType),
   };
+}
+
+/**
+ * Reusable Share Link & QR Code Panel/Modal for Public Lessons & Blog Posts
+ */
+export function LessonBlogSharePanel({
+  url,
+  shareUrl,
+  title,
+  visibility,
+  onVisibilityChange,
+  onClose,
+}: {
+  url?: string;
+  shareUrl?: string;
+  title: string;
+  visibility: "PRIVATE" | "PUBLIC";
+  onVisibilityChange?: (v: "PRIVATE" | "PUBLIC") => void;
+  onClose?: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+  const effectiveUrl = shareUrl || url || "";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(effectiveUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="p-5 rounded-2xl border border-primary/30 bg-card shadow-lg space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
+            <QrCode className="w-4 h-4" />
+            <span>ចែករំលែកមេរៀន / អត្ថបទ និង QR Code (Share Lesson &amp; QR)</span>
+          </div>
+          <h3 className="text-sm font-bold text-foreground mt-0.5">{title}</h3>
+          <p className="text-[11px] text-muted-foreground">
+            {visibility === "PUBLIC"
+              ? "🌍 បើកជាសាធារណៈ (Public)៖ សិស្សប្អូនអាចស្កេន QR Code ឬចុចតំណភ្ជាប់នេះដើម្បីចូលអានមេរៀនដោយមិនបាច់មានគណនី។"
+              : "🔒 ឯកជន (Private)៖ មានតែសមាជិកក្នុងក្រុម STJ ដែលបានចូលគណនីប៉ុណ្ណោះទើបអាចមើលមេរៀននេះបាន។"}
+          </p>
+        </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {onVisibilityChange && (
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => onVisibilityChange("PRIVATE")}
+            className={`px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+              visibility === "PRIVATE"
+                ? "border-amber-500 bg-amber-500/15 text-amber-500"
+                : "border-border bg-muted/20 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>🔒 Private (សមាជិកក្រុម)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onVisibilityChange("PUBLIC")}
+            className={`px-3 py-2 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+              visibility === "PUBLIC"
+                ? "border-emerald-500 bg-emerald-500/15 text-emerald-500"
+                : "border-border bg-muted/20 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>🌍 Public (សិស្សប្អូនមើលបាន)</span>
+          </button>
+        </div>
+      )}
+
+      <div className="flex flex-col sm:flex-row items-center gap-5 pt-2 border-t border-border/60">
+        <div className="p-3 bg-white rounded-2xl border border-border shadow-xs shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+              effectiveUrl
+            )}`}
+            alt={`QR Code for ${title}`}
+            className="w-36 h-36"
+          />
+        </div>
+
+        <div className="flex-1 w-full space-y-3 text-xs">
+          <div>
+            <label className="block text-[11px] font-semibold text-muted-foreground mb-1">
+              តំណភ្ជាប់សម្រាប់មេរៀននេះតែមួយ (Single-Lesson Direct Link)៖
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                readOnly
+                value={effectiveUrl}
+                className="w-full px-3 py-2 rounded-xl border border-input bg-muted/40 font-mono text-xs text-foreground"
+              />
+              <Button
+                type="button"
+                size="sm"
+                onClick={handleCopy}
+                className="h-9 px-3.5 text-xs space-x-1.5 shrink-0"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>បានចម្លង!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>ចម្លង Link</span>
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={effectiveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 font-semibold text-xs"
+            >
+              <span>បើកមើលទំព័រមេរៀនផ្ទាល់</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <Badge variant={visibility === "PUBLIC" ? "success" : "warning"}>
+              {visibility === "PUBLIC" ? "🌍 សាធារណៈ (Public)" : "🔒 ឯកជន (Private - សមាជិកក្រុម)"}
+            </Badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Reusable Thumbnail, OpenGraph & Public/Private Visibility Configurator
+ */
+export function ThumbnailAndVisibilityCard({
+  visibility,
+  onVisibilityChange,
+  thumbnailUrl,
+  onThumbnailUrlChange,
+  onThumbnailChange,
+  title,
+  titlePreview,
+  courseCode = "STJ",
+}: {
+  visibility: "PRIVATE" | "PUBLIC";
+  onVisibilityChange: (v: "PRIVATE" | "PUBLIC") => void;
+  thumbnailUrl: string;
+  onThumbnailUrlChange?: (url: string) => void;
+  onThumbnailChange?: (url: string) => void;
+  title?: string;
+  titlePreview?: string;
+  courseCode?: string;
+}) {
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingThumb, setUploadingThumb] = useState(false);
+  const [thumbError, setThumbError] = useState<string | null>(null);
+  const updateThumbnail = (url: string) => {
+    if (onThumbnailChange) onThumbnailChange(url);
+    if (onThumbnailUrlChange) onThumbnailUrlChange(url);
+  };
+  const effectiveTitle = titlePreview || title || "";
+
+  const handleThumbUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingThumb(true);
+    setThumbError(null);
+    try {
+      const uploaded = await uploadSingleFileToR2(file, courseCode);
+      updateThumbnail(uploaded.url);
+    } catch (err: unknown) {
+      setThumbError(err instanceof Error ? err.message : "បរាជ័យក្នុងការបង្ហោះរូបភាព Thumbnail");
+    } finally {
+      setUploadingThumb(false);
+      if (thumbInputRef.current) thumbInputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="p-5 rounded-2xl border border-border bg-card space-y-4 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* Left: Public vs Private Access Control */}
+        <div className="space-y-2.5">
+          <label className="block text-xs font-bold text-foreground">
+            កំណត់សិទ្ធិចូលមើលមេរៀន / អត្ថបទ (Visibility: Public or Private)
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => onVisibilityChange("PRIVATE")}
+              className={`p-3 rounded-xl border text-left transition-all space-y-1 ${
+                visibility === "PRIVATE"
+                  ? "border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/20"
+                  : "border-border bg-muted/20 hover:border-border/80"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
+                  <Lock className="w-3.5 h-3.5 text-amber-500" />
+                  <span>ឯកជន (Private)</span>
+                </span>
+                {visibility === "PRIVATE" && <Badge variant="warning">កំពុងជ្រើសរើស</Badge>}
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                សម្រាប់តែសមាជិកក្នុងក្រុម STJ ទើបអាចចូលមើលបាននៅក្នុង Portal។
+              </p>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onVisibilityChange("PUBLIC")}
+              className={`p-3 rounded-xl border text-left transition-all space-y-1 ${
+                visibility === "PUBLIC"
+                  ? "border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/20"
+                  : "border-border bg-muted/20 hover:border-border/80"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
+                  <Globe className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>សាធារណៈ (Public)</span>
+                </span>
+                {visibility === "PUBLIC" && <Badge variant="success">កំពុងជ្រើសរើស</Badge>}
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                មាន Link &amp; QR Code សម្រាប់សិស្សប្អូនចូលមើល និងបង្ហាញលើទំព័រដើម (Blog)។
+              </p>
+            </button>
+          </div>
+        </div>
+
+        {/* Right: Thumbnail & OpenGraph Image */}
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-bold text-foreground">
+              រូបភាពក្របមុខ (Thumbnail &amp; OpenGraph Social Preview)
+            </label>
+            <input
+              ref={thumbInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleThumbUpload}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={uploadingThumb}
+              onClick={() => thumbInputRef.current?.click()}
+              className="h-7 text-[11px] space-x-1 border-primary/40 text-primary"
+            >
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>
+                {uploadingThumb ? "កំពុងបង្ហោះទៅ R2..." : "បង្ហោះរូបភាព Thumbnail (R2)"}
+              </span>
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <input
+              type="url"
+              value={thumbnailUrl}
+              onChange={(e) => updateThumbnail(e.target.value)}
+              placeholder="បញ្ចូល URL រូបភាព Thumbnail ឬចុចប៊ូតុងបង្ហោះទៅ Cloudflare R2..."
+              className="w-full px-3 py-2 text-xs rounded-xl border border-input bg-background"
+            />
+            {thumbnailUrl && (
+              <button
+                type="button"
+                onClick={() => updateThumbnail("")}
+                className="p-2 rounded-lg text-destructive hover:bg-destructive/10 shrink-0"
+                title="លុបរូបភាព Thumbnail"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          {thumbError && <p className="text-[11px] text-destructive">{thumbError}</p>}
+
+          {thumbnailUrl && (
+            <div className="flex items-center gap-3 p-2.5 rounded-xl border border-border bg-muted/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumbnailUrl}
+                alt={effectiveTitle || "Thumbnail preview"}
+                className="w-24 h-14 object-cover rounded-lg border border-border shrink-0"
+              />
+              <div className="min-w-0 flex-1 text-xs">
+                <p className="font-semibold text-foreground truncate">
+                  {effectiveTitle || "គំរូបង្ហាញ OpenGraph & Blog Card"}
+                </p>
+                <p className="text-[10px] text-muted-foreground truncate">
+                  itcstudent.space • OpenGraph Thumbnail Ready
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function CloudflareR2AttachmentManager({
@@ -408,7 +1074,6 @@ export function CloudflareR2AttachmentManager({
         </Badge>
       </div>
 
-      {/* Drag & Drop Upload Dropzone */}
       <input
         ref={fileInputRef}
         type="file"
@@ -588,7 +1253,7 @@ export function RichTextEditor({
   attachments,
   onAttachmentsChange,
   courseCode = "STJ",
-  placeholder = "សរសេរមាតិកាមេរៀន សេចក្តីពន្យល់ គោលបំណងមេរៀន កូដគំរូ ឬអូសទម្លាក់រូបភាព/PDF/វីដេអូ (Drop files to Cloudflare R2)...",
+  placeholder = "សរសេរមាតិកាមេរៀន កូដគំរូ (VS Code) រូបមន្តគណិតវិទ្យា/រូបវិទ្យា (LaTeX) ឬអូសទម្លាក់រូបភាព/PDF/វីដេអូ (Drop files to Cloudflare R2)...",
   minHeightClass = "min-h-[420px]",
   hideInlineAttachments = false,
 }: RichTextEditorProps) {
@@ -599,7 +1264,7 @@ export function RichTextEditor({
 
   const [mode, setMode] = useState<"write" | "html" | "preview">("write");
   const [activePanel, setActivePanel] = useState<
-    null | "color" | "highlight" | "iframe" | "image" | "link"
+    null | "color" | "highlight" | "iframe" | "image" | "link" | "code" | "math"
   >(null);
 
   // Inline tool states
@@ -611,19 +1276,30 @@ export function RichTextEditor({
   const [linkUrlInput, setLinkUrlInput] = useState("");
   const [linkTextInput, setLinkTextInput] = useState("");
 
+  // VS Code Snippet Builder states
+  const [codeLang, setCodeLang] = useState("C / C++");
+  const [codeSnippet, setCodeSnippet] = useState(
+    `#include <stdio.h>\n\nint main() {\n    printf("សួស្តីពិភពលោក! សូមស្វាគមន៍មកកាន់ការសិក្សា C Programming!\\n");\n    return 0;\n}`
+  );
+
+  // Math / Physics / LaTeX Studio states
+  const [latexInput, setLatexInput] = useState(
+    "x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}"
+  );
+  const [latexDisplayMode, setLatexDisplayMode] = useState<"block" | "inline">("block");
+
   // Drag & drop / upload state inside editor
   const [isDraggingOnEditor, setIsDraggingOnEditor] = useState(false);
   const [editorUploading, setEditorUploading] = useState(false);
   const [editorUploadMsg, setEditorUploadMsg] = useState<string | null>(null);
 
-  // Sync incoming value into contentEditable (auto-unescaping any literal <iframe> tags)
   useEffect(() => {
     if (!editorRef.current || mode !== "write") return;
     if (isInternalChange.current) {
       isInternalChange.current = false;
       return;
     }
-    const normalized = normalizeRichHtml(value || "");
+    const normalized = normalizeRichHtml(value || "", false);
     if (editorRef.current.innerHTML !== normalized) {
       editorRef.current.innerHTML = normalized;
     }
@@ -632,7 +1308,7 @@ export function RichTextEditor({
   const syncEditorValue = () => {
     if (!editorRef.current) return;
     isInternalChange.current = true;
-    const normalized = normalizeRichHtml(editorRef.current.innerHTML);
+    const normalized = normalizeRichHtml(editorRef.current.innerHTML, false);
     if (normalized !== editorRef.current.innerHTML) {
       editorRef.current.innerHTML = normalized;
     }
@@ -702,10 +1378,29 @@ export function RichTextEditor({
     setActivePanel(null);
   };
 
-  /**
-   * Uploads dropped, pasted, or selected files to Cloudflare R2 and embeds them directly into the editor
-   * AND appends non-image files to the lesson's R2 attachments list!
-   */
+  const handleInsertVSCodeSnippet = () => {
+    if (!codeSnippet.trim()) return;
+    const escaped = codeSnippet
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    insertHtmlSnippet(
+      `<pre data-lang="${codeLang}" style="background:#1e1e1e;color:#d4d4d4;padding:14px 16px;border-radius:12px;font-family:monospace;font-size:12.5px;overflow-x:auto;border:1px solid #2d2d30;margin:14px 0;"><code>${escaped}</code></pre><p><br/></p>`
+    );
+    setActivePanel(null);
+  };
+
+  const handleInsertLatexFormula = () => {
+    const clean = latexInput.trim();
+    if (!clean) return;
+    if (latexDisplayMode === "block") {
+      insertHtmlSnippet(`<p>$$${clean}$$</p><p><br/></p>`);
+    } else {
+      insertHtmlSnippet(`<span>$${clean}$</span>&nbsp;`);
+    }
+    setActivePanel(null);
+  };
+
   const handleFilesIntoEditor = async (files: FileList | File[]) => {
     if (!files || files.length === 0) return;
     setEditorUploading(true);
@@ -716,7 +1411,8 @@ export function RichTextEditor({
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const isImage = file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
+        const isImage =
+          file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
         const uploaded = await uploadSingleFileToR2(file, courseCode);
 
         if (isImage) {
@@ -767,11 +1463,6 @@ export function RichTextEditor({
     }
   };
 
-  /**
-   * Smart Paste Handler:
-   * - Intercepts pasted files/images from clipboard and uploads them to R2
-   * - Intercepts pasted `<iframe ...></iframe>` or YouTube links and embeds them as responsive video players
-   */
   const handleEditorPaste = async (e: React.ClipboardEvent<HTMLDivElement>) => {
     const clipboardFiles = e.clipboardData?.files;
     if (clipboardFiles && clipboardFiles.length > 0) {
@@ -783,7 +1474,6 @@ export function RichTextEditor({
     const pastedText = e.clipboardData?.getData("text/plain")?.trim() || "";
     if (!pastedText) return;
 
-    // Auto-convert pasted <iframe> code or standalone YouTube watch/short URLs
     const isIframeCode = /^<iframe[\s\S]*<\/iframe>$/i.test(pastedText);
     const isYoutubeUrl =
       /^https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)[A-Za-z0-9_-]{6,}/i.test(
@@ -850,19 +1540,12 @@ export function RichTextEditor({
     );
   };
 
-  const handleInsertCodeBlock = () => {
-    insertHtmlSnippet(
-      `<pre style="background:#0f172a;color:#e2e8f0;padding:14px 16px;border-radius:12px;font-family:monospace;font-size:12px;overflow-x:auto;border:1px solid #1e293b;margin:12px 0;"><code>#include &lt;stdio.h&gt;\n\nint main() {\n    printf("Hello STJ ITC!\\n");\n    return 0;\n}</code></pre><p><br/></p>`
-    );
-  };
-
   const plainText = (value || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
   const wordCount = plainText ? plainText.split(" ").length : 0;
   const charCount = plainText.length;
 
   return (
     <div className="space-y-4">
-      {/* Hidden file inputs for inline editor Image & R2 File Drop buttons */}
       <input
         ref={inlineImageInputRef}
         type="file"
@@ -884,7 +1567,6 @@ export function RichTextEditor({
         {/* Top Professional Formatting Ribbon */}
         <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 border-b border-border bg-muted/40">
           <div className="flex flex-wrap items-center gap-1">
-            {/* Headings & Font Size */}
             <button
               type="button"
               onClick={() => exec("formatBlock", "H1")}
@@ -931,7 +1613,6 @@ export function RichTextEditor({
 
             <span className="w-px h-4 bg-border mx-1" />
 
-            {/* Inline Styles */}
             <button
               type="button"
               onClick={() => exec("bold")}
@@ -965,7 +1646,6 @@ export function RichTextEditor({
               <Strikethrough className="w-3.5 h-3.5" />
             </button>
 
-            {/* Text Color & Highlight Color Buttons */}
             <button
               type="button"
               onClick={() => setActivePanel((p) => (p === "color" ? null : "color"))}
@@ -995,7 +1675,6 @@ export function RichTextEditor({
 
             <span className="w-px h-4 bg-border mx-1" />
 
-            {/* Alignment */}
             <button
               type="button"
               onClick={() => exec("justifyLeft")}
@@ -1031,7 +1710,6 @@ export function RichTextEditor({
 
             <span className="w-px h-4 bg-border mx-1" />
 
-            {/* Lists & Checklist */}
             <button
               type="button"
               onClick={() => exec("insertUnorderedList")}
@@ -1059,7 +1737,35 @@ export function RichTextEditor({
 
             <span className="w-px h-4 bg-border mx-1" />
 
-            {/* Media & R2 Tools: Image, Iframe/YouTube, Drop File R2, Link */}
+            {/* Media, VS Code, LaTeX Math/Physics & R2 Tools */}
+            <button
+              type="button"
+              onClick={() => setActivePanel((p) => (p === "code" ? null : "code"))}
+              className={`px-2 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1 ${
+                activePanel === "code"
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted text-cyan-400"
+              }`}
+              title="បញ្ចូលកូដពណ៌ដូច VS Code (VS Code Syntax Block)"
+            >
+              <Code className="w-3.5 h-3.5" />
+              <span className="text-[11px]">VS Code</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActivePanel((p) => (p === "math" ? null : "math"))}
+              className={`px-2 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1 ${
+                activePanel === "math"
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted text-purple-400"
+              }`}
+              title="បញ្ចូលរូបមន្តគណិតវិទ្យា រូបវិទ្យា និង LaTeX (Math / Physics / LaTeX)"
+            >
+              <Sigma className="w-3.5 h-3.5" />
+              <span className="text-[11px]">Math / LaTeX</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setActivePanel((p) => (p === "image" ? null : "image"))}
@@ -1114,7 +1820,6 @@ export function RichTextEditor({
 
             <span className="w-px h-4 bg-border mx-1" />
 
-            {/* Rich Blocks */}
             <button
               type="button"
               onClick={handleInsertCallout}
@@ -1132,15 +1837,6 @@ export function RichTextEditor({
             >
               <Table className="w-3.5 h-3.5" />
               <span className="hidden sm:inline text-[11px]">តារាង</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleInsertCodeBlock}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-foreground text-xs font-medium inline-flex items-center gap-1"
-              title="បញ្ចូលកូដគំរូ (Code Block)"
-            >
-              <Code className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Code</span>
             </button>
             <button
               type="button"
@@ -1232,7 +1928,7 @@ export function RichTextEditor({
           </div>
         </div>
 
-        {/* Inline Action Panels (Color, Highlight, Iframe/YouTube, Image, Link) */}
+        {/* Inline Action Panels */}
         {activePanel === "color" && (
           <div className="px-4 py-2.5 border-b border-border bg-muted/30 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div className="flex flex-wrap items-center gap-2">
@@ -1305,6 +2001,191 @@ export function RichTextEditor({
             >
               <X className="w-4 h-4" />
             </button>
+          </div>
+        )}
+
+        {/* VS Code Snippet Builder Panel */}
+        {activePanel === "code" && (
+          <div className="p-4 border-b border-border bg-slate-950/90 space-y-3 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Code className="w-4 h-4 text-cyan-400" />
+                <span className="font-bold text-foreground">
+                  បញ្ចូលកូដពណ៌ដូច VS Code (VS Code Dark+ Syntax Highlighting)
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <select
+                  value={codeLang}
+                  onChange={(e) => setCodeLang(e.target.value)}
+                  className="px-2.5 py-1 rounded-lg border border-border bg-background text-xs font-mono"
+                >
+                  <option value="C / C++">C / C++</option>
+                  <option value="Python">Python</option>
+                  <option value="JavaScript / TS">JavaScript / TypeScript</option>
+                  <option value="SQL">SQL Database</option>
+                  <option value="Java">Java</option>
+                  <option value="HTML / CSS">HTML / CSS</option>
+                </select>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleInsertVSCodeSnippet}
+                  className="h-7 text-xs"
+                >
+                  ដាក់បញ្ចូលកូដ (Insert VS Code)
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setActivePanel(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+              <textarea
+                rows={6}
+                value={codeSnippet}
+                onChange={(e) => setCodeSnippet(e.target.value)}
+                placeholder="សរសេរ ឬបិទភ្ជាប់កូដ C, C++, Python, JS នៅទីនេះ..."
+                className="w-full p-3 rounded-xl border border-slate-800 bg-[#1e1e1e] text-slate-200 font-mono text-xs leading-relaxed focus:outline-none"
+              />
+              <div className="max-h-52 overflow-y-auto">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: highlightCodeToVSCodeWindow(codeSnippet, codeLang),
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Math, Physics & LaTeX Formula Studio Panel */}
+        {activePanel === "math" && (
+          <div className="p-4 border-b border-border bg-muted/30 space-y-3 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Sigma className="w-4 h-4 text-purple-400" />
+                <span className="font-bold text-foreground">
+                  សរសេររូបមន្តគណិតវិទ្យា រូបវិទ្យា គីមីវិទ្យា និង LaTeX (Math / Physics / LaTeX Studio)
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center rounded-lg border border-border bg-background p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setLatexDisplayMode("block")}
+                    className={`px-2 py-1 rounded text-[11px] font-medium ${
+                      latexDisplayMode === "block"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    សមីការពេញបន្ទាត់ ($$...$$)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLatexDisplayMode("inline")}
+                    className={`px-2 py-1 rounded text-[11px] font-medium ${
+                      latexDisplayMode === "inline"
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    ក្នុងអត្ថបទ ($...$)
+                  </button>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleInsertLatexFormula}
+                  className="h-7 text-xs"
+                >
+                  ដាក់បញ្ចូលរូបមន្ត
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => setActivePanel(null)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] font-semibold text-primary mr-1">គណិតវិទ្យា៖</span>
+                {MATH_PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => setLatexInput(p.latex)}
+                    className="px-2 py-1 rounded-md border border-border bg-background hover:border-primary/50 text-[11px]"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] font-semibold text-emerald-500 mr-1">
+                  រូបវិទ្យា &amp; គីមី៖
+                </span>
+                {PHYSICS_CHEM_PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => setLatexInput(p.latex)}
+                    className="px-2 py-1 rounded-md border border-border bg-background hover:border-emerald-500/50 text-[11px]"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-1">
+                <span className="text-[11px] text-muted-foreground mr-1">និមិត្តសញ្ញា៖</span>
+                {GREEK_SYMBOLS.map((g) => (
+                  <button
+                    key={g.tex}
+                    type="button"
+                    onClick={() => setLatexInput((cur) => `${cur} ${g.tex}`)}
+                    className="w-7 h-7 rounded border border-border bg-background hover:bg-primary/10 font-serif text-sm"
+                    title={g.tex}
+                  >
+                    {g.sym}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-center">
+              <div>
+                <label className="block text-[11px] text-muted-foreground mb-1">
+                  កូដ LaTeX (អាចសរសេរ `$$...$$` ឬ `$...$` ផ្ទាល់ក្នុងអត្ថបទក៏បាន)៖
+                </label>
+                <textarea
+                  rows={3}
+                  value={latexInput}
+                  onChange={(e) => setLatexInput(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-input bg-background font-mono text-xs"
+                  placeholder="\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}"
+                />
+              </div>
+              <div>
+                <span className="block text-[11px] text-muted-foreground mb-1">
+                  រូបរាងសមីការ (Live Formula Preview)៖
+                </span>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: renderLatexToMathHtml(latexInput, true),
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
 
@@ -1542,7 +2423,7 @@ export function RichTextEditor({
               onBlur={syncEditorValue}
               onPaste={handleEditorPaste}
               data-placeholder={placeholder}
-              className={`${minHeightClass} p-5 text-sm text-foreground leading-relaxed focus:outline-none prose prose-sm dark:prose-invert max-w-none empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground [&_h1]:text-xl [&_h1]:font-extrabold [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mt-2.5 [&_h2]:mb-1.5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:my-2 [&_pre]:bg-muted [&_pre]:p-3.5 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:text-xs [&_pre]:my-2 [&_a]:text-primary [&_a]:underline [&_hr]:my-4 [&_hr]:border-border [&_img]:rounded-xl [&_img]:my-2 [&_iframe]:w-full [&_iframe]:rounded-xl`}
+              className={`${minHeightClass} p-5 text-sm text-foreground leading-relaxed focus:outline-none prose prose-sm dark:prose-invert max-w-none empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground [&_h1]:text-xl [&_h1]:font-extrabold [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mt-2.5 [&_h2]:mb-1.5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:my-2 [&_pre]:bg-[#1e1e1e] [&_pre]:text-[#d4d4d4] [&_pre]:p-3.5 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:text-xs [&_pre]:my-2 [&_a]:text-primary [&_a]:underline [&_hr]:my-4 [&_hr]:border-border [&_img]:rounded-xl [&_img]:my-2 [&_iframe]:w-full [&_iframe]:rounded-xl`}
             />
           </div>
         )}
@@ -1561,7 +2442,7 @@ export function RichTextEditor({
             </span>
           </div>
           <span>
-            គាំទ្រ Paste YouTube / &lt;iframe&gt; • Drag &amp; Drop រូបភាព/PDF/Video ទៅ Cloudflare R2
+            VS Code Syntax • Math/Physics LaTeX ($$...$$) • YouTube/Iframe • Cloudflare R2 Drop
           </span>
         </div>
       </div>
@@ -1578,7 +2459,7 @@ export function RichTextEditor({
 }
 
 /**
- * Safe HTML & Cloudflare R2 Attachments Viewer for Course Members and Leaders
+ * Safe HTML, VS Code Dark+ Code Blocks, LaTeX Math/Physics & Cloudflare R2 Attachments Viewer
  */
 export function RichContentViewer({
   richContent,
@@ -1591,7 +2472,7 @@ export function RichContentViewer({
 }) {
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
 
-  const normalizedRich = normalizeRichHtml(richContent);
+  const normalizedRich = normalizeRichHtml(richContent, true);
   const hasRich = Boolean(normalizedRich && normalizedRich.trim());
   const hasNotes = Boolean(notes && notes.trim());
   const hasAttachments = Array.isArray(attachments) && attachments.length > 0;
@@ -1604,7 +2485,7 @@ export function RichContentViewer({
     <div className="space-y-3 mt-2">
       {hasRich ? (
         <div
-          className="text-xs sm:text-sm text-foreground/90 leading-relaxed space-y-2 [&_h1]:text-lg [&_h1]:font-extrabold [&_h1]:text-foreground [&_h1]:mt-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:text-foreground [&_pre]:bg-muted [&_pre]:p-3 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:text-xs [&_pre]:overflow-x-auto [&_a]:text-primary [&_a]:underline [&_hr]:my-3 [&_hr]:border-border [&_img]:rounded-xl [&_img]:max-w-full [&_iframe]:w-full [&_iframe]:rounded-xl"
+          className="text-xs sm:text-sm text-foreground/90 leading-relaxed space-y-2 [&_h1]:text-lg [&_h1]:font-extrabold [&_h1]:text-foreground [&_h1]:mt-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:text-foreground [&_a]:text-primary [&_a]:underline [&_hr]:my-3 [&_hr]:border-border [&_img]:rounded-xl [&_img]:max-w-full [&_iframe]:w-full [&_iframe]:rounded-xl"
           dangerouslySetInnerHTML={{ __html: normalizedRich }}
         />
       ) : hasNotes ? (

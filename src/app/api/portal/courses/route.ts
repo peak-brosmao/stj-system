@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
 import { fetchLiveMembersLookup, LiveMembersLookup } from "@/lib/memberSync";
-import { decodeRichNotes, isSyllabusSession } from "@/lib/richContent";
+import {
+  decodeRichNotes,
+  getDefaultCourseThumbnail,
+  isSyllabusSession,
+  SYLLABUS_MARKER_ROOM,
+  SYLLABUS_MARKER_TITLE,
+} from "@/lib/richContent";
+import { syncSessionsToBlogCache } from "@/lib/blogStore";
 
 export const dynamic = "force-dynamic";
 
@@ -89,7 +96,13 @@ function normalizeCourse(
   for (const bs of matchingBackendSessions) {
     const decoded = decodeRichNotes(bs.notes);
     if (isSyllabusSession(bs)) {
-      syllabusData = decoded;
+      if (
+        bs.status === "SYLLABUS" ||
+        bs.room === SYLLABUS_MARKER_ROOM ||
+        bs.title === SYLLABUS_MARKER_TITLE
+      ) {
+        syllabusData = decoded;
+      }
       continue;
     }
     sessionMap.set(String(bs.id), {
@@ -97,6 +110,10 @@ function normalizeCourse(
       notes: decoded.notes,
       richContent: decoded.richContent,
       attachments: decoded.attachments,
+      visibility: decoded.visibility || "PRIVATE",
+      thumbnailUrl: decoded.thumbnailUrl || getDefaultCourseThumbnail(courseCode),
+      authorNameKh: decoded.authorNameKh,
+      authorNameEn: decoded.authorNameEn,
     });
   }
 
@@ -121,6 +138,10 @@ function normalizeCourse(
         notes: bs.notes,
         richContent: bs.richContent,
         attachments: bs.attachments,
+        visibility: bs.visibility || "PRIVATE",
+        thumbnailUrl: bs.thumbnailUrl || getDefaultCourseThumbnail(courseCode),
+        authorNameKh: bs.authorNameKh,
+        authorNameEn: bs.authorNameEn,
       });
     }
   }
@@ -132,6 +153,10 @@ function normalizeCourse(
           notes: enriched.notes,
           richContent: enriched.richContent,
           attachments: enriched.attachments,
+          visibility: enriched.visibility || "PRIVATE",
+          thumbnailUrl: enriched.thumbnailUrl || getDefaultCourseThumbnail(courseCode),
+          authorNameKh: enriched.authorNameKh,
+          authorNameEn: enriched.authorNameEn,
         }
       : decodeRichNotes(s.notes);
 
@@ -145,6 +170,10 @@ function normalizeCourse(
       notes: decoded.notes,
       richContent: decoded.richContent,
       attachments: decoded.attachments,
+      visibility: decoded.visibility || "PRIVATE",
+      thumbnailUrl: decoded.thumbnailUrl || getDefaultCourseThumbnail(courseCode),
+      authorNameKh: decoded.authorNameKh || leaderName,
+      authorNameEn: decoded.authorNameEn || "Course Leader",
     };
   });
 

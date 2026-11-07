@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const scope = await resolveLeaderScope();
-  if (!scope.authenticated || (!scope.isSystemAdmin && !scope.isCourseLeader)) {
+  if (!scope.authenticated) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -27,10 +27,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const scope = await resolveLeaderScope();
-  if (!scope.authenticated || (!scope.isSystemAdmin && !scope.isCourseLeader)) {
+  if (!scope.authenticated) {
     return NextResponse.json(
-      { error: "អ្នកមិនមានសិទ្ធិបង្ហោះឯកសារមេរៀនឡើយ (Unauthorized)" },
-      { status: 403 }
+      { error: "សូមចូលគណនីជាមុនសិនដើម្បីបង្ហោះឯកសារ (Unauthorized)" },
+      { status: 401 }
     );
   }
 
@@ -57,7 +57,12 @@ export async function POST(req: NextRequest) {
     const fileType = String(body?.fileType || "application/octet-stream");
     const courseCode = String(body?.courseCode || "STJ");
 
-    if (scope.isCourseLeader && courseCode !== "STJ" && !scope.matchesCourse(courseCode)) {
+    if (
+      scope.isCourseLeader &&
+      courseCode !== "STJ" &&
+      courseCode !== "BLOG" &&
+      !scope.matchesCourse(courseCode)
+    ) {
       return NextResponse.json(
         { error: "អ្នកអាចបង្ហោះឯកសារសម្រាប់តែមុខវិជ្ជារបស់អ្នកប៉ុណ្ណោះ" },
         { status: 403 }
@@ -82,7 +87,12 @@ export async function POST(req: NextRequest) {
       const file = formData.get("file");
       const courseCode = String(formData.get("courseCode") || "STJ");
 
-      if (scope.isCourseLeader && courseCode !== "STJ" && !scope.matchesCourse(courseCode)) {
+      if (
+        scope.isCourseLeader &&
+        courseCode !== "STJ" &&
+        courseCode !== "BLOG" &&
+        !scope.matchesCourse(courseCode)
+      ) {
         return NextResponse.json(
           { error: "អ្នកអាចបង្ហោះឯកសារសម្រាប់តែមុខវិជ្ជារបស់អ្នកប៉ុណ្ណោះ" },
           { status: 403 }

@@ -55,6 +55,7 @@ export function Navbar() {
     { href: "/structure", label: t("nav.structure") },
     { href: "/about", label: t("nav.about") },
     { href: "/programs", label: t("nav.programs") },
+    { href: "/blog", label: "អត្ថបទ & មេរៀន (Blog)" },
     { href: "/activities", label: t("nav.activities") },
     { href: "/news", label: t("nav.news") },
     { href: "/contact", label: t("nav.contact") },

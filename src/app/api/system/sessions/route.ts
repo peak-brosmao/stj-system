@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch } from "@/lib/backendProxy";
+import { getSession } from "@/lib/auth";
 import { resolveLeaderScope } from "@/lib/leaderScope";
 import {
   encodeRichNotes,
@@ -8,6 +9,12 @@ import {
   SYLLABUS_MARKER_TITLE,
   SYLLABUS_MARKER_ROOM,
 } from "@/lib/richContent";
+import {
+  normalizeSessionToBlogOrLesson,
+  removeBlogCacheItem,
+  syncSessionsToBlogCache,
+  upsertBlogCacheItem,
+} from "@/lib/blogStore";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +33,9 @@ export async function GET(req: NextRequest) {
 
   let rawCourses: any[] = Array.isArray(data.courses) ? data.courses : [];
   let rawSessions: any[] = Array.isArray(data.sessions) ? data.sessions : [];
+
+  // Sync all fetched sessions into blog cache for public/portal access
+  syncSessionsToBlogCache(rawSessions);
 
   // Strict Course Leader scoping: only return their own assigned courses and sessions
   if (scope.isCourseLeader) {
@@ -50,6 +60,8 @@ export async function GET(req: NextRequest) {
       notes: string;
       richContent: string;
       attachments: any[];
+      visibility?: "PRIVATE" | "PUBLIC";
+      thumbnailUrl?: string;
     }
   > = {};
 
@@ -61,16 +73,20 @@ export async function GET(req: NextRequest) {
     const cid = String(s.courseId || s.course?.id || code);
 
     if (isSyllabusSession(s)) {
-      const entry = {
-        sessionId: String(s.id),
-        courseId: cid,
-        courseCode: code,
-        notes: decoded.notes,
-        richContent: decoded.richContent,
-        attachments: decoded.attachments,
-      };
-      if (code) courseSyllabuses[code] = entry;
-      if (cid) courseSyllabuses[cid] = entry;
+      if (s.status === "SYLLABUS" || s.room === SYLLABUS_MARKER_ROOM || s.title === SYLLABUS_MARKER_TITLE) {
+        const entry = {
+          sessionId: String(s.id),
+          courseId: cid,
+          courseCode: code,
+          notes: decoded.notes,
+          richContent: decoded.richContent,
+          attachments: decoded.attachments,
+          visibility: decoded.visibility || "PRIVATE",
+          thumbnailUrl: decoded.thumbnailUrl,
+        };
+        if (code) courseSyllabuses[code] = entry;
+        if (cid) courseSyllabuses[cid] = entry;
+      }
       continue;
     }
 
@@ -79,6 +95,11 @@ export async function GET(req: NextRequest) {
       notes: decoded.notes,
       richContent: decoded.richContent,
       attachments: decoded.attachments,
+      visibility: decoded.visibility || "PRIVATE",
+      thumbnailUrl: decoded.thumbnailUrl,
+      category: decoded.category,
+      authorNameKh: decoded.authorNameKh,
+      authorNameEn: decoded.authorNameEn,
     });
   }
 
@@ -110,10 +131,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const userSession = await getSession();
   const encodedNotes = encodeRichNotes({
     notes: body.notes,
     richContent: body.richContent,
     attachments: body.attachments,
+    visibility: body.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
+    thumbnailUrl: body.thumbnailUrl,
+    category: body.category,
+    authorId: userSession?.id,
+    authorStudentId: userSession?.studentId || undefined,
+    authorNameKh: userSession?.fullNameKh || userSession?.fullNameEn || "ប្រធានមុខវិជ្ជា STJ",
+    authorNameEn: userSession?.fullNameEn || userSession?.fullNameKh || "STJ Course Leader",
+    authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា (Course Leader)",
   });
 
   // Handle saving Course Syllabus / Overview
@@ -178,6 +208,10 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify(payload),
   });
   const data = await res.json().catch(() => null);
+  if (res.ok && data?.session) {
+    const normalized = normalizeSessionToBlogOrLesson(data.session);
+    if (normalized) upsertBlogCacheItem(normalized);
+  }
   return NextResponse.json(data || { success: res.ok }, { status: res.status });
 }
 
@@ -219,19 +253,31 @@ async function handleUpdateOrDelete(req: NextRequest, method: "PUT" | "PATCH" | 
       method: "DELETE",
     });
     const data = await res.json().catch(() => null);
+    removeBlogCacheItem(sessionId);
     return NextResponse.json(data || { success: res.ok }, { status: res.status });
   }
 
+  const userSession = await getSession();
   const updatePayload: Record<string, any> = { ...body };
   if (
     "notes" in updatePayload ||
     "richContent" in updatePayload ||
-    "attachments" in updatePayload
+    "attachments" in updatePayload ||
+    "visibility" in updatePayload ||
+    "thumbnailUrl" in updatePayload
   ) {
     updatePayload.notes = encodeRichNotes({
       notes: updatePayload.notes,
       richContent: updatePayload.richContent,
       attachments: updatePayload.attachments,
+      visibility: updatePayload.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
+      thumbnailUrl: updatePayload.thumbnailUrl,
+      category: updatePayload.category,
+      authorId: userSession?.id,
+      authorStudentId: userSession?.studentId || undefined,
+      authorNameKh: userSession?.fullNameKh || userSession?.fullNameEn || "ប្រធានមុខវិជ្ជា STJ",
+      authorNameEn: userSession?.fullNameEn || userSession?.fullNameKh || "STJ Course Leader",
+      authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា (Course Leader)",
     });
   }
 
@@ -240,6 +286,10 @@ async function handleUpdateOrDelete(req: NextRequest, method: "PUT" | "PATCH" | 
     body: JSON.stringify(updatePayload),
   });
   const data = await res.json().catch(() => null);
+  if (res.ok && data?.session) {
+    const normalized = normalizeSessionToBlogOrLesson(data.session);
+    if (normalized) upsertBlogCacheItem(normalized);
+  }
   return NextResponse.json(data || { success: res.ok }, { status: res.status });
 }
 

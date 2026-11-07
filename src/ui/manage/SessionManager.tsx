@@ -14,12 +14,17 @@ import {
   Check,
   BookOpen,
   FileText,
+  Globe,
+  Lock,
+  QrCode,
+  X,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
 import { extractPlainTextSnippet, type CourseAttachment } from "@/lib/richContent";
+import { LessonBlogSharePanel } from "@/ui/RichTextEditor";
 
 interface CourseOption {
   id: string;
@@ -41,6 +46,8 @@ interface SessionItem {
   notes?: string | null;
   richContent?: string;
   attachments?: CourseAttachment[];
+  visibility?: "PRIVATE" | "PUBLIC";
+  thumbnailUrl?: string;
   course: { id: string; code: string; titleKh: string };
   _count: { attendance: number };
   shareToken?: string | null;
@@ -69,6 +76,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sharingId, setSharingId] = useState<string | null>(null);
+  const [qrModalSession, setQrModalSession] = useState<SessionItem | null>(null);
 
   const attendanceHref =
     portalType === "leader" ? "/leader/attendance" : "/system/attendance";
@@ -193,6 +201,37 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
       alert("មានបញ្ហាក្នុងការចម្លងតំណភ្ជាប់ចែករំលែកវត្តមាន");
     } finally {
       setSharingId(null);
+    }
+  };
+
+  const handleToggleVisibility = async (
+    s: SessionItem,
+    nextVisibility: "PRIVATE" | "PUBLIC"
+  ) => {
+    setSessions((prev) =>
+      prev.map((item) => (item.id === s.id ? { ...item, visibility: nextVisibility } : item))
+    );
+    setQrModalSession((prev) =>
+      prev && prev.id === s.id ? { ...prev, visibility: nextVisibility } : prev
+    );
+    try {
+      await fetch("/api/blog", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: s.id,
+          title: s.title,
+          notes: s.notes || "",
+          richContent: s.richContent || "",
+          attachments: s.attachments || [],
+          visibility: nextVisibility,
+          thumbnailUrl: s.thumbnailUrl,
+          courseId: s.courseId || s.course?.id,
+          courseCode: s.course?.code || s.courseCode,
+        }),
+      });
+    } catch {
+      // ignore
     }
   };
 
@@ -363,10 +402,34 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
             return (
               <Card key={s.id} className="hover:border-primary/40 transition-colors">
                 <CardContent className="p-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
-                      {courseCode}
-                    </span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                        {courseCode}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setQrModalSession(s)}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-colors ${
+                          s.visibility === "PUBLIC"
+                            ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/25"
+                            : "bg-amber-500/10 text-amber-500 border-amber-500/30 hover:bg-amber-500/20"
+                        }`}
+                        title="ចុចដើម្បីប្តូរ Public / Private និងយក Link ឬ QR Code សម្រាប់មេរៀននេះ"
+                      >
+                        {s.visibility === "PUBLIC" ? (
+                          <>
+                            <Globe className="w-3 h-3" />
+                            <span>សាធារណៈ (Public)</span>
+                          </>
+                        ) : (
+                          <>
+                            <Lock className="w-3 h-3" />
+                            <span>ឯកជន (Private)</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                     <Badge variant={s.status === "COMPLETED" ? "success" : "info"}>
                       {s.status === "COMPLETED"
                         ? "បានបង្រៀនរួច (Completed)"
@@ -377,6 +440,11 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     <h3 className="text-sm font-bold text-foreground">{s.title}</h3>
                     <p className="text-xs text-muted-foreground">{courseTitleKh}</p>
                   </div>
+                  {(s.richContent || s.notes) && (
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {extractPlainTextSnippet(s.richContent, s.notes, 140)}
+                    </p>
+                  )}
                   <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground pt-2 border-t border-border">
                     <div className="flex items-center space-x-1.5">
                       <Clock className="w-3.5 h-3.5 text-primary" />
@@ -416,6 +484,17 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       វត្តមានកត់ត្រា៖ <strong className="text-foreground">{marked}</strong>
                     </span>
                     <div className="flex flex-wrap items-center gap-1.5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setQrModalSession(s)}
+                        className="h-7 text-xs space-x-1 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10"
+                        title="បើក Link មេរៀន និង QR Code (អាចកំណត់ Public ឱ្យសិស្សប្អូនមើល ឬ Private សម្រាប់សមាជិក)"
+                      >
+                        <QrCode className="w-3 h-3" />
+                        <span>តំណមេរៀន &amp; QR</span>
+                      </Button>
+
                       <Button
                         variant="outline"
                         size="sm"
@@ -486,6 +565,53 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
             </div>
           )}
         </div>
+
+        {/* Single-Lesson Share Link, Public/Private Toggle & QR Code Modal */}
+        {qrModalSession && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-md rounded-2xl bg-card border border-border shadow-2xl p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-border">
+                <div>
+                  <span className="text-[11px] font-mono font-bold text-primary">
+                    {qrModalSession.course?.code || qrModalSession.courseCode || "STJ"}
+                  </span>
+                  <h3 className="text-sm font-bold text-foreground line-clamp-1">
+                    {qrModalSession.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setQrModalSession(null)}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <LessonBlogSharePanel
+                title={qrModalSession.title}
+                shareUrl={
+                  typeof window !== "undefined"
+                    ? `${window.location.origin}/blog/${qrModalSession.id}`
+                    : `/blog/${qrModalSession.id}`
+                }
+                visibility={qrModalSession.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE"}
+                onVisibilityChange={(vis) => handleToggleVisibility(qrModalSession, vis)}
+              />
+
+              <div className="flex justify-end gap-2 pt-2 border-t border-border">
+                <Link
+                  href={`/blog/${qrModalSession.id}`}
+                  target="_blank"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>បើកទំព័រមេរៀននេះ (Open Single Lesson Page)</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </PortalLayout>
   );

@@ -29,6 +29,7 @@ import {
   Sliders,
   CheckCircle2,
   Layers,
+  PenTool,
 } from "lucide-react";
 import { useI18n } from "@/ui/i18n/I18nProvider";
 import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
@@ -124,6 +125,7 @@ export function PortalLayout({
     { href: "/system/dashboard", label: "nav.dashboard", icon: LayoutDashboard },
     { href: "/system/attendance", label: "nav.attendance", icon: CalendarCheck },
     { href: "/system/sessions", label: "nav.sessions", icon: CalendarDays },
+    { href: "/portal/blog", label: "អត្ថបទ & មេរៀន (Blog)", icon: PenTool },
     { href: "/system/members", label: "nav.members", icon: Users },
     { href: "/system/leaders", label: "nav.leaders", icon: UserCheck },
     { href: "/system/courses", label: "nav.courses", icon: BookOpen },
@@ -143,6 +145,7 @@ export function PortalLayout({
     { href: "/leader/members", label: "nav.myMembers", icon: Users },
     { href: "/leader/attendance", label: "nav.myAttendance", icon: CalendarCheck },
     { href: "/leader/sessions", label: "nav.sessions", icon: CalendarDays },
+    { href: "/portal/blog", label: "អត្ថបទ & មេរៀន (Blog)", icon: PenTool },
     { href: "/leader/reports", label: "nav.reports", icon: FileBarChart },
     { href: "/leader/share-links", label: "nav.shareLinks", icon: Share2 },
     { href: "/leader/announcements", label: "nav.announcements", icon: Megaphone },
@@ -156,6 +159,7 @@ export function PortalLayout({
     { href: "/portal/attendance", label: "nav.myAttendance", icon: CalendarCheck },
     { href: "/portal/courses", label: "nav.myCourses", icon: BookOpen },
     { href: "/portal/schedule", label: "nav.schedule", icon: CalendarDays },
+    { href: "/portal/blog", label: "អត្ថបទ & មេរៀន (Blog)", icon: PenTool },
     { href: "/portal/announcements", label: "nav.announcements", icon: Megaphone },
     { href: "/portal/notifications", label: "nav.notifications", icon: Bell },
     { href: "/portal/correction-requests", label: "nav.correctionRequests", icon: FileText },
@@ -264,7 +268,9 @@ export function PortalLayout({
                 }`}
               >
                 <Icon className={`w-4 h-4 shrink-0 ${active ? "text-primary-foreground" : "text-muted-foreground"}`} />
-                <span className="truncate">{t(item.label)}</span>
+                <span className="truncate">
+                  {item.label.startsWith("nav.") ? t(item.label) : item.label}
+                </span>
               </Link>
             );
           })}

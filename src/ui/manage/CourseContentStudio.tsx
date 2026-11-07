@@ -22,6 +22,8 @@ import { Badge } from "@/ui/Badge";
 import {
   RichTextEditor,
   CloudflareR2AttachmentManager,
+  ThumbnailAndVisibilityCard,
+  LessonBlogSharePanel,
 } from "@/ui/RichTextEditor";
 import type { CourseAttachment } from "@/lib/richContent";
 
@@ -63,6 +65,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
     status: "SCHEDULED",
     richContent: "",
     attachments: [] as CourseAttachment[],
+    visibility: "PRIVATE" as "PRIVATE" | "PUBLIC",
+    thumbnailUrl: "",
   });
 
   const loadInitialData = useCallback(async () => {
@@ -114,6 +118,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
           title: `មាតិកាមុខវិជ្ជា ${defaultCourse.code} - ${defaultCourse.titleKh}`,
           richContent: existingSyl?.richContent || existingSyl?.notes || "",
           attachments: Array.isArray(existingSyl?.attachments) ? existingSyl.attachments : [],
+          visibility: existingSyl?.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
+          thumbnailUrl: existingSyl?.thumbnailUrl || "",
         }));
       } else if (sessionIdParam) {
         const target = sessions.find((s) => String(s.id) === sessionIdParam);
@@ -131,6 +137,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
             richContent:
               target.richContent || (target.notes ? `<p>${target.notes}</p>` : ""),
             attachments: Array.isArray(target.attachments) ? target.attachments : [],
+            visibility: target.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
+            thumbnailUrl: target.thumbnailUrl || "",
           });
         }
       } else if (defaultCourse) {
@@ -174,6 +182,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
             richContent: form.richContent,
             notes: plainSummary,
             attachments: form.attachments,
+            visibility: form.visibility,
+            thumbnailUrl: form.thumbnailUrl,
           }),
         });
         const d = await res.json().catch(() => null);
@@ -203,6 +213,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
         notes: plainSummary,
         richContent: form.richContent,
         attachments: form.attachments,
+        visibility: form.visibility,
+        thumbnailUrl: form.thumbnailUrl,
       };
 
       const res = await fetch("/api/system/sessions", {
@@ -462,6 +474,32 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                   )}
                 </CardContent>
               </Card>
+
+              {/* Thumbnail, OpenGraph & Public/Private Visibility Card */}
+              {!isSyllabusMode && (
+                <ThumbnailAndVisibilityCard
+                  visibility={form.visibility}
+                  onVisibilityChange={(vis) => setForm((prev) => ({ ...prev, visibility: vis }))}
+                  thumbnailUrl={form.thumbnailUrl}
+                  onThumbnailChange={(url) => setForm((prev) => ({ ...prev, thumbnailUrl: url }))}
+                  courseCode={activeCourse?.code || "STJ"}
+                  titlePreview={form.title}
+                />
+              )}
+
+              {/* Direct Lesson Share Link & QR Code if editing an existing lesson */}
+              {!isSyllabusMode && sessionIdParam && (
+                <LessonBlogSharePanel
+                  title={form.title || "មេរៀន STJ"}
+                  shareUrl={
+                    typeof window !== "undefined"
+                      ? `${window.location.origin}/blog/${sessionIdParam}`
+                      : `/blog/${sessionIdParam}`
+                  }
+                  visibility={form.visibility}
+                  onVisibilityChange={(vis) => setForm((prev) => ({ ...prev, visibility: vis }))}
+                />
+              )}
 
               {/* Cloudflare R2 Attachments Manager Card */}
               <CloudflareR2AttachmentManager
