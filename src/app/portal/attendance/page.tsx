@@ -45,31 +45,10 @@ export default function MyAttendancePage() {
   const [courseFilter, setCourseFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const cached = localStorage.getItem("stj_user_profile");
-        if (cached) return JSON.parse(cached);
-      } catch {}
-    }
-    return null;
-  });
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
 
-  const [isExecutive, setIsExecutive] = useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const cached = localStorage.getItem("stj_user_profile");
-        if (cached) {
-          const u = JSON.parse(cached);
-          if (u.memberId === "STJ001" || u.memberId === "STJ002" || u.role === "ប្រធាន STJ" || u.role === "គណៈគ្រប់គ្រង") {
-            return true;
-          }
-        }
-      } catch {}
-    }
-    return false;
-  });
+  const [isExecutive, setIsExecutive] = useState(false);
   const [executiveCourses, setExecutiveCourses] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
   const [overallStats, setOverallStats] = useState({
@@ -80,6 +59,25 @@ export default function MyAttendancePage() {
   });
 
   useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        const profile = data.profile;
+        if (!profile) return;
+        const user = {
+          ...profile,
+          memberId: profile.member?.memberId,
+          studentId: profile.member?.studentId || profile.studentId,
+          fullNameKh: profile.fullNameKh,
+          fullNameEn: profile.fullNameEn,
+          departmentCode: profile.member?.department?.code,
+          role: profile.userRoles?.[0]?.role?.name,
+        };
+        setCurrentUser(user);
+        setIsExecutive(["STJ001", "STJ002"].includes(user.memberId) || ["STJ_PRESIDENT", "STUDENT_ASSOCIATION", "STJ_ADMIN"].includes(user.role));
+      })
+      .catch(() => {});
+
     fetch(`/api/portal/attendance?course=${courseFilter}&status=${statusFilter}`)
       .then((res) => res.json())
       .then((data) => {
@@ -563,4 +561,3 @@ export default function MyAttendancePage() {
     </PortalLayout>
   );
 }
-

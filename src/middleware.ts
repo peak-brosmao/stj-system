@@ -9,6 +9,7 @@ const SESSION_COOKIE_NAME = "stj_session";
 
 const ADMIN_ROLES = ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "STUDENT_ASSOCIATION"];
 const LEADER_ROLES = ["COURSE_LEADER", ...ADMIN_ROLES];
+const ATTENDANCE_ROLES = ["STJ_PRESIDENT", "STUDENT_ASSOCIATION", "COURSE_LEADER"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -85,6 +86,25 @@ export async function middleware(req: NextRequest) {
 
   // 5. System administration routes (/system/* and /api/system/*)
   if (pathname.startsWith("/system") || pathname.startsWith("/api/system")) {
+    const isAttendanceRoute =
+      pathname === "/system/attendance" ||
+      pathname.startsWith("/api/system/attendance");
+
+    if (isAttendanceRoute) {
+      if (!roles.some((role) => ATTENDANCE_ROLES.includes(role))) {
+        if (pathname.startsWith("/api/")) {
+          return NextResponse.json(
+            { error: "Forbidden: Attendance management privileges required" },
+            { status: 403 }
+          );
+        }
+        return NextResponse.redirect(
+          new URL(isAuthenticated ? "/portal/member" : "/portal/login", req.url)
+        );
+      }
+      return NextResponse.next();
+    }
+
     // API endpoints that course leaders are authorized to read for team management
     const leaderAllowedApis = [
       "/api/system/members",

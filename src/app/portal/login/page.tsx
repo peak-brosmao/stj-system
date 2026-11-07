@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Lock,
+  Eye,
+  EyeOff,
   Mail,
   ArrowRight,
   AlertCircle,
@@ -22,8 +24,17 @@ function LoginContent() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [supportTelegram, setSupportTelegram] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetch("/api/auth/support-contact")
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => setSupportTelegram(data?.telegram || null))
+      .catch(() => setSupportTelegram(null));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,37 +55,7 @@ function LoginContent() {
       }
 
       if (data.user) {
-        try {
-          const userRoles = data.user.roles || [];
-          let role = "សមាជិក STJ";
-          if (
-            userRoles.includes("SUPER_ADMIN") ||
-            userRoles.includes("STJ_PRESIDENT") ||
-            data.user.memberId === "STJ002" ||
-            data.user.studentId === "e20221334"
-          ) {
-            role = "ប្រធាន STJ";
-          } else if (userRoles.includes("COURSE_LEADER")) {
-            role = "ប្រធានក្រុម";
-          } else if (
-            userRoles.includes("STJ_ADMIN") ||
-            userRoles.includes("STUDENT_ASSOCIATION") ||
-            data.user.memberId === "STJ001"
-          ) {
-            role = "គណៈគ្រប់គ្រង";
-          }
-
-          localStorage.setItem(
-            "stj_user_profile",
-            JSON.stringify({
-              name: data.user.fullNameKh || data.user.fullNameEn || "សមាជិក STJ",
-              role,
-              email: data.user.email,
-              memberId: data.user.memberId,
-              avatar: data.user.profileImage || "",
-            })
-          );
-        } catch {}
+        router.refresh();
       }
 
       // Dynamic automatic redirect based on verified server-side role
@@ -146,23 +127,33 @@ function LoginContent() {
                 <label className="text-xs font-medium text-foreground">
                   {t("auth.password")}
                 </label>
-                <Link
-                  href="/contact"
+                <a
+                  href={supportTelegram ? `https://t.me/${supportTelegram.replace(/^@/, "")}` : "/contact"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[11px] text-primary hover:underline"
                 >
                   {t("auth.forgotPassword")}
-                </Link>
+                </a>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
+                  className="w-full pl-9 pr-10 py-2 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((visible) => !visible)}
+                  aria-label={showPassword ? "លាក់លេខសម្ងាត់" : "បង្ហាញលេខសម្ងាត់"}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 

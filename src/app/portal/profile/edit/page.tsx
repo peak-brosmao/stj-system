@@ -35,6 +35,7 @@ export default function ProfileEditPage() {
 
   // Editable fields
   const [displayName, setDisplayName] = useState("");
+  const [fullNameKh, setFullNameKh] = useState("");
   const [phone, setPhone] = useState("");
   const [telegram, setTelegram] = useState("");
   const [bio, setBio] = useState("");
@@ -57,6 +58,7 @@ export default function ProfileEditPage() {
           const p = data.profile;
           setProfile(p);
           setDisplayName(p.displayName || "");
+          setFullNameKh(p.fullNameKh || "");
           setPhone(p.phone || "");
           setTelegram(p.telegram || "");
           setBio(p.bio || "");
@@ -81,6 +83,7 @@ export default function ProfileEditPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           displayName,
+          fullNameKh,
           phone,
           telegram,
           bio,
@@ -294,6 +297,18 @@ export default function ProfileEditPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
+                    ឈ្មោះជាភាសាខ្មែរ (Khmer Name)
+                  </label>
+                  <input
+                    type="text"
+                    value={fullNameKh}
+                    onChange={(e) => setFullNameKh(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
+                    placeholder="ឧ. ពៀក ប្រុសម៉ៅ"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1.5">
                     លេខទូរស័ព្ទ (Phone Number)
                   </label>
                   <input
@@ -458,4 +473,3 @@ export default function ProfileEditPage() {
     </PortalLayout>
   );
 }
-

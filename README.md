@@ -139,13 +139,13 @@ JWT_SECRET="<SECURE_RANDOM_SECRET_KEY_MIN_32_CHARS>"
 NODE_ENV="production"
 
 # Application Settings
-NEXT_PUBLIC_APP_URL="https://stj.peakbrosmao.me"
+NEXT_PUBLIC_APP_URL="https://itcstudent.space"
 NEXT_PUBLIC_DEFAULT_LOCALE="km"
 TIMEZONE="Asia/Phnom_Penh"
 
 # API Integration
-NEXT_PUBLIC_API_URL="https://datastj.peakbrosmao.me/api"
-LARAVEL_API_URL="https://datastj.peakbrosmao.me/api"
+NEXT_PUBLIC_API_URL="https://api.itcstudent.space/api"
+LARAVEL_API_URL="https://api.itcstudent.space/api"
 ```
 
 ### Production deployment rule
@@ -156,6 +156,26 @@ production database on the backend server and configure the frontend only with
 the backend API URL and server-side secrets. Run migrations and seeders
 manually on the backend when an intentional schema or initial-data change is
 required.
+
+### STJ roster reset and import
+
+The backend seeder contains the verified 2026-2027 roster and course mapping.
+It intentionally replaces STJ application data, while preserving users that
+are not linked to an STJ member. Before running it on the backend server,
+create a database backup and verify the backend `.env` points to the intended
+database:
+
+```bash
+php artisan optimize:clear
+php artisan migrate --force
+php artisan db:seed --class=Database\\Seeders\\StjDatabaseSeeder --force
+```
+
+The import creates 39 unique member accounts. Each account uses the student ID
+as the username/identifier and `student_id@ITC!` as the initial password. The
+member `e20250861` is enrolled in both Physics and Mathematics, as specified
+by the supplied mapping. Do not run this seeder against a production database
+without a verified backup.
 
 ---
 

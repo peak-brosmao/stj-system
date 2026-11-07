@@ -23,6 +23,7 @@ import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { useI18n } from "@/components/i18n/I18nProvider";
 
 interface CourseOption {
   id: string;
@@ -54,11 +55,13 @@ interface MemberItem {
 }
 
 export default function SystemMembersPage() {
+  const { t } = useI18n();
   const [members, setMembers] = useState<MemberItem[]>([]);
   const [departments, setDepartments] = useState<Array<{ id: string; code: string }>>([]);
   const [academicYears, setAcademicYears] = useState<Array<{ id: string; code: string }>>([]);
   const [courses, setCourses] = useState<CourseOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [deptFilter, setDeptFilter] = useState("ALL");
   const [yearFilter, setYearFilter] = useState("ALL");
@@ -97,8 +100,15 @@ export default function SystemMembersPage() {
 
   const loadMembers = () => {
     setLoading(true);
+    setError(null);
     fetch("/api/system/members")
-      .then((res) => res.json())
+      .then(async (res) => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(data?.error || "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
+        }
+        return data;
+      })
       .then((data) => {
         if (data.members) setMembers(data.members);
         if (data.departments) {
@@ -119,6 +129,10 @@ export default function SystemMembersPage() {
             setNewMember((prev) => ({ ...prev, assignedCourse: data.courses[0].code }));
           }
         }
+      })
+      .catch((err: unknown) => {
+        setMembers([]);
+        setError(err instanceof Error ? err.message : "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
       })
       .finally(() => setLoading(false));
   };
@@ -304,18 +318,23 @@ export default function SystemMembersPage() {
   return (
     <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
       <div className="space-y-6">
+        {error && (
+          <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
+            {error}
+          </div>
+        )}
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border">
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Users className="w-4 h-4" />
-              <span>STJ Members Registry</span>
+              <span>{t("members.title")}</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-              គ្រប់គ្រងសមាជិកបង្រៀនស្ម័គ្រចិត្ត (Tutors &amp; Leaders)
+              {t("members.title")}
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              បញ្ជីសមាជិកផ្លូវការទាំង {members.length} នាក់ នៃកម្មវិធី STJ ឆ្នាំសិក្សា ២០២៦-២០២៧
+              {t("members.title")} ({members.length})
             </p>
           </div>
 
@@ -336,7 +355,7 @@ export default function SystemMembersPage() {
               className="text-xs space-x-1.5"
             >
               <UserPlus className="w-3.5 h-3.5" />
-              <span>បញ្ចូលសមាជិកថ្មី</span>
+              <span>{t("members.addMember")}</span>
             </Button>
           </div>
         </div>
@@ -349,7 +368,7 @@ export default function SystemMembersPage() {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="ស្វែងរកតាមឈ្មោះ អត្តលេខ STJ ឬលេខនិស្សិត..."
+              placeholder={t("common.search")}
               className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary"
             />
           </div>
@@ -360,7 +379,7 @@ export default function SystemMembersPage() {
               onChange={(e) => setCourseFilter(e.target.value)}
               className="text-xs border border-input rounded-lg p-1.5 bg-background text-foreground font-medium"
             >
-              <option value="ALL">គ្រប់មុខវិជ្ជា (All Courses)</option>
+              <option value="ALL">{t("common.all")} {t("courses.name")}</option>
               {courses.map((c) => (
                 <option key={c.id} value={c.code}>
                   [{c.code}] {c.titleKh}
@@ -373,7 +392,7 @@ export default function SystemMembersPage() {
               onChange={(e) => setDeptFilter(e.target.value)}
               className="text-xs border border-input rounded-lg p-1.5 bg-background text-foreground"
             >
-              <option value="ALL">គ្រប់ដេប៉ាតឺម៉ង់ (All Depts)</option>
+              <option value="ALL">{t("common.all")} {t("members.department")}</option>
               {departments.map((d) => (
                 <option key={d.id} value={d.code}>
                   {d.code}
@@ -386,7 +405,7 @@ export default function SystemMembersPage() {
               onChange={(e) => setYearFilter(e.target.value)}
               className="text-xs border border-input rounded-lg p-1.5 bg-background text-foreground"
             >
-              <option value="ALL">គ្រប់កម្រិត (All Years)</option>
+              <option value="ALL">{t("common.all")} {t("members.academicYear")}</option>
               {academicYears.map((y) => (
                 <option key={y.id} value={y.code}>
                   {y.code}
@@ -399,9 +418,9 @@ export default function SystemMembersPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="text-xs border border-input rounded-lg p-1.5 bg-background text-foreground"
             >
-              <option value="ALL">គ្រប់ស្ថានភាព</option>
-              <option value="ACTIVE">សកម្ម (Active)</option>
-              <option value="ARCHIVED">បណ្ណសារ (Archived)</option>
+              <option value="ALL">{t("common.all")} {t("members.status")}</option>
+              <option value="ACTIVE">{t("members.active")}</option>
+              <option value="ARCHIVED">{t("members.archived")}</option>
             </select>
 
             <Button variant="ghost" size="sm" onClick={loadMembers} className="h-8 px-2">
@@ -416,14 +435,14 @@ export default function SystemMembersPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">អត្តលេខ STJ</th>
-                  <th className="py-3 px-4 font-semibold">អត្តលេខ ITC</th>
-                  <th className="py-3 px-4 font-semibold">គោត្តនាម-នាម</th>
-                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជា (Course)</th>
-                  <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់</th>
-                  <th className="py-3 px-4 font-semibold">កម្រិត</th>
-                  <th className="py-3 px-4 font-semibold">ស្ថានភាព</th>
-                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.memberId")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.studentId")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.fullNameKh")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("courses.name")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.department")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.academicYear")}</th>
+                  <th className="py-3 px-4 font-semibold">{t("members.status")}</th>
+                  <th className="py-3 px-4 font-semibold text-right">{t("common.actions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -444,12 +463,12 @@ export default function SystemMembersPage() {
                         {m.memberId === "STJ001" ? (
                           <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                             <ShieldCheck className="w-3 h-3" />
-                            <span>សមាគមនិស្សិត</span>
+                            <span>{t("members.studentAssociation")}</span>
                           </span>
                         ) : m.memberId === "STJ002" ? (
                           <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
                             <Award className="w-3 h-3" />
-                            <span>ប្រធាន STJ</span>
+                            <span>{t("members.stjPresident")}</span>
                           </span>
                         ) : (
                           (() => {
@@ -473,7 +492,7 @@ export default function SystemMembersPage() {
                             }
 
                             if (memberCourseList.length === 0) {
-                              return <span className="text-[11px] text-muted-foreground italic">ពុំមានបង្រៀន</span>;
+                              return <span className="text-[11px] text-muted-foreground italic">{t("members.noTeaching")}</span>;
                             }
 
                             return (
@@ -497,7 +516,7 @@ export default function SystemMembersPage() {
                       <td className="py-3 px-4 font-medium">{yearBadge}</td>
                       <td className="py-3 px-4">
                         <Badge variant={m.status === "ACTIVE" ? "success" : "secondary"}>
-                          {m.status === "ACTIVE" ? "សកម្ម" : "បណ្ណសារ"}
+                          {m.status === "ACTIVE" ? t("members.active") : t("members.archived")}
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -510,7 +529,7 @@ export default function SystemMembersPage() {
                             title="កែប្រែព័ត៌មាន និងប្តូរមុខវិជ្ជា (Edit & Reassign Course)"
                           >
                             <Edit2 className="w-3 h-3" />
-                            <span>កែប្រែ</span>
+                            <span>{t("members.editMember")}</span>
                           </Button>
                           <Button
                             variant="outline"
@@ -551,7 +570,7 @@ export default function SystemMembersPage() {
                 {filteredMembers.length === 0 && (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      {loading ? "កំពុងទាញយកទិន្នន័យ..." : "ពុំមានសមាជិកត្រូវបង្ហាញឡើយ"}
+                      {loading ? t("common.loading") : t("members.noMembers")}
                     </td>
                   </tr>
                 )}
@@ -568,7 +587,7 @@ export default function SystemMembersPage() {
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <div>
                     <h3 className="font-bold text-sm text-foreground">
-                      កែប្រែព័ត៌មាន និងប្តូរមុខវិជ្ជា (Edit Member &amp; Course)
+                      {t("members.editTitle")}
                     </h3>
                     <p className="text-[11px] text-muted-foreground font-mono">
                       {editingMember.memberId} • {editingMember.studentId}
@@ -590,14 +609,14 @@ export default function SystemMembersPage() {
                   <div className="p-3.5 rounded-xl bg-primary/5 border border-primary/20 space-y-2">
                     <div className="flex items-center justify-between">
                       <label className="block font-semibold text-primary">
-                        មុខវិជ្ជាទទួលបន្ទុកបង្រៀន (ជ្រើសរើសបានច្រើនមុខវិជ្ជា)
+                        {t("members.teachingCourses")}
                       </label>
                       <span className="text-[10px] text-muted-foreground font-mono">
                         {courses.filter((c) =>
                           editingMember.courseIds.some(
                             (item) => item === c.id || item === c.code || item.toUpperCase().includes(c.code.toUpperCase())
                           )
-                        ).length} មុខវិជ្ជា
+                        ).length} {t("members.courseCount")}
                       </span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 pt-1">
@@ -641,13 +660,13 @@ export default function SystemMembersPage() {
                       })}
                     </div>
                     <p className="text-[10px] text-muted-foreground leading-relaxed pt-1">
-                      សមាជិកម្នាក់អាចទទួលបន្ទុកបង្រៀន ២ ទៅ ៣ មុខវិជ្ជាដំណាលគ្នាបាន។ ប្រសិនបើជាថ្នាក់ដឹកនាំមិនបង្រៀន (ដូចជា STJ001 ឬ STJ002) សូមដោះធីកទាំងអស់។
+                      {t("members.courseNote")}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">គោត្តនាម-នាម (ខ្មែរ) *</label>
+                      <label className="block font-medium mb-1">{t("members.fullNameKh")} *</label>
                       <input
                         type="text"
                         required
@@ -657,7 +676,7 @@ export default function SystemMembersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">ឈ្មោះឡាតាំង *</label>
+                      <label className="block font-medium mb-1">{t("members.fullNameEn")} *</label>
                       <input
                         type="text"
                         required
@@ -670,7 +689,7 @@ export default function SystemMembersPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">ដេប៉ាតឺម៉ង់ *</label>
+                      <label className="block font-medium mb-1">{t("members.department")} *</label>
                       <select
                         value={editingMember.departmentId}
                         onChange={(e) => setEditingMember({ ...editingMember, departmentId: e.target.value })}
@@ -685,7 +704,7 @@ export default function SystemMembersPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">កម្រិតសិក្សា *</label>
+                      <label className="block font-medium mb-1">{t("members.academicYear")} *</label>
                       <select
                         value={editingMember.academicYearId}
                         onChange={(e) => setEditingMember({ ...editingMember, academicYearId: e.target.value })}
@@ -703,7 +722,7 @@ export default function SystemMembersPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">លេខទូរស័ព្ទ</label>
+                      <label className="block font-medium mb-1">{t("members.phone")}</label>
                       <input
                         type="text"
                         placeholder="+855 ..."
@@ -713,7 +732,7 @@ export default function SystemMembersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">អ៊ីមែលផ្លូវការ</label>
+                      <label className="block font-medium mb-1">{t("members.email")}</label>
                       <input
                         type="email"
                         value={editingMember.email}
@@ -733,10 +752,10 @@ export default function SystemMembersPage() {
                         setEditingMember(null);
                       }}
                     >
-                      បោះបង់
+                      {t("common.cancel")}
                     </Button>
                     <Button type="submit" size="sm">
-                      រក្សាទុកការកែប្រែ
+                      {t("members.saveChanges")}
                     </Button>
                   </div>
                 </form>
@@ -751,7 +770,7 @@ export default function SystemMembersPage() {
             <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <h3 className="font-bold text-sm">បញ្ចូលសមាជិកសិក្សាថ្មី (Add Member)</h3>
+                  <h3 className="font-bold text-sm">{t("members.addMember")}</h3>
                   <button
                     onClick={() => setIsAddModalOpen(false)}
                     className="p-1 rounded text-muted-foreground hover:text-foreground"
@@ -763,16 +782,16 @@ export default function SystemMembersPage() {
                 <form onSubmit={handleCreateMember} className="space-y-3 text-xs">
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">អត្តលេខ STJ (Auto-Redeem ស្វ័យប្រវត្ត)</label>
+                      <label className="block font-medium mb-1">{t("members.autoMemberId")}</label>
                       <input
                         type="text"
                         readOnly
-                        value={newMember.memberId || "ស្វ័យប្រវត្ត (Auto-Generated)"}
+                        value={newMember.memberId || t("members.autoMemberId")}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-muted/60 font-mono font-bold text-primary cursor-not-allowed"
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">អត្តលេខនិស្សិត ITC (Student ID) *</label>
+                      <label className="block font-medium mb-1">{t("members.studentId")} *</label>
                       <input
                         type="text"
                         required
@@ -786,7 +805,7 @@ export default function SystemMembersPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">គោត្តនាម-នាម (ខ្មែរ) *</label>
+                      <label className="block font-medium mb-1">{t("members.fullNameKh")} *</label>
                       <input
                         type="text"
                         required
@@ -797,7 +816,7 @@ export default function SystemMembersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">ឈ្មោះឡាតាំង *</label>
+                      <label className="block font-medium mb-1">{t("members.fullNameEn")} *</label>
                       <input
                         type="text"
                         required
@@ -810,7 +829,7 @@ export default function SystemMembersPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">មុខវិជ្ជាទទួលខុសត្រូវ (Assigned Course) *</label>
+                    <label className="block font-medium mb-1">{t("members.assignedCourse")} *</label>
                     <select
                       value={newMember.assignedCourse}
                       onChange={(e) => setNewMember({ ...newMember, assignedCourse: e.target.value })}
@@ -827,7 +846,7 @@ export default function SystemMembersPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">ដេប៉ាតឺម៉ង់ *</label>
+                      <label className="block font-medium mb-1">{t("members.department")} *</label>
                       <select
                         value={newMember.departmentId}
                         onChange={(e) => setNewMember({ ...newMember, departmentId: e.target.value })}
@@ -841,7 +860,7 @@ export default function SystemMembersPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">កម្រិតសិក្សា *</label>
+                      <label className="block font-medium mb-1">{t("members.academicYear")} *</label>
                       <select
                         value={newMember.academicYearId}
                         onChange={(e) => setNewMember({ ...newMember, academicYearId: e.target.value })}
@@ -858,7 +877,7 @@ export default function SystemMembersPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">លេខទូរស័ព្ទ</label>
+                      <label className="block font-medium mb-1">{t("members.phone")}</label>
                       <input
                         type="text"
                         placeholder="+855 ..."
@@ -868,7 +887,7 @@ export default function SystemMembersPage() {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">អ៊ីមែល</label>
+                      <label className="block font-medium mb-1">{t("members.email")}</label>
                       <input
                         type="email"
                         placeholder="student@itc.edu.kh"
@@ -886,10 +905,10 @@ export default function SystemMembersPage() {
                       size="sm"
                       onClick={() => setIsAddModalOpen(false)}
                     >
-                      បោះបង់
+                      {t("common.cancel")}
                     </Button>
                     <Button type="submit" size="sm">
-                      រក្សាទុក
+                      {t("common.save")}
                     </Button>
                   </div>
                 </form>

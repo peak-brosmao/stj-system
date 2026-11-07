@@ -8,7 +8,7 @@ export const LARAVEL_API_BASE =
   process.env.NEXT_PUBLIC_API_URL ||
   (process.env.NODE_ENV === "development"
     ? "http://127.0.0.1:8000/api"
-    : "https://datastj.peakbrosmao.me/api");
+    : "https://api.itcstudent.space/api");
 
 export async function fetchFromLaravel(endpoint: string, options: RequestInit = {}) {
   const url = `${LARAVEL_API_BASE}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
@@ -28,4 +28,3 @@ export async function fetchFromLaravel(endpoint: string, options: RequestInit = 
     return null;
   }
 }
-

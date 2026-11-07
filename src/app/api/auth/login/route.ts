@@ -25,9 +25,14 @@ export async function POST(req: NextRequest) {
   });
 
   if (!response.ok) {
-    return NextResponse.json(await response.json().catch(() => ({ error: "Invalid credentials" })), {
-      status: response.status,
-    });
+    const body = await response.json().catch(() => null);
+    const error =
+      response.status === 404
+        ? "Backend authentication endpoint is unavailable. Please deploy the latest backend."
+        : body && typeof body.error === "string"
+          ? body.error
+          : "Invalid credentials";
+    return NextResponse.json({ error }, { status: response.status });
   }
 
   const data = await response.json();

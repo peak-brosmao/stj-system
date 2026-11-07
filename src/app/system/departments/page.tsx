@@ -74,7 +74,7 @@ export default function SystemDepartmentsPage() {
       code: dept.code,
       nameKh: dept.nameKh,
       nameEn: dept.nameEn,
-      nameFr: dept.nameFr,
+      nameFr: dept.nameFr || "",
       description: dept.description || "",
     });
     setErrorMsg(null);

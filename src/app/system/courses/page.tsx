@@ -6,6 +6,7 @@ import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { useI18n } from "@/components/i18n/I18nProvider";
 
 interface CourseItem {
   id: string;
@@ -45,6 +46,7 @@ interface CourseFormData {
 }
 
 export default function SystemCoursesPage() {
+  const { t } = useI18n();
   const [courses, setCourses] = useState<CourseItem[]>([]);
   const [eligibleLeaders, setEligibleLeaders] = useState<LeaderOption[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +63,14 @@ export default function SystemCoursesPage() {
     setError(null);
     try {
       const res = await fetch("/api/system/courses");
-      if (!res.ok) throw new Error("មិនអាចទាញយកទិន្នន័យមុខវិជ្ជាពី Database បានឡើយ");
+      if (res.status === 401) {
+        window.location.href = `/system/login?callbackUrl=${encodeURIComponent("/system/courses")}`;
+        return;
+      }
+      if (!res.ok) {
+        const responseData = await res.json().catch(() => null);
+        throw new Error(responseData?.error || "មិនអាចទាញយកទិន្នន័យមុខវិជ្ជាពី Database បានឡើយ");
+      }
       const data = await res.json();
       setCourses(data.courses || []);
       setEligibleLeaders(data.eligibleLeaders || []);
@@ -140,19 +149,19 @@ export default function SystemCoursesPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <BookOpen className="w-4 h-4" />
-              <span>កម្មវិធីសិក្សាផ្លូវការ</span>
+              <span>{t("courses.title")}</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ការគ្រប់គ្រងមុខវិជ្ជាសិក្សា
+              {t("courses.title")}
             </h1>
             <p className="text-xs text-muted-foreground">
-              គ្រប់គ្រងមុខវិជ្ជាស្នូល ចាត់តាំងប្រធានមុខវិជ្ជា និងរក្សាទុកផ្ទាល់ក្នុង Database
+              {t("courses.assignedLeaders")} · {t("courses.enrolledMembers")}
             </p>
           </div>
 
           <Button size="sm" onClick={openCreateModal} className="text-xs space-x-1.5">
             <Plus className="w-3.5 h-3.5" />
-            <span>បង្កើតមុខវិជ្ជាថ្មី (New Course)</span>
+            <span>{t("courses.addCourse")}</span>
           </Button>
         </div>
 

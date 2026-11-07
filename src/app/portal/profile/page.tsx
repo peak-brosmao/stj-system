@@ -108,7 +108,7 @@ export default function MyProfilePage() {
                       fill
                       sizes="(max-width: 640px) 96px, 112px"
                       className="object-cover object-center"
-                      unoptimized={profile.profileImage.startsWith("https://datastj.peakbrosmao.me")}
+                      unoptimized={profile.profileImage.startsWith("https://api.itcstudent.space")}
                     />
                   ) : (
                     <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold">

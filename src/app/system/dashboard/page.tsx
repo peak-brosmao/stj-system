@@ -29,6 +29,7 @@ import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { useI18n } from "@/components/i18n/I18nProvider";
 
 interface DashboardData {
   summary: {
@@ -55,50 +56,66 @@ interface DashboardData {
 const COLORS = ["#2563eb", "#3b82f6", "#60a5fa", "#93c5fd", "#bfdbfe"];
 
 export default function SystemDashboardPage() {
+  const { t } = useI18n();
   const [data, setData] = useState<DashboardData | null>(null);
   const [selectedAcademicYear, setSelectedAcademicYear] = useState("2026-2027");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setError(null);
+    setLoading(true);
     fetch("/api/system/stats")
-      .then((res) => res.json())
+      .then(async (res) => {
+        const responseData = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(responseData?.error || t("system.databaseError"));
+        }
+        return responseData;
+      })
       .then((resData) => {
+        if (!resData || resData.success === false || !resData.summary || !resData.charts) {
+          throw new Error(t("system.databaseError"));
+        }
         setData(resData);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err: unknown) => {
+        setData(null);
+        setError(err instanceof Error ? err.message : t("system.databaseError"));
         setLoading(false);
       });
   }, [selectedAcademicYear]);
 
-  const summary = data?.summary || {
-    totalMembers: 0,
-    activeMembers: 0,
-    totalLeaders: 0,
-    totalCourses: 0,
-    totalSessions: 0,
-    attendanceRate: 0,
-  };
+  const summary = data?.summary;
+  const deptData = data?.charts.deptDistribution || [];
+  const yearData = data?.charts.yearDistribution || [];
 
-  const deptData = data?.charts?.deptDistribution || [];
-
-  const yearData = data?.charts?.yearDistribution || [];
+  if (error || loading || !data || !summary) {
+    return (
+      <PortalLayout portalType="system" userRole={t("system.president")} userName="ផល ដាវីត">
+        <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
+          {error || t("common.loading")}
+        </div>
+      </PortalLayout>
+    );
+  }
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole={t("system.president")} userName="ផល ដាវីត">
       <div className="space-y-6">
         {/* Banner with Academic Year Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
           <div>
             <div className="inline-flex items-center space-x-2 text-xs font-semibold text-primary mb-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>STJ Central Command • វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា</span>
+              <span>{t("system.centralCommand")}</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ផ្ទាំងគ្រប់គ្រងប្រព័ន្ធកណ្តាល (System Administration)
+              {t("system.dashboardTitle")}
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              គ្រប់គ្រងសមាជិករៀមច្បងស្ម័គ្រចិត្ត មុខវិជ្ជា កាលវិភាគ និងស្រង់វត្តមានបង្រៀន (សម្រាប់សមាជិក STJ តែប៉ុណ្ណោះ)
+              {t("system.dashboardDescription")}
             </p>
           </div>
 
@@ -108,20 +125,20 @@ export default function SystemDashboardPage() {
               onChange={(e) => setSelectedAcademicYear(e.target.value)}
               className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-input bg-card text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             >
-              <option value="2026-2027">ឆ្នាំសិក្សា ២០២៦~២០២៧ (បច្ចុប្បន្ន)</option>
-              <option value="2027-2028">ឆ្នាំសិក្សា ២០២៧~២០២៨</option>
-              <option value="2025-2026">ឆ្នាំសិក្សា ២០២៥~២០២៦ (ប័ណ្ណសារ)</option>
+              <option value="2026-2027">{t("system.academicYearCurrent")}</option>
+              <option value="2027-2028">{t("system.academicYearNext")}</option>
+              <option value="2025-2026">{t("system.academicYearArchive")}</option>
             </select>
             <Link href="/system/attendance">
               <Button size="sm" className="space-x-1.5 text-xs">
                 <CalendarCheck className="w-3.5 h-3.5" />
-                <span>ស្រង់វត្តមានឥឡូវនេះ</span>
+                <span>{t("system.takeAttendanceNow")}</span>
               </Button>
             </Link>
             <Link href="/system/members">
               <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
                 <UserPlus className="w-3.5 h-3.5" />
-                <span>បញ្ចូលសមាជិក</span>
+                <span>{t("system.addMemberAction")}</span>
               </Button>
             </Link>
           </div>
@@ -132,12 +149,12 @@ export default function SystemDashboardPage() {
           <Card>
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between text-muted-foreground">
-                <span className="text-[11px] font-medium">សមាជិករៀមច្បង</span>
+                <span className="text-[11px] font-medium">{t("system.membersMetric")}</span>
                 <Users className="w-4 h-4 text-primary" />
               </div>
               <p className="text-xl font-bold text-foreground">{summary.totalMembers}</p>
               <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-                {summary.activeMembers} នាក់ (សកម្មផ្លូវការ)
+                {summary.activeMembers} {t("system.people")} ({t("system.officialActive")})
               </p>
             </CardContent>
           </Card>
@@ -145,45 +162,45 @@ export default function SystemDashboardPage() {
           <Card>
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between text-muted-foreground">
-                <span className="text-[11px] font-medium">គណៈដឹកនាំ & ប្រធាន</span>
+                <span className="text-[11px] font-medium">{t("system.leadersMetric")}</span>
                 <Award className="w-4 h-4 text-primary" />
               </div>
               <p className="text-xl font-bold text-foreground">{summary.totalLeaders}</p>
-              <p className="text-[10px] text-muted-foreground">រៀមច្បងទទួលបន្ទុក</p>
+              <p className="text-[10px] text-muted-foreground">{t("system.responsibleMembers")}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between text-muted-foreground">
-                <span className="text-[11px] font-medium">មុខវិជ្ជាសកម្ម</span>
+                <span className="text-[11px] font-medium">{t("system.activeCourses")}</span>
                 <BookOpen className="w-4 h-4 text-primary" />
               </div>
               <p className="text-xl font-bold text-foreground">{summary.totalCourses}</p>
-              <p className="text-[10px] text-muted-foreground">Programming, Math...</p>
+              <p className="text-[10px] text-muted-foreground">{t("system.programmingMath")}</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between text-muted-foreground">
-                <span className="text-[11px] font-medium">វគ្គបង្រៀន</span>
+                <span className="text-[11px] font-medium">{t("system.teachingSessions")}</span>
                 <CalendarDays className="w-4 h-4 text-primary" />
               </div>
               <p className="text-xl font-bold text-foreground">{summary.totalSessions}</p>
-              <p className="text-[10px] text-muted-foreground">ឆមាសទី១</p>
+              <p className="text-[10px] text-muted-foreground">{t("system.semesterOne")}</p>
             </CardContent>
           </Card>
 
           <Card className="col-span-2 border-primary/30 bg-primary/5">
             <CardContent className="p-4 space-y-1">
               <div className="flex items-center justify-between text-primary">
-                <span className="text-[11px] font-bold">អត្រាវត្តមានទូទៅ (Overall Attendance)</span>
+                <span className="text-[11px] font-bold">{t("system.overallAttendance")}</span>
                 <Percent className="w-4 h-4" />
               </div>
               <p className="text-2xl font-extrabold text-primary">{summary.attendanceRate}%</p>
               <p className="text-[10px] text-muted-foreground">
-                រូបមន្តផ្លូវការ៖ (វត្តមាន + មកយឺត) ÷ (សរុប - ច្បាប់)
+                {t("system.attendanceFormula")}
               </p>
             </CardContent>
           </Card>
@@ -195,7 +212,7 @@ export default function SystemDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold">
-                ការបែងចែកសមាជិកតាមដេប៉ាតឺម៉ង់ (Members by Department)
+                {t("system.membersByDepartment")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-2">
@@ -223,7 +240,7 @@ export default function SystemDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold">
-                ការបែងចែកសមាជិកតាមកម្រិតសិក្សា (Members by Year)
+                {t("system.membersByYear")}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-2 flex flex-col sm:flex-row items-center justify-around">
@@ -262,7 +279,7 @@ export default function SystemDashboardPage() {
                       style={{ backgroundColor: COLORS[idx % COLORS.length] }}
                     />
                     <span className="font-medium text-foreground">{item.name}:</span>
-                    <span className="text-muted-foreground">{item.count} នាក់</span>
+                    <span className="text-muted-foreground">{item.count} {t("system.people")}</span>
                   </div>
                 ))}
               </div>
@@ -275,15 +292,15 @@ export default function SystemDashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <div>
               <CardTitle className="text-sm font-semibold">
-                វគ្គបង្រៀនចុងក្រោយ (Recent Teaching Sessions)
+                {t("system.recentSessions")}
               </CardTitle>
               <p className="text-xs text-muted-foreground">
-                វគ្គសិក្សាដែលបានរៀបចំ និងកត់ត្រាវត្តមានរួចរាល់
+                {t("system.recentSessionsDescription")}
               </p>
             </div>
             <Link href="/system/sessions">
               <Button variant="ghost" size="sm" className="text-xs space-x-1">
-                <span>មើលទាំងអស់</span>
+                <span>{t("system.viewAll")}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Button>
             </Link>
@@ -293,11 +310,11 @@ export default function SystemDashboardPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-y border-border">
                   <tr>
-                    <th className="py-2.5 px-4 font-semibold">ចំណងជើងវគ្គបង្រៀន</th>
-                    <th className="py-2.5 px-4 font-semibold">មុខវិជ្ជា</th>
-                    <th className="py-2.5 px-4 font-semibold">កាលបរិច្ឆេទ</th>
-                    <th className="py-2.5 px-4 font-semibold">ស្ថានភាព</th>
-                    <th className="py-2.5 px-4 font-semibold text-right">សកម្មភាព</th>
+                    <th className="py-2.5 px-4 font-semibold">{t("system.sessionTitle")}</th>
+                    <th className="py-2.5 px-4 font-semibold">{t("system.course")}</th>
+                    <th className="py-2.5 px-4 font-semibold">{t("system.sessionDate")}</th>
+                    <th className="py-2.5 px-4 font-semibold">{t("system.sessionStatus")}</th>
+                    <th className="py-2.5 px-4 font-semibold text-right">{t("system.actions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -308,13 +325,13 @@ export default function SystemDashboardPage() {
                       <td className="py-3 px-4 text-muted-foreground">{s.date}</td>
                       <td className="py-3 px-4">
                         <Badge variant={s.status === "COMPLETED" ? "success" : "info"}>
-                          {s.status === "COMPLETED" ? "បានបញ្ចប់" : "តាមកាលវិភាគ"}
+                          {s.status === "COMPLETED" ? t("system.completed") : t("system.scheduled")}
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-right">
                         <Link href={`/system/attendance?sessionId=${s.id}`}>
                           <Button variant="outline" size="sm" className="h-7 text-xs">
-                            ពិនិត្យវត្តមាន
+                            {t("system.reviewAttendance")}
                           </Button>
                         </Link>
                       </td>
@@ -323,7 +340,7 @@ export default function SystemDashboardPage() {
                   {(data?.recentSessions || []).length === 0 && (
                     <tr>
                       <td colSpan={5} className="py-6 px-4 text-center text-muted-foreground">
-                        មិនទាន់មានវគ្គបង្រៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet)
+                        {t("system.noLessons")}
                       </td>
                     </tr>
                   )}
@@ -336,4 +353,3 @@ export default function SystemDashboardPage() {
     </PortalLayout>
   );
 }
-

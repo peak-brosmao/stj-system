@@ -46,10 +46,10 @@ function sortRoster(list: Member[]): Member[] {
     if (a.isLeader && !b.isLeader) return -1;
     if (!a.isLeader && b.isLeader) return 1;
 
-    // 2. Academic Year (I1 < I2 < I3 < I4 < I5)
+    // 2. Academic Year (I5 > I4 > I3 > I2 > I1)
     const yearA = getYearRank(a.academicYear?.code || "");
     const yearB = getYearRank(b.academicYear?.code || "");
-    if (yearA !== yearB) return yearA - yearB;
+    if (yearA !== yearB) return yearB - yearA;
 
     // 3. Alphabetical English name (A-Z)
     return (a.fullNameEn || "").localeCompare(b.fullNameEn || "");
@@ -144,6 +144,11 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
   };
 
   const save = async (finalize: boolean) => {
+    if (!sessionId) {
+      setMessage({ kind: "err", text: "សូមជ្រើសរើសមេរៀនជាមុនសិន (Select a lesson first)" });
+      return;
+    }
+
     const records = members
       .filter((m) => marks[m.id])
       .map((m) => ({ memberId: m.id, status: marks[m.id] as Status, remarks: remarks[m.id] || "" }));
@@ -159,16 +164,25 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, records, finalize }),
       });
-      const d = await res.json();
+      const d = await res.json().catch(() => null);
       if (!res.ok) {
-        setMessage({ kind: "err", text: d.error || "Save failed" });
+        setMessage({ kind: "err", text: d?.error || `រក្សាទុកមិនបាន (${res.status})` });
         return;
       }
       setMessage({ kind: "ok", text: "បានរក្សាទុកវត្តមាន (Attendance saved)" });
       // refresh lesson statuses and roster
-      const refreshed = await fetch("/api/system/attendance").then((r) => r.json());
+      const refreshedResponse = await fetch("/api/system/attendance");
+      const refreshed = await refreshedResponse.json().catch(() => null);
+      if (!refreshedResponse.ok) {
+        throw new Error(refreshed?.error || "មិនអាចទាញយកទិន្នន័យថ្មីបានឡើយ");
+      }
       setCourses(refreshed.courses || []);
-      loadRoster(sessionId);
+      await loadRoster(sessionId);
+    } catch (err: unknown) {
+      setMessage({
+        kind: "err",
+        text: err instanceof Error ? err.message : "រក្សាទុកវត្តមានមិនបាន",
+      });
     } finally {
       setSaving(false);
     }
@@ -355,4 +369,3 @@ export function AttendanceMarker(props: Props) {
     </Suspense>
   );
 }
-
