@@ -63,11 +63,15 @@ export default function SharedAttendancePage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/share/${token}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pwd }),
-      });
+      const res = await fetch(
+        `/api/share/${encodeURIComponent(token)}${pwd ? `?password=${encodeURIComponent(pwd)}` : ""}`,
+        {
+          method: pwd ? "POST" : "GET",
+          headers: pwd ? { "Content-Type": "application/json" } : undefined,
+          body: pwd ? JSON.stringify({ password: pwd }) : undefined,
+          cache: "no-store",
+        }
+      );
 
       const resData = await res.json();
 

@@ -12,7 +12,18 @@ const REST_RESOURCE_ENDPOINTS = new Set([
   "academic-years",
 ]);
 
+const globalForToken = globalThis as unknown as {
+  __stjPublicShareReadToken?: string;
+};
+
+export function getPublicShareReadToken(): string | undefined {
+  return process.env.BACKEND_API_TOKEN || globalForToken.__stjPublicShareReadToken;
+}
+
 function authHeaders(token: string | undefined, init: RequestInit): Headers {
+  if (token) {
+    globalForToken.__stjPublicShareReadToken = token;
+  }
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
   if (token) headers.set("Authorization", `Bearer ${token}`);

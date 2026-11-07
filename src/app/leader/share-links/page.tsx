@@ -11,8 +11,6 @@ import {
   ExternalLink,
   Trash2,
   X,
-  Lock,
-  Calendar,
   ShieldCheck,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
@@ -32,18 +30,38 @@ interface ShareItem {
   session?: { title: string } | null;
 }
 
+interface CourseOption {
+  id: string;
+  code: string;
+  titleKh: string;
+}
+
+interface SessionOption {
+  id: string;
+  courseId: string;
+  courseCode?: string;
+  title: string;
+  sessionDate: string;
+  startTime: string;
+  endTime: string;
+}
+
 export default function LeaderShareLinksPage() {
   const [links, setLinks] = useState<ShareItem[]>([]);
+  const [courses, setCourses] = useState<CourseOption[]>([]);
+  const [sessions, setSessions] = useState<SessionOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrToken, setQrToken] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
 
   // New Link form
   const [newLink, setNewLink] = useState({
-    title: "របាយការណ៍វត្តមាន Programming សប្តាហ៍ទី១",
-    courseId: "c-prog",
-    sessionId: "session-1",
+    title: "",
+    courseId: "",
+    sessionId: "",
     password: "",
     expiresAt: "",
     showStats: true,
@@ -51,10 +69,34 @@ export default function LeaderShareLinksPage() {
 
   const loadLinks = () => {
     setLoading(true);
-    fetch("/api/system/share-links")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.links) setLinks(data.links);
+    Promise.all([
+      fetch("/api/system/share-links").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/system/sessions").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([linksData, sessionsData]) => {
+        if (linksData?.links) setLinks(linksData.links);
+        const courseList: CourseOption[] = Array.isArray(sessionsData?.courses)
+          ? sessionsData.courses
+          : [];
+        const sessionList: SessionOption[] = Array.isArray(sessionsData?.sessions)
+          ? sessionsData.sessions
+          : [];
+        setCourses(courseList);
+        setSessions(sessionList);
+        if (courseList[0]) {
+          const firstCourse = courseList[0];
+          const firstSession = sessionList.find(
+            (s) => s.courseId === firstCourse.id || s.courseCode === firstCourse.code
+          );
+          setNewLink((prev) => ({
+            ...prev,
+            courseId: prev.courseId || firstCourse.id,
+            sessionId: prev.sessionId || firstSession?.id || "",
+            title:
+              prev.title ||
+              `របាយការណ៍វត្តមាន ${firstCourse.titleKh || firstCourse.code}`,
+          }));
+        }
       })
       .finally(() => setLoading(false));
   };
@@ -63,20 +105,43 @@ export default function LeaderShareLinksPage() {
     loadLinks();
   }, []);
 
+  const filteredSessions = sessions.filter((s) => {
+    const selectedCourse = courses.find(
+      (c) => c.id === newLink.courseId || c.code === newLink.courseId
+    );
+    if (!selectedCourse) return true;
+    return (
+      s.courseId === selectedCourse.id ||
+      s.courseCode === selectedCourse.code ||
+      s.courseId === selectedCourse.code
+    );
+  });
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newLink.courseId) {
+      setCreateError("សូមជ្រើសរើសមុខវិជ្ជាជាមុនសិន");
+      return;
+    }
+    setCreating(true);
+    setCreateError(null);
     try {
       const res = await fetch("/api/system/share-links", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newLink),
       });
+      const data = await res.json().catch(() => null);
       if (res.ok) {
         setIsModalOpen(false);
         loadLinks();
+      } else {
+        setCreateError(data?.error || data?.message || "មិនអាចបង្កើតតំណភ្ជាប់បានទេ");
       }
     } catch {
-      // ignore
+      setCreateError("មានបញ្ហាក្នុងការតភ្ជាប់បណ្តាញ");
+    } finally {
+      setCreating(false);
     }
   };
 
@@ -98,12 +163,7 @@ export default function LeaderShareLinksPage() {
   };
 
   return (
-    <PortalLayout
-      portalType="leader"
-      userRole="Course Leader"
-      userName="លាង ជីងហេង"
-      userEmail="leang.jingheng@itc.edu.kh"
-    >
+    <PortalLayout portalType="leader" userRole="Course Leader">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -121,7 +181,10 @@ export default function LeaderShareLinksPage() {
 
           <Button
             size="sm"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setCreateError(null);
+              setIsModalOpen(true);
+            }}
             className="text-xs space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -217,6 +280,13 @@ export default function LeaderShareLinksPage() {
                     </td>
                   </tr>
                 ))}
+                {links.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-muted-foreground text-xs">
+                      {loading ? "កំពុងទាញយកទិន្នន័យ..." : "ពុំទាន់មានតំណភ្ជាប់ចែករំលែកនៅឡើយទេ"}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -224,7 +294,12 @@ export default function LeaderShareLinksPage() {
 
         {/* Create Link Modal */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsModalOpen(false);
+            }}
+          >
             <Card className="max-w-md w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
@@ -234,7 +309,57 @@ export default function LeaderShareLinksPage() {
                   </button>
                 </div>
 
+                {createError && (
+                  <div className="p-2.5 rounded-lg bg-destructive/10 text-destructive text-xs">
+                    {createError}
+                  </div>
+                )}
+
                 <form onSubmit={handleCreate} className="space-y-3 text-xs">
+                  <div>
+                    <label className="block font-medium mb-1">មុខវិជ្ជា (Course) *</label>
+                    <select
+                      required
+                      value={newLink.courseId}
+                      onChange={(e) => {
+                        const cid = e.target.value;
+                        const c = courses.find((x) => x.id === cid || x.code === cid);
+                        const firstSess = sessions.find(
+                          (s) => s.courseId === cid || (c && s.courseCode === c.code)
+                        );
+                        setNewLink({
+                          ...newLink,
+                          courseId: cid,
+                          sessionId: firstSess?.id || "",
+                          title: c ? `របាយការណ៍វត្តមាន ${c.titleKh}` : newLink.title,
+                        });
+                      }}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    >
+                      {courses.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          [{c.code}] {c.titleKh}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-medium mb-1">មេរៀន / វគ្គបង្រៀន (Lesson)</label>
+                    <select
+                      value={newLink.sessionId}
+                      onChange={(e) => setNewLink({ ...newLink, sessionId: e.target.value })}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    >
+                      <option value="">គ្រប់មេរៀនទាំងអស់ក្នុងមុខវិជ្ជា (Full Course Report)</option>
+                      {filteredSessions.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.sessionDate} ({s.startTime}-{s.endTime}) • {s.title}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div>
                     <label className="block font-medium mb-1">ចំណងជើងរបាយការណ៍ *</label>
                     <input
@@ -242,27 +367,6 @@ export default function LeaderShareLinksPage() {
                       required
                       value={newLink.title}
                       onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
-                      className="w-full p-2 rounded-lg border border-input bg-background"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medium mb-1">លេខសម្ងាត់ការពារ (ស្រេចចិត្ត)</label>
-                    <input
-                      type="password"
-                      placeholder="ទុកនៅទំនេរ ប្រសិនបើមិនត្រូវការ"
-                      value={newLink.password}
-                      onChange={(e) => setNewLink({ ...newLink, password: e.target.value })}
-                      className="w-full p-2 rounded-lg border border-input bg-background"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-medium mb-1">កាលបរិច្ឆេទផុតកំណត់ (ស្រេចចិត្ត)</label>
-                    <input
-                      type="date"
-                      value={newLink.expiresAt}
-                      onChange={(e) => setNewLink({ ...newLink, expiresAt: e.target.value })}
                       className="w-full p-2 rounded-lg border border-input bg-background"
                     />
                   </div>
@@ -289,8 +393,8 @@ export default function LeaderShareLinksPage() {
                     >
                       បោះបង់
                     </Button>
-                    <Button type="submit" size="sm">
-                      បង្កើតតំណភ្ជាប់
+                    <Button type="submit" size="sm" disabled={creating}>
+                      {creating ? "កំពុងបង្កើត..." : "បង្កើតតំណភ្ជាប់"}
                     </Button>
                   </div>
                 </form>
@@ -301,7 +405,12 @@ export default function LeaderShareLinksPage() {
 
         {/* QR Code Modal */}
         {qrToken && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={(e) => { if (e.target === e.currentTarget) setQrToken(null); }}>
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setQrToken(null);
+            }}
+          >
             <Card className="max-w-sm w-full text-center max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-border">
