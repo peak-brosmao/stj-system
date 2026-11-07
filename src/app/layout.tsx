@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/ui/theme/ThemeProvider";
 import { I18nProvider } from "@/ui/i18n/I18nProvider";

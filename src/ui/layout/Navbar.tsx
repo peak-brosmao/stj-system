@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -114,7 +114,7 @@ export function Navbar() {
                 size="sm"
                 onClick={handleLogout}
                 className="h-9 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                title="Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€° (Sign Out)"
+                title="ចាកចេញ (Sign Out)"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </Button>
@@ -185,7 +185,7 @@ export function Navbar() {
                   <Link href={auth.user.dashboardUrl} onClick={() => setMobileMenuOpen(false)}>
                     <Button size="sm" className="w-full justify-center space-x-1.5 font-bold h-9">
                       <LayoutDashboard className="w-3.5 h-3.5" />
-                      <span>Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž</span>
+                      <span>ផ្ទាំងគ្រប់គ្រង</span>
                     </Button>
                   </Link>
                   <Button
@@ -195,7 +195,7 @@ export function Navbar() {
                     className="w-full justify-center space-x-1.5 font-bold h-9 text-destructive hover:bg-destructive/10"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€°</span>
+                    <span>ចាកចេញ</span>
                   </Button>
                 </div>
               </div>
@@ -213,4 +213,3 @@ export function Navbar() {
     </header>
   );
 }
-

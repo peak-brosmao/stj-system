@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/ui/layout/Navbar";
 import { Footer } from "@/ui/layout/Footer";
@@ -22,67 +22,67 @@ const COURSE_DATA: Record<
   }
 > = {
   programming: {
-    title: "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€™Ã¡Å¾Â¸Ã¡Å¾â‚¬Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¼Ã¡Å¾â€˜Ã¡Å¸ÂÃ¡Å¾Å¡ (Programming)",
+    title: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
     code: "PROG101",
     term: "2026-2027 Semester 1",
-    leaders: ["Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾â€ž Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾â€žÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€ž (LEANG JINGHENG - I3-GTI, Student ID: e20240704)"],
-    schedule: "Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¸Æ’Ã¡Å¾Å¸Ã¡Å¸â€¦Ã¡Å¾Å¡Ã¡Å¸Â Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž 08:00 - 11:00 Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾â‚¬",
-    room: "Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ SF1 (Room SF1), ITC Campus 1",
-    desc: "Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸â€žÃ¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾â€Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â¸ Memory Management, Pointer Mechanics, Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€ž Algorithms Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¸â€”Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€",
+    leaders: ["លាង ជីងហេង (LEANG JINGHENG - I3-GTI, Student ID: e20240704)"],
+    schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 08:00 - 11:00 ព្រឹក",
+    room: "បន្ទប់ SF1 (Room SF1), ITC Campus 1",
+    desc: "វគ្គបណ្តុះបណ្តាលដែលផ្តោតលើការសរសេរកូដប្រកបដោយប្រសិទ្ធភាព ការយល់ដឹងអំពី Memory Management, Pointer Mechanics, និង Algorithms សំខាន់ៗសម្រាប់និស្សិតវិស្វកម្ម។",
     syllabus: [
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡-Ã¡Å¸Â¢Ã¡Å¸â€“ Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¸â€¡ C/C++, Syntax, Data Types & Control Flow",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â£-Ã¡Å¸Â¤Ã¡Å¸â€“ Pointers, Arrays, Dynamic Memory Allocation (malloc, free)",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¥-Ã¡Å¸Â¦Ã¡Å¸â€“ Data Structures: Linked Lists, Stacks, Queues",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â§-Ã¡Å¸Â¨Ã¡Å¸â€“ Binary Trees, Graph Traversal & Sorting Algorithms",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â©-Ã¡Å¸Â¡Ã¡Å¸Â Ã¡Å¸â€“ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸â€ Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¡Ã¡Å¾â€ž Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€ž mini-project Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€ž",
+      "សប្តាហ៍ទី១-២៖ មូលដ្ឋានគ្រឹះ C/C++, Syntax, Data Types & Control Flow",
+      "សប្តាហ៍ទី៣-៤៖ Pointers, Arrays, Dynamic Memory Allocation (malloc, free)",
+      "សប្តាហ៍ទី៥-៦៖ Data Structures: Linked Lists, Stacks, Queues",
+      "សប្តាហ៍ទី៧-៨៖ Binary Trees, Graph Traversal & Sorting Algorithms",
+      "សប្តាហ៍ទី៩-១០៖ ការដោះស្រាយលំហាត់ប្រឡង និង mini-project ជាក់ស្តែង",
     ],
   },
   mathematics: {
-    title: "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (Mathematics)",
+    title: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
     code: "MATH101",
     term: "2026-2027 Semester 1",
-    leaders: ["Ã¡Å¾â€šÃ¡Å¾Â¹Ã¡Å¾Ëœ Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸Ë† (KIM Ratanak - I5-GIM, Student ID: e20221423)"],
-    schedule: "Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¸Æ’Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž 08:00 - 11:00 Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾â‚¬",
-    room: "Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ SF2 (Room SF2), ITC Campus 1",
-    desc: "Ã¡Å¾â€“Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€šÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¸â€¡Ã¡Å¾â€šÃ¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å¡Ã¡Å¾â„¢Ã¡Å¸Ë†Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å’Ã¡Å¾Â¸Ã¡Å¾â€¢Ã¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¸â€šÃ¡Å¾â€º Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¸Ã¡Å¾Å¸ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€ž Calculus Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€",
+    leaders: ["គឹម រតនៈ (KIM Ratanak - I5-GIM, Student ID: e20221423)"],
+    schedule: "រៀងរាល់ថ្ងៃអាទិត្យ ម៉ោង 08:00 - 11:00 ព្រឹក",
+    room: "បន្ទប់ SF2 (Room SF2), ITC Campus 1",
+    desc: "ពង្រឹងការគិតបែបរិះគន់តាមរយៈការដោះស្រាយសមីការឌីផេរ៉ង់ស្យែល ការវិភាគម៉ាទ្រីស និង Calculus កម្រិតខ្ពស់សម្រាប់វិស្វកម្ម។",
     syllabus: [
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡-Ã¡Å¸Â¢Ã¡Å¸â€“ Partial Derivatives, Gradients & Directional Derivatives",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â£-Ã¡Å¸Â¤Ã¡Å¸â€“ Double and Triple Integrals & Coordinate Transformations",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¥-Ã¡Å¸Â¦Ã¡Å¸â€“ Matrices, Eigenvalues, Eigenvectors and Diagonalization",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â§-Ã¡Å¸Â¨Ã¡Å¸â€“ First and Second-Order Ordinary Differential Equations",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â©-Ã¡Å¸Â¡Ã¡Å¸Â Ã¡Å¸â€“ Laplace Transforms Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¸â‚¬Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â¢Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾â€œÃ¡Å¾Â¸",
+      "សប្តាហ៍ទី១-២៖ Partial Derivatives, Gradients & Directional Derivatives",
+      "សប្តាហ៍ទី៣-៤៖ Double and Triple Integrals & Coordinate Transformations",
+      "សប្តាហ៍ទី៥-៦៖ Matrices, Eigenvalues, Eigenvectors and Diagonalization",
+      "សប្តាហ៍ទី៧-៨៖ First and Second-Order Ordinary Differential Equations",
+      "សប្តាហ៍ទី៩-១០៖ Laplace Transforms និងការអនុវត្តក្នុងសៀគ្វីអគ្គិសនី",
     ],
   },
   physics: {
-    title: "Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (Physics)",
+    title: "រូបវិទ្យាវិស្វកម្ម (Physics)",
     code: "PHYS101",
     term: "2026-2027 Semester 1",
-    leaders: ["Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â„¢ Ã¡Å¾Â¢Ã¡Å¾Â¸Ã¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€ž (KRUY Ykhang - I3-GIM, Student ID: e20240096)"],
-    schedule: "Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¸Æ’Ã¡Å¾Å¸Ã¡Å¸â€¦Ã¡Å¾Å¡Ã¡Å¸Â Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž 02:00 - 05:00 Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸â‚¬Ã¡Å¾â€º",
-    room: "Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ SF1 (Room SF1), ITC Campus 1",
-    desc: "Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€Ã¡Å¾Â»Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å½ Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â€“Ã¡Å¾â€º Ã¡Å¾â€¦Ã¡Å¾â€ºÃ¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€ºÃ¡Å¾â‚¬ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾â€˜Ã¡Å¸â€¦Ã¡Å¸â€",
+    leaders: ["គ្រុយ អីុខាង (KRUY Ykhang - I3-GIM, Student ID: e20240096)"],
+    schedule: "រៀងរាល់ថ្ងៃសៅរ៍ ម៉ោង 02:00 - 05:00 រសៀល",
+    room: "បន្ទប់ SF1 (Room SF1), ITC Campus 1",
+    desc: "ទ្រឹស្តីមេកានិកបុរាណ ថាមពល ចលនារលក និងអុបទិចសម្រាប់និស្សិតវិស្វកម្មទូទៅ។",
     syllabus: [
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡-Ã¡Å¸Â¢Ã¡Å¸â€“ Kinematics, Newton's Laws & Friction Forces",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â£-Ã¡Å¸Â¤Ã¡Å¸â€“ Work, Kinetic & Potential Energy, Conservation Laws",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¥-Ã¡Å¸Â¦Ã¡Å¸â€“ Rotational Dynamics, Torque & Angular Momentum",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â§-Ã¡Å¸Â¨Ã¡Å¸â€“ Simple Harmonic Motion, Waves & Sound Propagation",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â©-Ã¡Å¸Â¡Ã¡Å¸Â Ã¡Å¸â€“ Thermodynamics: Heat Transfer, First & Second Laws",
+      "សប្តាហ៍ទី១-២៖ Kinematics, Newton's Laws & Friction Forces",
+      "សប្តាហ៍ទី៣-៤៖ Work, Kinetic & Potential Energy, Conservation Laws",
+      "សប្តាហ៍ទី៥-៦៖ Rotational Dynamics, Torque & Angular Momentum",
+      "សប្តាហ៍ទី៧-៨៖ Simple Harmonic Motion, Waves & Sound Propagation",
+      "សប្តាហ៍ទី៩-១០៖ Thermodynamics: Heat Transfer, First & Second Laws",
     ],
   },
   chemistry: {
-    title: "Ã¡Å¾â€šÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾â€˜Ã¡Å¸â€¦ (Chemistry)",
+    title: "គីមីវិទ្យាទូទៅ (Chemistry)",
     code: "CHEM101",
     term: "2026-2027 Semester 1",
-    leaders: ["Ã¡Å¾ÂÃ¡Å¸ÂÃ¡Å¾â€ž Ã¡Å¾â€ºÃ¡Å¾Â¸Ã¡Å¾Â§Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸Â (KHENG Lyussa - I3-GCI, Student ID: e20240046)"],
-    schedule: "Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¸Æ’Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž 02:00 - 05:00 Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸â‚¬Ã¡Å¾â€º",
-    room: "Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ SF2 (Room SF2), ITC Campus 1",
-    desc: "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾â€˜Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Ëœ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€šÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¸ Ã¡Å¾â€˜Ã¡Å¸â€šÃ¡Å¾Å¡Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾Â¼Ã¡Å¾Å’Ã¡Å¾Â¸Ã¡Å¾Å½Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€šÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¸ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¸ÂÃ¡Å¾Â¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€šÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€",
+    leaders: ["ខេង លីឧស្សាហ៍ (KHENG Lyussa - I3-GCI, Student ID: e20240046)"],
+    schedule: "រៀងរាល់ថ្ងៃអាទិត្យ ម៉ោង 02:00 - 05:00 រសៀល",
+    room: "បន្ទប់ SF2 (Room SF2), ITC Campus 1",
+    desc: "ការយល់ដឹងអំពីទម្រង់អាតូម ប្រតិកម្មគីមី ទែរម៉ូឌីណាមិកគីមី និងអេឡិចត្រូគីមី។",
     syllabus: [
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡-Ã¡Å¸Â¢Ã¡Å¸â€“ Atomic Structure, Periodic Trends & Chemical Bonding",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â£-Ã¡Å¸Â¤Ã¡Å¸â€“ Stoichiometry, Solutions & Concentration Units",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¥-Ã¡Å¸Â¦Ã¡Å¸â€“ Chemical Equilibrium & Acid-Base Reactions",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â§-Ã¡Å¸Â¨Ã¡Å¸â€“ Chemical Kinetics & Reaction Rates",
-      "Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â©-Ã¡Å¸Â¡Ã¡Å¸Â Ã¡Å¸â€“ Electrochemistry, Oxidation-Reduction & Batteries",
+      "សប្តាហ៍ទី១-២៖ Atomic Structure, Periodic Trends & Chemical Bonding",
+      "សប្តាហ៍ទី៣-៤៖ Stoichiometry, Solutions & Concentration Units",
+      "សប្តាហ៍ទី៥-៦៖ Chemical Equilibrium & Acid-Base Reactions",
+      "សប្តាហ៍ទី៧-៨៖ Chemical Kinetics & Reaction Rates",
+      "សប្តាហ៍ទី៩-១០៖ Electrochemistry, Oxidation-Reduction & Batteries",
     ],
   },
 };
@@ -110,7 +110,7 @@ export default async function ProgramDetailPage({
             className="inline-flex items-center space-x-1.5 text-xs text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹</span>
+            <span>ត្រឡប់ទៅបញ្ជីមុខវិជ្ជាទាំងអស់</span>
           </Link>
 
           <div className="space-y-3">
@@ -131,7 +131,7 @@ export default async function ProgramDetailPage({
               <CardContent className="p-4 flex items-center space-x-3">
                 <Clock className="w-5 h-5 text-primary shrink-0" />
                 <div>
-                  <p className="text-[11px] text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€š</p>
+                  <p className="text-[11px] text-muted-foreground">កាលវិភាគ</p>
                   <p className="text-xs font-semibold">{course.schedule}</p>
                 </div>
               </CardContent>
@@ -141,7 +141,7 @@ export default async function ProgramDetailPage({
               <CardContent className="p-4 flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-primary shrink-0" />
                 <div>
-                  <p className="text-[11px] text-muted-foreground">Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž</p>
+                  <p className="text-[11px] text-muted-foreground">ទីតាំង</p>
                   <p className="text-xs font-semibold">{course.room}</p>
                 </div>
               </CardContent>
@@ -151,7 +151,7 @@ export default async function ProgramDetailPage({
               <CardContent className="p-4 flex items-center space-x-3">
                 <User className="w-5 h-5 text-primary shrink-0" />
                 <div>
-                  <p className="text-[11px] text-muted-foreground">Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</p>
+                  <p className="text-[11px] text-muted-foreground">ប្រធានមុខវិជ្ជា</p>
                   <p className="text-xs font-semibold">{course.leaders[0]}</p>
                 </div>
               </CardContent>
@@ -160,7 +160,7 @@ export default async function ProgramDetailPage({
 
           {/* Syllabus Section */}
           <div className="bg-card border border-border rounded-xl p-6 sm:p-8 space-y-4">
-            <h2 className="text-lg font-bold">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Syllabus)</h2>
+            <h2 className="text-lg font-bold">គ្រោងមេរៀន និងកាលវិភាគបង្រៀន (Syllabus)</h2>
             <div className="space-y-3">
               {course.syllabus.map((s, idx) => (
                 <div key={idx} className="flex items-start space-x-3 text-xs leading-relaxed">
@@ -173,13 +173,13 @@ export default async function ProgramDetailPage({
 
           <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-muted/30">
             <div>
-              <p className="text-xs font-semibold">Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾Ëœ?</p>
+              <p className="text-xs font-semibold">ចាប់អារម្មណ៍ចង់ចូលរួម?</p>
               <p className="text-[11px] text-muted-foreground">
-                Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾â„¢ STJ Ã¡Å¾Â¬Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬
+                ទាក់ទងមកកាន់ការិយាល័យ STJ ឬប្រធានដេប៉ាតឺម៉ង់របស់អ្នក
               </p>
             </div>
             <Link href="/contact">
-              <Button size="sm">Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾â€žÃ¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡</Button>
+              <Button size="sm">ទាក់ទងចុះឈ្មោះ</Button>
             </Link>
           </div>
         </div>
@@ -189,4 +189,3 @@ export default async function ProgramDetailPage({
     </div>
   );
 }
-

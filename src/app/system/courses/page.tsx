@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { BookOpen, Users, Calendar, AlertCircle, Plus, Pencil, X, Check, ShieldCheck } from "lucide-react";
@@ -69,7 +69,7 @@ export default function SystemCoursesPage() {
       }
       if (!res.ok) {
         const responseData = await res.json().catch(() => null);
-        throw new Error(responseData?.error || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Â¸ Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+        throw new Error(responseData?.error || "មិនអាចទាញយកទិន្នន័យមុខវិជ្ជាពី Database បានឡើយ");
       }
       const data = await res.json();
       setCourses(data.courses || []);
@@ -93,7 +93,7 @@ export default function SystemCoursesPage() {
       titleKh: "",
       titleEn: "",
       category: "Engineering Foundation",
-      term: "Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡ Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦-Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§",
+      term: "ឆមាសទី១ ឆ្នាំសិក្សា ២០២៦-២០២៧",
       status: "ACTIVE",
       leaderMemberId: "",
     });
@@ -108,7 +108,7 @@ export default function SystemCoursesPage() {
       titleKh: c.titleKh,
       titleEn: c.titleEn,
       category: c.category || "Engineering Foundation",
-      term: c.term || "Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡ Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦-Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§",
+      term: c.term || "ឆមាសទី១ ឆ្នាំសិក្សា ២០២៦-២០២៧",
       status: c.status || "ACTIVE",
       leaderMemberId: c.leaderMemberId || "",
     });
@@ -129,21 +129,21 @@ export default function SystemCoursesPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setFormError(data.error || "Ã¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶");
+        setFormError(data.error || "បរាជ័យក្នុងការរក្សាទុកមុខវិជ្ជា");
         return;
       }
       setIsModalOpen(false);
       setEditingCourse(null);
       await loadCourses();
     } catch {
-      setFormError("Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€°");
+      setFormError("មានបញ្ហាក្នុងការភ្ជាប់បណ្តាញ");
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
+    <PortalLayout portalType="system" userRole="ប្រធាន STJ" userName="ផល ដាវីត">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -155,7 +155,7 @@ export default function SystemCoursesPage() {
               {t("courses.title")}
             </h1>
             <p className="text-xs text-muted-foreground">
-              {t("courses.assignedLeaders")} Ã‚Â· {t("courses.enrolledMembers")}
+              {t("courses.assignedLeaders")} · {t("courses.enrolledMembers")}
             </p>
           </div>
 
@@ -167,7 +167,7 @@ export default function SystemCoursesPage() {
 
         {loading && (
           <div className="p-8 text-center text-xs text-muted-foreground">
-            Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€“Ã¡Å¾Â¸ Database...
+            កំពុងទាញយកទិន្នន័យពី Database...
           </div>
         )}
 
@@ -180,7 +180,7 @@ export default function SystemCoursesPage() {
 
         {!loading && !error && courses.length === 0 && (
           <div className="p-12 text-center text-xs text-muted-foreground border rounded-2xl">
-            Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€¦ &quot;Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸&quot;Ã¡Å¸â€
+            ពុំមានមុខវិជ្ជានៅក្នុងប្រព័ន្ធឡើយ។ សូមចុច &quot;បង្កើតមុខវិជ្ជាថ្មី&quot;។
           </div>
         )}
 
@@ -194,7 +194,7 @@ export default function SystemCoursesPage() {
                       {c.code}
                     </span>
                     <Badge variant={c.status === "ACTIVE" ? "success" : "secondary"}>
-                      {c.status === "ACTIVE" ? "Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ" : "Ã¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ"}
+                      {c.status === "ACTIVE" ? "សកម្ម" : "អសកម្ម"}
                     </Badge>
                   </div>
                   <Button
@@ -202,10 +202,10 @@ export default function SystemCoursesPage() {
                     size="sm"
                     onClick={() => openEditModal(c)}
                     className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
-                    title="Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶"
+                    title="កែប្រែព័ត៌មាន និងចាត់តាំងប្រធានមុខវិជ្ជា"
                   >
                     <Pencil className="w-3 h-3" />
-                    <span>Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š</span>
+                    <span>កែប្រែ</span>
                   </Button>
                 </div>
 
@@ -217,7 +217,7 @@ export default function SystemCoursesPage() {
                 <div className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
                   <div className="flex items-center space-x-1.5 text-muted-foreground">
                     <Users className="w-3.5 h-3.5 text-primary" />
-                    <span>Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€“ <strong className="text-foreground">{c.enrolled} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</strong></span>
+                    <span>សិស្សចុះឈ្មោះ៖ <strong className="text-foreground">{c.enrolled} នាក់</strong></span>
                   </div>
                   <div className="flex items-center space-x-1.5 text-muted-foreground">
                     <Calendar className="w-3.5 h-3.5" />
@@ -227,7 +227,7 @@ export default function SystemCoursesPage() {
 
                 <div className="p-2.5 rounded-lg bg-muted/50 text-xs text-muted-foreground flex items-center justify-between">
                   <div>
-                    Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¸â€“ <strong className="text-foreground">{c.leaders}</strong>
+                    ប្រធានមុខវិជ្ជា៖ <strong className="text-foreground">{c.leaders}</strong>
                   </div>
                   <ShieldCheck className="w-4 h-4 text-primary shrink-0 ml-2" />
                 </div>
@@ -248,10 +248,10 @@ export default function SystemCoursesPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-foreground">
-                        {editingCourse.id ? "Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Edit Course)" : "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New Course)"}
+                        {editingCourse.id ? "កែប្រែមុខវិជ្ជាសិក្សា (Edit Course)" : "បង្កើតមុខវិជ្ជាថ្មី (New Course)"}
                       </h3>
                       <p className="text-[11px] text-muted-foreground">
-                        Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€ž Database SQLite &amp; Backend API
+                        រក្សាទុកផ្ទាល់ក្នុង Database SQLite &amp; Backend API
                       </p>
                     </div>
                   </div>
@@ -274,11 +274,11 @@ export default function SystemCoursesPage() {
 
                 <form onSubmit={handleSaveCourse} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Course Code) *</label>
+                    <label className="block font-medium mb-1">កូដមុខវិជ្ជា (Course Code) *</label>
                     <input
                       type="text"
                       required
-                      placeholder="Ã¡Å¾Â§. MATH101, PROG101, ELEC101"
+                      placeholder="ឧ. MATH101, PROG101, ELEC101"
                       disabled={!!editingCourse.id}
                       value={editingCourse.code}
                       onChange={(e) => setEditingCourse({ ...editingCourse, code: e.target.value.toUpperCase() })}
@@ -287,11 +287,11 @@ export default function SystemCoursesPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾Å¡ *</label>
+                    <label className="block font-medium mb-1">ឈ្មោះមុខវិជ្ជាជាភាសាខ្មែរ *</label>
                     <input
                       type="text"
                       required
-                      placeholder="Ã¡Å¾Â§. Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ..."
+                      placeholder="ឧ. គណិតវិទ្យាវិស្វកម្ម..."
                       value={editingCourse.titleKh}
                       onChange={(e) => setEditingCourse({ ...editingCourse, titleKh: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
@@ -299,10 +299,10 @@ export default function SystemCoursesPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Â¢Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Å¸ / Ã¡Å¾Â¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž</label>
+                    <label className="block font-medium mb-1">ឈ្មោះជាភាសាអង់គ្លេស / ឡាតាំង</label>
                     <input
                       type="text"
-                      placeholder="Ã¡Å¾Â§. Engineering Mathematics"
+                      placeholder="ឧ. Engineering Mathematics"
                       value={editingCourse.titleEn}
                       onChange={(e) => setEditingCourse({ ...editingCourse, titleEn: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
@@ -311,7 +311,7 @@ export default function SystemCoursesPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€”Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Category)</label>
+                      <label className="block font-medium mb-1">ប្រភេទមុខវិជ្ជា (Category)</label>
                       <select
                         value={editingCourse.category}
                         onChange={(e) => setEditingCourse({ ...editingCourse, category: e.target.value })}
@@ -325,7 +325,7 @@ export default function SystemCoursesPage() {
                     </div>
 
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸ / Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Term)</label>
+                      <label className="block font-medium mb-1">ឆមាស / ឆ្នាំសិក្សា (Term)</label>
                       <input
                         type="text"
                         value={editingCourse.term}
@@ -337,40 +337,40 @@ export default function SystemCoursesPage() {
 
                   {/* Leader Assignment */}
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Assign Course Leader)</label>
+                    <label className="block font-medium mb-1">ចាត់តាំងប្រធានមុខវិជ្ជា (Assign Course Leader)</label>
                     <select
                       value={editingCourse.leaderMemberId}
                       onChange={(e) => setEditingCourse({ ...editingCourse, leaderMemberId: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
                     >
-                      <option value="">-- Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž (None) --</option>
+                      <option value="">-- មិនទាន់ចាត់តាំង (None) --</option>
                       {eligibleLeaders.map((m) => {
                         const year = m.academicYear?.code || "";
                         const dept = m.department?.code || "";
                         const badge = year && dept ? ` (${year}-${dept})` : "";
                         return (
                           <option key={m.id} value={m.id}>
-                            {m.memberId} Ã¢â‚¬Â¢ {m.fullNameKh} ({m.fullNameEn}){badge}
+                            {m.memberId} • {m.fullNameKh} ({m.fullNameEn}){badge}
                           </option>
                         );
                       })}
                     </select>
                     <p className="text-[10px] text-muted-foreground mt-1">
-                      Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¸â€
+                      ប្រធានមុខវិជ្ជាដែលត្រូវបានចាត់តាំង នឹងមានសិទ្ធិចូលគ្រប់គ្រងមេរៀន និងវត្តមានសម្រាប់មុខវិជ្ជានេះ។
                     </p>
                   </div>
 
                   {editingCourse.id && (
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Status)</label>
+                      <label className="block font-medium mb-1">ស្ថានភាពមុខវិជ្ជា (Status)</label>
                       <select
                         value={editingCourse.status}
                         onChange={(e) => setEditingCourse({ ...editingCourse, status: e.target.value })}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
                       >
-                        <option value="ACTIVE">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (ACTIVE)</option>
-                        <option value="INACTIVE">Ã¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (INACTIVE)</option>
-                        <option value="ARCHIVED">Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡ (ARCHIVED)</option>
+                        <option value="ACTIVE">សកម្ម (ACTIVE)</option>
+                        <option value="INACTIVE">អសកម្ម (INACTIVE)</option>
+                        <option value="ARCHIVED">បណ្ណសារ (ARCHIVED)</option>
                       </select>
                     </div>
                   )}
@@ -385,10 +385,10 @@ export default function SystemCoursesPage() {
                         setEditingCourse(null);
                       }}
                     >
-                      Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
+                      បោះបង់
                     </Button>
                     <Button type="submit" size="sm" disabled={saving}>
-                      {saving ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬..." : "Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€ž Database"}
+                      {saving ? "កំពុងរក្សាទុក..." : "រក្សាទុកក្នុង Database"}
                     </Button>
                   </div>
                 </form>

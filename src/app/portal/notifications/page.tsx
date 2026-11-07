@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -22,27 +22,27 @@ export default function PortalNotificationsPage() {
     {
       id: "n-1",
       category: "CORRECTION",
-      title: "Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â",
-      message: "Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡ Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ MATH101 Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¸â€ Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å Ã¡Å¾â€ºÃ¡Å¸â€¹ 100%Ã¡Å¸â€",
-      date: "Ã¡Å¸Â¡Ã¡Å¸Â¤ Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦ Ã¢â‚¬Â¢ 10:30 AM",
+      title: "សំណើកែតម្រូវវត្តមានត្រូវបានអនុម័ត",
+      message: "សំណើកែតម្រូវវត្តមានសម្រាប់វគ្គទី១ នៃមុខវិជ្ជា MATH101 ត្រូវបានគណៈគ្រប់គ្រងអនុម័តរួចរាល់។ អត្រាវត្តមានរបស់អ្នកឡើងដល់ 100%។",
+      date: "១៤ តុលា ២០២៦ • 10:30 AM",
       link: "/portal/attendance",
       isRead: false,
     },
     {
       id: "n-2",
       category: "SESSION",
-      title: "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (PROG101)",
-      message: "Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¤ Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¸Ã¡Å¾â€“Ã¡Å¾Â¸ Binary Search Trees & Recursion Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¸â€¦Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¸Æ’Ã¡Å¾Å¸Ã¡Å¸â€¦Ã¡Å¾Å¡Ã¡Å¸Â Ã¡Å¸Â Ã¡Å¸Â§ Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶ Ã¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž Ã¡Å¸Â Ã¡Å¸Â¨:Ã¡Å¸Â Ã¡Å¸Â  Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾â‚¬ Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ SF1Ã¡Å¸â€",
-      date: "Ã¡Å¸Â¢Ã¡Å¸Â¨ Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦ Ã¢â‚¬Â¢ 09:15 AM",
+      title: "កាលវិភាគវគ្គបង្រៀនបន្ទាប់ (PROG101)",
+      message: "វគ្គទី៤ ស្តីពី Binary Search Trees & Recursion នឹងប្រព្រឹត្តទៅនៅថ្ងៃសៅរ៍ ០៧ វិច្ឆិកា វេលាម៉ោង ០៨:០០ ព្រឹក នៅបន្ទប់ SF1។",
+      date: "២៨ តុលា ២០២៦ • 09:15 AM",
       link: "/portal/schedule",
       isRead: false,
     },
     {
       id: "n-3",
       category: "SECURITY",
-      title: "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸",
-      message: "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å¡Ã¡Å¾â„¢Ã¡Å¸Ë† Google Chrome Ã¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ WindowsÃ¡Å¸â€",
-      date: "Ã¡Å¸Â£Ã¡Å¸Â  Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦ Ã¢â‚¬Â¢ 06:12 PM",
+      title: "ការចូលប្រើប្រាស់គណនីពីឧបករណ៍ថ្មី",
+      message: "គណនីរបស់អ្នកត្រូវបានចូលប្រើប្រាស់ដោយជោគជ័យតាមរយៈ Google Chrome លើប្រព័ន្ធប្រតិបត្តិការ Windows។",
+      date: "៣០ តុលា ២០២៦ • 06:12 PM",
       link: "/portal/security",
       isRead: true,
     },
@@ -79,11 +79,11 @@ export default function PortalNotificationsPage() {
             </div>
             <div className="flex items-center space-x-2">
               <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¹Ã¡Å¾â€ž (Notifications)
+                ការជូនដំណឹង (Notifications)
               </h1>
               {unreadCount > 0 && (
                 <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
-                  {unreadCount} Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸
+                  {unreadCount} ថ្មី
                 </span>
               )}
             </div>
@@ -98,12 +98,12 @@ export default function PortalNotificationsPage() {
                 className="space-x-1.5 text-xs"
               >
                 <Check className="w-3.5 h-3.5" />
-                <span>Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€œ</span>
+                <span>សម្គាល់ទាំងអស់ថាបានអាន</span>
               </Button>
             )}
             <Link href="/portal/settings">
               <Button variant="ghost" size="sm" className="text-xs">
-                Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¹Ã¡Å¾â€ž
+                កំណត់ការជូនដំណឹង
               </Button>
             </Link>
           </div>
@@ -117,7 +117,7 @@ export default function PortalNotificationsPage() {
               filter === "ALL" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({notifications.length})
+            ទាំងអស់ ({notifications.length})
           </button>
           <button
             onClick={() => setFilter("UNREAD")}
@@ -125,7 +125,7 @@ export default function PortalNotificationsPage() {
               filter === "UNREAD" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€œ ({unreadCount})
+            មិនទាន់អាន ({unreadCount})
           </button>
           <button
             onClick={() => setFilter("CORRECTION")}
@@ -133,7 +133,7 @@ export default function PortalNotificationsPage() {
               filter === "CORRECTION" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Ã¡Å¾â€ºÃ¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€¢Ã¡Å¾â€ºÃ¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ
+            លទ្ធផលកែវត្តមាន
           </button>
           <button
             onClick={() => setFilter("SESSION")}
@@ -141,7 +141,7 @@ export default function PortalNotificationsPage() {
               filter === "SESSION" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ
+            វគ្គបង្រៀន
           </button>
           <button
             onClick={() => setFilter("SECURITY")}
@@ -149,7 +149,7 @@ export default function PortalNotificationsPage() {
               filter === "SECURITY" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“
+            សុវត្ថិភាព
           </button>
         </div>
 
@@ -185,7 +185,7 @@ export default function PortalNotificationsPage() {
                       onClick={() => markAsRead(item.id)}
                       className="inline-flex items-center space-x-1 text-xs font-semibold text-primary hover:underline"
                     >
-                      <span>Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Â¢Ã¡Å¾Â·Ã¡Å¾Â</span>
+                      <span>ពិនិត្យព័ត៌មានលម្អិត</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
@@ -198,7 +198,7 @@ export default function PortalNotificationsPage() {
                     onClick={() => markAsRead(item.id)}
                     className="text-[11px] text-muted-foreground hover:text-foreground shrink-0"
                   >
-                    Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦
+                    អានរួច
                   </Button>
                 )}
               </CardContent>
@@ -209,4 +209,3 @@ export default function PortalNotificationsPage() {
     </PortalLayout>
   );
 }
-

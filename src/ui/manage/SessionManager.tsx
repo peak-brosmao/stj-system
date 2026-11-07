@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
@@ -60,10 +60,10 @@ interface FormState {
 }
 
 const STATUS_LABEL: Record<string, string> = {
-  SCHEDULED: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€º (Scheduled)",
-  IN_PROGRESS: "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (In progress)",
-  COMPLETED: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦ (Completed)",
-  CANCELLED: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€º (Cancelled)",
+  SCHEDULED: "បានកំណត់ពេល (Scheduled)",
+  IN_PROGRESS: "កំពុងបង្រៀន (In progress)",
+  COMPLETED: "បានបង្រៀនរួច (Completed)",
+  CANCELLED: "បានលុបចោល (Cancelled)",
 };
 
 const STATUS_VARIANT: Record<string, "success" | "info" | "warning" | "destructive"> = {
@@ -126,7 +126,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
         body: JSON.stringify({
           courseId,
           sessionId: s.id,
-          title: `Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ ${s.title || ""}${courseCode ? ` (${courseCode})` : ""}`,
+          title: `របាយការណ៍មេរៀន ${s.title || ""}${courseCode ? ` (${courseCode})` : ""}`,
           showStats: true,
         }),
       });
@@ -166,7 +166,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   const openCreate = () => {
     setError("");
     // If a specific course is filtered, default to that course.
-    // Otherwise, do NOT auto-select courses[0] (wrong course bug) Ã¢â‚¬â€
+    // Otherwise, do NOT auto-select courses[0] (wrong course bug) —
     // leave the form courseId empty so the user must explicitly pick.
     const defaultCourse =
       courseFilter !== "ALL"
@@ -195,7 +195,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
     if (!form) return;
     // Guard: course MUST be explicitly selected (never fall through to a wrong default)
     if (!form.courseId) {
-      setError("Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾ËœÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€œ (Please select a course before saving)");
+      setError("សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវមុនសិន (Please select a course before saving)");
       return;
     }
     setSaving(true);
@@ -220,7 +220,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   };
 
   const cancelLesson = async (s: SessionItem) => {
-    if (!confirm("Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾Â¬Ã¡Å¾â€˜Ã¡Å¸Â? (Cancel this lesson?)")) return;
+    if (!confirm("តើអ្នកចង់លុបចោលមេរៀននេះឬទេ? (Cancel this lesson?)")) return;
     await fetch("/api/system/sessions", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -230,7 +230,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
   };
 
   const remove = async (s: SessionItem) => {
-    if (!confirm("Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¡Ã¡Å¾Â¬Ã¡Å¾â€˜Ã¡Å¸Â? (Delete this lesson permanently?)")) return;
+    if (!confirm("តើអ្នកចង់លុបមេរៀននេះជាស្ថាពរឬទេ? (Delete this lesson permanently?)")) return;
     const res = await fetch(`/api/system/sessions?id=${encodeURIComponent(s.id)}`, { method: "DELETE" });
     const data = await res.json();
     if (!res.ok) alert(data.error || "Delete failed");
@@ -265,16 +265,16 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
               <span>STJ Lessons</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€š (Lessons &amp; Schedule)
+              គ្រប់គ្រងមេរៀន និងកាលវិភាគ (Lessons &amp; Schedule)
             </h1>
             <p className="text-xs text-muted-foreground">
-              Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡ Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾Å Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â»Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€
+              មេរៀនដែលបង្កើតនៅទីនេះ នឹងបង្ហាញដល់សមាជិកក្នុងក្រុមរបស់មុខវិជ្ជានោះតែប៉ុណ្ណោះ។
               (Lessons created here become visible to that course team only.)
             </p>
           </div>
           <Button size="sm" onClick={openCreate} disabled={courses.length === 0} className="text-xs space-x-1.5">
             <Plus className="w-3.5 h-3.5" />
-            <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New lesson)</span>
+            <span>បង្កើតមេរៀនថ្មី (New lesson)</span>
           </Button>
         </div>
 
@@ -293,7 +293,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       : "border-border text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {code === "ALL" ? "Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ (All)" : code}
+                  {code === "ALL" ? "ទាំងអស់ (All)" : code}
                 </button>
               );
             })}
@@ -337,7 +337,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                 <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-[11px] text-muted-foreground">
-                    Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦Ã¡Å¸â€“{" "}
+                    វត្តមានកត់ត្រារួច៖{" "}
                     <strong className="text-foreground font-semibold">
                       {s._count?.attendance ?? (s as any).totalAttendance ?? (s as any).markedCount ?? 0}
                     </strong>
@@ -348,15 +348,15 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       size="sm"
                       onClick={() => openShareModal(s)}
                       className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
-                      title="Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ (Share attendance link with members)"
+                      title="ចែករំលែកតំណភ្ជាប់វត្តមានដល់សមាជិក (Share attendance link with members)"
                     >
                       <Share2 className="w-3 h-3 text-primary" />
-                      <span>Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Share)</span>
+                      <span>តំណភ្ជាប់ (Share)</span>
                     </Button>
                     <Link href={attendanceHref(s.id)}>
                       <Button variant="outline" size="sm" className="h-7 text-xs space-x-1">
                         <CalendarCheck className="w-3 h-3 text-primary" />
-                        <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
+                        <span>ស្រង់វត្តមាន</span>
                       </Button>
                     </Link>
                     <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => openEdit(s)} title="Edit">
@@ -380,8 +380,8 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
           {visible.length === 0 && (
             <div className="col-span-full text-center py-12 text-muted-foreground text-xs">
               {loading
-                ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢..."
-                : "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€¦ \"Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸\"Ã¡Å¸â€ (No lessons yet. Create the first one.)"}
+                ? "កំពុងទាញយកទិន្នន័យ..."
+                : "មិនទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយ។ សូមចុច \"បង្កើតមេរៀនថ្មី\"។ (No lessons yet. Create the first one.)"}
             </div>
           )}
         </div>
@@ -392,7 +392,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <h3 className="font-bold text-sm">
-                    {form.id ? "Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Edit lesson)" : "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New lesson)"}
+                    {form.id ? "កែប្រែមេរៀន (Edit lesson)" : "បង្កើតមេរៀនថ្មី (New lesson)"}
                   </h3>
                   <button onClick={() => setForm(null)} aria-label="Close">
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
@@ -402,7 +402,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                 <form onSubmit={submit} className="space-y-3 text-xs">
                   <div>
                     <label className="block font-medium mb-1">
-                      Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Course) <span className="text-destructive">*</span>
+                      មុខវិជ្ជា (Course) <span className="text-destructive">*</span>
                     </label>
                     <select
                       value={form.courseId}
@@ -416,7 +416,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       {/* Placeholder option: forces user to actively pick a course */}
                       {!form.courseId && (
                         <option value="" disabled>
-                          Ã¢â‚¬â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾ËœÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“ Ã¢â‚¬â€
+                          — សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវ —
                         </option>
                       )}
                       {courses.map((c) => (
@@ -427,13 +427,13 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     </select>
                     {!form.courseId && (
                       <p className="text-[10px] text-destructive mt-1">
-                        Ã¢Å¡Â Ã¯Â¸Â Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾â€œÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ
+                        ⚠️ ត្រូវតែជ្រើសរើសមុខវិជ្ជាមុនពេលបង្កើតមេរៀន
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Lesson title)</label>
+                    <label className="block font-medium mb-1">ចំណងជើងមេរៀន (Lesson title)</label>
                     <input
                       type="text"
                       required
@@ -444,7 +444,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜ (Date)</label>
+                    <label className="block font-medium mb-1">កាលបរិច្ឆេទ (Date)</label>
                     <input
                       type="date"
                       required
@@ -456,7 +456,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Ëœ (Start)</label>
+                      <label className="block font-medium mb-1">ម៉ោងចាប់ផ្តើម (Start)</label>
                       <input
                         type="time"
                         required
@@ -466,7 +466,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       />
                     </div>
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾â€Ã¡Å¸â€¹ (End)</label>
+                      <label className="block font-medium mb-1">ម៉ោងបញ្ចប់ (End)</label>
                       <input
                         type="time"
                         required
@@ -478,7 +478,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹ (Room)</label>
+                    <label className="block font-medium mb-1">បន្ទប់ (Room)</label>
                     <input
                       type="text"
                       required
@@ -490,7 +490,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                   {form.id && (
                     <div>
-                      <label className="block font-medium mb-1">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ (Status)</label>
+                      <label className="block font-medium mb-1">ស្ថានភាព (Status)</label>
                       <select
                         value={form.status}
                         onChange={(e) => setForm({ ...form, status: e.target.value })}
@@ -506,7 +506,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                   )}
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¶Ã¡Å¸â€  (Notes)</label>
+                    <label className="block font-medium mb-1">កំណត់ចំណាំ (Notes)</label>
                     <textarea
                       rows={2}
                       value={form.notes}
@@ -519,10 +519,10 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
 
                   <div className="pt-2 flex justify-end space-x-2">
                     <Button type="button" variant="outline" size="sm" onClick={() => setForm(null)}>
-                      Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
+                      បោះបង់
                     </Button>
                     <Button type="submit" size="sm" disabled={saving || !form.courseId}>
-                      {saving ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬..." : "Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬ (Save)"}
+                      {saving ? "កំពុងរក្សាទុក..." : "រក្សាទុក (Save)"}
                     </Button>
                   </div>
                 </form>
@@ -543,10 +543,10 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-foreground">
-                        Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Share Attendance Link)
+                        តំណភ្ជាប់ចែករំលែកវត្តមាន (Share Attendance Link)
                       </h3>
                       <p className="text-[11px] text-muted-foreground">
-                        {shareSession.course.code} Ã¢â‚¬Â¢ {shareSession.title}
+                        {shareSession.course.code} • {shareSession.title}
                       </p>
                     </div>
                   </div>
@@ -564,13 +564,13 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                 {shareLoading ? (
                   <div className="py-8 text-center text-xs text-muted-foreground space-y-2">
                     <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent"></div>
-                    <p>Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬...</p>
+                    <p>កំពុងបង្កើតតំណភ្ជាប់ចែករំលែក...</p>
                   </div>
                 ) : shareToken ? (
                   <div className="space-y-3 pt-1">
                     <div className="p-3 rounded-xl bg-muted/40 border border-border space-y-2">
                       <label className="block text-[11px] font-semibold text-foreground">
-                        Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ (Public Attendance URL)
+                        តំណភ្ជាប់សាធារណៈសម្រាប់សមាជិក (Public Attendance URL)
                       </label>
                       <div className="flex items-center space-x-1.5">
                         <input
@@ -591,14 +591,14 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                           className="h-8 text-xs shrink-0 space-x-1"
                         >
                           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copied ? "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾â€ž!" : "Ã¡Å¾â€¦Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾â€ž"}</span>
+                          <span>{copied ? "បានចម្លង!" : "ចម្លង"}</span>
                         </Button>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between text-xs pt-1">
                       <span className="text-[11px] text-muted-foreground">
-                        Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¸â€”Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¸â€¹ Login
+                        សមាជិកអាចបើកមើលបានភ្លាមៗដោយមិនបាច់ Login
                       </span>
                       <a
                         href={`/share/${shareToken}`}
@@ -606,14 +606,14 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                         rel="noopener noreferrer"
                         className="inline-flex items-center space-x-1 text-primary hover:underline font-semibold text-xs"
                       >
-                        <span>Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹</span>
+                        <span>បើកមើលផ្ទាល់</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   </div>
                 ) : (
                   <div className="py-6 text-center text-xs text-destructive">
-                    Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€ºÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾ÂÃ¡Å¸â€
+                    មិនអាចទាញយកតំណភ្ជាប់បានឡើយ។ សូមសាកល្បងម្តងទៀត។
                   </div>
                 )}
 
@@ -626,7 +626,7 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       setShareToken(null);
                     }}
                   >
-                    Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜
+                    បិទ
                   </Button>
                 </div>
               </CardContent>
@@ -637,4 +637,3 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
     </PortalLayout>
   );
 }
-

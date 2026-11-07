@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Locale } from "@/types";
@@ -56,4 +56,3 @@ export function useI18n() {
   }
   return context;
 }
-

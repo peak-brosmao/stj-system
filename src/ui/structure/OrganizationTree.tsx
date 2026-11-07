@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -115,7 +115,7 @@ export function OrganizationTree() {
       if (!res.ok || !data?.success || !data.hierarchy) {
         setHierarchy(null);
         setAvailableYears([]);
-        throw new Error("Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€“Ã¡Å¾Â¸ Backend Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+        throw new Error("មិនអាចទាញយកទិន្នន័យរចនាសម្ព័ន្ធពី Backend បានឡើយ");
       }
       if (data.hierarchy) {
         setHierarchy(data.hierarchy);
@@ -126,7 +126,7 @@ export function OrganizationTree() {
       }
     } catch (err) {
       setHierarchy(null);
-      setError(err instanceof Error ? err.message : "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+      setError(err instanceof Error ? err.message : "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
       console.error("Failed to load hierarchy:", err);
     } finally {
       setLoading(false);
@@ -217,7 +217,7 @@ export function OrganizationTree() {
             </div>
             <div>
               <div className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
-                Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Academic Mandate)
+                អាណត្តិសិក្សា (Academic Mandate)
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <div className="relative inline-block">
@@ -228,7 +228,7 @@ export function OrganizationTree() {
                   >
                     {availableYears.map((y) => (
                       <option key={y.academicYear} value={y.academicYear}>
-                        Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ {y.academicYear} {y.isCurrent ? "Ã¢Ëœâ€¦ (Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ)" : "(Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹)"}
+                        ឆ្នាំសិក្សា {y.academicYear} {y.isCurrent ? "★ (សកម្មបច្ចុប្បន្ន)" : "(បណ្ណសារចាស់)"}
                       </option>
                     ))}
                   </select>
@@ -238,7 +238,7 @@ export function OrganizationTree() {
                 <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>
-                    {selectedYear === "2026-2027" ? "Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ (Active)" : "Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¾Â¸Ã¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€º (Archived)"}
+                    {selectedYear === "2026-2027" ? "អាណត្តិបច្ចុប្បន្ន (Active)" : "ទិន្នន័យអតីតកាល (Archived)"}
                   </span>
                 </span>
               </div>
@@ -251,7 +251,7 @@ export function OrganizationTree() {
               <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡, Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Â, Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹..."
+                placeholder="ស្វែងរកឈ្មោះ, អត្តលេខ, ដេប៉ាតឺម៉ង់..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-sans"
@@ -270,7 +270,7 @@ export function OrganizationTree() {
                 }`}
               >
                 <Network className="w-3.5 h-3.5" />
-                <span>Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž (Tree)</span>
+                <span>មែកធាង (Tree)</span>
               </button>
               <button
                 type="button"
@@ -282,7 +282,7 @@ export function OrganizationTree() {
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Â (Grid)</span>
+                <span>កាត (Grid)</span>
               </button>
             </div>
           </div>
@@ -293,20 +293,20 @@ export function OrganizationTree() {
           <div className="pt-3 border-t border-border flex flex-wrap items-center justify-between text-xs text-muted-foreground gap-2">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <span>
-                Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ: <strong className="text-foreground">{hierarchy.president.nameKh}</strong>
+                ប្រធាន STJ: <strong className="text-foreground">{hierarchy.president.nameKh}</strong>
               </span>
-              <span>Ã¢â‚¬Â¢</span>
+              <span>•</span>
               <span>
-                Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¼Ã¡Å¾â€º: <strong className="text-foreground">{hierarchy.totalCourses} Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</strong>
+                មុខវិជ្ជាស្នូល: <strong className="text-foreground">{hierarchy.totalCourses} មុខវិជ្ជា</strong>
               </span>
-              <span>Ã¢â‚¬Â¢</span>
+              <span>•</span>
               <span>
-                Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€ž: <strong className="text-foreground">{hierarchy.totalTutors} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</strong>
+                សមាជិករៀមច្បង: <strong className="text-foreground">{hierarchy.totalTutors} នាក់</strong>
               </span>
             </div>
             <div className="text-[11px] text-primary font-medium flex items-center space-x-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â½Ã¡Å¾â„¢Ã¡Å¸â€”Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·</span>
+              <span>រាល់ទិន្នន័យត្រូវបានចាក់សោតាមឆ្នាំនីមួយៗការពារការកែប្រែឆ្លងអាណត្តិ</span>
             </div>
           </div>
         )}
@@ -315,7 +315,7 @@ export function OrganizationTree() {
       {loading && (
         <div className="py-24 text-center space-y-3">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž STJ...</p>
+          <p className="text-xs text-muted-foreground">កំពុងទាញយករចនាសម្ព័ន្ធមែកធាង STJ...</p>
         </div>
       )}
       {!loading && error && (
@@ -325,11 +325,11 @@ export function OrganizationTree() {
       )}
 
       {/* ========================================================================= */}
-      {/* VIEW 1: ORGANIZATIONAL TREE (Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž) */}
+      {/* VIEW 1: ORGANIZATIONAL TREE (មែកធាង) */}
       {/* ========================================================================= */}
       {!loading && hierarchy && viewMode === "tree" && (
         <div className="space-y-12">
-          {/* LEVEL 1: APEX NODE Ã¢â‚¬â€ STJ PRESIDENT */}
+          {/* LEVEL 1: APEX NODE — STJ PRESIDENT */}
           <div className="flex flex-col items-center">
             <div className="relative group max-w-md w-full">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary via-indigo-500 to-primary rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
@@ -337,7 +337,7 @@ export function OrganizationTree() {
               <div className="relative bg-card border-2 border-primary/40 rounded-2xl p-6 shadow-xl text-center space-y-4">
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-sm">
                   <Award className="w-3.5 h-3.5" />
-                  <span>Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â¼Ã¡Å¾â€º (Apex Leadership)</span>
+                  <span>ថ្នាក់ដឹកនាំកំពូល (Apex Leadership)</span>
                 </div>
 
                 <div className="flex flex-col items-center space-y-2">
@@ -372,7 +372,7 @@ export function OrganizationTree() {
                     {hierarchy.president.roleKh}
                   </div>
                   <div className="text-[11px] text-muted-foreground">
-                    {hierarchy.president.studentId} Ã¢â‚¬Â¢ {hierarchy.president.memberId} Ã¢â‚¬Â¢ Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹ {hierarchy.president.department} ({hierarchy.president.generation})
+                    {hierarchy.president.studentId} • {hierarchy.president.memberId} • ដេប៉ាតឺម៉ង់ {hierarchy.president.department} ({hierarchy.president.generation})
                   </div>
                 </div>
 
@@ -411,7 +411,7 @@ export function OrganizationTree() {
                           {course.code}
                         </span>
                         <span className="text-xs text-muted-foreground font-semibold">
-                          {course.memberCount} Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬
+                          {course.memberCount} សមាជិក
                         </span>
                       </div>
 
@@ -431,13 +431,13 @@ export function OrganizationTree() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-[10px] font-semibold text-primary uppercase tracking-wider">
-                            Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Course Leader)
+                            ប្រធានក្រុម (Course Leader)
                           </div>
                           <div className="font-bold text-xs text-foreground truncate">
                             {course.leader.nameKh}
                           </div>
                           <div className="text-[11px] text-muted-foreground truncate">
-                            {course.leader.studentId} Ã¢â‚¬Â¢ {course.leader.department}
+                            {course.leader.studentId} • {course.leader.department}
                           </div>
                         </div>
                       </div>
@@ -450,7 +450,7 @@ export function OrganizationTree() {
                         className="w-full text-xs justify-between h-8 mt-2"
                       >
                         <span>
-                          {isExpanded ? "Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬" : "Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬"} ({course.members.length})
+                          {isExpanded ? "បិទបញ្ជីសមាជិក" : "បើកមើលសមាជិក"} ({course.members.length})
                         </span>
                         <ChevronDown
                           className={`w-3.5 h-3.5 transition-transform duration-200 ${
@@ -500,7 +500,7 @@ export function OrganizationTree() {
 
                         {course.members.length === 0 && (
                           <div className="p-4 rounded-xl border border-dashed border-border text-center text-xs text-muted-foreground">
-                            Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬
+                            មិនមានសមាជិកត្រូវនឹងពាក្យស្វែងរក
                           </div>
                         )}
                       </div>
@@ -514,7 +514,7 @@ export function OrganizationTree() {
       )}
 
       {/* ========================================================================= */}
-      {/* VIEW 2: INTERACTIVE GRID VIEW (Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Â GRID) */}
+      {/* VIEW 2: INTERACTIVE GRID VIEW (កាត GRID) */}
       {/* ========================================================================= */}
       {!loading && hierarchy && viewMode === "grid" && (
         <div className="space-y-8 animate-in fade-in duration-300">
@@ -528,7 +528,7 @@ export function OrganizationTree() {
                   : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
               }`}
             >
-              Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({hierarchy.totalTutors})
+              សមាជិកទាំងអស់ ({hierarchy.totalTutors})
             </button>
             {hierarchy.courses.map((c) => (
               <button
@@ -540,7 +540,7 @@ export function OrganizationTree() {
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
                 }`}
               >
-                {c.code} Ã¢â‚¬Â¢ {c.nameKh} ({c.members.length})
+                {c.code} • {c.nameKh} ({c.members.length})
               </button>
             ))}
           </div>
@@ -549,17 +549,17 @@ export function OrganizationTree() {
           {activeCourseFilter === "ALL" && (
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€™Ã¡Å¾Â¸ STJ (Executive & Course Leaders)
+                គណៈដឹកនាំកម្មវិធី STJ (Executive & Course Leaders)
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {/* President */}
                 <div className="bg-gradient-to-br from-primary/10 via-card to-card border-2 border-primary/40 rounded-2xl p-4 shadow-sm space-y-2">
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-primary-foreground">
-                    Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ Ã¡Å¾â‚¬Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€º
+                    ប្រធាន STJ កណ្តាល
                   </span>
                   <div className="font-bold text-sm text-foreground">{hierarchy.president.nameKh}</div>
                   <div className="text-[11px] text-muted-foreground">{hierarchy.president.nameEn}</div>
-                  <div className="text-[11px] font-mono text-primary">{hierarchy.president.studentId} Ã¢â‚¬Â¢ {hierarchy.president.department}</div>
+                  <div className="text-[11px] font-mono text-primary">{hierarchy.president.studentId} • {hierarchy.president.department}</div>
                 </div>
 
                 {/* Course Leaders */}
@@ -570,7 +570,7 @@ export function OrganizationTree() {
                     </span>
                     <div className="font-bold text-sm text-foreground truncate">{c.leader.nameKh}</div>
                     <div className="text-[11px] text-muted-foreground truncate">{c.leader.nameEn}</div>
-                    <div className="text-[11px] font-mono text-muted-foreground">{c.leader.studentId} Ã¢â‚¬Â¢ {c.leader.department}</div>
+                    <div className="text-[11px] font-mono text-muted-foreground">{c.leader.studentId} • {c.leader.department}</div>
                   </div>
                 ))}
               </div>
@@ -581,7 +581,7 @@ export function OrganizationTree() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ ({allGridMembers.length} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹)
+                បញ្ជីសមាជិករៀមច្បងបង្រៀន ({allGridMembers.length} នាក់)
               </h3>
             </div>
 
@@ -609,11 +609,11 @@ export function OrganizationTree() {
 
                   <div className="pt-2 border-t border-border/60 grid grid-cols-2 gap-2 text-[11px]">
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Â STJ</span>
+                      <span className="text-muted-foreground block text-[10px]">អត្តលេខ STJ</span>
                       <span className="font-mono font-semibold text-foreground">{member.memberId}</span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â</span>
+                      <span className="text-muted-foreground block text-[10px]">អត្តលេខនិស្សិត</span>
                       <span className="font-mono font-medium text-foreground">{member.studentId}</span>
                     </div>
                   </div>
@@ -632,8 +632,8 @@ export function OrganizationTree() {
 
             {allGridMembers.length === 0 && (
               <div className="p-12 text-center border-2 border-dashed border-border rounded-2xl space-y-2">
-                <p className="text-sm font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢</p>
-                <p className="text-xs text-muted-foreground">Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€ºÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬ Ã¡Å¾Â¬Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¸â€</p>
+                <p className="text-sm font-semibold text-foreground">មិនមានសមាជិកត្រូវនឹងពាក្យស្វែងរកឡើយ</p>
+                <p className="text-xs text-muted-foreground">សូមសាកល្បងផ្លាស់ប្តូរពាក្យស្វែងរក ឬជ្រើសរើសមុខវិជ្ជាផ្សេង។</p>
               </div>
             )}
           </div>

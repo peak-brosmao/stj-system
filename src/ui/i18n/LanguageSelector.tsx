@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Globe } from "lucide-react";
@@ -9,7 +9,7 @@ export function LanguageSelector() {
   const { locale, setLocale } = useI18n();
 
   const options: Array<{ code: Locale; label: string }> = [
-    { code: "km", label: "ážáŸ’áž˜áŸ‚ážš" },
+    { code: "km", label: "ខ្មែរ" },
     { code: "en", label: "EN" },
     { code: "fr", label: "FR" },
   ];
@@ -33,4 +33,3 @@ export function LanguageSelector() {
     </div>
   );
 }
-

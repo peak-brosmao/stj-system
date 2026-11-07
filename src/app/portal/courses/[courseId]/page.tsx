@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -20,10 +20,10 @@ interface CourseDetail {
 }
 
 const STATUS: Record<string, { v: "info" | "warning" | "success" | "destructive"; t: string }> = {
-  SCHEDULED: { v: "info", t: "Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€š (Scheduled)" },
-  IN_PROGRESS: { v: "warning", t: "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (In progress)" },
-  COMPLETED: { v: "success", t: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾â€Ã¡Å¸â€¹ (Completed)" },
-  CANCELLED: { v: "destructive", t: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€º (Cancelled)" },
+  SCHEDULED: { v: "info", t: "តាមកាលវិភាគ (Scheduled)" },
+  IN_PROGRESS: { v: "warning", t: "កំពុងបង្រៀន (In progress)" },
+  COMPLETED: { v: "success", t: "បានបញ្ចប់ (Completed)" },
+  CANCELLED: { v: "destructive", t: "បានលុបចោល (Cancelled)" },
 };
 
 export default function CourseDetailPage() {
@@ -45,12 +45,12 @@ export default function CourseDetailPage() {
       <div className="space-y-6 max-w-4xl mx-auto">
         <Link href="/portal/courses" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Ã¡Å¾ÂÃ¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€žÃ¡Å¾â„¢ (Back)</span>
+          <span>ថយក្រោយ (Back)</span>
         </Link>
 
         {!course && (
           <p className="text-xs text-muted-foreground">
-            {loading ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡..." : "Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Æ’Ã¡Å¾Â¾Ã¡Å¾â€°Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢ (Course not found.)"}
+            {loading ? "កំពុងដំណើរការ..." : "រកមិនឃើញមុខវិជ្ជាឡើយ (Course not found.)"}
           </p>
         )}
 
@@ -69,14 +69,14 @@ export default function CourseDetailPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <UserCheck className="w-4 h-4 text-primary" />
-                  Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Course Leaders)
+                  ប្រធានក្រុមបង្រៀន (Course Leaders)
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 text-xs">
-                {course.leaders.length === 0 && <p className="text-muted-foreground">Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž (Not assigned yet.)</p>}
+                {course.leaders.length === 0 && <p className="text-muted-foreground">ពុំទាន់បានចាត់តាំង (Not assigned yet.)</p>}
                 {course.leaders.map((l) => (
                   <p key={l.email} className="text-foreground">
-                    {l.fullNameKh} ({l.fullNameEn}) Ã¢â‚¬Â¢ {l.phone}
+                    {l.fullNameKh} ({l.fullNameEn}) • {l.phone}
                   </p>
                 ))}
               </CardContent>
@@ -84,12 +84,12 @@ export default function CourseDetailPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Lessons)</CardTitle>
+                <CardTitle className="text-sm font-semibold">មេរៀន (Lessons)</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 {course.sessions.length === 0 && (
                   <p className="text-xs text-muted-foreground">
-                    Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸Â (No lessons created yet.)
+                    ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet.)
                   </p>
                 )}
                 {course.sessions.map((s) => (
@@ -111,7 +111,7 @@ export default function CourseDetailPage() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
                   <Users className="w-4 h-4 text-primary" />
-                  Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Team) - {course.enrolledMembers.length}
+                  ក្រុមគ្រូបង្រៀន (Team) - {course.enrolledMembers.length}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">

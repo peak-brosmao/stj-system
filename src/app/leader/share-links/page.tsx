@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export default function LeaderShareLinksPage() {
 
   // New Link form
   const [newLink, setNewLink] = useState({
-    title: "Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Programming Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡",
+    title: "របាយការណ៍វត្តមាន Programming សប្តាហ៍ទី១",
     courseId: "c-prog",
     sessionId: "session-1",
     password: "",
@@ -88,7 +88,7 @@ export default function LeaderShareLinksPage() {
   };
 
   const handleRevoke = async (id: string) => {
-    if (!confirm("Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â? (Revoke Share Link)")) return;
+    if (!confirm("តើអ្នកពិតជាចង់លុបចោលតំណភ្ជាប់នេះមែនទេ? (Revoke Share Link)")) return;
     try {
       await fetch(`/api/system/share-links?id=${id}`, { method: "DELETE" });
       loadLinks();
@@ -101,7 +101,7 @@ export default function LeaderShareLinksPage() {
     <PortalLayout
       portalType="leader"
       userRole="Course Leader"
-      userName="Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾â€ž Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾â€žÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€ž"
+      userName="លាង ជីងហេង"
       userEmail="leang.jingheng@itc.edu.kh"
     >
       <div className="space-y-6">
@@ -112,10 +112,10 @@ export default function LeaderShareLinksPage() {
               <span>Cryptographic Share Links</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Shareable Attendance Links)
+              តំណភ្ជាប់ចែករំលែកវត្តមាន (Shareable Attendance Links)
             </h1>
             <p className="text-xs text-muted-foreground">
-              Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ Ã¡Å¾Â¬Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å  QR Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Read-Only)
+              បង្កើតតំណភ្ជាប់ ឬកូដ QR សុវត្ថិភាពដើម្បីចែករំលែករបាយការណ៍វត្តមាន (Read-Only)
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export default function LeaderShareLinksPage() {
             className="text-xs space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New Share Link)</span>
+            <span>បង្កើតតំណភ្ជាប់ថ្មី (New Share Link)</span>
           </Button>
         </div>
 
@@ -134,7 +134,7 @@ export default function LeaderShareLinksPage() {
           <div className="flex items-center space-x-2">
             <ShieldCheck className="w-4 h-4 shrink-0" />
             <span>
-              Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢ Token Hash Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Â¾Ã¡Å¾â€ (Ã¡Å¾Å Ã¡Å¾Â¼Ã¡Å¾â€¦Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜ Ã¡Å¾Â¬Ã¡Å¾Â¢Ã¡Å¸Å Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€º) Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€
+              តំណភ្ជាប់ទាំងអស់ត្រូវបានការពារដោយ Token Hash និងមិនបង្ហាញព័ត៌មានផ្ទាល់ខ្លួនរសើប (ដូចជាលេខទូរស័ព្ទ ឬអ៊ីមែល) ឡើយ។
             </span>
           </div>
         </div>
@@ -145,11 +145,11 @@ export default function LeaderShareLinksPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â</th>
-                  <th className="py-3 px-4 font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ / Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€š</th>
-                  <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€º</th>
-                  <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
-                  <th className="py-3 px-4 font-semibold text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                  <th className="py-3 px-4 font-semibold">ចំណងជើងរបាយការណ៍</th>
+                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជា / វគ្គ</th>
+                  <th className="py-3 px-4 font-semibold text-center">ចូលមើល</th>
+                  <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
+                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -163,14 +163,14 @@ export default function LeaderShareLinksPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="font-mono font-bold text-primary">{link.course.code}</div>
-                      <div className="text-[10px] text-muted-foreground">{link.session?.title || "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶"}</div>
+                      <div className="text-[10px] text-muted-foreground">{link.session?.title || "គ្រប់វគ្គសិក្សា"}</div>
                     </td>
                     <td className="py-3 px-4 text-center font-bold text-foreground">
-                      {link.accessCount} Ã¡Å¾Å Ã¡Å¾â€ž
+                      {link.accessCount} ដង
                     </td>
                     <td className="py-3 px-4 text-center">
                       <Badge variant={link.isRevoked ? "destructive" : "success"}>
-                        {link.isRevoked ? "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€º" : "Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ"}
+                        {link.isRevoked ? "បានលុបចោល" : "សកម្ម"}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -228,7 +228,7 @@ export default function LeaderShareLinksPage() {
             <Card className="max-w-md w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <h3 className="font-bold text-sm">Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</h3>
+                  <h3 className="font-bold text-sm">បង្កើតតំណភ្ជាប់ចែករំលែកថ្មី</h3>
                   <button onClick={() => setIsModalOpen(false)}>
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                   </button>
@@ -236,7 +236,7 @@ export default function LeaderShareLinksPage() {
 
                 <form onSubmit={handleCreate} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â *</label>
+                    <label className="block font-medium mb-1">ចំណងជើងរបាយការណ៍ *</label>
                     <input
                       type="text"
                       required
@@ -247,10 +247,10 @@ export default function LeaderShareLinksPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡ (Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸ÂÃ¡Å¾â€¦Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â)</label>
+                    <label className="block font-medium mb-1">លេខសម្ងាត់ការពារ (ស្រេចចិត្ត)</label>
                     <input
                       type="password"
-                      placeholder="Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€˜Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾Å¡ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡"
+                      placeholder="ទុកនៅទំនេរ ប្រសិនបើមិនត្រូវការ"
                       value={newLink.password}
                       onChange={(e) => setNewLink({ ...newLink, password: e.target.value })}
                       className="w-full p-2 rounded-lg border border-input bg-background"
@@ -258,7 +258,7 @@ export default function LeaderShareLinksPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹ (Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸ÂÃ¡Å¾â€¦Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â)</label>
+                    <label className="block font-medium mb-1">កាលបរិច្ឆេទផុតកំណត់ (ស្រេចចិត្ត)</label>
                     <input
                       type="date"
                       value={newLink.expiresAt}
@@ -276,7 +276,7 @@ export default function LeaderShareLinksPage() {
                       className="rounded border-input text-primary focus:ring-primary"
                     />
                     <label htmlFor="showStats" className="font-medium cursor-pointer">
-                      Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ (Show Statistics Summary)
+                      បង្ហាញផ្ទាំងស្ថិតិវត្តមានសរុប (Show Statistics Summary)
                     </label>
                   </div>
 
@@ -287,10 +287,10 @@ export default function LeaderShareLinksPage() {
                       size="sm"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
+                      បោះបង់
                     </Button>
                     <Button type="submit" size="sm">
-                      Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹
+                      បង្កើតតំណភ្ជាប់
                     </Button>
                   </div>
                 </form>
@@ -305,7 +305,7 @@ export default function LeaderShareLinksPage() {
             <Card className="max-w-sm w-full text-center max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-border">
-                  <h3 className="font-bold text-sm">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å  QR Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬</h3>
+                  <h3 className="font-bold text-sm">កូដ QR សម្រាប់ចែករំលែក</h3>
                   <button onClick={() => setQrToken(null)}>
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                   </button>
@@ -320,7 +320,7 @@ export default function LeaderShareLinksPage() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Å Ã¡Å¸Æ’
+                  ស្កេនដើម្បីចូលមើលរបាយការណ៍វត្តមានផ្លូវការនៅលើទូរស័ព្ទដៃ
                 </p>
                 <Button
                   variant="outline"
@@ -328,7 +328,7 @@ export default function LeaderShareLinksPage() {
                   onClick={() => setQrToken(null)}
                   className="w-full"
                 >
-                  Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž
+                  បិទផ្ទាំង
                 </Button>
               </CardContent>
             </Card>
@@ -338,4 +338,3 @@ export default function LeaderShareLinksPage() {
     </PortalLayout>
   );
 }
-

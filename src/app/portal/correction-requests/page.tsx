@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -71,7 +71,7 @@ function CorrectionRequestsContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!recordId) {
-      alert("Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢ (No attendance record to correct yet)");
+      alert("មិនទាន់មានកំណត់ត្រាវត្តមានសម្រាប់ស្នើសុំកែតម្រូវឡើយ (No attendance record to correct yet)");
       return;
     }
     setSubmitting(true);
@@ -90,14 +90,14 @@ function CorrectionRequestsContent() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢");
+      if (!res.ok) throw new Error(data.error || "ការបញ្ជូនសំណើមិនជោគជ័យ");
 
-      setSuccessMsg("Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸â€¦Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ");
+      setSuccessMsg("សំណើកែតម្រូវវត្តមានត្រូវបានបញ្ជូនដោយជោគជ័យទៅគណៈគ្រប់គ្រង STJ");
       setReason("");
       setIsModalOpen(false);
       loadCorrections();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Â Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾");
+      alert(err instanceof Error ? err.message : "កំហុសក្នុងការបញ្ជូនសំណើ");
     } finally {
       setSubmitting(false);
     }
@@ -106,12 +106,12 @@ function CorrectionRequestsContent() {
   const getReviewBadge = (status: string) => {
     switch (status) {
       case "APPROVED":
-        return <Badge variant="success">Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â (Approved)</Badge>;
+        return <Badge variant="success">បានអនុម័ត (Approved)</Badge>;
       case "REJECTED":
-        return <Badge variant="destructive">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â (Rejected)</Badge>;
+        return <Badge variant="destructive">មិនអនុម័ត (Rejected)</Badge>;
       case "PENDING":
       default:
-        return <Badge variant="warning">Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ÂÃ¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ (Pending)</Badge>;
+        return <Badge variant="warning">រង់ចាំត្រួតពិនិត្យ (Pending)</Badge>;
     }
   };
 
@@ -125,10 +125,10 @@ function CorrectionRequestsContent() {
               <span>Attendance Correction Request Desk</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Attendance Correction Requests)
+              សំណើកែតម្រូវវត្តមាន (Attendance Correction Requests)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ
+              តាមដានស្ថានភាពសំណើកែតម្រូវវត្តមាន និងកំណត់ត្រាពិនិត្យរបស់គណៈគ្រប់គ្រង STJ
             </p>
           </div>
 
@@ -138,7 +138,7 @@ function CorrectionRequestsContent() {
             className="space-x-1.5 text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</span>
+            <span>ដាក់សំណើថ្មី</span>
           </Button>
         </div>
 
@@ -160,7 +160,7 @@ function CorrectionRequestsContent() {
                       {c.record?.session?.course?.code || "PROG101"}
                     </span>
                     <h3 className="font-bold text-sm text-foreground mt-1">
-                      {c.record?.session?.title || "Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ"}
+                      {c.record?.session?.title || "វគ្គបង្រៀន"}
                     </h3>
                   </div>
                   <div>{getReviewBadge(c.reviewStatus)}</div>
@@ -168,17 +168,17 @@ function CorrectionRequestsContent() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹ (Previous):</span>
+                    <span className="text-muted-foreground text-[11px]">ស្ថានភាពចាស់ (Previous):</span>
                     <p className="font-semibold text-destructive mt-0.5">{c.previousStatus}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€  (Requested):</span>
+                    <span className="text-muted-foreground text-[11px]">ស្ថានភាពស្នើសុំ (Requested):</span>
                     <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">{c.requestedStatus}</p>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€  (Reason):</span>
+                  <span className="text-muted-foreground text-[11px]">មូលហេតុស្នើសុំ (Reason):</span>
                   <p className="text-foreground text-xs mt-0.5 p-2 rounded-lg bg-muted/40">
                     {c.reason}
                   </p>
@@ -187,7 +187,7 @@ function CorrectionRequestsContent() {
                 {c.reviewNotes && (
                   <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs space-y-1">
                     <span className="text-[11px] font-semibold text-primary">
-                      Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž ({c.reviewedBy?.fullNameKh || "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ"}):
+                      កំណត់សម្គាល់ពីគណៈគ្រប់គ្រង ({c.reviewedBy?.fullNameKh || "គណៈគ្រប់គ្រង STJ"}):
                     </span>
                     <p className="text-muted-foreground">{c.reviewNotes}</p>
                   </div>
@@ -206,21 +206,21 @@ function CorrectionRequestsContent() {
             <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between pb-2 border-b border-border">
                 <h3 className="font-bold text-base text-foreground">
-                  Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ
+                  ដាក់ពាក្យស្នើសុំកែតម្រូវវត្តមាន
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   className="text-muted-foreground hover:text-foreground text-xs"
                 >
-                  Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜
+                  បិទ
                 </button>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div>
                   <label className="block font-medium text-foreground mb-1.5">
-                    Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€ž:
+                    ជ្រើសរើសវគ្គសិក្សាដែលមានការខុសឆ្គង:
                   </label>
                   <select
                     value={recordId}
@@ -229,11 +229,11 @@ function CorrectionRequestsContent() {
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                   >
                     {myRecords.length === 0 ? (
-                      <option value="">Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸Â (No attendance records yet)</option>
+                      <option value="">ពុំទាន់មានកំណត់ត្រាវត្តមានដែលបានកត់ត្រានៅឡើយទេ (No attendance records yet)</option>
                     ) : (
                       myRecords.map((r) => (
                         <option key={r.id} value={r.id}>
-                          {r.session?.title} - {r.session?.course?.code} (Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¸â€“ {r.status})
+                          {r.session?.title} - {r.session?.course?.code} (កត់ត្រា៖ {r.status})
                         </option>
                       ))
                     )}
@@ -243,45 +243,45 @@ function CorrectionRequestsContent() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block font-medium text-foreground mb-1.5">
-                      Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹:
+                      ស្ថានភាពចាស់:
                     </label>
                     <select
                       value={previousStatus}
                       onChange={(e) => setPreviousStatus(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                     >
-                      <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
-                      <option value="ABSENT">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</option>
-                      <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
-                      <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
+                      <option value="LATE">មកយឺត (Late)</option>
+                      <option value="ABSENT">អវត្តមាន (Absent)</option>
+                      <option value="EXCUSED">ច្បាប់ (Excused)</option>
+                      <option value="PRESENT">វត្តមាន (Present)</option>
                     </select>
                   </div>
                   <div>
                     <label className="block font-medium text-foreground mb-1.5">
-                      Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š:
+                      ស្ថានភាពស្នើសុំកែប្រែ:
                     </label>
                     <select
                       value={requestedStatus}
                       onChange={(e) => setRequestedStatus(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                     >
-                      <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
-                      <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
-                      <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
+                      <option value="PRESENT">វត្តមាន (Present)</option>
+                      <option value="EXCUSED">ច្បាប់ (Excused)</option>
+                      <option value="LATE">មកយឺត (Late)</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block font-medium text-foreground mb-1.5">
-                    Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â» Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€”Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹ (Reason & Evidence):
+                    មូលហេតុ និងភស្តុតាងបញ្ជាក់ (Reason & Evidence):
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    placeholder="Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â» Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾Ëœ..."
+                    placeholder="បញ្ជាក់ពីមូលហេតុ និងពេលវេលាជាក់ស្តែងនៃការចូលរួម..."
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                   />
                 </div>
@@ -293,10 +293,10 @@ function CorrectionRequestsContent() {
                     size="sm"
                     onClick={() => setIsModalOpen(false)}
                   >
-                    Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
+                    បោះបង់
                   </Button>
                   <Button type="submit" size="sm" disabled={submitting}>
-                    {submitting ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œ..." : "Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾"}
+                    {submitting ? "កំពុងបញ្ជូន..." : "បញ្ជូនសំណើ"}
                   </Button>
                 </div>
               </form>
@@ -315,4 +315,3 @@ export default function CorrectionRequestsPage() {
     </React.Suspense>
   );
 }
-

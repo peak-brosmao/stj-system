@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { AttendanceMarker } from "@/ui/manage/AttendanceMarker";
 

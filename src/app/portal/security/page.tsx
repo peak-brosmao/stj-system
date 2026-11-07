@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -34,22 +34,22 @@ export default function AccountSecurityPage() {
       id: "sess-curr",
       device: "Windows PC (Google Chrome)",
       ipAddress: "119.82.253.14 (Phnom Penh, Cambodia)",
-      lastActive: "Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡ (Current Session)",
+      lastActive: "ពេលនេះ (Current Session)",
       isCurrent: true,
     },
     {
       id: "sess-mob",
       device: "Apple iPhone 14 Pro (Safari)",
       ipAddress: "119.82.253.88",
-      lastActive: "Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€° Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž Ã¡Å¸Â Ã¡Å¸Â¨:Ã¡Å¸Â¡Ã¡Å¸Â¢ PM",
+      lastActive: "ម្សិលមិញ ម៉ោង ០៨:១២ PM",
       isCurrent: false,
     },
   ]);
 
   const loginHistory = [
-    { id: "lh-1", date: "Ã¡Å¸Â£Ã¡Å¸Â  Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦, Ã¡Å¸Â Ã¡Å¸Â¦:Ã¡Å¸Â¡Ã¡Å¸Â¢ PM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
-    { id: "lh-2", date: "Ã¡Å¸Â¢Ã¡Å¸Â© Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦, Ã¡Å¸Â Ã¡Å¸Â¨:Ã¡Å¸Â¡Ã¡Å¸Â¢ PM", ip: "119.82.253.88", device: "Safari / iOS", status: "SUCCESS" },
-    { id: "lh-3", date: "Ã¡Å¸Â¢Ã¡Å¸Â¥ Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦, Ã¡Å¸Â Ã¡Å¸Â©:Ã¡Å¸Â Ã¡Å¸Â  AM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
+    { id: "lh-1", date: "៣០ តុលា ២០២៦, ០៦:១២ PM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
+    { id: "lh-2", date: "២៩ តុលា ២០២៦, ០៨:១២ PM", ip: "119.82.253.88", device: "Safari / iOS", status: "SUCCESS" },
+    { id: "lh-3", date: "២៥ តុលា ២០២៦, ០៩:០០ AM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
   ];
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -58,12 +58,12 @@ export default function AccountSecurityPage() {
     setErrorMsg(null);
 
     if (newPassword.length < 8) {
-      setErrorMsg("Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â„¢Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€¦ Ã¡Å¸Â¨ Ã¡Å¾ÂÃ¡Å¾Â½Ã¡Å¾Â¢Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Å¡");
+      setErrorMsg("លេខកូដសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច ៨ តួអក្សរ");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg("Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+      setErrorMsg("ការបញ្ជាក់លេខកូដសម្ងាត់មិនត្រូវគ្នាឡើយ");
       return;
     }
 
@@ -75,23 +75,23 @@ export default function AccountSecurityPage() {
         body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢");
+      if (!res.ok) throw new Error(data.error || "ការផ្លាស់ប្តូរលេខកូដសម្ងាត់មិនជោគជ័យ");
 
-      setSuccessMsg("Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢ (Password changed)");
+      setSuccessMsg("លេខកូដសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ (Password changed)");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Â Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹");
+      setErrorMsg(err instanceof Error ? err.message : "កំហុសក្នុងការប្តូរពាក្យសម្ងាត់");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleRevokeOtherSessions = () => {
-    if (!confirm("Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¸â€”Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â?")) return;
+    if (!confirm("តើអ្នកពិតជាចង់ចាកចេញពីឧបករណ៍ផ្សេងៗទាំងអស់មែនទេ?")) return;
     setActiveSessions((prev) => prev.filter((s) => s.isCurrent));
-    alert("Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢");
+    alert("បានចាកចេញពីឧបករណ៍ផ្សេងទៀតទាំងអស់ដោយជោគជ័យ");
   };
 
   return (
@@ -103,10 +103,10 @@ export default function AccountSecurityPage() {
             <span>Account Security & Session Management</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-            Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸ (Security Settings)
+            សុវត្ថិភាពគណនី (Security Settings)
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¸â€”
+            គ្រប់គ្រងលេខកូដសម្ងាត់ ការចូលប្រើប្រាស់ និងសម័យកាលសកម្មនៅលើឧបករណ៍ផ្សេងៗ
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <KeyRound className="w-4 h-4 text-primary" />
-              <span>Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹ (Change Password)</span>
+              <span>ប្តូរលេខកូដសម្ងាត់ (Change Password)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -135,42 +135,42 @@ export default function AccountSecurityPage() {
             <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ (Current Password)
+                  លេខកូដសម្ងាត់បច្ចុប្បន្ន (Current Password)
                 </label>
                 <input
                   type="password"
                   required
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                  placeholder="••••••••••••"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New Password - Min 8 characters)
+                  លេខកូដសម្ងាត់ថ្មី (New Password - Min 8 characters)
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                  placeholder="••••••••••••"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (Confirm New Password)
+                  បញ្ជាក់លេខកូដសម្ងាត់ថ្មី (Confirm New Password)
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                  placeholder="••••••••••••"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -184,13 +184,13 @@ export default function AccountSecurityPage() {
                   className="rounded text-primary focus:ring-primary"
                 />
                 <label htmlFor="showpwd" text-xs className="text-xs text-muted-foreground cursor-pointer">
-                  Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹
+                  បង្ហាញលេខកូដសម្ងាត់
                 </label>
               </div>
 
               <Button type="submit" disabled={submitting} size="sm" className="space-x-1.5 text-xs">
                 <Lock className="w-3.5 h-3.5" />
-                <span>{submitting ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬..." : "Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹"}</span>
+                <span>{submitting ? "កំពុងរក្សាទុក..." : "ផ្លាស់ប្តូរលេខកូដសម្ងាត់"}</span>
               </Button>
             </form>
           </CardContent>
@@ -201,7 +201,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <Laptop className="w-4 h-4 text-primary" />
-              <span>Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â (Active Sessions)</span>
+              <span>សម័យកាលសកម្មលើឧបករណ៍ (Active Sessions)</span>
             </CardTitle>
             {activeSessions.length > 1 && (
               <Button
@@ -211,7 +211,7 @@ export default function AccountSecurityPage() {
                 className="text-xs text-destructive hover:bg-destructive/10 space-x-1"
               >
                 <LogOut className="w-3 h-3" />
-                <span>Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾Â</span>
+                <span>ចាកចេញពីឧបករណ៍ផ្សេងទៀត</span>
               </Button>
             )}
           </CardHeader>
@@ -229,7 +229,7 @@ export default function AccountSecurityPage() {
                     <div className="flex items-center space-x-2">
                       <p className="font-semibold text-foreground">{s.device}</p>
                       {s.isCurrent && (
-                        <Badge variant="success" className="text-[10px]">Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ</Badge>
+                        <Badge variant="success" className="text-[10px]">ឧបករណ៍បច្ចុប្បន្ន</Badge>
                       )}
                     </div>
                     <p className="text-[11px] text-muted-foreground font-mono mt-0.5">{s.ipAddress}</p>
@@ -246,7 +246,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <History className="w-4 h-4 text-primary" />
-              <span>Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€žÃ¡Å¾â„¢ (Recent Login History)</span>
+              <span>ប្រវត្តិចូលប្រើប្រាស់ចុងក្រោយ (Recent Login History)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -254,10 +254,10 @@ export default function AccountSecurityPage() {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-muted/30 text-muted-foreground font-semibold">
-                    <th className="py-2 px-3">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜ & Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€ž</th>
-                    <th className="py-2 px-3">Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â„¢Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹Ã¡Å¾Â¶Ã¡Å¾â€œ IP</th>
-                    <th className="py-2 px-3">Ã¡Å¾Â§Ã¡Å¾â€Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â & Browser</th>
-                    <th className="py-2 px-3 text-right">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                    <th className="py-2 px-3">កាលបរិច្ឆេទ & ម៉ោង</th>
+                    <th className="py-2 px-3">អាសយដ្ឋាន IP</th>
+                    <th className="py-2 px-3">ឧបករណ៍ & Browser</th>
+                    <th className="py-2 px-3 text-right">ស្ថានភាព</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -267,7 +267,7 @@ export default function AccountSecurityPage() {
                       <td className="py-2 px-3 font-mono text-muted-foreground">{lh.ip}</td>
                       <td className="py-2 px-3 text-muted-foreground">{lh.device}</td>
                       <td className="py-2 px-3 text-right">
-                        <Badge variant="success" className="text-[10px]">Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢ (Success)</Badge>
+                        <Badge variant="success" className="text-[10px]">ជោគជ័យ (Success)</Badge>
                       </td>
                     </tr>
                   ))}
@@ -280,4 +280,3 @@ export default function AccountSecurityPage() {
     </PortalLayout>
   );
 }
-

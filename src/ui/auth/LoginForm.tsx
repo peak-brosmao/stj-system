@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -116,7 +116,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                  placeholder="••••••••••••"
                   className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 />
               </div>
@@ -138,7 +138,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
           <Link href="/portal/login" className="text-primary hover:underline font-medium">
             STJ Portal Sign In
           </Link>
-          <span className="mx-2">Ã¢â‚¬Â¢</span>
+          <span className="mx-2">•</span>
           <Link href="/" className="hover:underline">
             {t("common.back")} {t("nav.home")}
           </Link>
@@ -147,4 +147,3 @@ export function LoginForm({ portalType }: LoginFormProps) {
     </div>
   );
 }
-

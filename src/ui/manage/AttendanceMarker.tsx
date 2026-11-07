@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -57,10 +57,10 @@ function sortRoster(list: Member[]): Member[] {
 }
 
 const OPTIONS: { value: Status; label: string; active: string }[] = [
-  { value: "PRESENT", label: "Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ", active: "bg-green-500/20 text-green-600 border-green-500/50" },
-  { value: "LATE", label: "Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â", active: "bg-yellow-500/20 text-yellow-600 border-yellow-500/50" },
-  { value: "ABSENT", label: "Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ", active: "bg-red-500/20 text-red-600 border-red-500/50" },
-  { value: "EXCUSED", label: "Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹", active: "bg-blue-500/20 text-blue-600 border-blue-500/50" },
+  { value: "PRESENT", label: "មានវត្តមាន", active: "bg-green-500/20 text-green-600 border-green-500/50" },
+  { value: "LATE", label: "យឺត", active: "bg-yellow-500/20 text-yellow-600 border-yellow-500/50" },
+  { value: "ABSENT", label: "អវត្តមាន", active: "bg-red-500/20 text-red-600 border-red-500/50" },
+  { value: "EXCUSED", label: "ច្បាប់", active: "bg-blue-500/20 text-blue-600 border-blue-500/50" },
 ];
 
 interface Props {
@@ -145,7 +145,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
 
   const save = async (finalize: boolean) => {
     if (!sessionId) {
-      setMessage({ kind: "err", text: "Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€œ (Select a lesson first)" });
+      setMessage({ kind: "err", text: "សូមជ្រើសរើសមេរៀនជាមុនសិន (Select a lesson first)" });
       return;
     }
 
@@ -153,7 +153,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
       .filter((m) => marks[m.id])
       .map((m) => ({ memberId: m.id, status: marks[m.id] as Status, remarks: remarks[m.id] || "" }));
     if (records.length === 0) {
-      setMessage({ kind: "err", text: "Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â„¢Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾Â Ã¡Å¸â€žÃ¡Å¾â€¦Ã¡Å¾Å½Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â½Ã¡Å¾â„¢ (Mark at least one member)" });
+      setMessage({ kind: "err", text: "សូមជ្រើសរើសស្ថានភាពយ៉ាងហោចណាស់មួយ (Mark at least one member)" });
       return;
     }
     setSaving(true);
@@ -166,22 +166,22 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
       });
       const d = await res.json().catch(() => null);
       if (!res.ok) {
-        setMessage({ kind: "err", text: d?.error || `Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œ (${res.status})` });
+        setMessage({ kind: "err", text: d?.error || `រក្សាទុកមិនបាន (${res.status})` });
         return;
       }
-      setMessage({ kind: "ok", text: "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Attendance saved)" });
+      setMessage({ kind: "ok", text: "បានរក្សាទុកវត្តមាន (Attendance saved)" });
       // refresh lesson statuses and roster
       const refreshedResponse = await fetch("/api/system/attendance");
       const refreshed = await refreshedResponse.json().catch(() => null);
       if (!refreshedResponse.ok) {
-        throw new Error(refreshed?.error || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+        throw new Error(refreshed?.error || "មិនអាចទាញយកទិន្នន័យថ្មីបានឡើយ");
       }
       setCourses(refreshed.courses || []);
       await loadRoster(sessionId);
     } catch (err: unknown) {
       setMessage({
         kind: "err",
-        text: err instanceof Error ? err.message : "Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œ",
+        text: err instanceof Error ? err.message : "រក្សាទុកវត្តមានមិនបាន",
       });
     } finally {
       setSaving(false);
@@ -198,25 +198,25 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
             <CalendarCheck className="w-4 h-4" />
             <span>STJ Attendance</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Mark Attendance)</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">ស្រង់វត្តមានកូនក្រុម (Mark Attendance)</h1>
           <p className="text-xs text-muted-foreground">
-            Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â»Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€ (Leaders can only mark and edit
+            ប្រធានក្រុមស្រង់ និងកែប្រែវត្តមានបានតែសមាជិកក្នុងមុខវិជ្ជារបស់ខ្លួនប៉ុណ្ណោះ។ (Leaders can only mark and edit
             their own course team.)
           </p>
         </div>
 
         {loading ? (
-          <p className="text-xs text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢...</p>
+          <p className="text-xs text-muted-foreground">កំពុងទាញយកទិន្នន័យ...</p>
         ) : courses.length === 0 ? (
           <p className="text-xs text-muted-foreground">
-            Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸ÂÃ¡Å¸â€ (No course is assigned to you.)
+            មិនមានមុខវិជ្ជាដែលអ្នកអាចគ្រប់គ្រងបានទេ។ (No course is assigned to you.)
           </p>
         ) : (
           <>
             <Card>
               <CardContent className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 <div>
-                  <label className="block font-medium mb-1">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Course)</label>
+                  <label className="block font-medium mb-1">មុខវិជ្ជា (Course)</label>
                   <select
                     value={courseId}
                     onChange={(e) => setCourseId(e.target.value)}
@@ -230,14 +230,14 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Lesson)</label>
+                  <label className="block font-medium mb-1">មេរៀន (Lesson)</label>
                   <select
                     value={sessionId}
                     onChange={(e) => setSessionId(e.target.value)}
                     className="w-full p-2 rounded-lg border border-input bg-background"
                     disabled={lessons.length === 0}
                   >
-                    {lessons.length === 0 && <option value="">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (No lessons yet)</option>}
+                    {lessons.length === 0 && <option value="">មិនទាន់មានមេរៀន (No lessons yet)</option>}
                     {lessons.map((l) => (
                       <option key={l.id} value={l.id}>
                         {new Date(l.sessionDate).toISOString().split("T")[0]} {l.startTime} - {l.title}
@@ -250,7 +250,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
 
             {lessons.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹ &quot;Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ&quot;Ã¡Å¸â€ (Create a lesson first in the Lessons page.)
+                សូមបង្កើតមេរៀនជាមុនសិន នៅត្រង់ &quot;គ្រប់គ្រងមេរៀន&quot;។ (Create a lesson first in the Lessons page.)
               </p>
             )}
 
@@ -258,7 +258,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
               <Card>
                 <CardContent className="p-4 space-y-4">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs text-muted-foreground font-medium">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ (Mark all):</span>
+                    <span className="text-xs text-muted-foreground font-medium">ស្រង់ទាំងអស់ (Mark all):</span>
                     {OPTIONS.map((o) => (
                       <button
                         key={o.value}
@@ -290,12 +290,12 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                               </p>
                               {m.isLeader && (
                                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 border border-amber-300">
-                                  Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ
+                                  ប្រធានក្រុម
                                 </span>
                               )}
                             </div>
                             <p className="text-[10px] text-muted-foreground">
-                              {m.memberId} Ã‚Â· {m.academicYear.code}-{m.department.code}
+                              {m.memberId} · {m.academicYear.code}-{m.department.code}
                             </p>
                           </div>
                         </div>
@@ -315,7 +315,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                           ))}
                           <input
                             type="text"
-                            placeholder="Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¶Ã¡Å¸â€ "
+                            placeholder="កំណត់ចំណាំ"
                             value={remarks[m.id] || ""}
                             onChange={(e) => setRemarks({ ...remarks, [m.id]: e.target.value })}
                             className="text-[11px] px-2 py-1 rounded border border-input bg-background w-36"
@@ -325,7 +325,7 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                     ))}
                     {members.length === 0 && (
                       <p className="text-xs text-muted-foreground text-center py-4">
-                        Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¸â€ (No team members assigned.)
+                        មិនទាន់មានសមាជិកក្នុងក្រុមនេះ។ (No team members assigned.)
                       </p>
                     )}
                   </div>
@@ -345,11 +345,11 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
                   <div className="flex flex-wrap justify-end gap-2">
                     <Button variant="outline" size="sm" disabled={saving || members.length === 0} onClick={() => save(false)} className="text-xs space-x-1.5">
                       <Save className="w-3.5 h-3.5" />
-                      <span>Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬ (Save)</span>
+                      <span>រក្សាទុក (Save)</span>
                     </Button>
                     <Button size="sm" disabled={saving || members.length === 0} onClick={() => save(true)} className="text-xs space-x-1.5">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Save &amp; complete)</span>
+                      <span>រក្សាទុក និងបញ្ចប់មេរៀន (Save &amp; complete)</span>
                     </Button>
                   </div>
                 </CardContent>

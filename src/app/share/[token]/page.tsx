@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
@@ -108,28 +108,28 @@ export default function SharedAttendancePage() {
         return (
           <Badge variant="success" className="space-x-1">
             <CheckCircle className="w-3 h-3" />
-            <span>Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</span>
+            <span>មានវត្តមាន (Present)</span>
           </Badge>
         );
       case "LATE":
         return (
           <Badge variant="warning" className="space-x-1">
             <Clock className="w-3 h-3" />
-            <span>Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</span>
+            <span>មកយឺត (Late)</span>
           </Badge>
         );
       case "EXCUSED":
         return (
           <Badge variant="purple" className="space-x-1">
             <FileText className="w-3 h-3" />
-            <span>Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</span>
+            <span>ច្បាប់ (Excused)</span>
           </Badge>
         );
       case "PENDING":
         return (
           <Badge variant="outline" className="space-x-1 border-amber-300 bg-amber-500/10 text-amber-700 dark:text-amber-400">
             <Clock className="w-3 h-3" />
-            <span>Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹ (Pending)</span>
+            <span>រង់ចាំស្រង់ (Pending)</span>
           </Badge>
         );
       case "ABSENT":
@@ -137,7 +137,7 @@ export default function SharedAttendancePage() {
         return (
           <Badge variant="destructive" className="space-x-1">
             <XCircle className="w-3 h-3" />
-            <span>Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</span>
+            <span>អវត្តមាន (Absent)</span>
           </Badge>
         );
     }
@@ -149,7 +149,7 @@ export default function SharedAttendancePage() {
         {/* Top Header Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-border gap-4 print:border-b-2">
           <div className="flex items-center space-x-3">
-            <Logo size="md" subtitle="Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€¡Ã¡Å¾Â¶ Ã¢â‚¬Â¢ Senior Teaching Junior" href="/" />
+            <Logo size="md" subtitle="វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • Senior Teaching Junior" href="/" />
             <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground uppercase tracking-wider print:hidden">
               Official Record
             </span>
@@ -174,7 +174,7 @@ export default function SharedAttendancePage() {
               className="space-x-1.5 text-xs"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“ (Print)</span>
+              <span>បោះពុម្ព (Print)</span>
             </Button>
           </div>
         </div>
@@ -186,9 +186,9 @@ export default function SharedAttendancePage() {
                 <Lock className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-bold text-base">Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹</h3>
+                <h3 className="font-bold text-base">របាយការណ៍ត្រូវបានការពារដោយលេខកូដសម្ងាត់</h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶
+                  សូមបញ្ចូលលេខកូដសម្ងាត់ដែលបានផ្តល់ដោយប្រធានមុខវិជ្ជា
                 </p>
               </div>
 
@@ -203,12 +203,12 @@ export default function SharedAttendancePage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹..."
+                  placeholder="លេខកូដសម្ងាត់..."
                   required
                   className="w-full px-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <Button type="submit" disabled={loading} className="w-full">
-                  {loading ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹..." : "Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â"}
+                  {loading ? "កំពុងផ្ទៀងផ្ទាត់..." : "បើកមើលរបាយការណ៍"}
                 </Button>
               </form>
             </CardContent>
@@ -218,7 +218,7 @@ export default function SharedAttendancePage() {
         {/* Loading state */}
         {loading && !requiresPassword && (
           <div className="text-center py-16 text-muted-foreground text-sm">
-            Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ...
+            កំពុងទាញយកទិន្នន័យវត្តមាន...
           </div>
         )}
 
@@ -226,7 +226,7 @@ export default function SharedAttendancePage() {
         {error && !requiresPassword && (
           <div className="p-6 rounded-2xl bg-destructive/10 border border-destructive/20 text-destructive text-center max-w-md mx-auto my-12 space-y-2">
             <AlertCircle className="w-8 h-8 mx-auto" />
-            <h3 className="font-bold text-base">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â</h3>
+            <h3 className="font-bold text-base">មិនអាចទាញយករបាយការណ៍បានទេ</h3>
             <p className="text-xs leading-relaxed">{error}</p>
           </div>
         )}
@@ -242,7 +242,7 @@ export default function SharedAttendancePage() {
                 </span>
                 {data.sessionDate && (
                   <span className="text-xs text-muted-foreground">
-                    Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¸â€“ {data.sessionDate}
+                    កាលបរិច្ឆេទ៖ {data.sessionDate}
                   </span>
                 )}
               </div>
@@ -261,13 +261,13 @@ export default function SharedAttendancePage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 <Card>
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-muted-foreground">Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€</p>
+                    <p className="text-[11px] text-muted-foreground">សមាជិកសរុប</p>
                     <p className="text-lg font-bold text-foreground mt-0.5">{data.stats.total}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400">Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</p>
+                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400">មានវត្តមាន</p>
                     <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
                       {data.stats.present}
                     </p>
@@ -275,7 +275,7 @@ export default function SharedAttendancePage() {
                 </Card>
                 <Card>
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-amber-600 dark:text-amber-400">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â</p>
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400">មកយឺត</p>
                     <p className="text-lg font-bold text-amber-600 dark:text-amber-400 mt-0.5">
                       {data.stats.late}
                     </p>
@@ -283,13 +283,13 @@ export default function SharedAttendancePage() {
                 </Card>
                 <Card>
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-destructive">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</p>
+                    <p className="text-[11px] text-destructive">អវត្តមាន</p>
                     <p className="text-lg font-bold text-destructive mt-0.5">{data.stats.absent}</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-purple-600 dark:text-purple-400">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹</p>
+                    <p className="text-[11px] text-purple-600 dark:text-purple-400">ច្បាប់</p>
                     <p className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-0.5">
                       {data.stats.excused}
                     </p>
@@ -297,7 +297,7 @@ export default function SharedAttendancePage() {
                 </Card>
                 <Card className="border-primary/40 bg-primary/5">
                   <CardContent className="p-3.5 text-center">
-                    <p className="text-[11px] text-primary font-medium">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</p>
+                    <p className="text-[11px] text-primary font-medium">អត្រាវត្តមាន</p>
                     <p className="text-lg font-extrabold text-primary mt-0.5">{data.stats.rate}%</p>
                   </CardContent>
                 </Card>
@@ -310,12 +310,12 @@ export default function SharedAttendancePage() {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                     <tr>
-                      <th className="py-3 px-4 w-12 text-center">Ã¡Å¾â€º.Ã¡Å¾Å¡</th>
-                      <th className="py-3 px-4 font-semibold">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Â</th>
-                      <th className="py-3 px-4 font-semibold">Ã¡Å¾â€šÃ¡Å¸â€žÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Ëœ-Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Ëœ</th>
-                      <th className="py-3 px-4 font-semibold">Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹</th>
-                      <th className="py-3 px-4 font-semibold">Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ </th>
-                      <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</th>
+                      <th className="py-3 px-4 w-12 text-center">ល.រ</th>
+                      <th className="py-3 px-4 font-semibold">អត្តលេខ</th>
+                      <th className="py-3 px-4 font-semibold">គោត្តនាម-នាម</th>
+                      <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់</th>
+                      <th className="py-3 px-4 font-semibold">ឆ្នាំ</th>
+                      <th className="py-3 px-4 font-semibold text-center">វត្តមាន</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -343,7 +343,7 @@ export default function SharedAttendancePage() {
 
             {/* Report Footer */}
             <div className="text-center pt-4 text-[11px] text-muted-foreground space-y-1">
-              <p>Ã‚Â© {new Date().getFullYear()} Senior Teaching Junior (STJ) - Institute of Technology of Cambodia.</p>
+              <p>© {new Date().getFullYear()} Senior Teaching Junior (STJ) - Institute of Technology of Cambodia.</p>
             </div>
           </div>
         )}
@@ -354,12 +354,12 @@ export default function SharedAttendancePage() {
             <Card className="max-w-sm w-full">
               <CardContent className="p-6 text-center space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-border">
-                  <h3 className="font-bold text-sm">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å  QR Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬</h3>
+                  <h3 className="font-bold text-sm">កូដ QR សម្រាប់ចែករំលែក</h3>
                   <button
                     onClick={() => setShowQrModal(false)}
                     className="p-1 rounded text-muted-foreground hover:text-foreground"
                   >
-                    Ã¢Å“â€¢
+                    ✕
                   </button>
                 </div>
                 <div className="p-4 bg-white rounded-xl inline-block shadow-inner mx-auto">
@@ -372,7 +372,7 @@ export default function SharedAttendancePage() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Å Ã¡Å¸Æ’
+                  ស្កេនដើម្បីបើកមើលរបាយការណ៍វត្តមានផ្លូវការនៅលើទូរស័ព្ទដៃ
                 </p>
                 <Button
                   variant="outline"
@@ -380,7 +380,7 @@ export default function SharedAttendancePage() {
                   onClick={() => setShowQrModal(false)}
                   className="w-full"
                 >
-                  Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž
+                  បិទផ្ទាំង
                 </Button>
               </CardContent>
             </Card>
@@ -390,4 +390,3 @@ export default function SharedAttendancePage() {
     </div>
   );
 }
-

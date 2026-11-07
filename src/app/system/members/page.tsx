@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -105,7 +105,7 @@ export default function SystemMembersPage() {
       .then(async (res) => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          throw new Error(data?.error || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+          throw new Error(data?.error || "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
         }
         return data;
       })
@@ -132,7 +132,7 @@ export default function SystemMembersPage() {
       })
       .catch((err: unknown) => {
         setMembers([]);
-        setError(err instanceof Error ? err.message : "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
+        setError(err instanceof Error ? err.message : "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
       })
       .finally(() => setLoading(false));
   };
@@ -316,7 +316,7 @@ export default function SystemMembersPage() {
   });
 
   return (
-    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
+    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
       <div className="space-y-6">
         {error && (
           <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
@@ -526,7 +526,7 @@ export default function SystemMembersPage() {
                             size="sm"
                             onClick={() => openEditModal(m)}
                             className="h-7 text-[11px] px-2 text-primary border-primary/30 hover:bg-primary/10 space-x-1"
-                            title="Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Edit & Reassign Course)"
+                            title="កែប្រែព័ត៌មាន និងប្តូរមុខវិជ្ជា (Edit & Reassign Course)"
                           >
                             <Edit2 className="w-3 h-3" />
                             <span>{t("members.editMember")}</span>
@@ -535,7 +535,7 @@ export default function SystemMembersPage() {
                             variant="outline"
                             size="sm"
                             onClick={async () => {
-                              if (!confirm(`Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¸â€žÃ¡Å¾â‚¬Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ ${m.fullNameKh} Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€°Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â?`)) return;
+                              if (!confirm(`តើលោកអ្នកចង់កំណត់ពាក្យសម្ងាត់សមាជិក ${m.fullNameKh} ឡើងវិញមែនទេ?`)) return;
                               try {
                                 const res = await fetch("/api/system/members/reset-password", {
                                   method: "POST",
@@ -544,7 +544,7 @@ export default function SystemMembersPage() {
                                 });
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || "Reset failed");
-                                alert(`Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹ ${m.fullNameKh} Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€°Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢: ${data.defaultPassword}`);
+                                alert(`ពាក្យសម្ងាត់របស់ ${m.fullNameKh} ត្រូវបានកំណត់ឡើងវិញជោគជ័យ: ${data.defaultPassword}`);
                               } catch (err: unknown) {
                                 alert(err instanceof Error ? err.message : "Error resetting password");
                               }
@@ -590,7 +590,7 @@ export default function SystemMembersPage() {
                       {t("members.editTitle")}
                     </h3>
                     <p className="text-[11px] text-muted-foreground font-mono">
-                      {editingMember.memberId} Ã¢â‚¬Â¢ {editingMember.studentId}
+                      {editingMember.memberId} • {editingMember.studentId}
                     </p>
                   </div>
                   <button
@@ -809,7 +809,7 @@ export default function SystemMembersPage() {
                       <input
                         type="text"
                         required
-                        placeholder="Ã¡Å¾â€¡Ã¡Å¾Â¶ Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹"
+                        placeholder="ជា វិសិដ្ឋ"
                         value={newMember.fullNameKh}
                         onChange={(e) => setNewMember({ ...newMember, fullNameKh: e.target.value })}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -128,14 +128,14 @@ export default function MyAttendancePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PRESENT":
-        return <Badge variant="success">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</Badge>;
+        return <Badge variant="success">វត្តមាន (Present)</Badge>;
       case "LATE":
-        return <Badge variant="warning">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</Badge>;
+        return <Badge variant="warning">មកយឺត (Late)</Badge>;
       case "EXCUSED":
-        return <Badge variant="purple">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</Badge>;
+        return <Badge variant="purple">ច្បាប់ (Excused)</Badge>;
       case "ABSENT":
       default:
-        return <Badge variant="destructive">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</Badge>;
+        return <Badge variant="destructive">អវត្តមាន (Absent)</Badge>;
     }
   };
 
@@ -143,7 +143,7 @@ export default function MyAttendancePage() {
     return (
       <PortalLayout
         portalType="portal"
-        userRole={currentUser?.memberId === "STJ002" ? "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ" : "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž"}
+        userRole={currentUser?.memberId === "STJ002" ? "ប្រធាន STJ" : "គណៈគ្រប់គ្រង"}
         userName={currentUser?.fullNameKh || ""}
         userMemberId={currentUser?.memberId || undefined}
       >
@@ -156,10 +156,10 @@ export default function MyAttendancePage() {
                 <span>Executive STJ Attendance Oversight</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ÂÃ¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾â€˜Ã¡Å¸â€¦ (Attendance Oversight)
+                ការត្រួតពិនិត្យ និងតាមដានវត្តមានទូទៅ (Attendance Oversight)
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾ËœÃ¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â Ã¢â‚¬Â¢ Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶
+                សម្រាប់ប្រធាន STJ និងគណៈកម្មាធិការសមាគមនិស្សិត • គ្រប់គ្រង និងតាមដានវត្តមានគ្រប់មុខវិជ្ជា
               </p>
             </div>
 
@@ -167,13 +167,13 @@ export default function MyAttendancePage() {
               <Link href="/system/attendance">
                 <Button size="sm" className="space-x-1.5 text-xs">
                   <CalendarCheck className="w-3.5 h-3.5" />
-                  <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™</span>
+                  <span>ស្រង់វត្តមានប្រព័ន្ធ</span>
                 </Button>
               </Link>
               <Link href="/system/sessions">
                 <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</span>
+                  <span>គ្រប់គ្រងវគ្គបង្រៀន</span>
                 </Button>
               </Link>
             </div>
@@ -183,28 +183,28 @@ export default function MyAttendancePage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Card>
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ (STJ)</span>
+                <span className="text-[11px] text-muted-foreground font-medium">វគ្គបង្រៀនសរុប (STJ)</span>
                 <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalSessions}</p>
                 <span className="text-[10px] text-muted-foreground">Across All Subjects</span>
               </CardContent>
             </Card>
             <Card className="border-emerald-500/30 bg-emerald-500/5">
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦</span>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">វត្តមានកត់ត្រារួច</span>
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{overallStats.totalAttendance}</p>
                 <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">Total Attended</span>
               </CardContent>
             </Card>
             <Card className="border-primary/30 bg-primary/5">
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-primary font-medium">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾Ëœ</span>
+                <span className="text-[11px] text-primary font-medium">អត្រាវត្តមានរួម</span>
                 <p className="text-2xl font-bold text-primary mt-1">{overallStats.averageRate}%</p>
                 <span className="text-[10px] text-muted-foreground">High Participation</span>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â</span>
+                <span className="text-[11px] text-muted-foreground font-medium">គ្រូបង្រៀនស្ម័គ្រចិត្ត</span>
                 <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalMembers}</p>
                 <span className="text-[10px] text-muted-foreground">Active Tutors</span>
               </CardContent>
@@ -214,7 +214,7 @@ export default function MyAttendancePage() {
           {/* Courses Overview */}
           <div className="space-y-3">
             <h3 className="text-sm font-bold text-foreground">
-              Ã¡Å¾Å¸Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸ÂÃ¡Å¾â€Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Courses Overview)
+              សង្ខេបតាមមុខវិជ្ជា (Courses Overview)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
               {executiveCourses.map((c) => (
@@ -225,13 +225,13 @@ export default function MyAttendancePage() {
                         {c.code}
                       </span>
                       <span className="text-[11px] text-muted-foreground">
-                        {c.sessionCount} Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ
+                        {c.sessionCount} វគ្គបង្រៀន
                       </span>
                     </div>
                     <h4 className="font-bold text-sm text-foreground truncate">{c.titleKh}</h4>
                     <div className="pt-1 text-[11px] text-muted-foreground border-t border-border space-y-0.5">
-                      <div>Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸â€“ <span className="font-medium text-foreground">{c.leaderName}</span></div>
-                      <div>Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€“ <span className="font-semibold text-primary">{c.memberCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</span></div>
+                      <div>ប្រធានក្រុម៖ <span className="font-medium text-foreground">{c.leaderName}</span></div>
+                      <div>សមាជិកចុះឈ្មោះ៖ <span className="font-semibold text-primary">{c.memberCount} នាក់</span></div>
                     </div>
                   </CardContent>
                 </Card>
@@ -243,9 +243,9 @@ export default function MyAttendancePage() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center justify-between">
-                <span>Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€” (Recent Lessons & Attendance)</span>
+                <span>វគ្គបង្រៀន និងកំណត់ត្រាវត្តមានថ្មីៗ (Recent Lessons & Attendance)</span>
                 <Link href="/system/sessions" className="text-xs text-primary hover:underline font-normal">
-                  Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ Ã¢â€ â€™
+                  មើលទាំងអស់ →
                 </Link>
               </CardTitle>
             </CardHeader>
@@ -254,12 +254,12 @@ export default function MyAttendancePage() {
                 <table className="w-full text-xs text-left">
                   <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-y border-border">
                     <tr>
-                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</th>
-                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
-                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜</th>
-                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹</th>
-                      <th className="py-2.5 px-4 font-semibold text-center">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</th>
-                      <th className="py-2.5 px-4 font-semibold text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                      <th className="py-2.5 px-4 font-semibold">មុខវិជ្ជា</th>
+                      <th className="py-2.5 px-4 font-semibold">ចំណងជើងមេរៀន</th>
+                      <th className="py-2.5 px-4 font-semibold">កាលបរិច្ឆេទ</th>
+                      <th className="py-2.5 px-4 font-semibold">បន្ទប់</th>
+                      <th className="py-2.5 px-4 font-semibold text-center">វត្តមាន</th>
+                      <th className="py-2.5 px-4 font-semibold text-right">សកម្មភាព</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -279,19 +279,19 @@ export default function MyAttendancePage() {
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                            {s.markedCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹
+                            {s.markedCount} នាក់
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right space-x-2">
                           <Link href={`/system/attendance?sessionId=${s.id}`}>
                             <Button size="sm" variant="outline" className="h-7 text-[11px] px-2.5">
-                              Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ
+                              ស្រង់វត្តមាន
                             </Button>
                           </Link>
                           {s.shareToken && (
                             <Link href={`/share/${s.shareToken}`} target="_blank">
                               <Button size="sm" variant="ghost" className="h-7 text-[11px] px-2 text-primary">
-                                Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬ Ã¢â€ â€”
+                                តំណចែករំលែក ↗
                               </Button>
                             </Link>
                           )}
@@ -324,10 +324,10 @@ export default function MyAttendancePage() {
               <span>Official Student Attendance Record</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â»Ã¡Å¸â€  (My Attendance Ledger)
+              កំណត់ត្រាវត្តមានរបស់ខ្ញុំ (My Attendance Ledger)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€“ <strong>{currentUser ? `${currentUser.fullNameKh} (${currentUser.fullNameEn})` : "Ã¡Å¾â€“Ã¡Å¸â‚¬Ã¡Å¾â‚¬ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€¦ (PEAK BROSMAO)"}</strong> Ã¢â‚¬Â¢ {currentUser?.memberId || "STJ033"} Ã¢â‚¬Â¢ {currentUser?.departmentCode || "I2-GIC"} ({currentUser?.studentId || "e20251455"})
+              សមាជិក៖ <strong>{currentUser ? `${currentUser.fullNameKh} (${currentUser.fullNameEn})` : "ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)"}</strong> • {currentUser?.memberId || "STJ033"} • {currentUser?.departmentCode || "I2-GIC"} ({currentUser?.studentId || "e20251455"})
             </p>
           </div>
 
@@ -335,16 +335,16 @@ export default function MyAttendancePage() {
             <Link href="/portal/correction-requests">
               <Button variant="outline" size="sm" className="space-x-1.5 text-xs border-amber-500/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10">
                 <FileText className="w-3.5 h-3.5" />
-                <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
+                <span>ស្នើសុំកែវត្តមាន</span>
               </Button>
             </Link>
             <Button variant="outline" size="sm" onClick={exportCSV} className="space-x-1.5 text-xs">
               <Download className="w-3.5 h-3.5" />
-              <span>Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬ CSV</span>
+              <span>ទាញយក CSV</span>
             </Button>
             <Button variant="outline" size="sm" onClick={() => window.print()} className="space-x-1.5 text-xs">
               <Printer className="w-3.5 h-3.5" />
-              <span>Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“</span>
+              <span>បោះពុម្ព</span>
             </Button>
           </div>
         </div>
@@ -353,42 +353,42 @@ export default function MyAttendancePage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€</span>
+              <span className="text-[11px] text-muted-foreground font-medium">វគ្គបង្រៀនសរុប</span>
               <p className="text-2xl font-bold text-foreground mt-1">{stats.total}</p>
               <span className="text-[10px] text-muted-foreground">Sessions Tracked</span>
             </CardContent>
           </Card>
           <Card className="border-emerald-500/30 bg-emerald-500/5">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</span>
+              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">វត្តមាន (Present)</span>
               <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{stats.present}</p>
-              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Â¶</span>
+              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">ទាន់ពេលវេលា</span>
             </CardContent>
           </Card>
           <Card className="border-amber-500/30 bg-amber-500/5">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</span>
+              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">មកយឺត (Late)</span>
               <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">{stats.late}</p>
-              <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80">Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
+              <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80">រាប់ជាវត្តមាន</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</span>
+              <span className="text-[11px] text-muted-foreground font-medium">អវត្តមាន (Absent)</span>
               <p className="text-2xl font-bold text-foreground mt-1">{stats.absent}</p>
-              <span className="text-[10px] text-muted-foreground">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Â</span>
+              <span className="text-[10px] text-muted-foreground">គ្មានការអនុញ្ញាត</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-purple-600 dark:text-purple-400 font-medium">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</span>
+              <span className="text-[11px] text-purple-600 dark:text-purple-400 font-medium">ច្បាប់ (Excused)</span>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{stats.excused}</p>
-              <span className="text-[10px] text-purple-600/80 dark:text-purple-400/80">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â»</span>
+              <span className="text-[10px] text-purple-600/80 dark:text-purple-400/80">មិនកាត់ពិន្ទុ</span>
             </CardContent>
           </Card>
           <Card className="border-primary/40 bg-primary/10">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-primary font-bold">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
+              <span className="text-[11px] text-primary font-bold">អត្រាវត្តមាន</span>
               <p className="text-2xl font-extrabold text-primary mt-1">{stats.rate}%</p>
               <span className="text-[10px] text-primary font-medium">Attendance Rate</span>
             </CardContent>
@@ -401,14 +401,14 @@ export default function MyAttendancePage() {
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center space-x-2">
                 <Filter className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¸â€“</span>
+                <span className="font-semibold text-foreground">មុខវិជ្ជា៖</span>
                 <select
                   value={courseFilter}
                   onChange={(e) => setCourseFilter(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs font-medium"
                 >
                   {enrolledCourses.length > 1 && (
-                    <option value="ALL">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({enrolledCourses.length} Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶)</option>
+                    <option value="ALL">គ្រប់មុខវិជ្ជាទាំងអស់ ({enrolledCourses.length} មុខវិជ្ជា)</option>
                   )}
                   {enrolledCourses.length > 0 ? (
                     enrolledCourses.map((c: any) => (
@@ -423,23 +423,23 @@ export default function MyAttendancePage() {
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className="font-semibold text-foreground">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¸â€“</span>
+                <span className="font-semibold text-foreground">ស្ថានភាព៖</span>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs"
                 >
-                  <option value="ALL">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ (All Status)</option>
-                  <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
-                  <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
-                  <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
-                  <option value="ABSENT">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</option>
+                  <option value="ALL">គ្រប់ស្ថានភាពទាំងអស់ (All Status)</option>
+                  <option value="PRESENT">វត្តមាន (Present)</option>
+                  <option value="LATE">មកយឺត (Late)</option>
+                  <option value="EXCUSED">ច្បាប់ (Excused)</option>
+                  <option value="ABSENT">អវត្តមាន (Absent)</option>
                 </select>
               </div>
             </div>
 
             <span className="text-xs text-muted-foreground">
-              Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾ËœÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¸â€“ <code className="font-mono bg-muted px-1.5 py-0.5 rounded">(Present + Late) / (Total - Excused) Ãƒâ€” 100%</code>
+              រូបមន្តគណនាផ្លូវការ៖ <code className="font-mono bg-muted px-1.5 py-0.5 rounded">(Present + Late) / (Total - Excused) × 100%</code>
             </span>
           </CardContent>
         </Card>
@@ -448,44 +448,44 @@ export default function MyAttendancePage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold">
-              Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Lessons set by your Leader Team)
+              មេរៀនដែលបានរៀបចំដោយប្រធានក្រុម (Lessons set by your Leader Team)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {upcoming.length === 0 && pending.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸ÂÃ¡Å¸â€ Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¸â€”Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€º Leader Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â¶Ã¡Å¸â€ (No lessons have been
+                ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ។ មេរៀននឹងបង្ហាញនៅទីនេះភ្លាមៗនៅពេល Leader បានបង្កើតវា។ (No lessons have been
                 created yet. They appear here as soon as your Leader creates them.)
               </p>
             )}
             {upcoming.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾Â (Upcoming)</p>
+                <p className="text-xs font-semibold text-foreground">មេរៀនខាងមុខ (Upcoming)</p>
                 {upcoming.map((l: any) => (
                   <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
                     <div>
                       <p className="font-semibold text-foreground">{l.title}</p>
                       <p className="text-muted-foreground">
-                        {l.course?.code} Ã¢â‚¬Â¢ {new Date(l.sessionDate).toISOString().split("T")[0]} Ã¢â‚¬Â¢ {l.startTime} - {l.endTime} Ã¢â‚¬Â¢ {l.room}
+                        {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
                       </p>
                     </div>
-                    <Badge variant="info">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Not taught yet)</Badge>
+                    <Badge variant="info">មិនទាន់បង្រៀន (Not taught yet)</Badge>
                   </div>
                 ))}
               </div>
             )}
             {pending.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Awaiting attendance)</p>
+                <p className="text-xs font-semibold text-foreground">មេរៀនរង់ចាំការស្រង់វត្តមាន (Awaiting attendance)</p>
                 {pending.map((l: any) => (
                   <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
                     <div>
                       <p className="font-semibold text-foreground">{l.title}</p>
                       <p className="text-muted-foreground">
-                        {l.course?.code} Ã¢â‚¬Â¢ {new Date(l.sessionDate).toISOString().split("T")[0]} Ã¢â‚¬Â¢ {l.startTime} - {l.endTime} Ã¢â‚¬Â¢ {l.room}
+                        {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
                       </p>
                     </div>
-                    <Badge variant="warning">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Not marked yet)</Badge>
+                    <Badge variant="warning">មិនទាន់ស្រង់វត្តមាន (Not marked yet)</Badge>
                   </div>
                 ))}
               </div>
@@ -496,22 +496,22 @@ export default function MyAttendancePage() {
         {/* Records Table */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ËœÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Attendance History)</CardTitle>
+            <CardTitle className="text-sm font-semibold">ប្រវត្តិនៃការចូលរួមវគ្គសិក្សា (Attendance History)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                    <th className="py-2.5 px-3">Ã¡Å¾â€º.Ã¡Å¾Å¡</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
-                    <th className="py-2.5 px-3">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹</th>
-                    <th className="py-2.5 px-3 text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                    <th className="py-2.5 px-3">ល.រ</th>
+                    <th className="py-2.5 px-3">មុខវិជ្ជា</th>
+                    <th className="py-2.5 px-3">ចំណងជើងវគ្គបង្រៀន</th>
+                    <th className="py-2.5 px-3">កាលបរិច្ឆេទ</th>
+                    <th className="py-2.5 px-3">ម៉ោងសិក្សា</th>
+                    <th className="py-2.5 px-3">បន្ទប់រៀន</th>
+                    <th className="py-2.5 px-3">ស្ថានភាព</th>
+                    <th className="py-2.5 px-3">កំណត់សម្គាល់</th>
+                    <th className="py-2.5 px-3 text-right">សកម្មភាព</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -540,7 +540,7 @@ export default function MyAttendancePage() {
                           href={`/portal/correction-requests?recordId=${r.id}&status=${r.status}`}
                           className="text-primary hover:underline font-medium text-[11px]"
                         >
-                          Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€š
+                          ស្នើសុំកែ
                         </Link>
                       </td>
                     </tr>
@@ -548,7 +548,7 @@ export default function MyAttendancePage() {
                   {records.length === 0 && (
                     <tr>
                       <td colSpan={9} className="py-6 px-3 text-center text-muted-foreground">
-                        Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸Â (No attendance recorded yet)
+                        ពុំទាន់មានកំណត់ត្រាវត្តមានដែលបានកត់ត្រានៅឡើយទេ (No attendance recorded yet)
                       </td>
                     </tr>
                   )}
