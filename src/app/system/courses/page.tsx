@@ -102,6 +102,12 @@ export default function SystemCoursesPage() {
 
   const openEditModal = (c: CourseItem) => {
     setFormError("");
+    const matchedLeader = eligibleLeaders.find(
+      (m) =>
+        (c.leaderMemberId && (m.id === c.leaderMemberId || m.memberId === c.leaderMemberId)) ||
+        (c.leaderStudentId && m.studentId.toLowerCase() === c.leaderStudentId.toLowerCase()) ||
+        (c.leaders && (m.fullNameKh === c.leaders || m.fullNameEn === c.leaders))
+    );
     setEditingCourse({
       id: c.id,
       code: c.code,
@@ -110,7 +116,7 @@ export default function SystemCoursesPage() {
       category: c.category || "Engineering Foundation",
       term: c.term || "ឆមាសទី១ ឆ្នាំសិក្សា ២០២៦-២០២៧",
       status: c.status || "ACTIVE",
-      leaderMemberId: c.leaderMemberId || "",
+      leaderMemberId: matchedLeader?.id || c.leaderMemberId || "",
     });
     setIsModalOpen(true);
   };
@@ -122,14 +128,25 @@ export default function SystemCoursesPage() {
     setFormError("");
     try {
       const isEdit = !!editingCourse.id;
+      const selectedLeader = eligibleLeaders.find(
+        (m) =>
+          m.id === editingCourse.leaderMemberId ||
+          m.memberId === editingCourse.leaderMemberId ||
+          m.studentId === editingCourse.leaderMemberId
+      );
+      const payload = {
+        ...editingCourse,
+        leaderMemberId: selectedLeader?.memberId || editingCourse.leaderMemberId || "",
+        leaderStudentId: selectedLeader?.studentId || "",
+      };
       const res = await fetch("/api/system/courses", {
         method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editingCourse),
+        body: JSON.stringify(payload),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setFormError(data.error || "បរាជ័យក្នុងការរក្សាទុកមុខវិជ្ជា");
+        setFormError(data?.error || data?.message || "បរាជ័យក្នុងការរក្សាទុកមុខវិជ្ជា");
         return;
       }
       setIsModalOpen(false);

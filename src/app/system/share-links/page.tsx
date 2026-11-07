@@ -99,21 +99,21 @@ export default function SystemShareLinksPage() {
                     <td className="py-3 px-4">
                       <div className="font-semibold text-foreground">{link.title}</div>
                       <div className="text-[10px] font-mono text-muted-foreground truncate max-w-xs">
-                        Token: {link.token.slice(0, 12)}...
+                        Token: {(link.token || "").slice(0, 12)}...
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-mono font-bold text-primary">{link.course.code}</div>
+                      <div className="font-mono font-bold text-primary">{link.course?.code || "STJ"}</div>
                       <div className="text-[10px] text-muted-foreground truncate max-w-xs">
                         {link.session?.title || "គ្រប់វគ្គសិក្សា"}
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-medium text-foreground">{link.createdBy.fullNameEn}</div>
-                      <div className="text-[10px] text-muted-foreground">{link.createdBy.email}</div>
+                      <div className="font-medium text-foreground">{link.createdBy?.fullNameEn || "STJ Administration"}</div>
+                      <div className="text-[10px] text-muted-foreground">{link.createdBy?.email || "stj@itc.edu.kh"}</div>
                     </td>
                     <td className="py-3 px-4 text-center font-bold text-foreground">
-                      {link.accessCount}
+                      {link.accessCount ?? 0}
                     </td>
                     <td className="py-3 px-4 text-center">
                       <Badge variant={link.isRevoked ? "destructive" : "success"}>
