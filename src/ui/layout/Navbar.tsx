@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -72,12 +72,12 @@ export function Navbar() {
         <Logo href="/" size="md" />
 
         {/* Desktop Nav Links */}
-        <nav className="hidden xl:flex items-center space-x-1">
+        <nav className="hidden lg:flex items-center space-x-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
                 isActive(link.href)
                   ? "bg-primary/10 text-primary font-bold"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -89,7 +89,7 @@ export function Navbar() {
         </nav>
 
         {/* Controls & Unified Sign In / Profile Desk */}
-        <div className="hidden md:flex items-center space-x-2">
+        <div className="hidden lg:flex items-center space-x-2 shrink-0">
           <LanguageSelector />
           <ThemeToggle />
           <div className="h-4 w-px bg-border mx-1" />
@@ -102,7 +102,7 @@ export function Navbar() {
                   </div>
                   <span className="truncate max-w-[130px]">{auth.user.name}</span>
                   {auth.user.memberId && (
-                    <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono hidden lg:inline-block">
+                    <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono hidden xl:inline-block">
                       {auth.user.memberId}
                     </span>
                   )}
@@ -129,8 +129,8 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile controls & hamburger */}
-        <div className="flex items-center space-x-2 md:hidden">
+        {/* Mobile/Tablet controls & hamburger */}
+        <div className="flex items-center space-x-2 lg:hidden">
           <LanguageSelector />
           <ThemeToggle />
           <button
@@ -145,7 +145,7 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
+        <div className="lg:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <Link

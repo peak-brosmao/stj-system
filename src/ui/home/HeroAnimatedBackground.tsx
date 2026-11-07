@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
@@ -114,13 +114,12 @@ export function HeroAnimatedBackground({ children }: HeroAnimatedBackgroundProps
         })}
 
         {/* LIGHT VIGNETTE & SUBTLE GRADIENTS FOR MAXIMUM IMAGE CLARITY & TEXT READABILITY */}
-        <div className="absolute inset-0 z-20 bg-gradient-to-b from-black/50 via-black/25 to-black/60 pointer-events-none" />
-        <div className="absolute inset-0 z-20 bg-background/35 dark:bg-background/50 backdrop-blur-[1px] pointer-events-none" />
+        <div className="absolute inset-0 z-20 bg-gradient-to-b from-slate-950/60 via-slate-950/40 to-slate-950/75 pointer-events-none" />
       </div>
 
-      {/* FOREGROUND HERO CONTENT WRAPPED IN A TRANSLUCENT GLASS CARD */}
-      <div className="relative z-30 container mx-auto px-4 py-14 md:py-20 flex justify-center">
-        <div className="max-w-3xl w-full bg-background/80 dark:bg-background/85 backdrop-blur-md rounded-3xl p-6 sm:p-10 border border-white/40 dark:border-white/10 shadow-2xl">
+      {/* FOREGROUND HERO CONTENT WRAPPED IN A REFINED GLASS CARD */}
+      <div className="relative z-30 container mx-auto px-4 pt-12 pb-24 md:py-24 flex justify-center">
+        <div className="max-w-4xl w-full bg-background/85 dark:bg-slate-900/85 backdrop-blur-xl rounded-3xl p-6 sm:p-10 md:p-12 border border-white/50 dark:border-white/15 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.45)]">
           {children}
         </div>
       </div>

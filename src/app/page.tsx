@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import {
   GraduationCap,
@@ -130,21 +130,21 @@ export default async function HomePage() {
             </p>
 
             {/* ONLY 3 PUBLIC BUTTONS - STRICTLY NO SYSTEM/DASHBOARD LINK */}
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <div className="pt-3 flex flex-wrap items-center justify-center gap-3.5">
               <Link href="/programs">
-                <Button size="lg" className="space-x-2 shadow-md">
+                <Button size="lg" className="h-11 px-6 rounded-xl space-x-2 font-semibold shadow-md">
                   <span>ស្វែងយល់ពីមុខវិជ្ជាសិក្សា</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/structure">
-                <Button variant="outline" size="lg" className="space-x-2 border-primary/40 hover:bg-primary/5 bg-background/80 backdrop-blur-md">
+                <Button variant="outline" size="lg" className="h-11 px-6 rounded-xl space-x-2 font-semibold border-primary/30 hover:border-primary/60 hover:bg-primary/5 bg-background/90 backdrop-blur-md shadow-sm">
                   <Layers className="w-4 h-4 text-primary" />
                   <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
                 </Button>
               </Link>
               <Link href="/about">
-                <Button variant="ghost" size="lg" className="bg-background/40 hover:bg-background/80 backdrop-blur-md">
+                <Button variant="secondary" size="lg" className="h-11 px-6 rounded-xl font-semibold border border-border/80 bg-secondary/90 hover:bg-secondary shadow-sm">
                   អំពីកម្មវិធី STJ
                 </Button>
               </Link>
