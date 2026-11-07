@@ -140,7 +140,15 @@ export function isVaultSession(session: Record<string, any> | null | undefined):
 
 export function isBlogSession(session: Record<string, any> | null | undefined): boolean {
   if (!session) return false;
-  return session.room === BLOG_MARKER_ROOM || session.status === "BLOG_POST";
+  return (
+    session.kind === "BLOG" ||
+    session.room === BLOG_MARKER_ROOM ||
+    session.room === "__BLOG__" ||
+    session.status === "BLOG_POST" ||
+    (typeof session.room === "string" && session.room.toUpperCase().includes("BLOG")) ||
+    (typeof session.id === "string" &&
+      (session.id.startsWith("blog-") || session.id.startsWith("post-")))
+  );
 }
 
 export function isSyllabusSession(session: Record<string, any> | null | undefined): boolean {

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -97,7 +97,14 @@ function MarkerInner({ portalType, userRole, userName }: Props) {
   }, [presetSession]);
 
   const course = courses.find((c) => c.id === courseId);
-  const lessons = course?.sessions.filter((s) => s.status !== "CANCELLED") || [];
+  const lessons =
+    course?.sessions.filter(
+      (s) =>
+        s.status !== "CANCELLED" &&
+        s.status !== "BLOG_POST" &&
+        (s as any).room !== "__BLOG__" &&
+        (s as any).kind !== "BLOG"
+    ) || [];
 
   // Keep selected lesson valid when the course changes
   useEffect(() => {

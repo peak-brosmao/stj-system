@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
-import { decodeRichNotes, isSyllabusSession } from "@/lib/richContent";
+import { decodeRichNotes, isBlogSession, isSyllabusSession } from "@/lib/richContent";
+import { getAllBlogAndLessonItems } from "@/lib/blogStore";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
     const query = req.nextUrl.search;
-    const [res, sessionsRes] = await Promise.all([
+    const [res, sessionsRes, allBlogLessonItems] = await Promise.all([
       backendFetch(`portal/attendance${query}`),
       backendFetch("sessions").catch(() => null),
+      getAllBlogAndLessonItems().catch(() => []),
     ]);
     const data = await res.json().catch(() => null);
     const sessionsData =
@@ -17,6 +19,10 @@ export async function GET(req: NextRequest) {
     const allBackendSessions: Record<string, any>[] = Array.isArray(sessionsData?.sessions)
       ? sessionsData.sessions
       : [];
+
+    const blogIds = new Set(
+      allBlogLessonItems.filter((i) => i.kind === "BLOG").map((i) => String(i.id))
+    );
 
     if (!res.ok || !data) {
       return NextResponse.json(
@@ -27,7 +33,15 @@ export async function GET(req: NextRequest) {
 
     const sessionLookup = new Map<string, Record<string, any>>();
     for (const bs of allBackendSessions) {
-      if (isSyllabusSession(bs)) continue;
+      if (
+        isSyllabusSession(bs) ||
+        isBlogSession(bs) ||
+        blogIds.has(String(bs.id)) ||
+        bs.status === "BLOG_POST" ||
+        bs.room === "__BLOG__"
+      ) {
+        continue;
+      }
       const decoded = decodeRichNotes(bs.notes);
       sessionLookup.set(String(bs.id), {
         ...bs,
@@ -70,11 +84,25 @@ export async function GET(req: NextRequest) {
     };
 
     let upcoming = (Array.isArray(data.upcoming) ? data.upcoming : [])
-      .filter((s: any) => !isSyllabusSession(s))
+      .filter(
+        (s: any) =>
+          !isSyllabusSession(s) &&
+          !isBlogSession(s) &&
+          !blogIds.has(String(s.id)) &&
+          s.status !== "BLOG_POST" &&
+          s.room !== "__BLOG__"
+      )
       .map(enrichLesson);
 
     const pending = (Array.isArray(data.pending) ? data.pending : [])
-      .filter((s: any) => !isSyllabusSession(s))
+      .filter(
+        (s: any) =>
+          !isSyllabusSession(s) &&
+          !isBlogSession(s) &&
+          !blogIds.has(String(s.id)) &&
+          s.status !== "BLOG_POST" &&
+          s.room !== "__BLOG__"
+      )
       .map(enrichLesson);
 
     // Collect all non-cancelled lessons for the member's enrolled courses
@@ -83,7 +111,16 @@ export async function GET(req: NextRequest) {
       const cSlug = c.slug || String(c.code || "stj").toLowerCase();
       const sessions = Array.isArray(c.sessions) ? c.sessions : [];
       for (const s of sessions) {
-        if (isSyllabusSession(s) || s.status === "CANCELLED") continue;
+        if (
+          isSyllabusSession(s) ||
+          isBlogSession(s) ||
+          blogIds.has(String(s.id)) ||
+          s.status === "CANCELLED" ||
+          s.status === "BLOG_POST" ||
+          s.room === "__BLOG__"
+        ) {
+          continue;
+        }
         const [startTime = "11:30", endTime = "13:00"] = String(s.time || "")
           .split("-")
           .map((part) => part.trim());

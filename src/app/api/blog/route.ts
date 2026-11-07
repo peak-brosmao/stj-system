@@ -270,7 +270,7 @@ export async function POST(req: NextRequest) {
           startTime: "08:00",
           endTime: "10:00",
           room: BLOG_MARKER_ROOM,
-          status: "COMPLETED",
+          status: "BLOG_POST",
           notes: encodedNotes,
         }),
       });
@@ -437,6 +437,8 @@ export async function PUT(req: NextRequest) {
       method: "PUT",
       body: JSON.stringify({
         title: nextTitle,
+        room: BLOG_MARKER_ROOM,
+        status: "BLOG_POST",
         notes: encodedNotes,
       }),
     });
