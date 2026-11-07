@@ -1,98 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
-import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { NextRequest } from "next/server";
+import { proxyToBackend } from "@/lib/backendProxy";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: NextRequest) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const body = await req.json();
-    const { currentPassword, newPassword, confirmPassword } = body;
-
-    if (!currentPassword || !newPassword) {
-      return NextResponse.json(
-        { error: "សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន និងពាក្យសម្ងាត់ថ្មី" },
-        { status: 400 }
-      );
-    }
-
-    if (newPassword.length < 8) {
-      return NextResponse.json(
-        { error: "ពាក្យសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច ៨ តួអក្សរ (Minimum 8 characters required)" },
-        { status: 400 }
-      );
-    }
-
-    if (confirmPassword && newPassword !== confirmPassword) {
-      return NextResponse.json(
-        { error: "ពាក្យសម្ងាត់ថ្មី និងការផ្ទៀងផ្ទាត់មិនដូចគ្នាឡើយ" },
-        { status: 400 }
-      );
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: session.id },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const ip = getClientIp(req.headers);
-    const rateLimit = checkRateLimit(`pwd-change:${session.id}:${ip}`, { limit: 5, windowMs: 15 * 60 * 1000 });
-    if (!rateLimit.success) {
-      return NextResponse.json(
-        { error: "អ្នកបានព្យាយាមផ្លាស់ប្តូរពាក្យសម្ងាត់ច្រើនដងពេកហើយ សូមរង់ចាំ ១៥ នាទីសិន" },
-        { status: 429 }
-      );
-    }
-
-    const passwordMatches = await bcrypt.compare(currentPassword, user.passwordHash);
-
-    if (!passwordMatches) {
-      return NextResponse.json(
-        { error: "ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវឡើយ (Incorrect current password)" },
-        { status: 401 }
-      );
-    }
-
-    const newHash = await bcrypt.hash(newPassword, 10);
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { passwordHash: newHash },
-    });
-
-    try {
-      await prisma.auditLog.create({
-        data: {
-          userId: user.id,
-          action: "PASSWORD_CHANGED",
-          entityType: "USER",
-          entityId: user.id,
-          details: JSON.stringify({ email: user.email }),
-          ipAddress: req.headers.get("x-forwarded-for") || "127.0.0.1",
-          userAgent: req.headers.get("user-agent"),
-        },
-      });
-    } catch {
-      // non-blocking
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "ពាក្យសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ (Password updated successfully)",
-    });
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Error changing password";
-    return NextResponse.json({ error: msg }, { status: 500 });
-  }
+async function forward(req: NextRequest) {
+  return proxyToBackend(req, "portal/security/password");
 }
 
+export const GET = forward;
+export const POST = forward;
+export const PUT = forward;
+export const PATCH = forward;
+export const DELETE = forward;

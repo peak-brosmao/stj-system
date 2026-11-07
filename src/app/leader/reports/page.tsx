@@ -104,7 +104,7 @@ export default function LeaderReportsPage() {
               របាយការណ៍ និងស្ថិតិវត្តមាន (Leader Reports)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ
+              ទិន្នន័យជាក់ស្តែងពី Backend API • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ
             </p>
           </div>
 
@@ -232,7 +232,7 @@ export default function LeaderReportsPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយករបាយការណ៍ពី SQLite Database (stj.db)...
+                      កំពុងទាញយករបាយការណ៍ពី Backend API...
                     </td>
                   </tr>
                 ) : (

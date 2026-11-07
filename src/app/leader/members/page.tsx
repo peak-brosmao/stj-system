@@ -91,7 +91,7 @@ export default function LeaderMembersPage() {
               សមាជិករៀមច្បងក្នុងបន្ទុក (Assigned STJ Tutors)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ មិនមែនសម្រាប់សិស្សប្អូនឡើយ
+              ទិន្នន័យជាក់ស្តែងពី Backend API • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ មិនមែនសម្រាប់សិស្សប្អូនឡើយ
             </p>
           </div>
 
@@ -179,7 +179,7 @@ export default function LeaderMembersPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី SQLite Database (stj.db)...
+                      កំពុងទាញយកទិន្នន័យពី Backend API...
                     </td>
                   </tr>
                 ) : filtered.length === 0 ? (

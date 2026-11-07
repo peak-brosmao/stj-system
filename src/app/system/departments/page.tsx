@@ -202,7 +202,7 @@ export default function SystemDepartmentsPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី SQLite Database (stj.db)...
+                      កំពុងទាញយកទិន្នន័យពី Backend API...
                     </td>
                   </tr>
                 ) : departments.length === 0 ? (

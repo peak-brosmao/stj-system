@@ -89,7 +89,7 @@ export default function SystemPortalUsersPage() {
               គ្រប់គ្រងគណនីសមាជិក STJ (Portal User Accounts)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • គណនីផ្លូវការរបស់និស្សិតរៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ សរុប {usersList.length} នាក់
+              ទិន្នន័យជាក់ស្តែងពី Backend API • គណនីផ្លូវការរបស់និស្សិតរៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ សរុប {usersList.length} នាក់
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function SystemPortalUsersPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី SQLite Database (stj.db)...
+                      កំពុងទាញយកទិន្នន័យពី Backend API...
                     </td>
                   </tr>
                 ) : filtered.length === 0 ? (

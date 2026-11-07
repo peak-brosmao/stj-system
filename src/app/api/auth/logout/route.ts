@@ -1,18 +1,13 @@
-import { NextResponse } from "next/server";
-import { clearSessionCookie, getSession } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
+import { clearSessionCookie } from "@/lib/auth";
+import { proxyToBackend } from "@/lib/backendProxy";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  await proxyToBackend(req, "auth/logout", { method: "POST" }).catch(() => null);
   await clearSessionCookie();
-  return NextResponse.json({ success: true });
+  const response = NextResponse.json({ success: true });
+  response.cookies.delete("stj_backend_token");
+  return response;
 }
-
-export async function GET() {
-  const session = await getSession();
-  if (!session) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
-  }
-  return NextResponse.json({ authenticated: true, user: session });
-}
-

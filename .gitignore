@@ -46,9 +46,11 @@ prisma/*.db-wal
 # Deployment Archives
 *.zip
 
+# Backend is deployed manually and kept locally for zip upload
+/backend/
+
 # Credentials & Confidential PDF Reports
 *Credentials*
 *credentials*
 database_backups/
 prisma/prisma/
-

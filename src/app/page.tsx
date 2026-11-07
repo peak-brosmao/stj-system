@@ -21,14 +21,14 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
-import { prisma } from "@/lib/prisma";
+import { LARAVEL_API_BASE } from "@/lib/laravelApi";
 import { HomeGallery } from "@/components/home/HomeGallery";
 import { HeroAnimatedBackground } from "@/components/home/HeroAnimatedBackground";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Live stats — read directly from the SQLite database with graceful fallbacks
+  // Live stats are owned by the backend API.
   let totalMembers = 39;
   let totalCourses = 4;
   let totalLeaders = 4;
@@ -36,20 +36,16 @@ export default async function HomePage() {
   let completedSessions = 0;
 
   try {
-    const [m, c, l, d, s] = await Promise.all([
-      prisma.member.count({ where: { status: "ACTIVE" } }),
-      prisma.course.count({ where: { status: "ACTIVE" } }),
-      prisma.courseLeader.count(),
-      prisma.department.count(),
-      prisma.teachingSession.count({ where: { status: "COMPLETED" } }),
-    ]);
-    totalMembers = m;
-    totalCourses = c;
-    totalLeaders = l;
-    totalDepts = d;
-    completedSessions = s;
+    const response = await fetch(`${LARAVEL_API_BASE}/stats`, { cache: "no-store" });
+    if (response.ok) {
+      const data = await response.json();
+      totalMembers = data.summary?.activeMembers ?? totalMembers;
+      totalCourses = data.summary?.totalCourses ?? totalCourses;
+      totalLeaders = data.summary?.totalLeaders ?? totalLeaders;
+      completedSessions = data.summary?.totalSessions ?? completedSessions;
+    }
   } catch (err) {
-    console.warn("[HomePage] Database stats fallback activated:", err);
+    console.warn("[HomePage] Backend stats unavailable:", err);
   }
 
   const stats = [
@@ -340,4 +336,3 @@ export default async function HomePage() {
     </div>
   );
 }
-

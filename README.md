@@ -29,7 +29,7 @@ The system is engineered for deployment on **Hostinger Web Hosting**:
 - **Styling & UI:** Tailwind CSS, custom UI components, Lucide icons (strictly zero emoji throughout the platform).
 - **Backend Architecture:**
   - Standalone REST API backend for persistent MySQL management.
-  - Next.js server actions and API handlers for real-time frontend delivery.
+  - Next.js API handlers act only as authenticated proxies to the backend.
 - **Database:** MySQL on Hostinger, managed via migrations and seeders.
 - **Data Validation & Sanitization:** Zod schema validation and XSS/injection sanitization on all entry points.
 - **Security:** HTTP-only sameSite session cookies, bcrypt password hashing, cryptographically signed JWT tokens, sliding-window rate limiting, and HTTP security headers (HSTS, X-Content-Type-Options, X-Frame-Options).
@@ -134,9 +134,6 @@ $$\text{Attendance Rate} = \frac{\text{Present Count} + \text{Late Count}}{\text
 Configure environment variables in your server configuration or `.env`:
 
 ```env
-# Database Connection
-DATABASE_URL="mysql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:3306/<DB_NAME>"
-
 # Security & Authentication
 JWT_SECRET="<SECURE_RANDOM_SECRET_KEY_MIN_32_CHARS>"
 NODE_ENV="production"
@@ -150,6 +147,15 @@ TIMEZONE="Asia/Phnom_Penh"
 NEXT_PUBLIC_API_URL="https://datastj.peakbrosmao.me/api"
 LARAVEL_API_URL="https://datastj.peakbrosmao.me/api"
 ```
+
+### Production deployment rule
+
+The frontend deployment must not create, copy, synchronize, or seed a database.
+`npm run build`, `npm install`, and `npm start` are database-neutral. Keep the
+production database on the backend server and configure the frontend only with
+the backend API URL and server-side secrets. Run migrations and seeders
+manually on the backend when an intentional schema or initial-data change is
+required.
 
 ---
 

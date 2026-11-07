@@ -98,3 +98,4 @@ Write-Host "   1. Upload 'backend-deploy.zip' ទៅ Hostinger File Manager"
 Write-Host "   2. Extract ទៅ datastj.peakbrosmao.me folder"
 Write-Host "   3. ⚠️  stj.db នៅ server នឹងមិនត្រូវបាន overwrite!"
 Write-Host ""
+

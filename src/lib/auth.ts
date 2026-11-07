@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
 import { SessionUser, RoleName } from "@/types";
 
 const JWT_SECRET = new TextEncoder().encode(
@@ -138,11 +137,7 @@ export function isFullManager(user: SessionUser): boolean {
  */
 export async function getManageableCourseIds(user: SessionUser): Promise<string[] | null> {
   if (isFullManager(user)) return null;
-  const rows = await prisma.courseLeader.findMany({
-    where: { userId: user.id },
-    select: { courseId: true },
-  });
-  return rows.map((r) => r.courseId);
+  return user.courseIds ?? [];
 }
 
 /** Throws FORBIDDEN unless the user may manage the given course. */
@@ -157,13 +152,6 @@ export async function assertCourseAccess(user: SessionUser, courseId: string): P
  * Validate that a Course Leader is assigned to the specified course
  */
 export async function verifyCourseLeaderAccess(userId: string, courseId: string): Promise<boolean> {
-  const assignment = await prisma.courseLeader.findUnique({
-    where: {
-      courseId_userId: {
-        courseId,
-        userId,
-      },
-    },
-  });
-  return !!assignment;
+  const session = await getSession();
+  return session?.id === userId && (session.courseIds ?? []).includes(courseId);
 }

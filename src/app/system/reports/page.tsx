@@ -131,7 +131,7 @@ export default function SystemReportsPage() {
               របាយការណ៍ និងស្ថិតិវត្តមានទូទាំងប្រព័ន្ធ
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទិន្នន័យជាក់ស្តែងពី SQLite Database (stj.db) • ស្រង់តាមវត្តមានជាក់ស្តែងដែលបានកត់ត្រា
+              ទិន្នន័យជាក់ស្តែងពី Backend API • ស្រង់តាមវត្តមានជាក់ស្តែងដែលបានកត់ត្រា
             </p>
           </div>
 

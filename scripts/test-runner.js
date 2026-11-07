@@ -150,28 +150,17 @@ async function main() {
     assert(!emojiRegex.test(kmRaw), "km.json must not contain any emoji characters");
   });
 
-  // Test 6: Database & Hostinger Compatibility (.db file / SQLite & MySQL compatible)
-  runTest("Database Compatibility: SQLite .db file / MySQL compatible with zero Redis/Docker dependencies", () => {
-    const schemaPath = path.join(__dirname, "..", "prisma", "schema.prisma");
-    assert(fs.existsSync(schemaPath), "prisma/schema.prisma must exist");
-    const schema = fs.readFileSync(schemaPath, "utf-8");
-
-    assert(
-      schema.includes('provider = "sqlite"') || schema.includes('provider = "mysql"'),
-      "Prisma schema must use SQLite .db file or MySQL"
-    );
-    assert(!schema.includes("postgresql"), "Production schema must not reference postgresql");
-
-    const dbPath = path.join(__dirname, "..", "prisma", "stj.db");
-    assert(fs.existsSync(dbPath), "prisma/stj.db file must exist and contain database records");
-
+  // Test 6: Backend-only database architecture
+  runTest("Database Architecture: frontend has no Prisma or SQLite dependency", () => {
     const packageJsonPath = path.join(__dirname, "..", "package.json");
     const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
 
+    assert(!pkg.dependencies["@prisma/client"], "Frontend must not depend on Prisma Client");
+    assert(!pkg.devDependencies.prisma, "Frontend must not depend on Prisma CLI");
+    assert(!pkg.scripts.build.includes("prisma"), "Frontend build must not run Prisma");
     assert(!pkg.dependencies["ioredis"], "Must not have Redis dependency");
     assert(!pkg.dependencies["redis"], "Must not have Redis dependency");
     assert(!pkg.dependencies["socket.io"], "Must not have Socket.IO dependency (incompatible with Hostinger Web App)");
-    assert(pkg.scripts["postinstall"].includes("prisma generate"), "postinstall must generate Prisma Client");
   });
 
   console.log("\n-------------------------------------------------------------------------------");
@@ -190,4 +179,3 @@ main().catch((e) => {
   console.error("Test execution error:", e);
   process.exit(1);
 });
-
