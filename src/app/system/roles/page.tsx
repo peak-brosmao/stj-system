@@ -3,28 +3,28 @@
 import React from "react";
 import { Shield, Check, X, Lock } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Badge } from "@/ui/Badge";
 
 export default function SystemRolesPage() {
   const matrix = [
-    { module: "áž€áž¶ážšáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ & Settings", code: "system:settings", super: true, admin: false, leader: false, member: false },
-    { module: "áž€áŸ†ážŽážáŸ‹áž áŸážáž»ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž– Audit Logs", code: "audit:view", super: true, admin: false, leader: false, member: false },
-    { module: "áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážáž½áž“áž¶áž‘áž¸ & ážŸáž·áž‘áŸ’áž’áž· RBAC", code: "rbac:manage", super: true, admin: false, leader: false, member: false },
-    { module: "áž”áž„áŸ’áž€áž¾áž & áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž‚ážŽáž“áž¸áž”áž»áž‚áŸ’áž‚áž›áž·áž€", code: "users:manage", super: true, admin: true, leader: false, member: false },
-    { module: "ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Mark Attendance)", code: "attendance:mark", super: true, admin: true, leader: false, member: false },
-    { module: "áž€áŸ‚áž”áŸ’ážšáŸ‚áž‘áž·áž“áŸ’áž“áž“áŸáž™ážœážáŸ’ážáž˜áž¶áž“ (Edit Attendance)", code: "attendance:edit", super: true, admin: true, leader: false, member: false },
-    { module: "áž¢áž“áž»áž˜áŸážážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“", code: "attendance:correct", super: true, admin: true, leader: false, member: false },
-    { module: "áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážŸáž˜áž¶áž‡áž·áž€ (Members CRUD)", code: "members:manage", super: true, admin: true, leader: false, member: false },
-    { module: "áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ & áž…áž¶ážáŸ‹ážáž¶áŸ†áž„ Leader", code: "courses:manage", super: true, admin: true, leader: false, member: false },
-    { module: "áž”áž„áŸ’áž€áž¾ážážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“ (Teaching Sessions)", code: "sessions:manage", super: true, admin: true, leader: false, member: false },
-    { module: "áž˜áž¾áž›ážœážáŸ’ážáž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€ (Read Attendance)", code: "attendance:read", super: true, admin: true, leader: true, member: true },
-    { module: "áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ (Share Links)", code: "share:create", super: true, admin: true, leader: true, member: false },
-    { module: "áž‘áž¶áž‰áž™áž€ážšáž”áž¶áž™áž€áž¶ážšážŽáŸáž•áŸ’áž›áž¼ážœáž€áž¶ážš (Export Reports)", code: "reports:view", super: true, admin: true, leader: true, member: false },
+    { module: "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™ & Settings", code: "system:settings", super: true, admin: false, leader: false, member: false },
+    { module: "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ Audit Logs", code: "audit:view", super: true, admin: false, leader: false, member: false },
+    { module: "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¸ & Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â· RBAC", code: "rbac:manage", super: true, admin: false, leader: false, member: false },
+    { module: "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾Â & Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾â€Ã¡Å¾Â»Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€ºÃ¡Å¾Â·Ã¡Å¾â‚¬", code: "users:manage", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ (Mark Attendance)", code: "attendance:mark", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Edit Attendance)", code: "attendance:edit", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ", code: "attendance:correct", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ (Members CRUD)", code: "members:manage", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ & Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž Leader", code: "courses:manage", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Teaching Sessions)", code: "sessions:manage", super: true, admin: true, leader: false, member: false },
+    { module: "Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ (Read Attendance)", code: "attendance:read", super: true, admin: true, leader: true, member: true },
+    { module: "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬ (Share Links)", code: "share:create", super: true, admin: true, leader: true, member: false },
+    { module: "Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ (Export Reports)", code: "reports:view", super: true, admin: true, leader: true, member: false },
   ];
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -33,10 +33,10 @@ export default function SystemRolesPage() {
               <span>Role-Based Access Control</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ážáž¶ážšáž¶áž„ážŸáž·áž‘áŸ’áž’áž· áž“áž·áž„ážáž½áž“áž¶áž‘áž¸ (Permission Matrix)
+              Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â· Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¸ (Permission Matrix)
             </h1>
             <p className="text-xs text-muted-foreground">
-              áž€áž¶ážšáž€áŸ†ážŽážáŸ‹ážŸáž·áž‘áŸ’áž’áž·áž¢áž“áž»áž‰áŸ’áž‰áž¶ážáž™áŸ‰áž¶áž„áž˜áŸ‰ážºáž„áž˜áŸ‰áž¶ážáŸ‹ážáž¶áž˜áž€áž˜áŸ’ážšáž·ážážáž½áž“áž¶áž‘áž¸áž“áž¸áž˜áž½áž™áŸ—
+              Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾â„¢Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾ÂºÃ¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â½Ã¡Å¾â„¢Ã¡Å¸â€”
             </p>
           </div>
         </div>
@@ -45,8 +45,8 @@ export default function SystemRolesPage() {
         <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 flex items-start space-x-3">
           <Lock className="w-4 h-4 mt-0.5 shrink-0" />
           <div className="leading-relaxed">
-            <strong className="block font-semibold">áž‚áŸ„áž›áž€áž¶ážšážŽáŸážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–ážœážáŸ’ážáž˜áž¶áž“ážŠáŸážáž¹áž„ážšáŸ‰áž¹áž„ (Zero Mutation for Leaders):</strong>
-            áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Course Leaders) áž‚áŸ’áž˜áž¶áž“ážŸáž·áž‘áŸ’áž’áž·áž€áŸ’áž“áž»áž„áž€áž¶ážšáž€ážáŸ‹ážáŸ’ážšáž¶ áž€áŸ‚áž”áŸ’ážšáŸ‚ áž¬áž›áž»áž”ážœážáŸ’ážáž˜áž¶áž“áž•áŸ’áž›áž¼ážœáž€áž¶ážšáž¡áž¾áž™áŸ” áž˜áž¶áž“ážáŸ‚áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž€ážŽáŸ’ážáž¶áž› (Super Admin) áž“áž·áž„áž¢áŸ’áž“áž€áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž•áŸ’áž›áž¼ážœáž€áž¶ážš (STJ Admin) áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡ážŠáŸ‚áž›áž¢áž¶áž…ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“áž”áž¶áž“áŸ”
+            <strong className="block font-semibold">Ã¡Å¾â€šÃ¡Å¸â€žÃ¡Å¾â€ºÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¸â€°Ã¡Å¾Â¹Ã¡Å¾â€ž (Zero Mutation for Leaders):</strong>
+            Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Course Leaders) Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š Ã¡Å¾Â¬Ã¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€º (Super Admin) Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ (STJ Admin) Ã¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â»Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€
           </div>
         </div>
 
@@ -56,8 +56,8 @@ export default function SystemRolesPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">áž˜áž»ážáž„áž¶ážš / ážŸáž·áž‘áŸ’áž’áž·áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš</th>
-                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠážŸáž·áž‘áŸ’áž’áž·</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾Å¡ / Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·</th>
                   <th className="py-3 px-4 text-center font-semibold">Super Admin</th>
                   <th className="py-3 px-4 text-center font-semibold">STJ Admin</th>
                   <th className="py-3 px-4 text-center font-semibold text-primary">Course Leader</th>

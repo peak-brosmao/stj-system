@@ -7,8 +7,8 @@ import { ShieldCheck, UserCheck, Lock, Mail, ArrowRight, AlertCircle } from "luc
 import { useI18n } from "@/ui/i18n/I18nProvider";
 import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
-import { Button } from "@/ui/ui/Button";
-import { Logo } from "@/ui/ui/Logo";
+import { Button } from "@/ui/Button";
+import { Logo } from "@/ui/Logo";
 
 interface LoginFormProps {
   portalType: "system" | "leader";
@@ -116,7 +116,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
                   className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 />
               </div>
@@ -138,7 +138,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
           <Link href="/portal/login" className="text-primary hover:underline font-medium">
             STJ Portal Sign In
           </Link>
-          <span className="mx-2">â€¢</span>
+          <span className="mx-2">Ã¢â‚¬Â¢</span>
           <Link href="/" className="hover:underline">
             {t("common.back")} {t("nav.home")}
           </Link>

@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { UserCheck, Mail, Phone, BookOpen, AlertCircle } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Badge } from "@/ui/Badge";
 import { useI18n } from "@/ui/i18n/I18nProvider";
 
 interface LeaderItem {
@@ -86,7 +86,7 @@ export default function SystemLeadersPage() {
   }, []);
 
   return (
-    <PortalLayout portalType="system" userRole={t("system.president")} userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole={t("system.president")} userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -144,7 +144,7 @@ export default function SystemLeadersPage() {
                 <div className="space-y-1.5 text-xs text-muted-foreground pt-2 border-t border-border">
                   <div className="flex items-center space-x-2">
                     <span className="font-mono text-primary font-semibold">{t("system.studentIdPrefix")} {leader.studentId || t("system.notAvailable")}</span>
-                    <span>â€¢</span>
+                    <span>Ã¢â‚¬Â¢</span>
                     <span>{leader.academicYear}-{leader.department}</span>
                   </div>
                   <div className="flex items-center space-x-2">

@@ -24,9 +24,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 import * as XLSX from "xlsx";
 
 export default function MyAttendancePage() {
@@ -128,14 +128,14 @@ export default function MyAttendancePage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PRESENT":
-        return <Badge variant="success">ážœážáŸ’ážáž˜áž¶áž“ (Present)</Badge>;
+        return <Badge variant="success">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</Badge>;
       case "LATE":
-        return <Badge variant="warning">áž˜áž€áž™ážºáž (Late)</Badge>;
+        return <Badge variant="warning">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</Badge>;
       case "EXCUSED":
-        return <Badge variant="purple">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</Badge>;
+        return <Badge variant="purple">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</Badge>;
       case "ABSENT":
       default:
-        return <Badge variant="destructive">áž¢ážœážáŸ’ážáž˜áž¶áž“ (Absent)</Badge>;
+        return <Badge variant="destructive">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</Badge>;
     }
   };
 
@@ -143,7 +143,7 @@ export default function MyAttendancePage() {
     return (
       <PortalLayout
         portalType="portal"
-        userRole={currentUser?.memberId === "STJ002" ? "áž”áŸ’ážšáž’áž¶áž“ STJ" : "áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„"}
+        userRole={currentUser?.memberId === "STJ002" ? "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ" : "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž"}
         userName={currentUser?.fullNameKh || ""}
         userMemberId={currentUser?.memberId || undefined}
       >
@@ -156,10 +156,10 @@ export default function MyAttendancePage() {
                 <span>Executive STJ Attendance Oversight</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                áž€áž¶ážšážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ áž“áž·áž„ážáž¶áž˜ážŠáž¶áž“ážœážáŸ’ážáž˜áž¶áž“áž‘áž¼áž‘áŸ… (Attendance Oversight)
+                Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ÂÃ¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾â€˜Ã¡Å¸â€¦ (Attendance Oversight)
               </h1>
               <p className="text-xs text-muted-foreground mt-0.5">
-                ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž”áŸ’ážšáž’áž¶áž“ STJ áž“áž·áž„áž‚ážŽáŸˆáž€áž˜áŸ’áž˜áž¶áž’áž·áž€áž¶ážšážŸáž˜áž¶áž‚áž˜áž“áž·ážŸáŸ’ážŸáž·áž â€¢ áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ áž“áž·áž„ážáž¶áž˜ážŠáž¶áž“ážœážáŸ’ážáž˜áž¶áž“áž‚áŸ’ážšáž”áŸ‹áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶
+                Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾ËœÃ¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â Ã¢â‚¬Â¢ Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶
               </p>
             </div>
 
@@ -167,13 +167,13 @@ export default function MyAttendancePage() {
               <Link href="/system/attendance">
                 <Button size="sm" className="space-x-1.5 text-xs">
                   <CalendarCheck className="w-3.5 h-3.5" />
-                  <span>ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“áž”áŸ’ážšáž–áŸáž“áŸ’áž’</span>
+                  <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™</span>
                 </Button>
               </Link>
               <Link href="/system/sessions">
                 <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
                   <Clock className="w-3.5 h-3.5" />
-                  <span>áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“</span>
+                  <span>Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</span>
                 </Button>
               </Link>
             </div>
@@ -183,28 +183,28 @@ export default function MyAttendancePage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Card>
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-muted-foreground font-medium">ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“ážŸážšáž»áž” (STJ)</span>
+                <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ (STJ)</span>
                 <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalSessions}</p>
                 <span className="text-[10px] text-muted-foreground">Across All Subjects</span>
               </CardContent>
             </Card>
             <Card className="border-emerald-500/30 bg-emerald-500/5">
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">ážœážáŸ’ážáž˜áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶ážšáž½áž…</span>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦</span>
                 <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{overallStats.totalAttendance}</p>
                 <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">Total Attended</span>
               </CardContent>
             </Card>
             <Card className="border-primary/30 bg-primary/5">
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-primary font-medium">áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážšáž½áž˜</span>
+                <span className="text-[11px] text-primary font-medium">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾Ëœ</span>
                 <p className="text-2xl font-bold text-primary mt-1">{overallStats.averageRate}%</p>
                 <span className="text-[10px] text-muted-foreground">High Participation</span>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="p-4 text-center">
-                <span className="text-[11px] text-muted-foreground font-medium">áž‚áŸ’ážšáž¼áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž</span>
+                <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â</span>
                 <p className="text-2xl font-bold text-foreground mt-1">{overallStats.totalMembers}</p>
                 <span className="text-[10px] text-muted-foreground">Active Tutors</span>
               </CardContent>
@@ -214,7 +214,7 @@ export default function MyAttendancePage() {
           {/* Courses Overview */}
           <div className="space-y-3">
             <h3 className="text-sm font-bold text-foreground">
-              ážŸáž„áŸ’ážáŸáž”ážáž¶áž˜áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Courses Overview)
+              Ã¡Å¾Å¸Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸ÂÃ¡Å¾â€Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Courses Overview)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
               {executiveCourses.map((c) => (
@@ -225,13 +225,13 @@ export default function MyAttendancePage() {
                         {c.code}
                       </span>
                       <span className="text-[11px] text-muted-foreground">
-                        {c.sessionCount} ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“
+                        {c.sessionCount} Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ
                       </span>
                     </div>
                     <h4 className="font-bold text-sm text-foreground truncate">{c.titleKh}</h4>
                     <div className="pt-1 text-[11px] text-muted-foreground border-t border-border space-y-0.5">
-                      <div>áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜áŸ– <span className="font-medium text-foreground">{c.leaderName}</span></div>
-                      <div>ážŸáž˜áž¶áž‡áž·áž€áž…áž»áŸ‡ážˆáŸ’áž˜áŸ„áŸ‡áŸ– <span className="font-semibold text-primary">{c.memberCount} áž“áž¶áž€áŸ‹</span></div>
+                      <div>Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸â€“ <span className="font-medium text-foreground">{c.leaderName}</span></div>
+                      <div>Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€“ <span className="font-semibold text-primary">{c.memberCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</span></div>
                     </div>
                   </CardContent>
                 </Card>
@@ -243,9 +243,9 @@ export default function MyAttendancePage() {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center justify-between">
-                <span>ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“ áž“áž·áž„áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážáŸ’áž˜áž¸áŸ— (Recent Lessons & Attendance)</span>
+                <span>Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€” (Recent Lessons & Attendance)</span>
                 <Link href="/system/sessions" className="text-xs text-primary hover:underline font-normal">
-                  áž˜áž¾áž›áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ â†’
+                  Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ Ã¢â€ â€™
                 </Link>
               </CardTitle>
             </CardHeader>
@@ -254,12 +254,12 @@ export default function MyAttendancePage() {
                 <table className="w-full text-xs text-left">
                   <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-y border-border">
                     <tr>
-                      <th className="py-2.5 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</th>
-                      <th className="py-2.5 px-4 font-semibold">áž…áŸ†ážŽáž„áž‡áž¾áž„áž˜áŸážšáŸ€áž“</th>
-                      <th className="py-2.5 px-4 font-semibold">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘</th>
-                      <th className="py-2.5 px-4 font-semibold">áž”áž“áŸ’áž‘áž”áŸ‹</th>
-                      <th className="py-2.5 px-4 font-semibold text-center">ážœážáŸ’ážáž˜áž¶áž“</th>
-                      <th className="py-2.5 px-4 font-semibold text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
+                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</th>
+                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
+                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜</th>
+                      <th className="py-2.5 px-4 font-semibold">Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹</th>
+                      <th className="py-2.5 px-4 font-semibold text-center">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</th>
+                      <th className="py-2.5 px-4 font-semibold text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -279,19 +279,19 @@ export default function MyAttendancePage() {
                         </td>
                         <td className="py-3 px-4 text-center">
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                            {s.markedCount} áž“áž¶áž€áŸ‹
+                            {s.markedCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right space-x-2">
                           <Link href={`/system/attendance?sessionId=${s.id}`}>
                             <Button size="sm" variant="outline" className="h-7 text-[11px] px-2.5">
-                              ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“
+                              Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ
                             </Button>
                           </Link>
                           {s.shareToken && (
                             <Link href={`/share/${s.shareToken}`} target="_blank">
                               <Button size="sm" variant="ghost" className="h-7 text-[11px] px-2 text-primary">
-                                ážáŸ†ážŽáž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ â†—
+                                Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬ Ã¢â€ â€”
                               </Button>
                             </Link>
                           )}
@@ -324,10 +324,10 @@ export default function MyAttendancePage() {
               <span>Official Student Attendance Record</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážšáž”ážŸáŸ‹ážáŸ’áž‰áž»áŸ† (My Attendance Ledger)
+              Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â»Ã¡Å¸â€  (My Attendance Ledger)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ážŸáž˜áž¶áž‡áž·áž€áŸ– <strong>{currentUser ? `${currentUser.fullNameKh} (${currentUser.fullNameEn})` : "áž–áŸ€áž€ áž”áŸ’ážšáž»ážŸáž˜áŸ‰áŸ… (PEAK BROSMAO)"}</strong> â€¢ {currentUser?.memberId || "STJ033"} â€¢ {currentUser?.departmentCode || "I2-GIC"} ({currentUser?.studentId || "e20251455"})
+              Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€“ <strong>{currentUser ? `${currentUser.fullNameKh} (${currentUser.fullNameEn})` : "Ã¡Å¾â€“Ã¡Å¸â‚¬Ã¡Å¾â‚¬ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€¦ (PEAK BROSMAO)"}</strong> Ã¢â‚¬Â¢ {currentUser?.memberId || "STJ033"} Ã¢â‚¬Â¢ {currentUser?.departmentCode || "I2-GIC"} ({currentUser?.studentId || "e20251455"})
             </p>
           </div>
 
@@ -335,16 +335,16 @@ export default function MyAttendancePage() {
             <Link href="/portal/correction-requests">
               <Button variant="outline" size="sm" className="space-x-1.5 text-xs border-amber-500/30 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10">
                 <FileText className="w-3.5 h-3.5" />
-                <span>ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚ážœážáŸ’ážáž˜áž¶áž“</span>
+                <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
               </Button>
             </Link>
             <Button variant="outline" size="sm" onClick={exportCSV} className="space-x-1.5 text-xs">
               <Download className="w-3.5 h-3.5" />
-              <span>áž‘áž¶áž‰áž™áž€ CSV</span>
+              <span>Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬ CSV</span>
             </Button>
             <Button variant="outline" size="sm" onClick={() => window.print()} className="space-x-1.5 text-xs">
               <Printer className="w-3.5 h-3.5" />
-              <span>áž”áŸ„áŸ‡áž–áž»áž˜áŸ’áž–</span>
+              <span>Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“</span>
             </Button>
           </div>
         </div>
@@ -353,42 +353,42 @@ export default function MyAttendancePage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“ážŸážšáž»áž”</span>
+              <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€</span>
               <p className="text-2xl font-bold text-foreground mt-1">{stats.total}</p>
               <span className="text-[10px] text-muted-foreground">Sessions Tracked</span>
             </CardContent>
           </Card>
           <Card className="border-emerald-500/30 bg-emerald-500/5">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">ážœážáŸ’ážáž˜áž¶áž“ (Present)</span>
+              <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</span>
               <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{stats.present}</p>
-              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">áž‘áž¶áž“áŸ‹áž–áŸáž›ážœáŸáž›áž¶</span>
+              <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80">Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Â¶</span>
             </CardContent>
           </Card>
           <Card className="border-amber-500/30 bg-amber-500/5">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">áž˜áž€áž™ážºáž (Late)</span>
+              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</span>
               <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">{stats.late}</p>
-              <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80">ážšáž¶áž”áŸ‹áž‡áž¶ážœážáŸ’ážáž˜áž¶áž“</span>
+              <span className="text-[10px] text-amber-600/80 dark:text-amber-400/80">Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-muted-foreground font-medium">áž¢ážœážáŸ’ážáž˜áž¶áž“ (Absent)</span>
+              <span className="text-[11px] text-muted-foreground font-medium">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</span>
               <p className="text-2xl font-bold text-foreground mt-1">{stats.absent}</p>
-              <span className="text-[10px] text-muted-foreground">áž‚áŸ’áž˜áž¶áž“áž€áž¶ážšáž¢áž“áž»áž‰áŸ’áž‰áž¶áž</span>
+              <span className="text-[10px] text-muted-foreground">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Â</span>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-purple-600 dark:text-purple-400 font-medium">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</span>
+              <span className="text-[11px] text-purple-600 dark:text-purple-400 font-medium">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</span>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{stats.excused}</p>
-              <span className="text-[10px] text-purple-600/80 dark:text-purple-400/80">áž˜áž·áž“áž€áž¶ážáŸ‹áž–áž·áž“áŸ’áž‘áž»</span>
+              <span className="text-[10px] text-purple-600/80 dark:text-purple-400/80">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â»</span>
             </CardContent>
           </Card>
           <Card className="border-primary/40 bg-primary/10">
             <CardContent className="p-4 text-center">
-              <span className="text-[11px] text-primary font-bold">áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“</span>
+              <span className="text-[11px] text-primary font-bold">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
               <p className="text-2xl font-extrabold text-primary mt-1">{stats.rate}%</p>
               <span className="text-[10px] text-primary font-medium">Attendance Rate</span>
             </CardContent>
@@ -401,14 +401,14 @@ export default function MyAttendancePage() {
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center space-x-2">
                 <Filter className="w-3.5 h-3.5 text-muted-foreground" />
-                <span className="font-semibold text-foreground">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áŸ–</span>
+                <span className="font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¸â€“</span>
                 <select
                   value={courseFilter}
                   onChange={(e) => setCourseFilter(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs font-medium"
                 >
                   {enrolledCourses.length > 1 && (
-                    <option value="ALL">áž‚áŸ’ážšáž”áŸ‹áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({enrolledCourses.length} áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶)</option>
+                    <option value="ALL">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({enrolledCourses.length} Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶)</option>
                   )}
                   {enrolledCourses.length > 0 ? (
                     enrolledCourses.map((c: any) => (
@@ -423,23 +423,23 @@ export default function MyAttendancePage() {
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className="font-semibold text-foreground">ážŸáŸ’ážáž¶áž“áž—áž¶áž–áŸ–</span>
+                <span className="font-semibold text-foreground">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¸â€“</span>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-2.5 py-1.5 rounded-lg border border-input bg-background text-xs"
                 >
-                  <option value="ALL">áž‚áŸ’ážšáž”áŸ‹ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ (All Status)</option>
-                  <option value="PRESENT">ážœážáŸ’ážáž˜áž¶áž“ (Present)</option>
-                  <option value="LATE">áž˜áž€áž™ážºáž (Late)</option>
-                  <option value="EXCUSED">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</option>
-                  <option value="ABSENT">áž¢ážœážáŸ’ážáž˜áž¶áž“ (Absent)</option>
+                  <option value="ALL">Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ (All Status)</option>
+                  <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
+                  <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
+                  <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
+                  <option value="ABSENT">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</option>
                 </select>
               </div>
             </div>
 
             <span className="text-xs text-muted-foreground">
-              ážšáž¼áž”áž˜áž“áŸ’ážáž‚ážŽáž“áž¶áž•áŸ’áž›áž¼ážœáž€áž¶ážšáŸ– <code className="font-mono bg-muted px-1.5 py-0.5 rounded">(Present + Late) / (Total - Excused) Ã— 100%</code>
+              Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾â€Ã¡Å¾ËœÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¸â€“ <code className="font-mono bg-muted px-1.5 py-0.5 rounded">(Present + Late) / (Total - Excused) Ãƒâ€” 100%</code>
             </span>
           </CardContent>
         </Card>
@@ -448,44 +448,44 @@ export default function MyAttendancePage() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold">
-              áž˜áŸážšáŸ€áž“ážŠáŸ‚áž›áž”áž¶áž“ážšáŸ€áž”áž…áŸ†ážŠáŸ„áž™áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ (Lessons set by your Leader Team)
+              Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Lessons set by your Leader Team)
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {upcoming.length === 0 && pending.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž˜áŸážšáŸ€áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž“áŸ…áž¡áž¾áž™áž‘áŸáŸ” áž˜áŸážšáŸ€áž“áž“áž¹áž„áž”áž„áŸ’áž áž¶áž‰áž“áŸ…áž‘áž¸áž“áŸáŸ‡áž—áŸ’áž›áž¶áž˜áŸ—áž“áŸ…áž–áŸáž› Leader áž”áž¶áž“áž”áž„áŸ’áž€áž¾ážážœáž¶áŸ” (No lessons have been
+                Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸ÂÃ¡Å¸â€ Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¸â€”Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€º Leader Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â¶Ã¡Å¸â€ (No lessons have been
                 created yet. They appear here as soon as your Leader creates them.)
               </p>
             )}
             {upcoming.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-foreground">áž˜áŸážšáŸ€áž“ážáž¶áž„áž˜áž»áž (Upcoming)</p>
+                <p className="text-xs font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾Â (Upcoming)</p>
                 {upcoming.map((l: any) => (
                   <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
                     <div>
                       <p className="font-semibold text-foreground">{l.title}</p>
                       <p className="text-muted-foreground">
-                        {l.course?.code} â€¢ {new Date(l.sessionDate).toISOString().split("T")[0]} â€¢ {l.startTime} - {l.endTime} â€¢ {l.room}
+                        {l.course?.code} Ã¢â‚¬Â¢ {new Date(l.sessionDate).toISOString().split("T")[0]} Ã¢â‚¬Â¢ {l.startTime} - {l.endTime} Ã¢â‚¬Â¢ {l.room}
                       </p>
                     </div>
-                    <Badge variant="info">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž”áž„áŸ’ážšáŸ€áž“ (Not taught yet)</Badge>
+                    <Badge variant="info">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Not taught yet)</Badge>
                   </div>
                 ))}
               </div>
             )}
             {pending.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-foreground">áž˜áŸážšáŸ€áž“ážšáž„áŸ‹áž…áž¶áŸ†áž€áž¶ážšážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Awaiting attendance)</p>
+                <p className="text-xs font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Awaiting attendance)</p>
                 {pending.map((l: any) => (
                   <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
                     <div>
                       <p className="font-semibold text-foreground">{l.title}</p>
                       <p className="text-muted-foreground">
-                        {l.course?.code} â€¢ {new Date(l.sessionDate).toISOString().split("T")[0]} â€¢ {l.startTime} - {l.endTime} â€¢ {l.room}
+                        {l.course?.code} Ã¢â‚¬Â¢ {new Date(l.sessionDate).toISOString().split("T")[0]} Ã¢â‚¬Â¢ {l.startTime} - {l.endTime} Ã¢â‚¬Â¢ {l.room}
                       </p>
                     </div>
-                    <Badge variant="warning">áž˜áž·áž“áž‘áž¶áž“áŸ‹ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Not marked yet)</Badge>
+                    <Badge variant="warning">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Not marked yet)</Badge>
                   </div>
                 ))}
               </div>
@@ -496,22 +496,22 @@ export default function MyAttendancePage() {
         {/* Records Table */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">áž”áŸ’ážšážœážáŸ’ážáž·áž“áŸƒáž€áž¶ážšáž…áž¼áž›ážšáž½áž˜ážœáž‚áŸ’áž‚ážŸáž·áž€áŸ’ážŸáž¶ (Attendance History)</CardTitle>
+            <CardTitle className="text-sm font-semibold">Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ËœÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Attendance History)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-muted/40 text-muted-foreground font-semibold">
-                    <th className="py-2.5 px-3">áž›.ážš</th>
-                    <th className="py-2.5 px-3">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</th>
-                    <th className="py-2.5 px-3">áž…áŸ†ážŽáž„áž‡áž¾áž„ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“</th>
-                    <th className="py-2.5 px-3">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘</th>
-                    <th className="py-2.5 px-3">áž˜áŸ‰áŸ„áž„ážŸáž·áž€áŸ’ážŸáž¶</th>
-                    <th className="py-2.5 px-3">áž”áž“áŸ’áž‘áž”áŸ‹ážšáŸ€áž“</th>
-                    <th className="py-2.5 px-3">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
-                    <th className="py-2.5 px-3">áž€áŸ†ážŽážáŸ‹ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹</th>
-                    <th className="py-2.5 px-3 text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾â€º.Ã¡Å¾Å¡</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                    <th className="py-2.5 px-3">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹</th>
+                    <th className="py-2.5 px-3 text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -540,7 +540,7 @@ export default function MyAttendancePage() {
                           href={`/portal/correction-requests?recordId=${r.id}&status=${r.status}`}
                           className="text-primary hover:underline font-medium text-[11px]"
                         >
-                          ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚
+                          Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€š
                         </Link>
                       </td>
                     </tr>
@@ -548,7 +548,7 @@ export default function MyAttendancePage() {
                   {records.length === 0 && (
                     <tr>
                       <td colSpan={9} className="py-6 px-3 text-center text-muted-foreground">
-                        áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážŠáŸ‚áž›áž”áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶áž“áŸ…áž¡áž¾áž™áž‘áŸ (No attendance recorded yet)
+                        Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸Â (No attendance recorded yet)
                       </td>
                     </tr>
                   )}

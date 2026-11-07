@@ -14,9 +14,9 @@ import {
   CalendarCheck,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 function CorrectionRequestsContent() {
   const searchParams = useSearchParams();
@@ -71,7 +71,7 @@ function CorrectionRequestsContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!recordId) {
-      alert("áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœáž¡áž¾áž™ (No attendance record to correct yet)");
+      alert("Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢ (No attendance record to correct yet)");
       return;
     }
     setSubmitting(true);
@@ -90,14 +90,14 @@ function CorrectionRequestsContent() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšáž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
+      if (!res.ok) throw new Error(data.error || "Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢");
 
-      setSuccessMsg("ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž‰áŸ’áž‡áž¼áž“ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™áž‘áŸ…áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ");
+      setSuccessMsg("Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸â€¦Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ");
       setReason("");
       setIsModalOpen(false);
       loadCorrections();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "áž€áŸ†áž áž»ážŸáž€áŸ’áž“áž»áž„áž€áž¶ážšáž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾");
+      alert(err instanceof Error ? err.message : "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Â Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾");
     } finally {
       setSubmitting(false);
     }
@@ -106,12 +106,12 @@ function CorrectionRequestsContent() {
   const getReviewBadge = (status: string) => {
     switch (status) {
       case "APPROVED":
-        return <Badge variant="success">áž”áž¶áž“áž¢áž“áž»áž˜áŸáž (Approved)</Badge>;
+        return <Badge variant="success">Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â (Approved)</Badge>;
       case "REJECTED":
-        return <Badge variant="destructive">áž˜áž·áž“áž¢áž“áž»áž˜áŸáž (Rejected)</Badge>;
+        return <Badge variant="destructive">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â (Rejected)</Badge>;
       case "PENDING":
       default:
-        return <Badge variant="warning">ážšáž„áŸ‹áž…áž¶áŸ†ážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ (Pending)</Badge>;
+        return <Badge variant="warning">Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ÂÃ¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ (Pending)</Badge>;
     }
   };
 
@@ -125,10 +125,10 @@ function CorrectionRequestsContent() {
               <span>Attendance Correction Request Desk</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“ (Attendance Correction Requests)
+              Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Attendance Correction Requests)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ážáž¶áž˜ážŠáž¶áž“ážŸáŸ’ážáž¶áž“áž—áž¶áž–ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶áž–áž·áž“áž·ážáŸ’áž™ážšáž”ážŸáŸ‹áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ
+              Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ
             </p>
           </div>
 
@@ -138,7 +138,7 @@ function CorrectionRequestsContent() {
             className="space-x-1.5 text-xs"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>ážŠáž¶áž€áŸ‹ážŸáŸ†ážŽáž¾ážáŸ’áž˜áž¸</span>
+            <span>Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</span>
           </Button>
         </div>
 
@@ -160,7 +160,7 @@ function CorrectionRequestsContent() {
                       {c.record?.session?.course?.code || "PROG101"}
                     </span>
                     <h3 className="font-bold text-sm text-foreground mt-1">
-                      {c.record?.session?.title || "ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“"}
+                      {c.record?.session?.title || "Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ"}
                     </h3>
                   </div>
                   <div>{getReviewBadge(c.reviewStatus)}</div>
@@ -168,17 +168,17 @@ function CorrectionRequestsContent() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-muted-foreground text-[11px]">ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž…áž¶ážŸáŸ‹ (Previous):</span>
+                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹ (Previous):</span>
                     <p className="font-semibold text-destructive mt-0.5">{c.previousStatus}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">ážŸáŸ’ážáž¶áž“áž—áž¶áž–ážŸáŸ’áž“áž¾ážŸáž»áŸ† (Requested):</span>
+                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€  (Requested):</span>
                     <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">{c.requestedStatus}</p>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground text-[11px]">áž˜áž¼áž›áž áŸážáž»ážŸáŸ’áž“áž¾ážŸáž»áŸ† (Reason):</span>
+                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€  (Reason):</span>
                   <p className="text-foreground text-xs mt-0.5 p-2 rounded-lg bg-muted/40">
                     {c.reason}
                   </p>
@@ -187,7 +187,7 @@ function CorrectionRequestsContent() {
                 {c.reviewNotes && (
                   <div className="p-3 rounded-lg bg-primary/5 border border-primary/20 text-xs space-y-1">
                     <span className="text-[11px] font-semibold text-primary">
-                      áž€áŸ†ážŽážáŸ‹ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹áž–áž¸áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ ({c.reviewedBy?.fullNameKh || "áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ"}):
+                      Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž ({c.reviewedBy?.fullNameKh || "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJ"}):
                     </span>
                     <p className="text-muted-foreground">{c.reviewNotes}</p>
                   </div>
@@ -206,21 +206,21 @@ function CorrectionRequestsContent() {
             <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between pb-2 border-b border-border">
                 <h3 className="font-bold text-base text-foreground">
-                  ážŠáž¶áž€áŸ‹áž–áž¶áž€áŸ’áž™ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“
+                  Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ
                 </h3>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   className="text-muted-foreground hover:text-foreground text-xs"
                 >
-                  áž”áž·áž‘
+                  Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜
                 </button>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div>
                   <label className="block font-medium text-foreground mb-1.5">
-                    áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸážœáž‚áŸ’áž‚ážŸáž·áž€áŸ’ážŸáž¶ážŠáŸ‚áž›áž˜áž¶áž“áž€áž¶ážšážáž»ážŸáž†áŸ’áž‚áž„:
+                    Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€ž:
                   </label>
                   <select
                     value={recordId}
@@ -229,11 +229,11 @@ function CorrectionRequestsContent() {
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                   >
                     {myRecords.length === 0 ? (
-                      <option value="">áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážŠáŸ‚áž›áž”áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶áž“áŸ…áž¡áž¾áž™áž‘áŸ (No attendance records yet)</option>
+                      <option value="">Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¾â€˜Ã¡Å¸Â (No attendance records yet)</option>
                     ) : (
                       myRecords.map((r) => (
                         <option key={r.id} value={r.id}>
-                          {r.session?.title} - {r.session?.course?.code} (áž€ážáŸ‹ážáŸ’ážšáž¶áŸ– {r.status})
+                          {r.session?.title} - {r.session?.course?.code} (Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¸â€“ {r.status})
                         </option>
                       ))
                     )}
@@ -243,45 +243,45 @@ function CorrectionRequestsContent() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block font-medium text-foreground mb-1.5">
-                      ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž…áž¶ážŸáŸ‹:
+                      Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹:
                     </label>
                     <select
                       value={previousStatus}
                       onChange={(e) => setPreviousStatus(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                     >
-                      <option value="LATE">áž˜áž€áž™ážºáž (Late)</option>
-                      <option value="ABSENT">áž¢ážœážáŸ’ážáž˜áž¶áž“ (Absent)</option>
-                      <option value="EXCUSED">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</option>
-                      <option value="PRESENT">ážœážáŸ’ážáž˜áž¶áž“ (Present)</option>
+                      <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
+                      <option value="ABSENT">Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Absent)</option>
+                      <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
+                      <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
                     </select>
                   </div>
                   <div>
                     <label className="block font-medium text-foreground mb-1.5">
-                      ážŸáŸ’ážáž¶áž“áž—áž¶áž–ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚áž”áŸ’ážšáŸ‚:
+                      Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š:
                     </label>
                     <select
                       value={requestedStatus}
                       onChange={(e) => setRequestedStatus(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                     >
-                      <option value="PRESENT">ážœážáŸ’ážáž˜áž¶áž“ (Present)</option>
-                      <option value="EXCUSED">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</option>
-                      <option value="LATE">áž˜áž€áž™ážºáž (Late)</option>
+                      <option value="PRESENT">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Present)</option>
+                      <option value="EXCUSED">Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ (Excused)</option>
+                      <option value="LATE">Ã¡Å¾ËœÃ¡Å¾â‚¬Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â (Late)</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
                   <label className="block font-medium text-foreground mb-1.5">
-                    áž˜áž¼áž›áž áŸážáž» áž“áž·áž„áž—ážŸáŸ’ážáž»ážáž¶áž„áž”áž‰áŸ’áž‡áž¶áž€áŸ‹ (Reason & Evidence):
+                    Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â» Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€”Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹ (Reason & Evidence):
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    placeholder="áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž–áž¸áž˜áž¼áž›áž áŸážáž» áž“áž·áž„áž–áŸáž›ážœáŸáž›áž¶áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž“áŸƒáž€áž¶ážšáž…áž¼áž›ážšáž½áž˜..."
+                    placeholder="Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â» Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾Ëœ..."
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
                   />
                 </div>
@@ -293,10 +293,10 @@ function CorrectionRequestsContent() {
                     size="sm"
                     onClick={() => setIsModalOpen(false)}
                   >
-                    áž”áŸ„áŸ‡áž”áž„áŸ‹
+                    Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
                   </Button>
                   <Button type="submit" size="sm" disabled={submitting}>
-                    {submitting ? "áž€áŸ†áž–áž»áž„áž”áž‰áŸ’áž‡áž¼áž“..." : "áž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾"}
+                    {submitting ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œ..." : "Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾"}
                   </Button>
                 </div>
               </form>

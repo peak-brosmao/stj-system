@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { BookOpen, CalendarCheck, CalendarDays, Clock, MapPin, Percent, Users, Plus } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 interface Overview {
   user: { fullNameKh: string; fullNameEn: string; displayName: string | null; email: string; memberId: string | null; roles?: string[] };
@@ -49,10 +49,10 @@ interface Overview {
 }
 
 const STATUS_BADGE: Record<string, { v: "success" | "warning" | "destructive" | "purple"; t: string }> = {
-  PRESENT: { v: "success", t: "áž˜áž¶áž“ážœážáŸ’ážáž˜áž¶áž“" },
-  LATE: { v: "warning", t: "áž™ážºáž" },
-  ABSENT: { v: "destructive", t: "áž¢ážœážáŸ’ážáž˜áž¶áž“" },
-  EXCUSED: { v: "purple", t: "áž…áŸ’áž”áž¶áž”áŸ‹" },
+  PRESENT: { v: "success", t: "Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ" },
+  LATE: { v: "warning", t: "Ã¡Å¾â„¢Ã¡Å¾ÂºÃ¡Å¾Â" },
+  ABSENT: { v: "destructive", t: "Ã¡Å¾Â¢Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ" },
+  EXCUSED: { v: "purple", t: "Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹" },
 };
 
 export default function LeaderDashboardPage() {
@@ -101,7 +101,7 @@ export default function LeaderDashboardPage() {
   return (
     <PortalLayout
       portalType="leader"
-      userRole="áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ (Course Leader)"
+      userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Course Leader)"
       userName={data?.user.fullNameKh || ""}
       userMemberId={data?.user.memberId || undefined}
       userEmail={data?.user.email}
@@ -114,7 +114,7 @@ export default function LeaderDashboardPage() {
               <span>STJ Leader Desk</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              áž•áŸ’áž‘áž¶áŸ†áž„áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜áž”áž„áŸ’ážšáŸ€áž“ (Course Leader Dashboard)
+              Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Course Leader Dashboard)
             </h1>
             <p className="text-xs text-muted-foreground mt-1">
               {data?.user.displayName || data?.user.fullNameEn}
@@ -124,13 +124,13 @@ export default function LeaderDashboardPage() {
             <Link href="/leader/sessions">
               <Button size="sm" className="text-xs space-x-1.5">
                 <Plus className="w-3.5 h-3.5" />
-                <span>áž”áž„áŸ’áž€áž¾ážáž˜áŸážšáŸ€áž“</span>
+                <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</span>
               </Button>
             </Link>
             <Link href="/leader/attendance">
               <Button size="sm" variant="outline" className="text-xs space-x-1.5">
                 <CalendarCheck className="w-3.5 h-3.5" />
-                <span>ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“</span>
+                <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
               </Button>
             </Link>
           </div>
@@ -140,10 +140,10 @@ export default function LeaderDashboardPage() {
           <>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { label: "áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Courses)", value: l.courses.length, icon: BookOpen },
-                { label: "ážŸáž˜áž¶áž‡áž·áž€áž€áŸ’áž“áž»áž„áž€áŸ’ážšáž»áž˜ (Team members)", value: l.totalMembers, icon: Users },
-                { label: "áž˜áŸážšáŸ€áž“ážŸážšáž»áž” (Lessons)", value: `${l.completedLessons}/${l.totalLessons}`, icon: CalendarDays },
-                { label: "áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“áž˜áž’áŸ’áž™áž˜ (Avg rate)", value: l.stats.total > 0 ? `${l.stats.rate}%` : "-", icon: Percent },
+                { label: "Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Courses)", value: l.courses.length, icon: BookOpen },
+                { label: "Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Team members)", value: l.totalMembers, icon: Users },
+                { label: "Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ (Lessons)", value: `${l.completedLessons}/${l.totalLessons}`, icon: CalendarDays },
+                { label: "Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾â€™Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Ëœ (Avg rate)", value: l.stats.total > 0 ? `${l.stats.rate}%` : "-", icon: Percent },
               ].map((c) => (
                 <Card key={c.label}>
                   <CardContent className="p-4">
@@ -158,11 +158,11 @@ export default function LeaderDashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">ážœážáŸ’ážáž˜áž¶áž“ážáž¶áž˜ážáŸ‚ (Monthly attendance)</CardTitle>
+                  <CardTitle className="text-sm font-semibold">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾ÂÃ¡Å¸â€š (Monthly attendance)</CardTitle>
                 </CardHeader>
                 <CardContent className="h-56">
                   {l.monthly.length === 0 ? (
-                    <p className="text-xs text-muted-foreground">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážœážáŸ’ážáž˜áž¶áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶áž‘áŸáŸ” (No attendance recorded yet.)</p>
+                    <p className="text-xs text-muted-foreground">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¸ÂÃ¡Å¸â€ (No attendance recorded yet.)</p>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={l.monthly}>
@@ -181,12 +181,12 @@ export default function LeaderDashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">áž˜áŸážšáŸ€áž“ážáŸ’ážšáž¼ážœáž”áž„áŸ’ážšáŸ€áž“ (Upcoming lessons)</CardTitle>
+                  <CardTitle className="text-sm font-semibold">Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Upcoming lessons)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {l.upcoming.length === 0 && (
                     <p className="text-xs text-muted-foreground">
-                      áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž˜áŸážšáŸ€áž“áŸ” ážŸáž¼áž˜áž”áž„áŸ’áž€áž¾ážáž˜áŸážšáŸ€áž“ážŠáž¾áž˜áŸ’áž”áž¸áž±áŸ’áž™ážŸáž˜áž¶áž‡áž·áž€áž˜áž¾áž›ážƒáž¾áž‰áŸ” (No upcoming lessons. Create one so your team can see it.)
+                      Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾Â±Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Æ’Ã¡Å¾Â¾Ã¡Å¾â€°Ã¡Å¸â€ (No upcoming lessons. Create one so your team can see it.)
                     </p>
                   )}
                   {l.upcoming.map((s) => (
@@ -200,7 +200,7 @@ export default function LeaderDashboardPage() {
                         <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{s.room}</span>
                       </div>
                       <Link href={`/leader/attendance?sessionId=${s.id}`} className="text-primary hover:underline font-medium">
-                        ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Mark attendance){s.marked > 0 ? ` - ${s.marked}` : ""}
+                        Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Mark attendance){s.marked > 0 ? ` - ${s.marked}` : ""}
                       </Link>
                     </div>
                   ))}
@@ -210,18 +210,18 @@ export default function LeaderDashboardPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážšáž”ážŸáŸ‹ážáŸ’áž‰áž»áŸ† (My courses)</CardTitle>
+                <CardTitle className="text-sm font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â»Ã¡Å¸â€  (My courses)</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {l.courses.map((c) => (
                   <Link key={c.id} href="/leader/members" className="p-3 rounded-lg border border-border hover:border-primary/50 transition-colors text-xs">
                     <div className="flex items-center justify-between">
                       <span className="font-mono font-bold text-primary">{c.code}</span>
-                      <span className="text-muted-foreground">{c.memberCount} áž“áž¶áž€áŸ‹</span>
+                      <span className="text-muted-foreground">{c.memberCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</span>
                     </div>
                     <p className="font-semibold text-foreground mt-1">{c.titleKh}</p>
                     <p className="text-muted-foreground mt-0.5">
-                      áž˜áŸážšáŸ€áž“ {c.completedCount}/{c.lessonCount} Â· ážœážáŸ’ážáž˜áž¶áž“ {c.rate}%
+                      Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ {c.completedCount}/{c.lessonCount} Ã‚Â· Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ {c.rate}%
                     </p>
                   </Link>
                 ))}
@@ -230,15 +230,15 @@ export default function LeaderDashboardPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážáŸ’áž˜áž¸áŸ— (Recent attendance records)</CardTitle>
+                <CardTitle className="text-sm font-semibold">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€” (Recent attendance records)</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {l.recentAttendance.length === 0 && <p className="text-xs text-muted-foreground">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áŸ” (None yet.)</p>}
+                {l.recentAttendance.length === 0 && <p className="text-xs text-muted-foreground">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€ (None yet.)</p>}
                 {l.recentAttendance.map((r) => (
                   <div key={r.id} className="flex items-center justify-between text-xs p-2 rounded-lg border border-border">
                     <div>
                       <p className="font-medium text-foreground">{r.memberName}</p>
-                      <p className="text-muted-foreground">{r.courseCode} Â· {r.lesson} Â· {r.date}</p>
+                      <p className="text-muted-foreground">{r.courseCode} Ã‚Â· {r.lesson} Ã‚Â· {r.date}</p>
                     </div>
                     <Badge variant={STATUS_BADGE[r.status]?.v || "info"}>{STATUS_BADGE[r.status]?.t || r.status}</Badge>
                   </div>

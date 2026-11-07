@@ -20,9 +20,9 @@ import {
   Award,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 import { useI18n } from "@/ui/i18n/I18nProvider";
 
 interface CourseOption {
@@ -105,7 +105,7 @@ export default function SystemMembersPage() {
       .then(async (res) => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          throw new Error(data?.error || "áž˜áž·áž“áž¢áž¶áž…áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ… Backend Database áž”áž¶áž“áž¡áž¾áž™");
+          throw new Error(data?.error || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
         }
         return data;
       })
@@ -132,7 +132,7 @@ export default function SystemMembersPage() {
       })
       .catch((err: unknown) => {
         setMembers([]);
-        setError(err instanceof Error ? err.message : "áž˜áž·áž“áž¢áž¶áž…áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ… Backend Database áž”áž¶áž“áž¡áž¾áž™");
+        setError(err instanceof Error ? err.message : "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
       })
       .finally(() => setLoading(false));
   };
@@ -316,7 +316,7 @@ export default function SystemMembersPage() {
   });
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         {error && (
           <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
@@ -526,7 +526,7 @@ export default function SystemMembersPage() {
                             size="sm"
                             onClick={() => openEditModal(m)}
                             className="h-7 text-[11px] px-2 text-primary border-primary/30 hover:bg-primary/10 space-x-1"
-                            title="áž€áŸ‚áž”áŸ’ážšáŸ‚áž–áŸážáŸŒáž˜áž¶áž“ áž“áž·áž„áž”áŸ’ážáž¼ážšáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Edit & Reassign Course)"
+                            title="Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Edit & Reassign Course)"
                           >
                             <Edit2 className="w-3 h-3" />
                             <span>{t("members.editMember")}</span>
@@ -535,7 +535,7 @@ export default function SystemMembersPage() {
                             variant="outline"
                             size="sm"
                             onClick={async () => {
-                              if (!confirm(`ážáž¾áž›áŸ„áž€áž¢áŸ’áž“áž€áž…áž„áŸ‹áž€áŸ†ážŽážáŸ‹áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážŸáž˜áž¶áž‡áž·áž€ ${m.fullNameKh} áž¡áž¾áž„ážœáž·áž‰áž˜áŸ‚áž“áž‘áŸ?`)) return;
+                              if (!confirm(`Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¸â€žÃ¡Å¾â‚¬Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ ${m.fullNameKh} Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€°Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â?`)) return;
                               try {
                                 const res = await fetch("/api/system/members/reset-password", {
                                   method: "POST",
@@ -544,7 +544,7 @@ export default function SystemMembersPage() {
                                 });
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || "Reset failed");
-                                alert(`áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážšáž”ážŸáŸ‹ ${m.fullNameKh} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áŸ†ážŽážáŸ‹áž¡áž¾áž„ážœáž·áž‰áž‡áŸ„áž‚áž‡áŸáž™: ${data.defaultPassword}`);
+                                alert(`Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹ ${m.fullNameKh} Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€°Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢: ${data.defaultPassword}`);
                               } catch (err: unknown) {
                                 alert(err instanceof Error ? err.message : "Error resetting password");
                               }
@@ -590,7 +590,7 @@ export default function SystemMembersPage() {
                       {t("members.editTitle")}
                     </h3>
                     <p className="text-[11px] text-muted-foreground font-mono">
-                      {editingMember.memberId} â€¢ {editingMember.studentId}
+                      {editingMember.memberId} Ã¢â‚¬Â¢ {editingMember.studentId}
                     </p>
                   </div>
                   <button
@@ -809,7 +809,7 @@ export default function SystemMembersPage() {
                       <input
                         type="text"
                         required
-                        placeholder="áž‡áž¶ ážœáž·ážŸáž·ážŠáŸ’áž‹"
+                        placeholder="Ã¡Å¾â€¡Ã¡Å¾Â¶ Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹"
                         value={newMember.fullNameKh}
                         onChange={(e) => setNewMember({ ...newMember, fullNameKh: e.target.value })}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"

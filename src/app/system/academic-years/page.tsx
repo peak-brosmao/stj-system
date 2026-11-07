@@ -15,9 +15,9 @@ import {
   ArrowRightLeft,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 interface OperationalYear {
   id: string;
@@ -80,7 +80,7 @@ export default function SystemAcademicYearsPage() {
       });
       if (res.ok) {
         setCurrentYearCode(yearCode);
-        setSuccessMessage(`áž”áž¶áž“áž€áŸ†ážŽážáŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ ${yearCode} áž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜áž‡áŸ„áž‚áž‡áŸáž™`);
+        setSuccessMessage(`Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ ${yearCode} Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢`);
         loadData();
         setTimeout(() => setSuccessMessage(null), 3000);
       }
@@ -100,7 +100,7 @@ export default function SystemAcademicYearsPage() {
       if (res.ok) {
         setIsAddModalOpen(false);
         setNewYear({ yearCode: "", label: "", startDate: "", endDate: "" });
-        setSuccessMessage("áž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸áž‡áŸ„áž‚áž‡áŸáž™");
+        setSuccessMessage("Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢");
         loadData();
         setTimeout(() => setSuccessMessage(null), 3000);
       }
@@ -110,20 +110,20 @@ export default function SystemAcademicYearsPage() {
   };
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         {/* Banner with scope explanation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
           <div>
             <div className="inline-flex items-center space-x-2 text-xs font-semibold text-primary mb-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>STJ Institutional Governance â€¢ ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶</span>
+              <span>STJ Institutional Governance Ã¢â‚¬Â¢ Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€¡Ã¡Å¾Â¶</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              áž€áž¶ážšáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áž“áž·áž„áž€áž˜áŸ’ážšáž·ážážŸáž·áž€áŸ’ážŸáž¶ (Academic Cycles & Levels)
+              Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Academic Cycles & Levels)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ážšáŸ€áž”áž…áŸ† áž“áž·áž„áž€áŸ†ážŽážáŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš STJ áž‡áž¶ážšáŸ€áž„ážšáž¶áž›áŸ‹áž†áŸ’áž“áž¶áŸ† ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ (áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áŸáŸ‡áž˜áž·áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž·ážŸáŸ’ážŸáž”áŸ’áž¢áž¼áž“áž¡áž¾áž™)
+              Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€  Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ STJ Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€  Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Â¢Ã¡Å¾Â¼Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢)
             </p>
           </div>
 
@@ -133,7 +133,7 @@ export default function SystemAcademicYearsPage() {
             className="space-x-1.5 text-xs self-start sm:self-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
-            <span>áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸</span>
+            <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</span>
           </Button>
         </div>
 
@@ -150,10 +150,10 @@ export default function SystemAcademicYearsPage() {
             <div>
               <h2 className="text-base font-bold text-foreground flex items-center space-x-2">
                 <CalendarDays className="w-4 h-4 text-primary" />
-                <span>áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš STJ (Operational Academic Cycles)</span>
+                <span>Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ STJ (Operational Academic Cycles)</span>
               </h2>
               <p className="text-xs text-muted-foreground">
-                áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž“áž¸áž˜áž½áž™áŸ—ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„ áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ áž“áž·áž„áž”áŸ’ážšážœážáŸ’ážáž·áž“áŸƒáž€áž¶ážšáž…áž»áŸ‡áž”áž„áŸ’ážšáŸ€áž“ážŠáž¶áž…áŸ‹ážŠáŸ„áž™áž¡áŸ‚áž€
+                Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â½Ã¡Å¾â„¢Ã¡Å¸â€”Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€ž Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾Â¡Ã¡Å¸â€šÃ¡Å¾â‚¬
               </p>
             </div>
           </div>
@@ -177,10 +177,10 @@ export default function SystemAcademicYearsPage() {
                       className="text-[10px]"
                     >
                       {yr.isCurrent
-                        ? "áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Active)"
+                        ? "Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ (Active)"
                         : yr.status === "UPCOMING"
-                        ? "áž‚áŸ’ážšáŸ„áž„áž‘áž»áž€ (Upcoming)"
-                        : "áž”ážŽáŸ’ážŽážŸáž¶ážš (Archived)"}
+                        ? "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€žÃ¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬ (Upcoming)"
+                        : "Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡ (Archived)"}
                     </Badge>
                     <span className="text-xs font-mono font-bold text-muted-foreground">{yr.yearCode}</span>
                   </div>
@@ -188,24 +188,24 @@ export default function SystemAcademicYearsPage() {
                   <div>
                     <h3 className="text-base font-bold text-foreground">{yr.label}</h3>
                     <p className="text-[11px] text-muted-foreground">
-                      {yr.startDate} ážŠáž›áŸ‹ {yr.endDate}
+                      {yr.startDate} Ã¡Å¾Å Ã¡Å¾â€ºÃ¡Å¸â€¹ {yr.endDate}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border/60 text-center">
                     <div>
                       <span className="text-xs font-bold text-foreground">{yr.membersCount}</span>
-                      <p className="text-[10px] text-muted-foreground">ážŸáž˜áž¶áž‡áž·áž€</p>
+                      <p className="text-[10px] text-muted-foreground">Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬</p>
                     </div>
                     <div>
                       <span className="text-xs font-bold text-foreground">{yr.sessionsCount}</span>
-                      <p className="text-[10px] text-muted-foreground">ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“</p>
+                      <p className="text-[10px] text-muted-foreground">Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ</p>
                     </div>
                     <div>
                       <span className="text-xs font-bold text-primary">
                         {yr.attendanceRate > 0 ? `${yr.attendanceRate}%` : "N/A"}
                       </span>
-                      <p className="text-[10px] text-muted-foreground">ážœážáŸ’ážáž˜áž¶áž“</p>
+                      <p className="text-[10px] text-muted-foreground">Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</p>
                     </div>
                   </div>
 
@@ -213,7 +213,7 @@ export default function SystemAcademicYearsPage() {
                     {yr.isCurrent ? (
                       <Button variant="outline" size="sm" disabled className="w-full text-xs">
                         <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                        <span>áž€áŸ†áž–áž»áž„áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜</span>
+                        <span>Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ</span>
                       </Button>
                     ) : (
                       <Button
@@ -223,7 +223,7 @@ export default function SystemAcademicYearsPage() {
                         className="w-full text-xs"
                       >
                         <RefreshCw className="w-3.5 h-3.5 mr-1" />
-                        <span>áž€áŸ†ážŽážáŸ‹áž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜</span>
+                        <span>Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ</span>
                       </Button>
                     )}
                   </div>
@@ -239,14 +239,14 @@ export default function SystemAcademicYearsPage() {
             <div>
               <h2 className="text-base font-bold text-foreground flex items-center space-x-2">
                 <GraduationCap className="w-4 h-4 text-primary" />
-                <span>áž€áž˜áŸ’ážšáž·ážážœáž·ážŸáŸ’ážœáž€ážš áž“áŸƒážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„ (Engineering Levels I1 - I5)</span>
+                <span>Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Å¡ Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€ž (Engineering Levels I1 - I5)</span>
               </h2>
               <p className="text-xs text-muted-foreground">
-                áž€áž¶ážšáž”áŸ‚áž„áž…áŸ‚áž€áž€áž˜áŸ’ážšáž·ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ {currentYearCode}
+                Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â STJ Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ {currentYearCode}
               </p>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-              ážŸážšáž»áž” áŸ£áŸ© áž“áž¶áž€áŸ‹ (áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš)
+              Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ Ã¡Å¸Â£Ã¡Å¸Â© Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹ (Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡)
             </span>
           </div>
 
@@ -255,12 +255,12 @@ export default function SystemAcademicYearsPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                   <tr>
-                    <th className="py-3 px-4 font-semibold">áž€áž¼ážŠáž€áž˜áŸ’ážšáž·áž</th>
-                    <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž€áž˜áŸ’ážšáž·ážážœáž·ážŸáŸ’ážœáž€ážš (ITC Engineering Level)</th>
-                    <th className="py-3 px-4 font-semibold text-center">áž›áŸ†ážŠáž¶áž”áŸ‹</th>
-                    <th className="py-3 px-4 font-semibold text-center">áž…áŸ†áž“áž½áž“ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž</th>
-                    <th className="py-3 px-4 font-semibold text-center">áž—áž¶áž‚ážšáž™</th>
-                    <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
+                    <th className="py-3 px-4 font-semibold">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾Â</th>
+                    <th className="py-3 px-4 font-semibold">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Å¡ (ITC Engineering Level)</th>
+                    <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾â€ºÃ¡Å¸â€ Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹</th>
+                    <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â</th>
+                    <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾Å¡Ã¡Å¾â„¢</th>
+                    <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -272,7 +272,7 @@ export default function SystemAcademicYearsPage() {
                         <td className="py-3 px-4 font-medium text-foreground">{lvl.label}</td>
                         <td className="py-3 px-4 text-center">{lvl.order}</td>
                         <td className="py-3 px-4 text-center font-bold text-foreground">
-                          {lvl.membersCount} áž“áž¶áž€áŸ‹
+                          {lvl.membersCount} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹
                         </td>
                         <td className="py-3 px-4 text-center font-mono text-muted-foreground">
                           {percent}%
@@ -280,11 +280,11 @@ export default function SystemAcademicYearsPage() {
                         <td className="py-3 px-4 text-center">
                           {lvl.membersCount > 0 ? (
                             <Badge variant="success" className="text-[10px]">
-                              áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€
+                              Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬
                             </Badge>
                           ) : (
                             <Badge variant="secondary" className="text-[10px]">
-                              áž‚áŸ’áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€
+                              Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬
                             </Badge>
                           )}
                         </td>
@@ -304,7 +304,7 @@ export default function SystemAcademicYearsPage() {
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-base font-bold text-foreground flex items-center space-x-2">
                   <CalendarDays className="w-5 h-5 text-primary" />
-                  <span>áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸</span>
+                  <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</span>
                 </h3>
                 <button
                   onClick={() => setIsAddModalOpen(false)}
@@ -316,24 +316,24 @@ export default function SystemAcademicYearsPage() {
 
               <form onSubmit={handleCreateYear} className="space-y-4">
                 <div>
-                  <label className="text-xs font-semibold text-foreground">áž€áž¼ážŠáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ (Year Code) *</label>
+                  <label className="text-xs font-semibold text-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Year Code) *</label>
                   <input
                     type="text"
                     required
-                    placeholder="áž§. 2027-2028"
+                    placeholder="Ã¡Å¾Â§. 2027-2028"
                     value={newYear.yearCode}
                     onChange={(e) => setNewYear({ ...newYear, yearCode: e.target.value })}
                     className="w-full mt-1 px-3 py-2 text-xs rounded-lg border border-input bg-background text-foreground"
                   />
-                  <p className="text-[10px] text-muted-foreground mt-0.5">áž‘áž˜áŸ’ážšáž„áŸ‹ YYYY-YYYY</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Ã¡Å¾â€˜Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹ YYYY-YYYY</p>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-foreground">ážˆáŸ’áž˜áŸ„áŸ‡áž”áž„áŸ’áž áž¶áž‰áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš (Label) *</label>
+                  <label className="text-xs font-semibold text-foreground">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾Å¡ (Label) *</label>
                   <input
                     type="text"
                     required
-                    placeholder="áž§. áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ§~áŸ¢áŸ áŸ¢áŸ¨"
+                    placeholder="Ã¡Å¾Â§. Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§~Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¨"
                     value={newYear.label}
                     onChange={(e) => setNewYear({ ...newYear, label: e.target.value })}
                     className="w-full mt-1 px-3 py-2 text-xs rounded-lg border border-input bg-background text-foreground"
@@ -342,7 +342,7 @@ export default function SystemAcademicYearsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold text-foreground">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘áž…áž¶áž”áŸ‹áž•áŸ’ážáž¾áž˜</label>
+                    <label className="text-xs font-semibold text-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Ëœ</label>
                     <input
                       type="date"
                       value={newYear.startDate}
@@ -351,7 +351,7 @@ export default function SystemAcademicYearsPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-foreground">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘áž‘áž‘áž½áž›áž”áž‰áŸ’áž…áž”áŸ‹</label>
+                    <label className="text-xs font-semibold text-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾â€˜Ã¡Å¾â€˜Ã¡Å¾Â½Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾â€Ã¡Å¸â€¹</label>
                     <input
                       type="date"
                       value={newYear.endDate}
@@ -368,10 +368,10 @@ export default function SystemAcademicYearsPage() {
                     size="sm"
                     onClick={() => setIsAddModalOpen(false)}
                   >
-                    áž”áŸ„áŸ‡áž”áž„áŸ‹
+                    Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
                   </Button>
                   <Button type="submit" size="sm">
-                    áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶
+                    Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶
                   </Button>
                 </div>
               </form>

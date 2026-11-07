@@ -7,8 +7,8 @@ import { Menu, X, LogIn, LayoutDashboard, LogOut } from "lucide-react";
 import { useI18n } from "@/ui/i18n/I18nProvider";
 import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
-import { Button } from "@/ui/ui/Button";
-import { Logo } from "@/ui/ui/Logo";
+import { Button } from "@/ui/Button";
+import { Logo } from "@/ui/Logo";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -114,7 +114,7 @@ export function Navbar() {
                 size="sm"
                 onClick={handleLogout}
                 className="h-9 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                title="áž…áž¶áž€áž…áŸáž‰ (Sign Out)"
+                title="Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€° (Sign Out)"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </Button>
@@ -185,7 +185,7 @@ export function Navbar() {
                   <Link href={auth.user.dashboardUrl} onClick={() => setMobileMenuOpen(false)}>
                     <Button size="sm" className="w-full justify-center space-x-1.5 font-bold h-9">
                       <LayoutDashboard className="w-3.5 h-3.5" />
-                      <span>áž•áŸ’áž‘áž¶áŸ†áž„áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„</span>
+                      <span>Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž</span>
                     </Button>
                   </Link>
                   <Button
@@ -195,7 +195,7 @@ export function Navbar() {
                     className="w-full justify-center space-x-1.5 font-bold h-9 text-destructive hover:bg-destructive/10"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>áž…áž¶áž€áž…áŸáž‰</span>
+                    <span>Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â€°</span>
                   </Button>
                 </div>
               </div>

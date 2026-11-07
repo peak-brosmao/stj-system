@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { BookOpen, Users, Calendar, AlertCircle, Plus, Pencil, X, Check, ShieldCheck } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 import { useI18n } from "@/ui/i18n/I18nProvider";
 
 interface CourseItem {
@@ -69,7 +69,7 @@ export default function SystemCoursesPage() {
       }
       if (!res.ok) {
         const responseData = await res.json().catch(() => null);
-        throw new Error(responseData?.error || "áž˜áž·áž“áž¢áž¶áž…áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž–áž¸ Database áž”áž¶áž“áž¡áž¾áž™");
+        throw new Error(responseData?.error || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Â¸ Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
       }
       const data = await res.json();
       setCourses(data.courses || []);
@@ -93,7 +93,7 @@ export default function SystemCoursesPage() {
       titleKh: "",
       titleEn: "",
       category: "Engineering Foundation",
-      term: "áž†áž˜áž¶ážŸáž‘áž¸áŸ¡ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦-áŸ¢áŸ áŸ¢áŸ§",
+      term: "Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡ Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦-Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§",
       status: "ACTIVE",
       leaderMemberId: "",
     });
@@ -108,7 +108,7 @@ export default function SystemCoursesPage() {
       titleKh: c.titleKh,
       titleEn: c.titleEn,
       category: c.category || "Engineering Foundation",
-      term: c.term || "áž†áž˜áž¶ážŸáž‘áž¸áŸ¡ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦-áŸ¢áŸ áŸ¢áŸ§",
+      term: c.term || "Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡ Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦-Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§",
       status: c.status || "ACTIVE",
       leaderMemberId: c.leaderMemberId || "",
     });
@@ -129,21 +129,21 @@ export default function SystemCoursesPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setFormError(data.error || "áž”ážšáž¶áž‡áŸáž™áž€áŸ’áž“áž»áž„áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶");
+        setFormError(data.error || "Ã¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶");
         return;
       }
       setIsModalOpen(false);
       setEditingCourse(null);
       await loadCourses();
     } catch {
-      setFormError("áž˜áž¶áž“áž”áž‰áŸ’áž áž¶áž€áŸ’áž“áž»áž„áž€áž¶ážšáž—áŸ’áž‡áž¶áž”áŸ‹áž”ážŽáŸ’ážáž¶áž‰");
+      setFormError("Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€°");
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -155,7 +155,7 @@ export default function SystemCoursesPage() {
               {t("courses.title")}
             </h1>
             <p className="text-xs text-muted-foreground">
-              {t("courses.assignedLeaders")} Â· {t("courses.enrolledMembers")}
+              {t("courses.assignedLeaders")} Ã‚Â· {t("courses.enrolledMembers")}
             </p>
           </div>
 
@@ -167,7 +167,7 @@ export default function SystemCoursesPage() {
 
         {loading && (
           <div className="p-8 text-center text-xs text-muted-foreground">
-            áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž–áž¸ Database...
+            Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€“Ã¡Å¾Â¸ Database...
           </div>
         )}
 
@@ -180,7 +180,7 @@ export default function SystemCoursesPage() {
 
         {!loading && !error && courses.length === 0 && (
           <div className="p-12 text-center text-xs text-muted-foreground border rounded-2xl">
-            áž–áž»áŸ†áž˜áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž“áŸ…áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž¡áž¾áž™áŸ” ážŸáž¼áž˜áž…áž»áž… &quot;áž”áž„áŸ’áž€áž¾ážáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážáŸ’áž˜áž¸&quot;áŸ”
+            Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€¦ &quot;Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸&quot;Ã¡Å¸â€
           </div>
         )}
 
@@ -194,7 +194,7 @@ export default function SystemCoursesPage() {
                       {c.code}
                     </span>
                     <Badge variant={c.status === "ACTIVE" ? "success" : "secondary"}>
-                      {c.status === "ACTIVE" ? "ážŸáž€áž˜áŸ’áž˜" : "áž¢ážŸáž€áž˜áŸ’áž˜"}
+                      {c.status === "ACTIVE" ? "Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ" : "Ã¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ"}
                     </Badge>
                   </div>
                   <Button
@@ -202,10 +202,10 @@ export default function SystemCoursesPage() {
                     size="sm"
                     onClick={() => openEditModal(c)}
                     className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
-                    title="áž€áŸ‚áž”áŸ’ážšáŸ‚áž–áŸážáŸŒáž˜áž¶áž“ áž“áž·áž„áž…áž¶ážáŸ‹ážáž¶áŸ†áž„áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶"
+                    title="Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶"
                   >
                     <Pencil className="w-3 h-3" />
-                    <span>áž€áŸ‚áž”áŸ’ážšáŸ‚</span>
+                    <span>Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š</span>
                   </Button>
                 </div>
 
@@ -217,7 +217,7 @@ export default function SystemCoursesPage() {
                 <div className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
                   <div className="flex items-center space-x-1.5 text-muted-foreground">
                     <Users className="w-3.5 h-3.5 text-primary" />
-                    <span>ážŸáž·ážŸáŸ’ážŸáž…áž»áŸ‡ážˆáŸ’áž˜áŸ„áŸ‡áŸ– <strong className="text-foreground">{c.enrolled} áž“áž¶áž€áŸ‹</strong></span>
+                    <span>Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¸â€¡Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¸â€“ <strong className="text-foreground">{c.enrolled} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</strong></span>
                   </div>
                   <div className="flex items-center space-x-1.5 text-muted-foreground">
                     <Calendar className="w-3.5 h-3.5" />
@@ -227,7 +227,7 @@ export default function SystemCoursesPage() {
 
                 <div className="p-2.5 rounded-lg bg-muted/50 text-xs text-muted-foreground flex items-center justify-between">
                   <div>
-                    áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áŸ– <strong className="text-foreground">{c.leaders}</strong>
+                    Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¸â€“ <strong className="text-foreground">{c.leaders}</strong>
                   </div>
                   <ShieldCheck className="w-4 h-4 text-primary shrink-0 ml-2" />
                 </div>
@@ -248,10 +248,10 @@ export default function SystemCoursesPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-foreground">
-                        {editingCourse.id ? "áž€áŸ‚áž”áŸ’ážšáŸ‚áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáž·áž€áŸ’ážŸáž¶ (Edit Course)" : "áž”áž„áŸ’áž€áž¾ážáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážáŸ’áž˜áž¸ (New Course)"}
+                        {editingCourse.id ? "Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Edit Course)" : "Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New Course)"}
                       </h3>
                       <p className="text-[11px] text-muted-foreground">
-                        ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž•áŸ’áž‘áž¶áž›áŸ‹áž€áŸ’áž“áž»áž„ Database SQLite &amp; Backend API
+                        Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€ž Database SQLite &amp; Backend API
                       </p>
                     </div>
                   </div>
@@ -274,11 +274,11 @@ export default function SystemCoursesPage() {
 
                 <form onSubmit={handleSaveCourse} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-medium mb-1">áž€áž¼ážŠáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Course Code) *</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Course Code) *</label>
                     <input
                       type="text"
                       required
-                      placeholder="áž§. MATH101, PROG101, ELEC101"
+                      placeholder="Ã¡Å¾Â§. MATH101, PROG101, ELEC101"
                       disabled={!!editingCourse.id}
                       value={editingCourse.code}
                       onChange={(e) => setEditingCourse({ ...editingCourse, code: e.target.value.toUpperCase() })}
@@ -287,11 +287,11 @@ export default function SystemCoursesPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš *</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾Å¡ *</label>
                     <input
                       type="text"
                       required
-                      placeholder="áž§. áž‚ážŽáž·ážážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜..."
+                      placeholder="Ã¡Å¾Â§. Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ..."
                       value={editingCourse.titleKh}
                       onChange={(e) => setEditingCourse({ ...editingCourse, titleKh: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
@@ -299,10 +299,10 @@ export default function SystemCoursesPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ / áž¡áž¶ážáž¶áŸ†áž„</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Â¢Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Å¸ / Ã¡Å¾Â¡Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž</label>
                     <input
                       type="text"
-                      placeholder="áž§. Engineering Mathematics"
+                      placeholder="Ã¡Å¾Â§. Engineering Mathematics"
                       value={editingCourse.titleEn}
                       onChange={(e) => setEditingCourse({ ...editingCourse, titleEn: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
@@ -311,7 +311,7 @@ export default function SystemCoursesPage() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block font-medium mb-1">áž”áŸ’ážšáž—áŸáž‘áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Category)</label>
+                      <label className="block font-medium mb-1">Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€”Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Category)</label>
                       <select
                         value={editingCourse.category}
                         onChange={(e) => setEditingCourse({ ...editingCourse, category: e.target.value })}
@@ -325,7 +325,7 @@ export default function SystemCoursesPage() {
                     </div>
 
                     <div>
-                      <label className="block font-medium mb-1">áž†áž˜áž¶ážŸ / áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ (Term)</label>
+                      <label className="block font-medium mb-1">Ã¡Å¾â€ Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾Å¸ / Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Term)</label>
                       <input
                         type="text"
                         value={editingCourse.term}
@@ -337,40 +337,40 @@ export default function SystemCoursesPage() {
 
                   {/* Leader Assignment */}
                   <div>
-                    <label className="block font-medium mb-1">áž…áž¶ážáŸ‹ážáž¶áŸ†áž„áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Assign Course Leader)</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Assign Course Leader)</label>
                     <select
                       value={editingCourse.leaderMemberId}
                       onChange={(e) => setEditingCourse({ ...editingCourse, leaderMemberId: e.target.value })}
                       className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
                     >
-                      <option value="">-- áž˜áž·áž“áž‘áž¶áž“áŸ‹áž…áž¶ážáŸ‹ážáž¶áŸ†áž„ (None) --</option>
+                      <option value="">-- Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž (None) --</option>
                       {eligibleLeaders.map((m) => {
                         const year = m.academicYear?.code || "";
                         const dept = m.department?.code || "";
                         const badge = year && dept ? ` (${year}-${dept})` : "";
                         return (
                           <option key={m.id} value={m.id}>
-                            {m.memberId} â€¢ {m.fullNameKh} ({m.fullNameEn}){badge}
+                            {m.memberId} Ã¢â‚¬Â¢ {m.fullNameKh} ({m.fullNameEn}){badge}
                           </option>
                         );
                       })}
                     </select>
                     <p className="text-[10px] text-muted-foreground mt-1">
-                      áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŠáŸ‚áž›ážáŸ’ážšáž¼ážœáž”áž¶áž“áž…áž¶ážáŸ‹ážáž¶áŸ†áž„ áž“áž¹áž„áž˜áž¶áž“ážŸáž·áž‘áŸ’áž’áž·áž…áž¼áž›áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž˜áŸážšáŸ€áž“ áž“áž·áž„ážœážáŸ’ážáž˜áž¶áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž“áŸáŸ‡áŸ”
+                      Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å Ã¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¸â€
                     </p>
                   </div>
 
                   {editingCourse.id && (
                     <div>
-                      <label className="block font-medium mb-1">ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Status)</label>
+                      <label className="block font-medium mb-1">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ (Status)</label>
                       <select
                         value={editingCourse.status}
                         onChange={(e) => setEditingCourse({ ...editingCourse, status: e.target.value })}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"
                       >
-                        <option value="ACTIVE">ážŸáž€áž˜áŸ’áž˜ (ACTIVE)</option>
-                        <option value="INACTIVE">áž¢ážŸáž€áž˜áŸ’áž˜ (INACTIVE)</option>
-                        <option value="ARCHIVED">áž”ážŽáŸ’ážŽážŸáž¶ážš (ARCHIVED)</option>
+                        <option value="ACTIVE">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (ACTIVE)</option>
+                        <option value="INACTIVE">Ã¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (INACTIVE)</option>
+                        <option value="ARCHIVED">Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡ (ARCHIVED)</option>
                       </select>
                     </div>
                   )}
@@ -385,10 +385,10 @@ export default function SystemCoursesPage() {
                         setEditingCourse(null);
                       }}
                     >
-                      áž”áŸ„áŸ‡áž”áž„áŸ‹
+                      Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
                     </Button>
                     <Button type="submit" size="sm" disabled={saving}>
-                      {saving ? "áž€áŸ†áž–áž»áž„ážšáž€áŸ’ážŸáž¶áž‘áž»áž€..." : "ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž€áŸ’áž“áž»áž„ Database"}
+                      {saving ? "Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬..." : "Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€ž Database"}
                     </Button>
                   </div>
                 </form>

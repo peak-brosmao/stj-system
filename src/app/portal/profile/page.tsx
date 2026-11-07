@@ -22,9 +22,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 export default function MyProfilePage() {
   const [profile, setProfile] = useState<any>(null);
@@ -55,7 +55,7 @@ export default function MyProfilePage() {
       <PortalLayout portalType="portal">
         <div className="min-h-[500px] flex flex-col items-center justify-center space-y-3">
           <div className="w-9 h-9 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs text-muted-foreground animate-pulse">áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž–áŸážáŸŒáž˜áž¶áž“áž‚ážŽáž“áž¸...</p>
+          <p className="text-xs text-muted-foreground animate-pulse">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸...</p>
         </div>
       </PortalLayout>
     );
@@ -67,21 +67,21 @@ export default function MyProfilePage() {
   const isMember = !!profile?.member;
   const memberId = profile?.member?.memberId || "-";
   const studentId = profile?.member?.studentId || profile?.studentId || "-";
-  const department = profile?.member?.department?.nameKh || (isMember ? "-" : "áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ (Administration)");
+  const department = profile?.member?.department?.nameKh || (isMember ? "-" : "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™ (Administration)");
   const deptCode = profile?.member?.department?.code || (isMember ? "-" : "STJ Admin");
   const year = profile?.member?.academicYear?.label || (isMember ? "-" : "-");
   const phone = profile?.phone || "-";
   const email = profile?.email || "";
   const telegram = profile?.telegram || "-";
   const address = profile?.address || "-";
-  const bio = profile?.bio || "áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž‡áž¸ážœáž”áŸ’ážšážœážáŸ’ážáž·ážŸáž„áŸ’ážáŸáž”áž“áŸ…áž¡áž¾áž™ (No biography added yet)";
-  const gender = profile?.gender === "M" ? "áž”áŸ’ážšáž»ážŸ (Male)" : profile?.gender === "F" ? "ážŸáŸ’ážšáž¸ (Female)" : "-";
+  const bio = profile?.bio || "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸ÂÃ¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢ (No biography added yet)";
+  const gender = profile?.gender === "M" ? "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Å¸ (Male)" : profile?.gender === "F" ? "Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¸ (Female)" : "-";
   const isPresident = profile?.userRoles?.some((r: any) => r.role?.name === "SUPER_ADMIN" || r.role?.name === "STJ_PRESIDENT") || memberId === "STJ002";
   const userRole = isPresident
-    ? "áž”áŸ’ážšáž’áž¶áž“ STJ"
+    ? "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ"
     : profile?.userRoles?.some((r: any) => r.role?.name === "COURSE_LEADER")
-    ? "áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜"
-    : (isMember ? "ážŸáž˜áž¶áž‡áž·áž€ STJ" : "áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„");
+    ? "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ"
+    : (isMember ? "Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ STJ" : "Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž");
 
   const enrolledCourses = profile?.member?.enrollments?.map((e: any) => `${e.course?.code} - ${e.course?.titleKh}`).join(", ");
 
@@ -121,14 +121,14 @@ export default function MyProfilePage() {
                     <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">{nameKh}</h1>
                     {nameEn && <span className="text-sm font-semibold text-muted-foreground font-sans">({nameEn})</span>}
                     <Badge variant={profile?.status === "ACTIVE" ? "success" : "info"}>
-                      {profile?.status === "ACTIVE" ? "ážŸáž€áž˜áŸ’áž˜ (Active)" : profile?.status || "Active"}
+                      {profile?.status === "ACTIVE" ? "Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (Active)" : profile?.status || "Active"}
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰áž€áŸ’ážšáŸ…: <strong className="text-foreground">{displayName}</strong>
+                    Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€¦: <strong className="text-foreground">{displayName}</strong>
                     {isMember && (
                       <>
-                        {" "}â€¢ áž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž: <strong className="text-foreground font-mono">{studentId}</strong>
+                        {" "}Ã¢â‚¬Â¢ Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â: <strong className="text-foreground font-mono">{studentId}</strong>
                       </>
                     )}
                   </p>
@@ -139,7 +139,7 @@ export default function MyProfilePage() {
                           STJ Member: {memberId}
                         </span>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium">
-                          ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹: {deptCode} ({year})
+                          Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹: {deptCode} ({year})
                         </span>
                       </>
                     ) : (
@@ -155,13 +155,13 @@ export default function MyProfilePage() {
                 <Link href="/portal/profile/edit">
                   <Button size="sm" className="space-x-1.5 text-xs">
                     <Edit2 className="w-3.5 h-3.5" />
-                    <span>áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž–áŸážáŸŒáž˜áž¶áž“</span>
+                    <span>Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€ºÃ¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ</span>
                   </Button>
                 </Link>
                 <Link href="/portal/security">
                   <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
                     <Lock className="w-3.5 h-3.5" />
-                    <span>ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–</span>
+                    <span>Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</span>
                   </Button>
                 </Link>
               </div>
@@ -175,10 +175,10 @@ export default function MyProfilePage() {
             <div className="space-y-1">
               <div className="flex items-center space-x-2">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-xs font-bold text-foreground">áž€áž˜áŸ’ážšáž·ážáž“áŸƒáž€áž¶ážšáž”áŸ†áž–áŸáž‰áž–áŸážáŸŒáž˜áž¶áž“ (Profile Completeness): {completeness}%</span>
+                <span className="text-xs font-bold text-foreground">Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Profile Completeness): {completeness}%</span>
               </div>
               <p className="text-xs text-muted-foreground">
-                áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áŸ†áž–áŸáž‰ážŠáŸ„áž™ážŸáŸ’ážœáŸáž™áž”áŸ’ážšážœážáŸ’ážáž·áŸ” áž–áŸážáŸŒáž˜áž¶áž“ážŸáŸ’ážšáž”áž…áŸ’áž”áž¶áž”áŸ‹ážáŸ’ážšáž¼ážœáž‘áž¶áž˜áž‘áž¶ážšáž€áž¶ážšáž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž•áŸ’áž›áž¼ážœáž€áž¶ážšáŸ”
+                Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¸â€
               </p>
             </div>
             <div className="w-full sm:w-48 bg-muted rounded-full h-2.5 overflow-hidden">
@@ -197,17 +197,17 @@ export default function MyProfilePage() {
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-semibold flex items-center space-x-2">
                 <User className="w-4 h-4 text-primary" />
-                <span>áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ (Personal Information)</span>
+                <span>Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â½Ã¡Å¾â€œ (Personal Information)</span>
               </CardTitle>
               <Link href="/portal/profile/edit" className="text-xs text-primary hover:underline flex items-center space-x-1">
                 <Edit2 className="w-3 h-3" />
-                <span>áž€áŸ‚áž”áŸ’ážšáŸ‚</span>
+                <span>Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š</span>
               </Link>
             </CardHeader>
             <CardContent className="space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
                 <div>
-                  <span className="text-muted-foreground text-[11px]">ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰ (ážáŸ’áž˜áŸ‚ážš):</span>
+                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€° (Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾Å¡):</span>
                   <p className="font-semibold text-foreground text-sm mt-0.5">{nameKh || "-"}</p>
                 </div>
                 <div>
@@ -217,16 +217,16 @@ export default function MyProfilePage() {
               </div>
               <div className="grid grid-cols-2 gap-2 pb-2 border-b border-border">
                 <div>
-                  <span className="text-muted-foreground text-[11px]">ážˆáŸ’áž˜áŸ„áŸ‡áž”áž„áŸ’áž áž¶áž‰ (Preferred Name):</span>
+                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€° (Preferred Name):</span>
                   <p className="font-medium text-foreground mt-0.5">{displayName}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground text-[11px]">áž—áŸáž‘ (Gender):</span>
+                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾â€”Ã¡Å¸ÂÃ¡Å¾â€˜ (Gender):</span>
                   <p className="font-medium text-foreground mt-0.5">{gender}</p>
                 </div>
               </div>
               <div>
-                <span className="text-muted-foreground text-[11px]">áž‡áž¸ážœáž”áŸ’ážšážœážáŸ’ážáž·ážŸáž„áŸ’ážáŸáž” (Personal Biography):</span>
+                <span className="text-muted-foreground text-[11px]">Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¸ÂÃ¡Å¾â€ (Personal Biography):</span>
                 <p className="text-muted-foreground leading-relaxed mt-1 p-2.5 rounded-lg bg-muted/40 text-[11px]">
                   {bio}
                 </p>
@@ -239,11 +239,11 @@ export default function MyProfilePage() {
             <CardHeader className="pb-3 flex flex-row items-center justify-between">
               <CardTitle className="text-sm font-semibold flex items-center space-x-2">
                 <Mail className="w-4 h-4 text-primary" />
-                <span>áž–áŸážáŸŒáž˜áž¶áž“áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ (Contact Information)</span>
+                <span>Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¾â€ž (Contact Information)</span>
               </CardTitle>
               <Link href="/portal/profile/edit" className="text-xs text-primary hover:underline flex items-center space-x-1">
                 <Edit2 className="w-3 h-3" />
-                <span>áž€áŸ‚áž”áŸ’ážšáŸ‚</span>
+                <span>Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€š</span>
               </Link>
             </CardHeader>
             <CardContent className="space-y-3.5 text-xs">
@@ -251,21 +251,21 @@ export default function MyProfilePage() {
                 <div className="flex items-center space-x-2.5">
                   <Mail className="w-4 h-4 text-primary" />
                   <div>
-                    <span className="text-[11px] text-muted-foreground">áž¢áŸŠáž¸áž˜áŸ‚áž›ážŸáŸ’ážáž¶áž”áŸáž“ (Institutional Email):</span>
+                    <span className="text-[11px] text-muted-foreground">Ã¡Å¾Â¢Ã¡Å¸Å Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€ºÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸ÂÃ¡Å¾â€œ (Institutional Email):</span>
                     <p className="font-medium text-foreground">{email || "-"}</p>
                   </div>
                 </div>
-                <Badge variant="success" className="text-[10px]">áž•áŸ’áž‘áŸ€áž„áž•áŸ’áž‘áž¶ážáŸ‹ážšáž½áž…</Badge>
+                <Badge variant="success" className="text-[10px]">Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€¦</Badge>
               </div>
               <div className="flex items-center justify-between pb-2.5 border-b border-border">
                 <div className="flex items-center space-x-2.5">
                   <Phone className="w-4 h-4 text-primary" />
                   <div>
-                    <span className="text-[11px] text-muted-foreground">áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘ (Phone Number):</span>
+                    <span className="text-[11px] text-muted-foreground">Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜ (Phone Number):</span>
                     <p className="font-medium text-foreground font-mono">{phone}</p>
                   </div>
                 </div>
-                <span className="text-[10px] text-muted-foreground">áž¢áž¶áž…áž‘áž¶áž€áŸ‹áž‘áž„áž”áž¶áž“</span>
+                <span className="text-[10px] text-muted-foreground">Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œ</span>
               </div>
               <div className="flex items-center space-x-2.5 pb-2.5 border-b border-border">
                 <Send className="w-4 h-4 text-primary" />
@@ -277,7 +277,7 @@ export default function MyProfilePage() {
               <div className="flex items-start space-x-2.5">
                 <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-[11px] text-muted-foreground">áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Current Address):</span>
+                  <span className="text-[11px] text-muted-foreground">Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â„¢Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ (Current Address):</span>
                   <p className="font-medium text-foreground mt-0.5">{address}</p>
                 </div>
               </div>
@@ -292,35 +292,35 @@ export default function MyProfilePage() {
               <div>
                 <CardTitle className="text-sm font-semibold flex items-center space-x-2">
                   <GraduationCap className="w-4 h-4 text-primary" />
-                  <span>áž–áŸážáŸŒáž˜áž¶áž“ážŸáž·áž€áŸ’ážŸáž¶áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Official Academic Records)</span>
+                  <span>Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ (Official Academic Records)</span>
                 </CardTitle>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶áž•áŸ’áž›áž¼ážœáž€áž¶ážšážšáž”ážŸáŸ‹ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶áŸ” áž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚áž‘áž¶áž˜áž‘áž¶ážšáž€áž¶ážšážŸáŸ’áž“áž¾ážŸáž»áŸ† áž“áž·áž„áž€áž¶ážšáž™áž›áŸ‹áž–áŸ’ážšáž˜áž–áž¸áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJáŸ”
+                  Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¸ÂÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€  Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ËœÃ¡Å¾â€“Ã¡Å¾Â¸Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž STJÃ¡Å¸â€
                 </p>
               </div>
               <Link href="/portal/profile/edit#correction-request">
                 <Button variant="outline" size="sm" className="space-x-1.5 text-xs">
                   <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                  <span>ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚áž”áŸ’ážšáŸ‚áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš</span>
+                  <span>Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡</span>
                 </Button>
               </Link>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/30 border border-border">
                 <div>
-                  <span className="text-[11px] text-muted-foreground">áž›áŸážáž€áž¼ážŠážŸáž˜áž¶áž‡áž·áž€ STJ:</span>
+                  <span className="text-[11px] text-muted-foreground">Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ STJ:</span>
                   <p className="font-bold text-primary font-mono text-sm mt-0.5">{memberId}</p>
                 </div>
                 <div>
-                  <span className="text-[11px] text-muted-foreground">áž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž:</span>
+                  <span className="text-[11px] text-muted-foreground">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â:</span>
                   <p className="font-bold text-foreground font-mono text-sm mt-0.5">{studentId}</p>
                 </div>
                 <div>
-                  <span className="text-[11px] text-muted-foreground">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (Department):</span>
+                  <span className="text-[11px] text-muted-foreground">Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹ (Department):</span>
                   <p className="font-semibold text-foreground text-xs mt-0.5">{deptCode} ({department})</p>
                 </div>
                 <div>
-                  <span className="text-[11px] text-muted-foreground">áž€áž˜áŸ’ážšáž·ážážŸáž·áž€áŸ’ážŸáž¶ (Year):</span>
+                  <span className="text-[11px] text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Year):</span>
                   <p className="font-semibold text-foreground text-xs mt-0.5">{year}</p>
                 </div>
               </div>
@@ -328,10 +328,10 @@ export default function MyProfilePage() {
               {enrolledCourses && (
                 <div className="mt-4 pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
                   <div className="space-y-1">
-                    <span className="font-semibold text-foreground">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž‘áž½áž›ážáž»ážŸážáŸ’ážšáž¼ážœáž”áž„áŸ’ážšáŸ€áž“ (Enrolled Course Team):</span>
+                    <span className="font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾â€˜Ã¡Å¾Â½Ã¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ (Enrolled Course Team):</span>
                     <p className="text-muted-foreground">{enrolledCourses}</p>
                   </div>
-                  <span className="text-[11px] text-muted-foreground shrink-0">áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦-áŸ¢áŸ áŸ¢áŸ§</span>
+                  <span className="text-[11px] text-muted-foreground shrink-0">Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦-Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§</span>
                 </div>
               )}
             </CardContent>
@@ -341,11 +341,11 @@ export default function MyProfilePage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-semibold flex items-center space-x-2">
                 <Shield className="w-4 h-4 text-primary" />
-                <span>ážáž½áž“áž¶áž‘áž¸áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ (System Administrative Role)</span>
+                <span>Ã¡Å¾ÂÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™ (System Administrative Role)</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="text-xs text-muted-foreground">
-              áž‚ážŽáž“áž¸áž“áŸáŸ‡áž‡áž¶áž‚ážŽáž“áž¸ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ† STJ (STJ Leadership Account)áŸ”
+              Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€  STJ (STJ Leadership Account)Ã¡Å¸â€
             </CardContent>
           </Card>
         )}
@@ -355,30 +355,30 @@ export default function MyProfilePage() {
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <Shield className="w-4 h-4 text-primary" />
-              <span>áž–áŸážáŸŒáž˜áž¶áž“áž‚ážŽáž“áž¸ áž“áž·áž„ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž– (Account Information)</span>
+              <span>Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ (Account Information)</span>
             </CardTitle>
             <Link href="/portal/security" className="text-xs text-primary hover:underline">
-              áž€áž¶ážšáž€áŸ†ážŽážáŸ‹ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–
+              Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“
             </Link>
           </CardHeader>
           <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
             <div>
-              <span className="text-[11px] text-muted-foreground">ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž‚ážŽáž“áž¸:</span>
-              <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">ážŸáž€áž˜áŸ’áž˜ (Active)</p>
+              <span className="text-[11px] text-muted-foreground">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â¸:</span>
+              <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ (Active)</p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">áž—áž¶ážŸáž¶áž–áŸáž‰áž…áž·ážáŸ’áž:</span>
-              <p className="font-medium text-foreground mt-0.5">áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš (km)</p>
+              <span className="text-[11px] text-muted-foreground">Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€°Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â:</span>
+              <p className="font-medium text-foreground mt-0.5">Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾Å¡ (km)</p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">áž€áž¶ážšáž…áž¼áž›áž”áŸ’ážšáž¾áž…áž»áž„áž€áŸ’ážšáŸ„áž™:</span>
+              <span className="text-[11px] text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€žÃ¡Å¾â„¢:</span>
               <p className="font-medium text-muted-foreground mt-0.5">
-                {profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString("km-KH") : "ážáŸ’áž˜áž¸áŸ—áž“áŸáŸ‡"}
+                {profile?.lastLoginAt ? new Date(profile.lastLoginAt).toLocaleString("km-KH") : "Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€”Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡"}
               </p>
             </div>
             <div>
-              <span className="text-[11px] text-muted-foreground">áž€áž¶ážšáž•áŸ’áž‘áŸ€áž„áž•áŸ’áž‘áž¶ážáŸ‹ áŸ¢ áž‡áŸ†áž áž¶áž“ (2FA):</span>
-              <p className="font-medium text-muted-foreground mt-0.5">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž”áž¾áž€ (Optional)</p>
+              <span className="text-[11px] text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹ Ã¡Å¸Â¢ Ã¡Å¾â€¡Ã¡Å¸â€ Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€œ (2FA):</span>
+              <p className="font-medium text-muted-foreground mt-0.5">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¸â€¹Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬ (Optional)</p>
             </div>
           </CardContent>
         </Card>

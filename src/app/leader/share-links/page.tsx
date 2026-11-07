@@ -16,9 +16,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 interface ShareItem {
   id: string;
@@ -41,7 +41,7 @@ export default function LeaderShareLinksPage() {
 
   // New Link form
   const [newLink, setNewLink] = useState({
-    title: "ážšáž”áž¶áž™áž€áž¶ážšážŽáŸážœážáŸ’ážáž˜áž¶áž“ Programming ážŸáž”áŸ’ážáž¶áž áŸáž‘áž¸áŸ¡",
+    title: "Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Programming Ã¡Å¾Å¸Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾Â¸Ã¡Å¸Â¡",
     courseId: "c-prog",
     sessionId: "session-1",
     password: "",
@@ -88,7 +88,7 @@ export default function LeaderShareLinksPage() {
   };
 
   const handleRevoke = async (id: string) => {
-    if (!confirm("ážáž¾áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž›áž»áž”áž…áŸ„áž›ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž“áŸáŸ‡áž˜áŸ‚áž“áž‘áŸ? (Revoke Share Link)")) return;
+    if (!confirm("Ã¡Å¾ÂÃ¡Å¾Â¾Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€ºÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¸â€¡Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€œÃ¡Å¾â€˜Ã¡Å¸Â? (Revoke Share Link)")) return;
     try {
       await fetch(`/api/system/share-links?id=${id}`, { method: "DELETE" });
       loadLinks();
@@ -101,7 +101,7 @@ export default function LeaderShareLinksPage() {
     <PortalLayout
       portalType="leader"
       userRole="Course Leader"
-      userName="áž›áž¶áž„ áž‡áž¸áž„áž áŸáž„"
+      userName="Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾â€ž Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾â€žÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾â€ž"
       userEmail="leang.jingheng@itc.edu.kh"
     >
       <div className="space-y-6">
@@ -112,10 +112,10 @@ export default function LeaderShareLinksPage() {
               <span>Cryptographic Share Links</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážœážáŸ’ážáž˜áž¶áž“ (Shareable Attendance Links)
+              Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Shareable Attendance Links)
             </h1>
             <p className="text-xs text-muted-foreground">
-              áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹ áž¬áž€áž¼ážŠ QR ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–ážŠáž¾áž˜áŸ’áž”áž¸áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážšáž”áž¶áž™áž€áž¶ážšážŽáŸážœážáŸ’ážáž˜áž¶áž“ (Read-Only)
+              Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹ Ã¡Å¾Â¬Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å  QR Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ (Read-Only)
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export default function LeaderShareLinksPage() {
             className="text-xs space-x-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹ážáŸ’áž˜áž¸ (New Share Link)</span>
+            <span>Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸ (New Share Link)</span>
           </Button>
         </div>
 
@@ -134,7 +134,7 @@ export default function LeaderShareLinksPage() {
           <div className="flex items-center space-x-2">
             <ShieldCheck className="w-4 h-4 shrink-0" />
             <span>
-              ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áž¶ážšáž–áž¶ážšážŠáŸ„áž™ Token Hash áž“áž·áž„áž˜áž·áž“áž”áž„áŸ’áž áž¶áž‰áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ážšážŸáž¾áž” (ážŠáž¼áž…áž‡áž¶áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘ áž¬áž¢áŸŠáž¸áž˜áŸ‚áž›) áž¡áž¾áž™áŸ”
+              Ã¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢ Token Hash Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â½Ã¡Å¾â€œÃ¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Â¾Ã¡Å¾â€ (Ã¡Å¾Å Ã¡Å¾Â¼Ã¡Å¾â€¦Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜ Ã¡Å¾Â¬Ã¡Å¾Â¢Ã¡Å¸Å Ã¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â€º) Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢Ã¡Å¸â€
             </span>
           </div>
         </div>
@@ -145,11 +145,11 @@ export default function LeaderShareLinksPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">áž…áŸ†ážŽáž„áž‡áž¾áž„ážšáž”áž¶áž™áž€áž¶ážšážŽáŸ</th>
-                  <th className="py-3 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ / ážœáž‚áŸ’áž‚</th>
-                  <th className="py-3 px-4 font-semibold text-center">áž…áž¼áž›áž˜áž¾áž›</th>
-                  <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
-                  <th className="py-3 px-4 font-semibold text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶ / Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€š</th>
+                  <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€º</th>
+                  <th className="py-3 px-4 font-semibold text-center">Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
+                  <th className="py-3 px-4 font-semibold text-right">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -163,14 +163,14 @@ export default function LeaderShareLinksPage() {
                     </td>
                     <td className="py-3 px-4">
                       <div className="font-mono font-bold text-primary">{link.course.code}</div>
-                      <div className="text-[10px] text-muted-foreground">{link.session?.title || "áž‚áŸ’ážšáž”áŸ‹ážœáž‚áŸ’áž‚ážŸáž·áž€áŸ’ážŸáž¶"}</div>
+                      <div className="text-[10px] text-muted-foreground">{link.session?.title || "Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾Å“Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾â€šÃ¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶"}</div>
                     </td>
                     <td className="py-3 px-4 text-center font-bold text-foreground">
-                      {link.accessCount} ážŠáž„
+                      {link.accessCount} Ã¡Å¾Å Ã¡Å¾â€ž
                     </td>
                     <td className="py-3 px-4 text-center">
                       <Badge variant={link.isRevoked ? "destructive" : "success"}>
-                        {link.isRevoked ? "áž”áž¶áž“áž›áž»áž”áž…áŸ„áž›" : "ážŸáž€áž˜áŸ’áž˜"}
+                        {link.isRevoked ? "Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾Â»Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€žÃ¡Å¾â€º" : "Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Ëœ"}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -228,7 +228,7 @@ export default function LeaderShareLinksPage() {
             <Card className="max-w-md w-full max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <h3 className="font-bold text-sm">áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážáŸ’áž˜áž¸</h3>
+                  <h3 className="font-bold text-sm">Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸</h3>
                   <button onClick={() => setIsModalOpen(false)}>
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                   </button>
@@ -236,7 +236,7 @@ export default function LeaderShareLinksPage() {
 
                 <form onSubmit={handleCreate} className="space-y-3 text-xs">
                   <div>
-                    <label className="block font-medium mb-1">áž…áŸ†ážŽáž„áž‡áž¾áž„ážšáž”áž¶áž™áž€áž¶ážšážŽáŸ *</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾â€¦Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€žÃ¡Å¾â€¡Ã¡Å¾Â¾Ã¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸Â *</label>
                     <input
                       type="text"
                       required
@@ -247,10 +247,10 @@ export default function LeaderShareLinksPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">áž›áŸážážŸáž˜áŸ’áž„áž¶ážáŸ‹áž€áž¶ážšáž–áž¶ážš (ážŸáŸ’ážšáŸáž…áž…áž·ážáŸ’áž)</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€žÃ¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡ (Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸ÂÃ¡Å¾â€¦Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â)</label>
                     <input
                       type="password"
-                      placeholder="áž‘áž»áž€áž“áŸ…áž‘áŸ†áž“áŸážš áž”áŸ’ážšážŸáž·áž“áž”áž¾áž˜áž·áž“ážáŸ’ážšáž¼ážœáž€áž¶ážš"
+                      placeholder="Ã¡Å¾â€˜Ã¡Å¾Â»Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€˜Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾Å¡ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡"
                       value={newLink.password}
                       onChange={(e) => setNewLink({ ...newLink, password: e.target.value })}
                       className="w-full p-2 rounded-lg border border-input bg-background"
@@ -258,7 +258,7 @@ export default function LeaderShareLinksPage() {
                   </div>
 
                   <div>
-                    <label className="block font-medium mb-1">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘áž•áž»ážáž€áŸ†ážŽážáŸ‹ (ážŸáŸ’ážšáŸáž…áž…áž·ážáŸ’áž)</label>
+                    <label className="block font-medium mb-1">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹ (Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸ÂÃ¡Å¾â€¦Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â)</label>
                     <input
                       type="date"
                       value={newLink.expiresAt}
@@ -276,7 +276,7 @@ export default function LeaderShareLinksPage() {
                       className="rounded border-input text-primary focus:ring-primary"
                     />
                     <label htmlFor="showStats" className="font-medium cursor-pointer">
-                      áž”áž„áŸ’áž áž¶áž‰áž•áŸ’áž‘áž¶áŸ†áž„ážŸáŸ’ážáž·ážáž·ážœážáŸ’ážáž˜áž¶áž“ážŸážšáž»áž” (Show Statistics Summary)
+                      Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Â Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾â€ (Show Statistics Summary)
                     </label>
                   </div>
 
@@ -287,10 +287,10 @@ export default function LeaderShareLinksPage() {
                       size="sm"
                       onClick={() => setIsModalOpen(false)}
                     >
-                      áž”áŸ„áŸ‡áž”áž„áŸ‹
+                      Ã¡Å¾â€Ã¡Å¸â€žÃ¡Å¸â€¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€¹
                     </Button>
                     <Button type="submit" size="sm">
-                      áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹
+                      Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¾ÂÃ¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹
                     </Button>
                   </div>
                 </form>
@@ -305,7 +305,7 @@ export default function LeaderShareLinksPage() {
             <Card className="max-w-sm w-full text-center max-h-[90vh] overflow-y-auto">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center justify-between pb-2 border-b border-border">
-                  <h3 className="font-bold text-sm">áž€áž¼ážŠ QR ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€</h3>
+                  <h3 className="font-bold text-sm">Ã¡Å¾â‚¬Ã¡Å¾Â¼Ã¡Å¾Å  QR Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â€ Ã¡Å¾â€ºÃ¡Å¸â€šÃ¡Å¾â‚¬</h3>
                   <button onClick={() => setQrToken(null)}>
                     <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
                   </button>
@@ -320,7 +320,7 @@ export default function LeaderShareLinksPage() {
                   />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  ážŸáŸ’áž€áŸáž“ážŠáž¾áž˜áŸ’áž”áž¸áž…áž¼áž›áž˜áž¾áž›ážšáž”áž¶áž™áž€áž¶ážšážŽáŸážœážáŸ’ážáž˜áž¶áž“áž•áŸ’áž›áž¼ážœáž€áž¶ážšáž“áŸ…áž›áž¾áž‘áž¼ážšážŸáŸáž–áŸ’áž‘ážŠáŸƒ
+                  Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â‚¬Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¾Å Ã¡Å¾Â¾Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾Â¸Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å½Ã¡Å¸ÂÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€œÃ¡Å¸â€¦Ã¡Å¾â€ºÃ¡Å¾Â¾Ã¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Å Ã¡Å¸Æ’
                 </p>
                 <Button
                   variant="outline"
@@ -328,7 +328,7 @@ export default function LeaderShareLinksPage() {
                   onClick={() => setQrToken(null)}
                   className="w-full"
                 >
-                  áž”áž·áž‘áž•áŸ’áž‘áž¶áŸ†áž„
+                  Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€ž
                 </Button>
               </CardContent>
             </Card>

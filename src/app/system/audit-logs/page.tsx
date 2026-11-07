@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { History, Shield, Search, Filter } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent } from "@/ui/ui/Card";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent } from "@/ui/Card";
+import { Badge } from "@/ui/Badge";
 
 export default function SystemAuditLogsPage() {
   const [logs] = useState([
@@ -47,7 +47,7 @@ export default function SystemAuditLogsPage() {
   ]);
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -56,10 +56,10 @@ export default function SystemAuditLogsPage() {
               <span>Tamper-Evident Security Log</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              áž€áŸ†ážŽážáŸ‹áž áŸážáž»ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž– (Audit Logs)
+              Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ (Audit Logs)
             </h1>
             <p className="text-xs text-muted-foreground">
-              áž€ážáŸ‹ážáŸ’ážšáž¶ážšáž¶áž›áŸ‹ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–ážšážŠáŸ’áž‹áž”áž¶áž› áž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž€áž¶ážšáž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž–áŸáž“áŸ’áž’
+              Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¾Å¡Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€º Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™
             </p>
           </div>
         </div>
@@ -69,11 +69,11 @@ export default function SystemAuditLogsPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘</th>
-                  <th className="py-3 px-4 font-semibold">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž– (Action)</th>
-                  <th className="py-3 px-4 font-semibold">áž¢áŸ’áž“áž€áž”áŸ’ážšážáž·áž”ážáŸ’ážáž· (Actor)</th>
-                  <th className="py-3 px-4 font-semibold">áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž (Details)</th>
-                  <th className="py-3 px-4 font-semibold">áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“ IP</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¾â€Ã¡Å¾Å¡Ã¡Å¾Â·Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€ Ã¡Å¸ÂÃ¡Å¾â€˜</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“ (Action)</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾Â¢Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â· (Actor)</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¸Å’Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€ºÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Â¢Ã¡Å¾Â·Ã¡Å¾Â (Details)</th>
+                  <th className="py-3 px-4 font-semibold">Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾â„¢Ã¡Å¾Å Ã¡Å¸â€™Ã¡Å¾â€¹Ã¡Å¾Â¶Ã¡Å¾â€œ IP</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

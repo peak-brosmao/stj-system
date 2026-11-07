@@ -33,8 +33,8 @@ import {
 import { useI18n } from "@/ui/i18n/I18nProvider";
 import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
-import { Button } from "@/ui/ui/Button";
-import { Logo } from "@/ui/ui/Logo";
+import { Button } from "@/ui/Button";
+import { Logo } from "@/ui/Logo";
 import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 interface PortalLayoutProps {
@@ -59,10 +59,10 @@ export function PortalLayout({
   const router = useRouter();
   const { t } = useI18n();
   const translateRole = (role: string) => {
-    if (role.includes("STJ") && (role.includes("President") || role.includes("áž”áŸ’ážšáž’áž¶áž“"))) return t("system.president");
-    if (role.includes("Association") || role.includes("ážŸáž˜áž¶áž‚áž˜")) return t("system.association");
-    if (role.includes("Leader") || role.includes("áž€áŸ’ážšáž»áž˜") || role.includes("áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶")) return t("system.leader");
-    if (role.includes("Admin") || role.includes("áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„")) return t("system.admin");
+    if (role.includes("STJ") && (role.includes("President") || role.includes("Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ"))) return t("system.president");
+    if (role.includes("Association") || role.includes("Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€šÃ¡Å¾Ëœ")) return t("system.association");
+    if (role.includes("Leader") || role.includes("Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ") || role.includes("Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶")) return t("system.leader");
+    if (role.includes("Admin") || role.includes("Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€ž")) return t("system.admin");
     return t("system.member");
   };
 
@@ -71,11 +71,11 @@ export function PortalLayout({
       (m) =>
         (userEmail && userEmail !== "user@itc.edu.kh" && m.email.toLowerCase() === userEmail.toLowerCase()) ||
         (userMemberId && m.memberId.toLowerCase() === userMemberId.toLowerCase()) ||
-        (userName && userName !== "STJ Academic Staff" && userName !== "ážŸáž˜áž¶áž‡áž·áž€ STJ" && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
+        (userName && userName !== "STJ Academic Staff" && userName !== "Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ STJ" && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
     );
   }, [userEmail, userMemberId, userName]);
 
-  const initialName = userName && userName !== "STJ Academic Staff" && userName !== "ážŸáž˜áž¶áž‡áž·áž€ STJ"
+  const initialName = userName && userName !== "STJ Academic Staff" && userName !== "Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ STJ"
     ? userName
     : rosterMatch?.nameKh || "";
 
@@ -88,7 +88,7 @@ export function PortalLayout({
 
   const [currentUser, setCurrentUser] = useState(() => {
     return {
-      name: initialName || (portalType === "system" ? "áž•áž› ážŠáž¶ážœáž¸áž" : t("system.member")),
+      name: initialName || (portalType === "system" ? "Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â" : t("system.member")),
       role: initialRole || (portalType === "system" ? t("system.president") : t("system.member")),
       email: userEmail,
       memberId: initialMemberId || (portalType === "system" ? "STJ002" : undefined),
@@ -118,7 +118,7 @@ export function PortalLayout({
           }
 
           const resolvedUser = {
-            name: u.fullNameKh || u.fullNameEn || initialName || (portalType === "system" ? "áž•áž› ážŠáž¶ážœáž¸áž" : t("system.member")),
+            name: u.fullNameKh || u.fullNameEn || initialName || (portalType === "system" ? "Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â" : t("system.member")),
             role: resolvedRole,
             email: u.email || userEmail,
             memberId: u.member?.memberId || u.studentId || initialMemberId || (portalType === "system" ? "STJ002" : undefined),

@@ -15,34 +15,34 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
-import { Button } from "@/ui/ui/Button";
-import { Badge } from "@/ui/ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
+import { Button } from "@/ui/Button";
+import { Badge } from "@/ui/Badge";
 
 export default function SystemProfileRequestsPage() {
   const [requests, setRequests] = useState([
     {
       id: "req-1",
-      memberName: "áž–áŸ€áž€ áž”áŸ’ážšáž»ážŸáž˜áŸ‰áŸ… (PEAK BROSMAO)",
+      memberName: "Ã¡Å¾â€“Ã¡Å¸â‚¬Ã¡Å¾â‚¬ Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€°Ã¡Å¸â€¦ (PEAK BROSMAO)",
       memberId: "STJ033",
       field: "studentId",
-      fieldLabel: "áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž (Student ID)",
+      fieldLabel: "Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â (Student ID)",
       oldValue: "e20251455",
       requestedValue: "e20251455",
-      reason: "áž•áŸ’áž‘áŸ€áž„áž•áŸ’áž‘áž¶ážáŸ‹ áž“áž·áž„áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·ážáž•áŸ’áž›áž¼ážœáž€áž¶ážšážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦~áŸ¢áŸ áŸ¢áŸ§ ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ GIC",
-      submittedDate: "áŸ£áŸ  ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
+      reason: "Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¸â‚¬Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¸â€¹ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦~Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â§ Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹ GIC",
+      submittedDate: "Ã¡Å¸Â£Ã¡Å¸Â  Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦",
       status: "PENDING",
     },
     {
       id: "req-2",
-      memberName: "áž‚áž¹áž˜ áž áŸŠáž¶áž„ (KIM Heang)",
+      memberName: "Ã¡Å¾â€šÃ¡Å¾Â¹Ã¡Å¾Ëœ Ã¡Å¾Â Ã¡Å¸Å Ã¡Å¾Â¶Ã¡Å¾â€ž (KIM Heang)",
       memberId: "STJ007",
       field: "phone",
-      fieldLabel: "áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘áž•áŸ’áž›áž¼ážœáž€áž¶ážš",
+      fieldLabel: "Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡",
       oldValue: "012000000",
       requestedValue: "012734562",
-      reason: "áž”áŸ’ážáž¼ážšáž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘ážáŸ’áž˜áž¸ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž‘áž¶áž€áŸ‹áž‘áž„áž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž",
-      submittedDate: "áŸ¢áŸ¨ ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
+      reason: "Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€˜Ã¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€“Ã¡Å¸â€™Ã¡Å¾â€˜Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾â€šÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Â",
+      submittedDate: "Ã¡Å¸Â¢Ã¡Å¸Â¨ Ã¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€ºÃ¡Å¾Â¶ Ã¡Å¸Â¢Ã¡Å¸Â Ã¡Å¸Â¢Ã¡Å¸Â¦",
       status: "APPROVED",
     },
   ]);
@@ -53,16 +53,16 @@ export default function SystemProfileRequestsPage() {
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "APPROVED" } : r))
     );
-    alert("ážŸáŸ†ážŽáž¾ážáŸ’ážšáž¼ážœáž”áž¶áž“áž¢áž“áž»áž˜áŸážážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™áŸ” áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶áž•áŸ’áž›áž¼ážœáž€áž¶ážšážáŸ’ážšáž¼ážœáž”áž¶áž“áž’áŸ’ážœáž¾áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“áž—áž¶áž–áŸ”");
+    alert("Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å Ã¡Å¸â€žÃ¡Å¾â„¢Ã¡Å¾â€¡Ã¡Å¸â€žÃ¡Å¾â€šÃ¡Å¾â€¡Ã¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€¹Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€™Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¾Â¾Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€”Ã¡Å¾Â¶Ã¡Å¾â€“Ã¡Å¸â€");
   };
 
   const handleReject = (id: string) => {
-    const reason = prompt("ážŸáž¼áž˜áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž˜áž¼áž›áž áŸážáž»áž“áŸƒáž€áž¶ážšáž”ážŠáž·ážŸáŸáž’ážŸáŸ†ážŽáž¾áŸ–");
+    const reason = prompt("Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â»Ã¡Å¾â€œÃ¡Å¸Æ’Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€™Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¸â€“");
     if (!reason) return;
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "REJECTED" } : r))
     );
-    alert("ážŸáŸ†ážŽáž¾ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”ážŠáž·ážŸáŸáž’áŸ”");
+    alert("Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Å Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€™Ã¡Å¸â€");
   };
 
   const filtered = requests.filter(
@@ -70,7 +70,7 @@ export default function SystemProfileRequestsPage() {
   );
 
   return (
-    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
+    <PortalLayout portalType="system" userRole="Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ (President)" userName="Ã¡Å¾â€¢Ã¡Å¾â€º Ã¡Å¾Å Ã¡Å¾Â¶Ã¡Å¾Å“Ã¡Å¾Â¸Ã¡Å¾Â">
       <div className="space-y-6 max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -79,10 +79,10 @@ export default function SystemProfileRequestsPage() {
               <span>Official Academic Records Governance</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              áž€áž¶ážšáž–áž·áž“áž·ážáŸ’áž™ážŸáŸ†ážŽáž¾áž€áŸ‚áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Profile Requests)
+              Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡ (Profile Requests)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ áž“áž·áž„áž¢áž“áž»áž˜áŸážážŸáŸ†ážŽáž¾áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›ážˆáŸ’áž˜áŸ„áŸ‡ áž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž áž“áž·áž„ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€ STJ
+              Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾ÂÃ¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â½Ã¡Å¾â€ºÃ¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡ Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€°Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬ STJ
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "ALL" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({requests.length})
+              Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({requests.length})
             </button>
             <button
               onClick={() => setFilter("PENDING")}
@@ -101,7 +101,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "PENDING" ? "bg-amber-600 text-white font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              ážšáž„áŸ‹áž…áž¶áŸ†áž–áž·áž“áž·ážáŸ’áž™ ({requests.filter((r) => r.status === "PENDING").length})
+              Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ ({requests.filter((r) => r.status === "PENDING").length})
             </button>
             <button
               onClick={() => setFilter("APPROVED")}
@@ -109,7 +109,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "APPROVED" ? "bg-emerald-600 text-white font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              áž”áž¶áž“áž¢áž“áž»áž˜áŸáž ({requests.filter((r) => r.status === "APPROVED").length})
+              Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â ({requests.filter((r) => r.status === "APPROVED").length})
             </button>
           </div>
         </div>
@@ -127,32 +127,32 @@ export default function SystemProfileRequestsPage() {
                   </div>
                   <div>
                     {req.status === "APPROVED" ? (
-                      <Badge variant="success">áž”áž¶áž“áž¢áž“áž»áž˜áŸáž (Approved)</Badge>
+                      <Badge variant="success">Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾Â (Approved)</Badge>
                     ) : req.status === "REJECTED" ? (
-                      <Badge variant="destructive">áž”áž¶áž“áž”ážŠáž·ážŸáŸáž’ (Rejected)</Badge>
+                      <Badge variant="destructive">Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€Ã¡Å¾Å Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€™ (Rejected)</Badge>
                     ) : (
-                      <Badge variant="warning">ážšáž„áŸ‹áž…áž¶áŸ†áž€áž¶ážšáž–áž·áž“áž·ážáŸ’áž™ (Pending)</Badge>
+                      <Badge variant="warning">Ã¡Å¾Å¡Ã¡Å¾â€žÃ¡Å¸â€¹Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â„¢ (Pending)</Badge>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <span className="text-muted-foreground text-[11px]">áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáŸ’áž“áž¾ážŸáž»áŸ†áŸ–</span>
+                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Â»Ã¡Å¸â€ Ã¡Å¸â€“</span>
                     <p className="font-semibold text-foreground mt-0.5">{req.fieldLabel}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">ážáž˜áŸ’áž›áŸƒáž…áž¶ážŸáŸ‹áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áŸ–</span>
+                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¸Æ’Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¸â€“</span>
                     <p className="font-mono text-muted-foreground mt-0.5">{req.oldValue || "-"}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">ážáž˜áŸ’áž›áŸƒážáŸ’ážšáž¹áž˜ážáŸ’ážšáž¼ážœážáŸ’áž˜áž¸áŸ–</span>
+                    <span className="text-muted-foreground text-[11px]">Ã¡Å¾ÂÃ¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¸Æ’Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¹Ã¡Å¾ËœÃ¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Â¸Ã¡Å¸â€“</span>
                     <p className="font-mono font-bold text-primary mt-0.5">{req.requestedValue}</p>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground text-[11px]">áž˜áž¼áž›áž áŸážáž» áž“áž·áž„áž€áž¶ážšáž–áž“áŸ’áž™áž›áŸ‹ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€áŸ–</span>
+                  <span className="text-muted-foreground text-[11px]">Ã¡Å¾ËœÃ¡Å¾Â¼Ã¡Å¾â€ºÃ¡Å¾Â Ã¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Â» Ã¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾â€žÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾Å¡Ã¡Å¾â€Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€“</span>
                   <p className="text-xs text-foreground mt-1 p-2.5 rounded-lg bg-muted/40">
                     {req.reason}
                   </p>
@@ -167,7 +167,7 @@ export default function SystemProfileRequestsPage() {
                       className="text-xs text-destructive hover:bg-destructive/10 space-x-1"
                     >
                       <X className="w-3.5 h-3.5" />
-                      <span>áž”ážŠáž·ážŸáŸáž’</span>
+                      <span>Ã¡Å¾â€Ã¡Å¾Å Ã¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€™</span>
                     </Button>
                     <Button
                       size="sm"
@@ -175,7 +175,7 @@ export default function SystemProfileRequestsPage() {
                       className="text-xs space-x-1"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      <span>áž¢áž“áž»áž˜áŸážážŸáŸ†ážŽáž¾</span>
+                      <span>Ã¡Å¾Â¢Ã¡Å¾â€œÃ¡Å¾Â»Ã¡Å¾ËœÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾Å¸Ã¡Å¸â€ Ã¡Å¾Å½Ã¡Å¾Â¾</span>
                     </Button>
                   </div>
                 )}

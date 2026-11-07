@@ -24,7 +24,7 @@ import {
   Network,
   Filter,
 } from "lucide-react";
-import { Button } from "@/ui/ui/Button";
+import { Button } from "@/ui/Button";
 interface MemberItem {
   id: string;
   memberId: string;
@@ -115,7 +115,7 @@ export function OrganizationTree() {
       if (!res.ok || !data?.success || !data.hierarchy) {
         setHierarchy(null);
         setAvailableYears([]);
-        throw new Error("áž˜áž·áž“áž¢áž¶áž…áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž–áž¸ Backend áž”áž¶áž“áž¡áž¾áž™");
+        throw new Error("Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾â€“Ã¡Å¾Â¸ Backend Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
       }
       if (data.hierarchy) {
         setHierarchy(data.hierarchy);
@@ -126,7 +126,7 @@ export function OrganizationTree() {
       }
     } catch (err) {
       setHierarchy(null);
-      setError(err instanceof Error ? err.message : "áž˜áž·áž“áž¢áž¶áž…áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ… Backend Database áž”áž¶áž“áž¡áž¾áž™");
+      setError(err instanceof Error ? err.message : "Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾â€¦Ã¡Å¾â€”Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€Ã¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¸â€¦ Backend Database Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢");
       console.error("Failed to load hierarchy:", err);
     } finally {
       setLoading(false);
@@ -217,7 +217,7 @@ export function OrganizationTree() {
             </div>
             <div>
               <div className="text-[11px] text-muted-foreground font-semibold uppercase tracking-wider">
-                áž¢áž¶ážŽážáŸ’ážáž·ážŸáž·áž€áŸ’ážŸáž¶ (Academic Mandate)
+                Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ (Academic Mandate)
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <div className="relative inline-block">
@@ -228,7 +228,7 @@ export function OrganizationTree() {
                   >
                     {availableYears.map((y) => (
                       <option key={y.academicYear} value={y.academicYear}>
-                        áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ {y.academicYear} {y.isCurrent ? "â˜… (ážŸáž€áž˜áŸ’áž˜áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“)" : "(áž”ážŽáŸ’ážŽážŸáž¶ážšáž…áž¶ážŸáŸ‹)"}
+                        Ã¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â¶ {y.academicYear} {y.isCurrent ? "Ã¢Ëœâ€¦ (Ã¡Å¾Å¸Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ)" : "(Ã¡Å¾â€Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾Å½Ã¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹)"}
                       </option>
                     ))}
                   </select>
@@ -238,7 +238,7 @@ export function OrganizationTree() {
                 <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>
-                    {selectedYear === "2026-2027" ? "áž¢áž¶ážŽážáŸ’ážáž·áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Active)" : "áž‘áž·áž“áŸ’áž“áž“áŸáž™áž¢ážáž¸ážáž€áž¶áž› (Archived)"}
+                    {selectedYear === "2026-2027" ? "Ã¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·Ã¡Å¾â€Ã¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€¦Ã¡Å¾Â»Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œ (Active)" : "Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¾Â¸Ã¡Å¾ÂÃ¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾â€º (Archived)"}
                   </span>
                 </span>
               </div>
@@ -251,7 +251,7 @@ export function OrganizationTree() {
               <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="ážŸáŸ’ážœáŸ‚áž„ážšáž€ážˆáŸ’áž˜áŸ„áŸ‡, áž¢ážáŸ’ážáž›áŸáž, ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹..."
+                placeholder="Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Ë†Ã¡Å¸â€™Ã¡Å¾ËœÃ¡Å¸â€žÃ¡Å¸â€¡, Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Â, Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-xs rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-sans"
@@ -270,7 +270,7 @@ export function OrganizationTree() {
                 }`}
               >
                 <Network className="w-3.5 h-3.5" />
-                <span>áž˜áŸ‚áž€áž’áž¶áž„ (Tree)</span>
+                <span>Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž (Tree)</span>
               </button>
               <button
                 type="button"
@@ -282,7 +282,7 @@ export function OrganizationTree() {
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>áž€áž¶áž (Grid)</span>
+                <span>Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Â (Grid)</span>
               </button>
             </div>
           </div>
@@ -293,20 +293,20 @@ export function OrganizationTree() {
           <div className="pt-3 border-t border-border flex flex-wrap items-center justify-between text-xs text-muted-foreground gap-2">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <span>
-                áž”áŸ’ážšáž’áž¶áž“ STJ: <strong className="text-foreground">{hierarchy.president.nameKh}</strong>
+                Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ: <strong className="text-foreground">{hierarchy.president.nameKh}</strong>
               </span>
-              <span>â€¢</span>
+              <span>Ã¢â‚¬Â¢</span>
               <span>
-                áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáŸ’áž“áž¼áž›: <strong className="text-foreground">{hierarchy.totalCourses} áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</strong>
+                Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¼Ã¡Å¾â€º: <strong className="text-foreground">{hierarchy.totalCourses} Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶</strong>
               </span>
-              <span>â€¢</span>
+              <span>Ã¢â‚¬Â¢</span>
               <span>
-                ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„: <strong className="text-foreground">{hierarchy.totalTutors} áž“áž¶áž€áŸ‹</strong>
+                Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€ž: <strong className="text-foreground">{hierarchy.totalTutors} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹</strong>
               </span>
             </div>
             <div className="text-[11px] text-primary font-medium flex items-center space-x-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>ážšáž¶áž›áŸ‹áž‘áž·áž“áŸ’áž“áž“áŸáž™ážáŸ’ážšáž¼ážœáž”áž¶áž“áž…áž¶áž€áŸ‹ážŸáŸ„ážáž¶áž˜áž†áŸ’áž“áž¶áŸ†áž“áž¸áž˜áž½áž™áŸ—áž€áž¶ážšáž–áž¶ážšáž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚áž†áŸ’áž›áž„áž¢áž¶ážŽážáŸ’ážáž·</span>
+              <span>Ã¡Å¾Å¡Ã¡Å¾Â¶Ã¡Å¾â€ºÃ¡Å¸â€¹Ã¡Å¾â€˜Ã¡Å¾Â·Ã¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾â€œÃ¡Å¸ÂÃ¡Å¾â„¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â€¦Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å¸Ã¡Å¸â€žÃ¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾ËœÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€œÃ¡Å¾Â¸Ã¡Å¾ËœÃ¡Å¾Â½Ã¡Å¾â„¢Ã¡Å¸â€”Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¸â€šÃ¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â€šÃ¡Å¾â€ Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Â¶Ã¡Å¾Å½Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â·</span>
             </div>
           </div>
         )}
@@ -315,7 +315,7 @@ export function OrganizationTree() {
       {loading && (
         <div className="py-24 text-center space-y-3">
           <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-muted-foreground">áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž˜áŸ‚áž€áž’áž¶áž„ STJ...</p>
+          <p className="text-xs text-muted-foreground">Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â»Ã¡Å¾â€žÃ¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¾â€°Ã¡Å¾â„¢Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¾â€¦Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾â€“Ã¡Å¸ÂÃ¡Å¾â€œÃ¡Å¸â€™Ã¡Å¾â€™Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž STJ...</p>
         </div>
       )}
       {!loading && error && (
@@ -325,11 +325,11 @@ export function OrganizationTree() {
       )}
 
       {/* ========================================================================= */}
-      {/* VIEW 1: ORGANIZATIONAL TREE (áž˜áŸ‚áž€áž’áž¶áž„) */}
+      {/* VIEW 1: ORGANIZATIONAL TREE (Ã¡Å¾ËœÃ¡Å¸â€šÃ¡Å¾â‚¬Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€ž) */}
       {/* ========================================================================= */}
       {!loading && hierarchy && viewMode === "tree" && (
         <div className="space-y-12">
-          {/* LEVEL 1: APEX NODE â€” STJ PRESIDENT */}
+          {/* LEVEL 1: APEX NODE Ã¢â‚¬â€ STJ PRESIDENT */}
           <div className="flex flex-col items-center">
             <div className="relative group max-w-md w-full">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary via-indigo-500 to-primary rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
@@ -337,7 +337,7 @@ export function OrganizationTree() {
               <div className="relative bg-card border-2 border-primary/40 rounded-2xl p-6 shadow-xl text-center space-y-4">
                 <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-sm">
                   <Award className="w-3.5 h-3.5" />
-                  <span>ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ†áž€áŸ†áž–áž¼áž› (Apex Leadership)</span>
+                  <span>Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¸â€ Ã¡Å¾â€“Ã¡Å¾Â¼Ã¡Å¾â€º (Apex Leadership)</span>
                 </div>
 
                 <div className="flex flex-col items-center space-y-2">
@@ -372,7 +372,7 @@ export function OrganizationTree() {
                     {hierarchy.president.roleKh}
                   </div>
                   <div className="text-[11px] text-muted-foreground">
-                    {hierarchy.president.studentId} â€¢ {hierarchy.president.memberId} â€¢ ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ {hierarchy.president.department} ({hierarchy.president.generation})
+                    {hierarchy.president.studentId} Ã¢â‚¬Â¢ {hierarchy.president.memberId} Ã¢â‚¬Â¢ Ã¡Å¾Å Ã¡Å¸ÂÃ¡Å¾â€Ã¡Å¸â€°Ã¡Å¾Â¶Ã¡Å¾ÂÃ¡Å¾ÂºÃ¡Å¾ËœÃ¡Å¸â€°Ã¡Å¾â€žÃ¡Å¸â€¹ {hierarchy.president.department} ({hierarchy.president.generation})
                   </div>
                 </div>
 
@@ -411,7 +411,7 @@ export function OrganizationTree() {
                           {course.code}
                         </span>
                         <span className="text-xs text-muted-foreground font-semibold">
-                          {course.memberCount} ážŸáž˜áž¶áž‡áž·áž€
+                          {course.memberCount} Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬
                         </span>
                       </div>
 
@@ -431,13 +431,13 @@ export function OrganizationTree() {
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-[10px] font-semibold text-primary uppercase tracking-wider">
-                            áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ (Course Leader)
+                            Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â»Ã¡Å¾Ëœ (Course Leader)
                           </div>
                           <div className="font-bold text-xs text-foreground truncate">
                             {course.leader.nameKh}
                           </div>
                           <div className="text-[11px] text-muted-foreground truncate">
-                            {course.leader.studentId} â€¢ {course.leader.department}
+                            {course.leader.studentId} Ã¢â‚¬Â¢ {course.leader.department}
                           </div>
                         </div>
                       </div>
@@ -450,7 +450,7 @@ export function OrganizationTree() {
                         className="w-full text-xs justify-between h-8 mt-2"
                       >
                         <span>
-                          {isExpanded ? "áž”áž·áž‘áž”áž‰áŸ’áž‡áž¸ážŸáž˜áž¶áž‡áž·áž€" : "áž”áž¾áž€áž˜áž¾áž›ážŸáž˜áž¶áž‡áž·áž€"} ({course.members.length})
+                          {isExpanded ? "Ã¡Å¾â€Ã¡Å¾Â·Ã¡Å¾â€˜Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬" : "Ã¡Å¾â€Ã¡Å¾Â¾Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¾Â¾Ã¡Å¾â€ºÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬"} ({course.members.length})
                         </span>
                         <ChevronDown
                           className={`w-3.5 h-3.5 transition-transform duration-200 ${
@@ -500,7 +500,7 @@ export function OrganizationTree() {
 
                         {course.members.length === 0 && (
                           <div className="p-4 rounded-xl border border-dashed border-border text-center text-xs text-muted-foreground">
-                            áž˜áž·áž“áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€ážáŸ’ážšáž¼ážœáž“áž¹áž„áž–áž¶áž€áŸ’áž™ážŸáŸ’ážœáŸ‚áž„ážšáž€
+                            Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬
                           </div>
                         )}
                       </div>
@@ -514,7 +514,7 @@ export function OrganizationTree() {
       )}
 
       {/* ========================================================================= */}
-      {/* VIEW 2: INTERACTIVE GRID VIEW (áž€áž¶áž GRID) */}
+      {/* VIEW 2: INTERACTIVE GRID VIEW (Ã¡Å¾â‚¬Ã¡Å¾Â¶Ã¡Å¾Â GRID) */}
       {/* ========================================================================= */}
       {!loading && hierarchy && viewMode === "grid" && (
         <div className="space-y-8 animate-in fade-in duration-300">
@@ -528,7 +528,7 @@ export function OrganizationTree() {
                   : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
               }`}
             >
-              ážŸáž˜áž¶áž‡áž·áž€áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({hierarchy.totalTutors})
+              Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾â€˜Ã¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â€žÃ¡Å¾Â¢Ã¡Å¾Å¸Ã¡Å¸â€¹ ({hierarchy.totalTutors})
             </button>
             {hierarchy.courses.map((c) => (
               <button
@@ -540,7 +540,7 @@ export function OrganizationTree() {
                     : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
                 }`}
               >
-                {c.code} â€¢ {c.nameKh} ({c.members.length})
+                {c.code} Ã¢â‚¬Â¢ {c.nameKh} ({c.members.length})
               </button>
             ))}
           </div>
@@ -549,17 +549,17 @@ export function OrganizationTree() {
           {activeCourseFilter === "ALL" && (
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                áž‚ážŽáŸˆážŠáž¹áž€áž“áž¶áŸ†áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ (Executive & Course Leaders)
+                Ã¡Å¾â€šÃ¡Å¾Å½Ã¡Å¸Ë†Ã¡Å¾Å Ã¡Å¾Â¹Ã¡Å¾â‚¬Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¸â€ Ã¡Å¾â‚¬Ã¡Å¾ËœÃ¡Å¸â€™Ã¡Å¾ËœÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€™Ã¡Å¾Â¸ STJ (Executive & Course Leaders)
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {/* President */}
                 <div className="bg-gradient-to-br from-primary/10 via-card to-card border-2 border-primary/40 rounded-2xl p-4 shadow-sm space-y-2">
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-primary-foreground">
-                    áž”áŸ’ážšáž’áž¶áž“ STJ áž€ážŽáŸ’ážáž¶áž›
+                    Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾â€™Ã¡Å¾Â¶Ã¡Å¾â€œ STJ Ã¡Å¾â‚¬Ã¡Å¾Å½Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¶Ã¡Å¾â€º
                   </span>
                   <div className="font-bold text-sm text-foreground">{hierarchy.president.nameKh}</div>
                   <div className="text-[11px] text-muted-foreground">{hierarchy.president.nameEn}</div>
-                  <div className="text-[11px] font-mono text-primary">{hierarchy.president.studentId} â€¢ {hierarchy.president.department}</div>
+                  <div className="text-[11px] font-mono text-primary">{hierarchy.president.studentId} Ã¢â‚¬Â¢ {hierarchy.president.department}</div>
                 </div>
 
                 {/* Course Leaders */}
@@ -570,7 +570,7 @@ export function OrganizationTree() {
                     </span>
                     <div className="font-bold text-sm text-foreground truncate">{c.leader.nameKh}</div>
                     <div className="text-[11px] text-muted-foreground truncate">{c.leader.nameEn}</div>
-                    <div className="text-[11px] font-mono text-muted-foreground">{c.leader.studentId} â€¢ {c.leader.department}</div>
+                    <div className="text-[11px] font-mono text-muted-foreground">{c.leader.studentId} Ã¢â‚¬Â¢ {c.leader.department}</div>
                   </div>
                 ))}
               </div>
@@ -581,7 +581,7 @@ export function OrganizationTree() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                áž”áž‰áŸ’áž‡áž¸ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ ({allGridMembers.length} áž“áž¶áž€áŸ‹)
+                Ã¡Å¾â€Ã¡Å¾â€°Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¸Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾ËœÃ¡Å¾â€¦Ã¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾â€Ã¡Å¾â€žÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¸â‚¬Ã¡Å¾â€œ ({allGridMembers.length} Ã¡Å¾â€œÃ¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€¹)
               </h3>
             </div>
 
@@ -609,11 +609,11 @@ export function OrganizationTree() {
 
                   <div className="pt-2 border-t border-border/60 grid grid-cols-2 gap-2 text-[11px]">
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">áž¢ážáŸ’ážáž›áŸáž STJ</span>
+                      <span className="text-muted-foreground block text-[10px]">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾Â STJ</span>
                       <span className="font-mono font-semibold text-foreground">{member.memberId}</span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">áž¢ážáŸ’ážáž›áŸážáž“áž·ážŸáŸ’ážŸáž·áž</span>
+                      <span className="text-muted-foreground block text-[10px]">Ã¡Å¾Â¢Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾â€ºÃ¡Å¸ÂÃ¡Å¾ÂÃ¡Å¾â€œÃ¡Å¾Â·Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¾Â·Ã¡Å¾Â</span>
                       <span className="font-mono font-medium text-foreground">{member.studentId}</span>
                     </div>
                   </div>
@@ -632,8 +632,8 @@ export function OrganizationTree() {
 
             {allGridMembers.length === 0 && (
               <div className="p-12 text-center border-2 border-dashed border-border rounded-2xl space-y-2">
-                <p className="text-sm font-semibold text-foreground">áž˜áž·áž“áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€ážáŸ’ážšáž¼ážœáž“áž¹áž„áž–áž¶áž€áŸ’áž™ážŸáŸ’ážœáŸ‚áž„ážšáž€áž¡áž¾áž™</p>
-                <p className="text-xs text-muted-foreground">ážŸáž¼áž˜ážŸáž¶áž€áž›áŸ’áž”áž„áž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšáž–áž¶áž€áŸ’áž™ážŸáŸ’ážœáŸ‚áž„ážšáž€ áž¬áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž•áŸ’ážŸáŸáž„áŸ”</p>
+                <p className="text-sm font-semibold text-foreground">Ã¡Å¾ËœÃ¡Å¾Â·Ã¡Å¾â€œÃ¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€œÃ¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â¶Ã¡Å¾â€¡Ã¡Å¾Â·Ã¡Å¾â‚¬Ã¡Å¾ÂÃ¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¼Ã¡Å¾Å“Ã¡Å¾â€œÃ¡Å¾Â¹Ã¡Å¾â€žÃ¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬Ã¡Å¾Â¡Ã¡Å¾Â¾Ã¡Å¾â„¢</p>
+                <p className="text-xs text-muted-foreground">Ã¡Å¾Å¸Ã¡Å¾Â¼Ã¡Å¾ËœÃ¡Å¾Å¸Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¾â€ºÃ¡Å¸â€™Ã¡Å¾â€Ã¡Å¾â€žÃ¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾â€ºÃ¡Å¾Â¶Ã¡Å¾Å¸Ã¡Å¸â€¹Ã¡Å¾â€Ã¡Å¸â€™Ã¡Å¾ÂÃ¡Å¾Â¼Ã¡Å¾Å¡Ã¡Å¾â€“Ã¡Å¾Â¶Ã¡Å¾â‚¬Ã¡Å¸â€™Ã¡Å¾â„¢Ã¡Å¾Å¸Ã¡Å¸â€™Ã¡Å¾Å“Ã¡Å¸â€šÃ¡Å¾â€žÃ¡Å¾Å¡Ã¡Å¾â‚¬ Ã¡Å¾Â¬Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾Å¡Ã¡Å¾Â¾Ã¡Å¾Å¸Ã¡Å¾ËœÃ¡Å¾Â»Ã¡Å¾ÂÃ¡Å¾Å“Ã¡Å¾Â·Ã¡Å¾â€¡Ã¡Å¸â€™Ã¡Å¾â€¡Ã¡Å¾Â¶Ã¡Å¾â€¢Ã¡Å¸â€™Ã¡Å¾Å¸Ã¡Å¸ÂÃ¡Å¾â€žÃ¡Å¸â€</p>
               </div>
             )}
           </div>
