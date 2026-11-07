@@ -146,7 +146,8 @@ export function PortalLayout({
     { href: "/leader/reports", label: "nav.reports", icon: FileBarChart },
     { href: "/leader/share-links", label: "nav.shareLinks", icon: Share2 },
     { href: "/leader/announcements", label: "nav.announcements", icon: Megaphone },
-    { href: "/portal/profile", label: "nav.profile", icon: User },
+    { href: "/leader/profile", label: "nav.profile", icon: User },
+    { href: "/portal/security", label: "nav.security", icon: Lock },
   ];
 
   const portalNavItems = [

@@ -1,41 +1,121 @@
 ﻿"use client";
 
-import React, { useState } from "react";
-import { User, Lock, Mail, Shield, CheckCircle2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { User, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 
 export default function LeaderProfilePage() {
   const [profile, setProfile] = useState({
-    fullNameKh: "លាង ជីងហេង",
-    fullNameEn: "LEANG JINGHENG",
-    email: "leang.jingheng@itc.edu.kh",
-    phone: "0976355500",
-    studentId: "e20240704",
+    fullNameKh: "",
+    fullNameEn: "",
+    email: "",
+    phone: "",
+    studentId: "",
+  });
+
+  const [passwordState, setPasswordState] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
 
   const [saved, setSaved] = useState(false);
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [passwordMsg, setPasswordMsg] = useState<string | null>(null);
+  const [passwordErr, setPasswordErr] = useState<string | null>(null);
+  const [changingPassword, setChangingPassword] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        const p = data?.profile || data?.user;
+        if (p) {
+          setProfile({
+            fullNameKh: p.fullNameKh || "",
+            fullNameEn: p.fullNameEn || p.displayName || "",
+            email: p.email || "",
+            phone: p.phone || "",
+            studentId: p.studentId || p.member?.studentId || "",
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSavingProfile(true);
+    try {
+      const res = await fetch("/api/portal/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullNameKh: profile.fullNameKh,
+          displayName: profile.fullNameEn,
+          phone: profile.phone,
+        }),
+      });
+      if (res.ok) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    } finally {
+      setSavingProfile(false);
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordMsg(null);
+    setPasswordErr(null);
+
+    if (passwordState.newPassword.length < 8) {
+      setPasswordErr("ពាក្យសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច ៨ តួអក្សរ");
+      return;
+    }
+
+    if (passwordState.newPassword !== passwordState.confirmPassword) {
+      setPasswordErr("ពាក្យសម្ងាត់ថ្មី និងការបញ្ជាក់មិនដូចគ្នាឡើយ");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const res = await fetch("/api/portal/security/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(passwordState),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error || "ការផ្លាស់ប្តូរពាក្យសម្ងាត់មិនជោគជ័យ");
+      }
+
+      setPasswordMsg("ពាក្យសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ (Password changed)");
+      setPasswordState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err: unknown) {
+      setPasswordErr(err instanceof Error ? err.message : "កំហុសក្នុងការប្តូរពាក្យសម្ងាត់");
+    } finally {
+      setChangingPassword(false);
+    }
   };
 
   return (
-    <PortalLayout portalType="leader">
+    <PortalLayout portalType="leader" userName={profile.fullNameKh}>
       <div className="space-y-6 max-w-4xl">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
             <User className="w-4 h-4" />
-            <span>Leader Identity</span>
+            <span>Leader Identity &amp; Security</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-foreground">
             គណនីប្រធានមុខវិជ្ជា (Leader Profile)
           </h1>
           <p className="text-xs text-muted-foreground">
-            ព័ត៌មានផ្ទាល់ខ្លួន និងការកំណត់សុវត្ថិភាព
+            ព័ត៌មានផ្ទាល់ខ្លួន និងការផ្លាស់ប្តូរលេខកូដសម្ងាត់គណនី
           </p>
         </div>
 
@@ -97,8 +177,8 @@ export default function LeaderProfilePage() {
                   />
                 </div>
                 <div className="pt-2">
-                  <Button type="submit" size="sm" className="w-full">
-                    រក្សាទុកព័ត៌មាន
+                  <Button type="submit" size="sm" disabled={savingProfile} className="w-full">
+                    {savingProfile ? "កំពុងរក្សាទុក..." : "រក្សាទុកព័ត៌មាន"}
                   </Button>
                 </div>
               </form>
@@ -107,20 +187,47 @@ export default function LeaderProfilePage() {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-foreground">ប្តូរពាក្យសម្ងាត់</h3>
-              <form className="space-y-3 text-xs">
+              <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-primary" />
+                <span>ប្តូរពាក្យសម្ងាត់ (Change Password)</span>
+              </h3>
+
+              {passwordMsg && (
+                <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{passwordMsg}</span>
+                </div>
+              )}
+              {passwordErr && (
+                <div className="p-2.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{passwordErr}</span>
+                </div>
+              )}
+
+              <form onSubmit={handlePasswordChange} className="space-y-3 text-xs">
                 <div>
                   <label className="block font-medium mb-1">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
                   <input
                     type="password"
+                    required
+                    value={passwordState.currentPassword}
+                    onChange={(e) =>
+                      setPasswordState({ ...passwordState, currentPassword: e.target.value })
+                    }
                     placeholder="••••••••••••"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">ពាក្យសម្ងាត់ថ្មី</label>
+                  <label className="block font-medium mb-1">ពាក្យសម្ងាត់ថ្មី (យ៉ាងតិច ៨ តួ)</label>
                   <input
                     type="password"
+                    required
+                    value={passwordState.newPassword}
+                    onChange={(e) =>
+                      setPasswordState({ ...passwordState, newPassword: e.target.value })
+                    }
                     placeholder="••••••••••••"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
@@ -129,13 +236,23 @@ export default function LeaderProfilePage() {
                   <label className="block font-medium mb-1">បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
                   <input
                     type="password"
+                    required
+                    value={passwordState.confirmPassword}
+                    onChange={(e) =>
+                      setPasswordState({ ...passwordState, confirmPassword: e.target.value })
+                    }
                     placeholder="••••••••••••"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
                 </div>
                 <div className="pt-2">
-                  <Button type="button" variant="outline" size="sm" className="w-full">
-                    ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
+                  <Button
+                    type="submit"
+                    size="sm"
+                    disabled={changingPassword}
+                    className="w-full"
+                  >
+                    {changingPassword ? "កំពុងរក្សាទុក..." : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់"}
                   </Button>
                 </div>
               </form>

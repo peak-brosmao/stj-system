@@ -122,3 +122,4 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ error: "Unsupported request format" }, { status: 400 });
 }
+

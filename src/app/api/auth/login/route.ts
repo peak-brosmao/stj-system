@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { createSessionToken, setSessionCookie } from "@/lib/auth";
+import { createSessionToken, setSessionCookie, verifyPassword } from "@/lib/auth";
 import { LARAVEL_API_BASE } from "@/lib/laravelApi";
+import { getVaultEntry, rememberServiceToken } from "@/lib/passwordVault";
 
 export const dynamic = "force-dynamic";
 
@@ -17,12 +18,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 400 });
   }
 
-  const response = await fetch(`${LARAVEL_API_BASE}/auth/login`, {
+  const { email, password } = parsed.data;
+  let effectiveBackendPassword = password;
+
+  // Check if user changed their password via the encrypted SQLite credential vault
+  const vaultEntry = await getVaultEntry(email);
+  if (vaultEntry) {
+    const matchesNewPassword = await verifyPassword(password, vaultEntry.newPasswordHash);
+    if (!matchesNewPassword) {
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+    effectiveBackendPassword = vaultEntry.backendAuthPassword;
+  }
+
+  let response = await fetch(`${LARAVEL_API_BASE}/auth/login`, {
     method: "POST",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
-    body: JSON.stringify(parsed.data),
+    body: JSON.stringify({ ...parsed.data, password: effectiveBackendPassword }),
     cache: "no-store",
   });
+
+  // If backend already has the new password natively in users.password, try direct password too
+  if (!response.ok && effectiveBackendPassword !== password) {
+    response = await fetch(`${LARAVEL_API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify(parsed.data),
+      cache: "no-store",
+    });
+  }
 
   if (!response.ok) {
     const body = await response.json().catch(() => null);
@@ -36,6 +60,10 @@ export async function POST(req: NextRequest) {
   }
 
   const data = await response.json();
+  if (data.token) {
+    rememberServiceToken(data.token);
+  }
+
   const token = await createSessionToken(data.user);
   await setSessionCookie(token);
 

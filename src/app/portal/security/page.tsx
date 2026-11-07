@@ -28,6 +28,22 @@ export default function AccountSecurityPage() {
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [detectedPortal, setDetectedPortal] = useState<"portal" | "leader" | "system">("portal");
+
+  React.useEffect(() => {
+    fetch("/api/portal/profile")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const u = d?.profile || d?.user;
+        const roles: string[] = u?.roles || u?.userRoles?.map((x: any) => x?.role?.name || x) || [];
+        if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN")) {
+          setDetectedPortal("system");
+        } else if (roles.includes("COURSE_LEADER")) {
+          setDetectedPortal("leader");
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [activeSessions, setActiveSessions] = useState([
     {
@@ -95,7 +111,7 @@ export default function AccountSecurityPage() {
   };
 
   return (
-    <PortalLayout portalType="portal">
+    <PortalLayout portalType={detectedPortal}>
       <div className="space-y-6 max-w-4xl mx-auto">
         <div>
           <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">

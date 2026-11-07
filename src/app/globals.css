@@ -93,10 +93,20 @@
 /* ============================================================
    Modal / Dialog Overlay — ការពារ modal ត្រូវបង្ហាញពេញ Screen
    ============================================================ */
-/* Ensure fixed-positioned modals always cover full viewport */
+/* Ensure fixed-positioned modals always cover full viewport without space-y margin gaps */
+.fixed.inset-0,
 .modal-overlay {
   position: fixed !important;
   inset: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.modal-overlay {
   z-index: 100 !important;
   display: flex !important;
   align-items: center !important;

@@ -27,24 +27,36 @@ export default function SystemProfilePage() {
 
   useEffect(() => {
     fetch("/api/portal/profile")
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data.user) {
+        const u = data?.profile || data?.user;
+        if (u) {
           setProfile({
-            fullNameKh: data.user.fullNameKh || "ផល ដាវីត",
-            fullNameEn: data.user.fullNameEn || "PHAL David",
-            email: data.user.email || "e20221334@itc.edu.kh",
-            phone: data.user.phone || "086439191",
+            fullNameKh: u.fullNameKh || "",
+            fullNameEn: u.fullNameEn || u.displayName || "",
+            email: u.email || "",
+            phone: u.phone || "",
           });
         }
       })
       .catch(() => {});
   }, []);
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    const res = await fetch("/api/portal/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullNameKh: profile.fullNameKh,
+        displayName: profile.fullNameEn,
+        phone: profile.phone,
+      }),
+    }).catch(() => null);
+    if (res && res.ok) {
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {

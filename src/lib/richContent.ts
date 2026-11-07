@@ -72,12 +72,25 @@ export function decodeRichNotes(raw: string | null | undefined): RichNotesPayloa
 
 export const SYLLABUS_MARKER_TITLE = "__COURSE_SYLLABUS__";
 export const SYLLABUS_MARKER_ROOM = "__SYLLABUS__";
+export const VAULT_MARKER_TITLE = "__STJ_AUTH_VAULT__";
+export const VAULT_MARKER_ROOM = "__VAULT__";
+
+export function isVaultSession(session: Record<string, any> | null | undefined): boolean {
+  if (!session) return false;
+  return (
+    session.status === "CREDENTIAL_VAULT" ||
+    session.room === VAULT_MARKER_ROOM ||
+    session.title === VAULT_MARKER_TITLE
+  );
+}
 
 export function isSyllabusSession(session: Record<string, any> | null | undefined): boolean {
   if (!session) return false;
+  if (isVaultSession(session)) return true;
   return (
     session.status === "SYLLABUS" ||
     session.room === SYLLABUS_MARKER_ROOM ||
     session.title === SYLLABUS_MARKER_TITLE
   );
 }
+
