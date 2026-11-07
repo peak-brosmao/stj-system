@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
   await proxyToBackend(req, "auth/logout", { method: "POST" }).catch(() => null);
   await clearSessionCookie();
   const response = NextResponse.json({ success: true });
+  response.cookies.delete("stj_session");
   response.cookies.delete("stj_backend_token");
   return response;
 }

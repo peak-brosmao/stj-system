@@ -54,18 +54,21 @@ function LoginContent() {
         throw new Error(data.error || t("auth.errorInvalid"));
       }
 
-      if (data.user) {
-        router.refresh();
+      // Dynamic automatic redirect based on verified server-side role
+      const roles: string[] = Array.isArray(data.user?.roles) ? data.user.roles : [];
+      const adminRoles = ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "STUDENT_ASSOCIATION"];
+      let fallbackTarget = "/portal/member";
+      if (roles.some((r) => adminRoles.includes(r))) {
+        fallbackTarget = "/system/dashboard";
+      } else if (roles.includes("COURSE_LEADER")) {
+        fallbackTarget = "/leader/dashboard";
       }
 
-      // Dynamic automatic redirect based on verified server-side role
-      const redirectTarget = data.redirectUrl || "/portal/member";
-      router.push(redirectTarget);
-      router.refresh();
+      const redirectTarget = data.redirectUrl || fallbackTarget;
+      window.location.replace(redirectTarget);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : t("auth.errorInvalid");
       setError(msg);
-    } finally {
       setLoading(false);
     }
   };

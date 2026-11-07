@@ -38,13 +38,32 @@ export async function POST(req: NextRequest) {
   const data = await response.json();
   const token = await createSessionToken(data.user);
   await setSessionCookie(token);
-  const result = NextResponse.json({ success: true, user: data.user });
-  result.cookies.set("stj_backend_token", data.token, {
+
+  const roles: string[] = Array.isArray(data.user?.roles) ? data.user.roles : [];
+  const adminRoles = ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "STUDENT_ASSOCIATION"];
+  let redirectUrl = "/portal/member";
+  if (roles.some((r) => adminRoles.includes(r))) {
+    redirectUrl = "/system/dashboard";
+  } else if (roles.includes("COURSE_LEADER")) {
+    redirectUrl = "/leader/dashboard";
+  }
+
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
+  };
+
+  const result = NextResponse.json({
+    success: true,
+    user: data.user,
+    redirectUrl,
   });
+  result.cookies.set("stj_session", token, cookieOptions);
+  if (data.token) {
+    result.cookies.set("stj_backend_token", data.token, cookieOptions);
+  }
   return result;
 }
