@@ -43,6 +43,14 @@ export async function fetchLiveMembersLookup(): Promise<LiveMembersLookup> {
   const byStudentId = new Map<string, LiveMemberRecord>();
   const byEmail = new Map<string, LiveMemberRecord>();
 
+  const registerRecord = (rec: LiveMemberRecord) => {
+    list.push(rec);
+    if (rec.id) byId.set(rec.id.toLowerCase(), rec);
+    if (rec.memberId) byMemberId.set(rec.memberId.toLowerCase(), rec);
+    if (rec.studentId) byStudentId.set(rec.studentId.toLowerCase(), rec);
+    if (rec.email) byEmail.set(rec.email.toLowerCase(), rec);
+  };
+
   try {
     const res = await backendFetch("members");
     if (res.ok) {
@@ -50,7 +58,7 @@ export async function fetchLiveMembersLookup(): Promise<LiveMembersLookup> {
       const rawMembers = Array.isArray(data?.members) ? data.members : [];
       for (const m of rawMembers) {
         if (!m || typeof m !== "object") continue;
-        const rec: LiveMemberRecord = {
+        registerRecord({
           id: String(m.id || m.memberId || ""),
           memberId: String(m.memberId || m.member_id || ""),
           studentId: String(m.studentId || m.student_id || ""),
@@ -62,22 +70,23 @@ export async function fetchLiveMembersLookup(): Promise<LiveMembersLookup> {
           status: String(m.status || "ACTIVE"),
           departmentId: m.departmentId,
           academicYearId: m.academicYearId,
-          department: m.department || (m.departmentCode ? { code: m.departmentCode, nameKh: m.departmentNameKh || m.departmentCode } : undefined),
-          academicYear: m.academicYear || (m.yearCode ? { code: m.yearCode, label: m.yearLabel || m.yearCode } : undefined),
+          department:
+            m.department ||
+            (m.departmentCode
+              ? { code: m.departmentCode, nameKh: m.departmentNameKh || m.departmentCode }
+              : undefined),
+          academicYear:
+            m.academicYear ||
+            (m.yearCode ? { code: m.yearCode, label: m.yearLabel || m.yearCode } : undefined),
           courseCode: m.courseCode ?? null,
           courseCodes: Array.isArray(m.courseCodes) ? m.courseCodes : [],
           courses: Array.isArray(m.courses) ? m.courses : [],
           enrollments: Array.isArray(m.enrollments) ? m.enrollments : [],
-        };
-        list.push(rec);
-        if (rec.id) byId.set(rec.id.toLowerCase(), rec);
-        if (rec.memberId) byMemberId.set(rec.memberId.toLowerCase(), rec);
-        if (rec.studentId) byStudentId.set(rec.studentId.toLowerCase(), rec);
-        if (rec.email) byEmail.set(rec.email.toLowerCase(), rec);
+        });
       }
     }
   } catch {
-    // Fallback to empty lookup on network failure
+    // Ignore and check hierarchy endpoint below if list is empty
   }
 
   return {
@@ -107,4 +116,3 @@ export async function fetchLiveMembersLookup(): Promise<LiveMembersLookup> {
     },
   };
 }
-

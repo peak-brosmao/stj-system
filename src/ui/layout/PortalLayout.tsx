@@ -35,7 +35,6 @@ import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
 import { ThemeToggle } from "@/ui/theme/ThemeToggle";
 import { Button } from "@/ui/Button";
 import { Logo } from "@/ui/Logo";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 
 interface PortalLayoutProps {
   children: React.ReactNode;
@@ -66,32 +65,22 @@ export function PortalLayout({
     return t("system.member");
   };
 
-  const rosterMatch = React.useMemo(() => {
-    return OFFICIAL_STJ_ROSTER.find(
-      (m) =>
-        (userEmail && userEmail !== "user@itc.edu.kh" && m.email.toLowerCase() === userEmail.toLowerCase()) ||
-        (userMemberId && m.memberId.toLowerCase() === userMemberId.toLowerCase()) ||
-        (userName && userName !== "STJ Academic Staff" && userName !== "សមាជិក STJ" && (m.nameKh === userName || m.nameEn.toLowerCase() === userName.toLowerCase()))
-    );
-  }, [userEmail, userMemberId, userName]);
+  const initialName =
+    userName && userName !== "STJ Academic Staff" && userName !== "សមាជិក STJ" && !userName.includes("?")
+      ? userName
+      : "";
 
-  const initialName = userName && userName !== "STJ Academic Staff" && userName !== "សមាជិក STJ"
-    ? userName
-    : rosterMatch?.nameKh || "";
-
-  const initialMemberId = userMemberId || rosterMatch?.memberId;
-  const initialRole = rosterMatch?.isLeader
-    ? t("system.leader")
-    : rosterMatch?.studentId === "e20221334"
-    ? t("system.president")
-    : (rosterMatch?.role || (userRole && userRole !== "STJ Member" ? userRole : "")).replace(/\s*\([^)]*\)/g, "").trim();
+  const initialMemberId = userMemberId;
+  const initialRole = (userRole && userRole !== "STJ Member" ? userRole : "")
+    .replace(/\s*\([^)]*\)/g, "")
+    .trim();
 
   const [currentUser, setCurrentUser] = useState(() => {
     return {
-      name: initialName || (portalType === "system" ? "ផល ដាវីត" : t("system.member")),
+      name: initialName || t("system.member"),
       role: initialRole || (portalType === "system" ? t("system.president") : t("system.member")),
       email: userEmail,
-      memberId: initialMemberId || (portalType === "system" ? "STJ002" : undefined),
+      memberId: initialMemberId,
       avatar: "" as string | undefined,
     };
   });
@@ -107,21 +96,21 @@ export function PortalLayout({
         if (u) {
           const userRoles: string[] = u.roles || u.userRoles?.map((r: any) => r.role?.name || r) || [];
           let resolvedRole = t("system.member");
-          if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT") || u.member?.memberId === "STJ002" || u.studentId === "e20221334") {
+          if (userRoles.includes("SUPER_ADMIN") || userRoles.includes("STJ_PRESIDENT")) {
             resolvedRole = t("system.president");
           } else if (userRoles.includes("COURSE_LEADER")) {
             resolvedRole = t("system.leader");
-          } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION") || u.member?.memberId === "STJ001") {
+          } else if (userRoles.includes("STJ_ADMIN") || userRoles.includes("STUDENT_ASSOCIATION")) {
             resolvedRole = userRoles.includes("STUDENT_ASSOCIATION") ? t("system.association") : t("system.admin");
           } else if (u.member?.role) {
             resolvedRole = u.member.role.replace(/\s*\([^)]*\)/g, "").trim();
           }
 
           const resolvedUser = {
-            name: u.fullNameKh || u.fullNameEn || initialName || (portalType === "system" ? "ផល ដាវីត" : t("system.member")),
+            name: u.fullNameKh || u.fullNameEn || initialName || t("system.member"),
             role: resolvedRole,
             email: u.email || userEmail,
-            memberId: u.member?.memberId || u.studentId || initialMemberId || (portalType === "system" ? "STJ002" : undefined),
+            memberId: u.member?.memberId || u.studentId || initialMemberId,
             avatar: u.profileImage || "",
           };
 
@@ -129,7 +118,7 @@ export function PortalLayout({
         }
       })
       .catch(() => {});
-  }, [userEmail, initialName, initialMemberId, portalType]);
+  }, [userEmail, initialName, initialMemberId, portalType, t]);
 
   const systemNavItems = [
     { href: "/system/dashboard", label: "nav.dashboard", icon: LayoutDashboard },

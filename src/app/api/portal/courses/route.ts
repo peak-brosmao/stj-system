@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
 import { fetchLiveMembersLookup, LiveMembersLookup } from "@/lib/memberSync";
 
 export const dynamic = "force-dynamic";
@@ -23,21 +22,14 @@ function normalizeCourse(raw: Record<string, any>, membersLookup: LiveMembersLoo
       nameEn: rawEn,
     });
 
-    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
-      (m) =>
-        (studentId && m.studentId.toLowerCase() === studentId.toLowerCase()) ||
-        (email && m.email.toLowerCase() === email.toLowerCase()) ||
-        (rawKh && m.nameKh === rawKh)
-    );
-
     return {
-      fullNameKh: liveMatch?.fullNameKh || rawKh || rosterMatch?.nameKh || "ប្រធានក្រុម",
-      fullNameEn: liveMatch?.fullNameEn || rawEn || rosterMatch?.nameEn || "Course Leader",
-      email: liveMatch?.email || email || rosterMatch?.email || "",
-      phone: liveMatch?.phone || l.phone || rosterMatch?.phone || "",
-      studentId: liveMatch?.studentId || studentId || rosterMatch?.studentId || "",
-      department: liveMatch?.department?.code || l.department || rosterMatch?.dept || "ITC",
-      year: liveMatch?.academicYear?.code || l.year || rosterMatch?.year || "",
+      fullNameKh: liveMatch?.fullNameKh || rawKh || "ប្រធានក្រុម",
+      fullNameEn: liveMatch?.fullNameEn || rawEn || "Course Leader",
+      email: liveMatch?.email || email || "",
+      phone: liveMatch?.phone || l.phone || "",
+      studentId: liveMatch?.studentId || studentId || "",
+      department: liveMatch?.department?.code || l.department || "ITC",
+      year: liveMatch?.academicYear?.code || l.year || "",
     };
   });
 
@@ -56,22 +48,13 @@ function normalizeCourse(raw: Record<string, any>, membersLookup: LiveMembersLoo
       nameEn: rawEn,
     });
 
-    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
-      (r) =>
-        (rawMemberId && r.memberId.toLowerCase() === rawMemberId.toLowerCase()) ||
-        (rawMemberId && r.studentId.toLowerCase() === rawMemberId.toLowerCase()) ||
-        (rawStudentId && r.studentId.toLowerCase() === rawStudentId.toLowerCase()) ||
-        (rawKh && r.nameKh === rawKh) ||
-        (rawEn && r.nameEn.toLowerCase() === rawEn.toLowerCase())
-    );
-
     return {
-      memberId: liveMatch?.memberId || rosterMatch?.memberId || rawMemberId || `STJ-${idx + 1}`,
-      studentId: liveMatch?.studentId || rosterMatch?.studentId || rawStudentId || rawMemberId || "",
-      fullNameKh: liveMatch?.fullNameKh || rawKh || rosterMatch?.nameKh || "សមាជិក STJ",
-      fullNameEn: liveMatch?.fullNameEn || rawEn || rosterMatch?.nameEn || "STJ Member",
-      department: liveMatch?.department?.code || m.department || rosterMatch?.dept || "",
-      year: liveMatch?.academicYear?.code || m.year || rosterMatch?.year || "",
+      memberId: liveMatch?.memberId || rawMemberId || `STJ-${idx + 1}`,
+      studentId: liveMatch?.studentId || rawStudentId || rawMemberId || "",
+      fullNameKh: liveMatch?.fullNameKh || rawKh || "សមាជិក STJ",
+      fullNameEn: liveMatch?.fullNameEn || rawEn || "STJ Member",
+      department: liveMatch?.department?.code || m.department || "",
+      year: liveMatch?.academicYear?.code || m.year || "",
     };
   });
 

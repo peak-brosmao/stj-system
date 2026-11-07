@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+import { fetchLiveMembersLookup } from "@/lib/memberSync";
 
 export const dynamic = "force-dynamic";
 
@@ -11,28 +11,27 @@ export async function GET() {
       return NextResponse.json({ authenticated: false, user: null });
     }
 
-    const rosterMatch = OFFICIAL_STJ_ROSTER.find(
-      (m) =>
-        (session.studentId && m.studentId.toLowerCase() === session.studentId.toLowerCase()) ||
-        (session.email && m.email.toLowerCase() === session.email.toLowerCase()) ||
-        (session.id && m.memberId.toLowerCase() === session.id.toLowerCase())
-    );
+    const membersLookup = await fetchLiveMembersLookup();
+    const liveMember = membersLookup.find({
+      id: session.id,
+      memberId: session.memberId,
+      studentId: session.studentId,
+      email: session.email,
+    });
 
-    const roles = session.roles && session.roles.length > 0
-      ? session.roles
-      : rosterMatch?.isLeader
-      ? ["COURSE_LEADER", "MEMBER"]
-      : rosterMatch?.studentId === "e20221334"
-      ? ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "MEMBER"]
-      : ["MEMBER"];
+    const roles =
+      session.roles && session.roles.length > 0 ? session.roles : ["MEMBER"];
 
     let dashboardUrl = "/portal/member";
-    if (roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT") || roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
+    if (
+      roles.includes("SUPER_ADMIN") ||
+      roles.includes("STJ_PRESIDENT") ||
+      roles.includes("STJ_ADMIN") ||
+      roles.includes("STUDENT_ASSOCIATION")
+    ) {
       dashboardUrl = "/system/dashboard";
     } else if (roles.includes("COURSE_LEADER")) {
       dashboardUrl = "/leader/dashboard";
-    } else {
-      dashboardUrl = "/portal/member";
     }
 
     let roleLabel = "សមាជិក STJ (Member)";
@@ -42,14 +41,12 @@ export async function GET() {
       roleLabel = "ប្រធានក្រុម (Course Leader)";
     } else if (roles.includes("STJ_ADMIN") || roles.includes("STUDENT_ASSOCIATION")) {
       roleLabel = "គណៈគ្រប់គ្រង (Admin)";
-    } else if (rosterMatch?.role) {
-      roleLabel = rosterMatch.role;
     }
 
-    const fullNameKh = session.fullNameKh || rosterMatch?.nameKh || "សមាជិក STJ";
-    const fullNameEn = session.fullNameEn || rosterMatch?.nameEn || "";
-    const memberId = session.memberId || rosterMatch?.memberId || "STJ";
-    const studentId = session.studentId || rosterMatch?.studentId || null;
+    const fullNameKh = liveMember?.fullNameKh || session.fullNameKh || "សមាជិក STJ";
+    const fullNameEn = liveMember?.fullNameEn || session.fullNameEn || "";
+    const memberId = liveMember?.memberId || session.memberId || null;
+    const studentId = liveMember?.studentId || session.studentId || null;
 
     return NextResponse.json({
       authenticated: true,
@@ -70,4 +67,3 @@ export async function GET() {
     return NextResponse.json({ authenticated: false, user: null });
   }
 }
-
