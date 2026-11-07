@@ -14,9 +14,29 @@ interface CourseDetail {
   titleEn: string;
   descriptionKh: string;
   academicTerm: string;
-  leaders: Array<{ fullNameKh: string; fullNameEn: string; email: string; phone: string }>;
+  leaders: Array<{
+    fullNameKh?: string;
+    full_name_kh?: string;
+    fullNameEn?: string;
+    full_name_en?: string;
+    email: string;
+    phone?: string;
+    studentId?: string;
+    department?: string;
+    year?: string;
+  }>;
   sessions: Array<{ id: string; title: string; date: string; time: string; room: string; status: string }>;
-  enrolledMembers: Array<{ memberId: string; fullNameKh: string; fullNameEn: string }>;
+  enrolledMembers: Array<{
+    memberId?: string;
+    member_id?: string;
+    studentId?: string;
+    fullNameKh?: string;
+    full_name_kh?: string;
+    fullNameEn?: string;
+    full_name_en?: string;
+    department?: string;
+    year?: string;
+  }>;
 }
 
 const STATUS: Record<string, { v: "info" | "warning" | "success" | "destructive"; t: string }> = {
@@ -72,13 +92,21 @@ export default function CourseDetailPage() {
                   ប្រធានក្រុមបង្រៀន (Course Leaders)
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-1 text-xs">
+              <CardContent className="space-y-2 text-xs">
                 {course.leaders.length === 0 && <p className="text-muted-foreground">ពុំទាន់បានចាត់តាំង (Not assigned yet.)</p>}
-                {course.leaders.map((l) => (
-                  <p key={l.email} className="text-foreground">
-                    {l.fullNameKh} ({l.fullNameEn}) • {l.phone}
-                  </p>
-                ))}
+                {course.leaders.map((l, idx) => {
+                  const nameKh = l.fullNameKh || l.full_name_kh || "ប្រធានក្រុម";
+                  const nameEn = l.fullNameEn || l.full_name_en || "";
+                  const meta = [l.phone, l.email].filter(Boolean).join(" • ");
+                  return (
+                    <div key={l.email || idx} className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-muted/30 border border-border/60">
+                      <div className="font-semibold text-foreground">
+                        {nameKh} {nameEn ? <span className="text-muted-foreground font-normal">({nameEn})</span> : null}
+                      </div>
+                      {meta && <span className="text-muted-foreground font-mono text-[11px]">{meta}</span>}
+                    </div>
+                  );
+                })}
               </CardContent>
             </Card>
 
@@ -114,12 +142,30 @@ export default function CourseDetailPage() {
                   ក្រុមគ្រូបង្រៀន (Team) - {course.enrolledMembers.length}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
-                {course.enrolledMembers.map((m) => (
-                  <p key={m.memberId} className="text-foreground">
-                    <span className="font-mono text-muted-foreground">{m.memberId}</span> {m.fullNameKh} ({m.fullNameEn})
-                  </p>
-                ))}
+              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                {course.enrolledMembers.map((m, idx) => {
+                  const memberId = m.memberId || m.member_id || `STJ-${idx + 1}`;
+                  const nameKh = m.fullNameKh || m.full_name_kh || "សមាជិក STJ";
+                  const nameEn = m.fullNameEn || m.full_name_en || "";
+                  const deptBadge = [m.year, m.department].filter(Boolean).join("-");
+                  return (
+                    <div
+                      key={`${memberId}-${idx}`}
+                      className="flex items-center justify-between gap-2 p-2.5 rounded-lg border border-border/60 bg-muted/20"
+                    >
+                      <div className="min-w-0 truncate">
+                        <span className="font-mono text-[11px] font-bold text-primary mr-2">{memberId}</span>
+                        <span className="font-semibold text-foreground">{nameKh}</span>
+                        {nameEn && <span className="text-muted-foreground ml-1">({nameEn})</span>}
+                      </div>
+                      {deptBadge && (
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0">
+                          {deptBadge}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </CardContent>
             </Card>
           </>

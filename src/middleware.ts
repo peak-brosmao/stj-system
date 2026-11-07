@@ -105,17 +105,31 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
 
-    // API endpoints that course leaders are authorized to read for team management
+    // API endpoints that course leaders are authorized to read/manage
     const leaderAllowedApis = [
       "/api/system/members",
       "/api/system/share-links",
       "/api/system/sessions",
       "/api/system/attendance",
       "/api/system/stats",
+      "/api/system/announcements",
+      "/api/system/reports",
+    ];
+    // Read-only system APIs that any authenticated member may read (e.g., official announcements)
+    const memberReadAllowedApis = [
+      "/api/system/announcements",
+      "/api/system/courses",
+      "/api/system/departments",
+      "/api/system/academic-years",
     ];
     const isLeaderAllowedApi = leaderAllowedApis.some((api) => pathname.startsWith(api));
+    const isMemberReadAllowed =
+      req.method === "GET" && memberReadAllowedApis.some((api) => pathname.startsWith(api));
 
     if (pathname.startsWith("/api/")) {
+      if (isMemberReadAllowed) {
+        return NextResponse.next();
+      }
       if (isLeaderAllowedApi) {
         if (!isLeader) {
           return NextResponse.json({ error: "Forbidden: Member is read-only" }, { status: 403 });
