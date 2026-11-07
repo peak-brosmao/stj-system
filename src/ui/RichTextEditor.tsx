@@ -19,6 +19,9 @@ import {
   Quote,
   Code,
   Table,
+  Table2,
+  Columns2,
+  Columns3,
   Minus,
   Info,
   Link as LinkIcon,
@@ -1226,8 +1229,19 @@ export function RichTextEditor({
 
   const [mode, setMode] = useState<"write" | "html" | "preview">("write");
   const [activePanel, setActivePanel] = useState<
-    null | "color" | "highlight" | "iframe" | "image" | "link" | "code" | "math"
+    null | "color" | "highlight" | "iframe" | "image" | "link" | "code" | "math" | "table"
   >(null);
+
+  // Table Studio states
+  const [customTableRows, setCustomTableRows] = useState(3);
+  const [customTableCols, setCustomTableCols] = useState(2);
+  const [activeTableContext, setActiveTableContext] = useState<{
+    inTable: boolean;
+    cols?: number;
+    rows?: number;
+    isTwoCol?: boolean;
+  }>({ inTable: false });
+  const lastActiveCellRef = useRef<HTMLTableCellElement | null>(null);
 
   // Inline tool states
   const [embedInput, setEmbedInput] = useState("");
@@ -1460,30 +1474,375 @@ export function RichTextEditor({
     }
   };
 
-  const handleInsertTable = () => {
+  // Table detection & context checking
+  const checkTableContext = () => {
+    if (typeof window === "undefined") return;
+    const sel = window.getSelection();
+    if (!sel || !sel.anchorNode || !editorRef.current) return;
+    let node: Node | null = sel.anchorNode;
+    while (node && node !== editorRef.current) {
+      if (node.nodeName === "TD" || node.nodeName === "TH") {
+        const cell = node as HTMLTableCellElement;
+        const row = cell.closest("tr");
+        const table = cell.closest("table");
+        if (table && row) {
+          lastActiveCellRef.current = cell;
+          const colsCount = row.children.length;
+          const rowsCount = table.querySelectorAll("tr").length;
+          setActiveTableContext({
+            inTable: true,
+            cols: colsCount,
+            rows: rowsCount,
+            isTwoCol: colsCount === 2,
+          });
+          return;
+        }
+      }
+      node = node.parentNode;
+    }
+    setActiveTableContext({ inTable: false });
+  };
+
+  const getContextTableElements = () => {
+    const cell = lastActiveCellRef.current;
+    if (cell && editorRef.current?.contains(cell)) {
+      return {
+        cell,
+        row: cell.closest("tr"),
+        table: cell.closest("table"),
+      };
+    }
+    const sel = window.getSelection();
+    let node = sel?.anchorNode;
+    while (node && node !== editorRef.current) {
+      if (node.nodeName === "TD" || node.nodeName === "TH") {
+        const c = node as HTMLTableCellElement;
+        return { cell: c, row: c.closest("tr"), table: c.closest("table") };
+      }
+      node = node.parentNode;
+    }
+    const firstTable = editorRef.current?.querySelector("table");
+    if (firstTable) {
+      const lastRow =
+        firstTable.querySelector("tbody tr:last-child") ||
+        firstTable.querySelector("tr:last-child");
+      const firstCell = lastRow?.querySelector("td, th") as HTMLTableCellElement | null;
+      return { cell: firstCell, row: lastRow as HTMLTableRowElement | null, table: firstTable };
+    }
+    return null;
+  };
+
+  const handleInsertTwoColEqualTable = () => {
     insertHtmlSnippet(
-      `<table style="width:100%; border-collapse:collapse; margin:12px 0;">
-        <thead>
-          <tr style="background:rgba(59,130,246,0.12);">
-            <th style="border:1px solid #334155; padding:8px; text-align:left;">ប្រធានបទ (Topic)</th>
-            <th style="border:1px solid #334155; padding:8px; text-align:left;">ខ្លឹមសារសំខាន់ (Details)</th>
-            <th style="border:1px solid #334155; padding:8px; text-align:left;">កំណត់សម្គាល់ (Notes)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="border:1px solid #334155; padding:8px;">ផ្នែកទី ១</td>
-            <td style="border:1px solid #334155; padding:8px;">សេចក្តីផ្តើម</td>
-            <td style="border:1px solid #334155; padding:8px;">-</td>
-          </tr>
-          <tr>
-            <td style="border:1px solid #334155; padding:8px;">ផ្នែកទី ២</td>
-            <td style="border:1px solid #334155; padding:8px;">ការអនុវត្តលំហាត់</td>
-            <td style="border:1px solid #334155; padding:8px;">-</td>
-          </tr>
-        </tbody>
-      </table><p><br/></p>`
+      `<div class="table-responsive" style="width:100%;overflow-x:auto;margin:14px 0;">
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid rgba(148,163,184,0.3);border-radius:10px;overflow:hidden;min-width:320px;">
+          <colgroup>
+            <col style="width:50%;" />
+            <col style="width:50%;" />
+          </colgroup>
+          <thead>
+            <tr style="background:rgba(59,130,246,0.12);border-bottom:2px solid rgba(59,130,246,0.25);">
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:50%;word-break:break-word;">ផ្នែកទី ១ / ចំណុច A</th>
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:50%;word-break:break-word;">ផ្នែកទី ២ / ចំណុច B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:50%;word-break:break-word;">ខ្លឹមសារចំណុចទី ១...</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:50%;word-break:break-word;">ខ្លឹមសារចំណុចទី ២...</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:50%;word-break:break-word;">ឧទាហរណ៍ ឬការអនុវត្តជាក់ស្តែង A</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:50%;word-break:break-word;">ឧទាហរណ៍ ឬការអនុវត្តជាក់ស្តែង B</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><p><br/></p>`
     );
+    setActivePanel(null);
+  };
+
+  const handleInsertTwoColKeyValueTable = () => {
+    insertHtmlSnippet(
+      `<div class="table-responsive" style="width:100%;overflow-x:auto;margin:14px 0;">
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid rgba(148,163,184,0.3);border-radius:10px;overflow:hidden;min-width:320px;">
+          <colgroup>
+            <col style="width:35%;" />
+            <col style="width:65%;" />
+          </colgroup>
+          <thead>
+            <tr style="background:rgba(59,130,246,0.12);border-bottom:2px solid rgba(59,130,246,0.25);">
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:35%;word-break:break-word;">ប្រធានបទ / ពាក្យគន្លឹះ (Key)</th>
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:65%;word-break:break-word;">សេចក្តីពន្យល់ / ខ្លឹមសារ (Value)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;font-weight:600;width:35%;word-break:break-word;">និយមន័យទី ១</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:65%;word-break:break-word;">ពន្យល់លម្អិតអំពីចំណុចទី ១...</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;font-weight:600;width:35%;word-break:break-word;">និយមន័យទី ២</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:65%;word-break:break-word;">ពន្យល់លម្អិតអំពីចំណុចទី ២...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><p><br/></p>`
+    );
+    setActivePanel(null);
+  };
+
+  const handleInsertTwoColQATable = () => {
+    insertHtmlSnippet(
+      `<div class="table-responsive" style="width:100%;overflow-x:auto;margin:14px 0;">
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid rgba(148,163,184,0.3);border-radius:10px;overflow:hidden;min-width:320px;">
+          <colgroup>
+            <col style="width:40%;" />
+            <col style="width:60%;" />
+          </colgroup>
+          <thead>
+            <tr style="background:rgba(59,130,246,0.12);border-bottom:2px solid rgba(59,130,246,0.25);">
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:40%;word-break:break-word;">សំណួរ ឬលំហាត់ (Question)</th>
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:60%;word-break:break-word;">ចម្លើយ / ដំណោះស្រាយ (Answer)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;font-weight:600;width:40%;word-break:break-word;">សំណួរទី ១៖ ...</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:60%;word-break:break-word;">ដំណោះស្រាយ និងការពន្យល់...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><p><br/></p>`
+    );
+    setActivePanel(null);
+  };
+
+  const handleInsertThreeColTable = () => {
+    insertHtmlSnippet(
+      `<div class="table-responsive" style="width:100%;overflow-x:auto;margin:14px 0;">
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid rgba(148,163,184,0.3);border-radius:10px;overflow:hidden;min-width:320px;">
+          <colgroup>
+            <col style="width:16%;" />
+            <col style="width:44%;" />
+            <col style="width:40%;" />
+          </colgroup>
+          <thead>
+            <tr style="background:rgba(59,130,246,0.12);border-bottom:2px solid rgba(59,130,246,0.25);">
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:16%;">ល.រ</th>
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:44%;word-break:break-word;">ប្រធានបទ (Topic)</th>
+              <th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:40%;word-break:break-word;">ខ្លឹមសារ / សម្គាល់ (Details)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:16%;">01</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:44%;word-break:break-word;">ផ្នែកទី ១</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:40%;word-break:break-word;">សេចក្តីផ្តើម និងទ្រឹស្តី</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:16%;">02</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:44%;word-break:break-word;">ផ្នែកទី ២</td>
+              <td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:40%;word-break:break-word;">ការអនុវត្តជាក់ស្តែង</td>
+            </tr>
+          </tbody>
+        </table>
+      </div><p><br/></p>`
+    );
+    setActivePanel(null);
+  };
+
+  const handleInsertCustomTable = () => {
+    const cols = Math.max(2, Math.min(8, Number(customTableCols) || 2));
+    const rows = Math.max(1, Math.min(20, Number(customTableRows) || 3));
+    const colWidth = (100 / cols).toFixed(1) + "%";
+
+    let colgroupHtml = "<colgroup>";
+    let headerCells = "";
+    for (let c = 1; c <= cols; c++) {
+      colgroupHtml += `<col style="width:${colWidth};" />`;
+      headerCells += `<th style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;text-align:left;font-weight:700;width:${colWidth};word-break:break-word;">ជួរឈរ ${c}</th>`;
+    }
+    colgroupHtml += "</colgroup>";
+
+    let bodyRows = "";
+    for (let r = 1; r <= rows; r++) {
+      let rowCells = "";
+      for (let c = 1; c <= cols; c++) {
+        rowCells += `<td style="border:1px solid rgba(148,163,184,0.3);padding:10px 14px;vertical-align:top;width:${colWidth};word-break:break-word;">ក្រឡា ${r}.${c}</td>`;
+      }
+      bodyRows += `<tr>${rowCells}</tr>`;
+    }
+
+    insertHtmlSnippet(
+      `<div class="table-responsive" style="width:100%;overflow-x:auto;margin:14px 0;">
+        <table style="width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid rgba(148,163,184,0.3);border-radius:10px;overflow:hidden;min-width:320px;">
+          ${colgroupHtml}
+          <thead>
+            <tr style="background:rgba(59,130,246,0.12);border-bottom:2px solid rgba(59,130,246,0.25);">
+              ${headerCells}
+            </tr>
+          </thead>
+          <tbody>
+            ${bodyRows}
+          </tbody>
+        </table>
+      </div><p><br/></p>`
+    );
+    setActivePanel(null);
+  };
+
+  const handleTableAddRow = (below = true) => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.row || !ctx.table) {
+      handleInsertTwoColEqualTable();
+      return;
+    }
+    const colsCount = ctx.row.children.length;
+    const isTwoCol = colsCount === 2;
+    const newRow = document.createElement("tr");
+    for (let i = 0; i < colsCount; i++) {
+      const td = document.createElement("td");
+      td.style.border = "1px solid rgba(148,163,184,0.3)";
+      td.style.padding = "10px 14px";
+      td.style.verticalAlign = "top";
+      td.style.wordBreak = "break-word";
+      if (isTwoCol) td.style.width = "50%";
+      td.innerHTML = "<br/>";
+      newRow.appendChild(td);
+    }
+    if (below) {
+      ctx.row.after(newRow);
+    } else {
+      ctx.row.before(newRow);
+    }
+    syncEditorValue();
+    checkTableContext();
+  };
+
+  const handleTableDeleteRow = () => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.row || !ctx.table) return;
+    const allRows = ctx.table.querySelectorAll("tr");
+    if (allRows.length <= 1) {
+      handleTableDeleteTable();
+      return;
+    }
+    ctx.row.remove();
+    syncEditorValue();
+    checkTableContext();
+  };
+
+  const handleTableAddCol = () => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.table) return;
+    const table = ctx.table;
+    const allRows = table.querySelectorAll("tr");
+    allRows.forEach((tr, index) => {
+      const isHeader = tr.parentElement?.tagName === "THEAD" || index === 0;
+      const cell = document.createElement(isHeader ? "th" : "td");
+      cell.style.border = "1px solid rgba(148,163,184,0.3)";
+      cell.style.padding = "10px 14px";
+      cell.style.verticalAlign = "top";
+      cell.style.wordBreak = "break-word";
+      if (isHeader) {
+        cell.style.fontWeight = "700";
+        cell.style.textAlign = "left";
+        cell.textContent = `ជួរឈរថ្មី`;
+      } else {
+        cell.innerHTML = "<br/>";
+      }
+      tr.appendChild(cell);
+    });
+    const colgroup = table.querySelector("colgroup");
+    if (colgroup) {
+      const totalCols = allRows[0]?.children.length || 2;
+      const w = (100 / totalCols).toFixed(1) + "%";
+      colgroup.innerHTML = "";
+      for (let i = 0; i < totalCols; i++) {
+        const col = document.createElement("col");
+        col.style.width = w;
+        colgroup.appendChild(col);
+      }
+    }
+    syncEditorValue();
+    checkTableContext();
+  };
+
+  const handleTableDeleteCol = () => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.table) return;
+    const table = ctx.table;
+    const cellIndex = ctx.cell
+      ? Array.from(ctx.cell.parentElement?.children || []).indexOf(ctx.cell)
+      : -1;
+    const targetIdx =
+      cellIndex >= 0 ? cellIndex : (table.querySelector("tr")?.children.length || 1) - 1;
+
+    const allRows = table.querySelectorAll("tr");
+    if ((allRows[0]?.children.length || 0) <= 1) {
+      handleTableDeleteTable();
+      return;
+    }
+
+    allRows.forEach((tr) => {
+      if (tr.children[targetIdx]) {
+        tr.children[targetIdx].remove();
+      }
+    });
+
+    const colgroup = table.querySelector("colgroup");
+    if (colgroup) {
+      const remainingCols = allRows[0]?.children.length || 2;
+      const w = (100 / remainingCols).toFixed(1) + "%";
+      colgroup.innerHTML = "";
+      for (let i = 0; i < remainingCols; i++) {
+        const col = document.createElement("col");
+        col.style.width = w;
+        colgroup.appendChild(col);
+      }
+    }
+    syncEditorValue();
+    checkTableContext();
+  };
+
+  const handleEqualizeTwoCols = () => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.table) return;
+    const table = ctx.table;
+    table.style.width = "100%";
+    table.style.tableLayout = "fixed";
+
+    let colgroup = table.querySelector("colgroup");
+    if (!colgroup) {
+      colgroup = document.createElement("colgroup");
+      table.prepend(colgroup);
+    }
+    colgroup.innerHTML = `<col style="width:50%;" /><col style="width:50%;" />`;
+
+    table.querySelectorAll("th, td").forEach((c) => {
+      const cell = c as HTMLTableCellElement;
+      cell.style.width = "50%";
+      cell.style.wordBreak = "break-word";
+      cell.style.verticalAlign = "top";
+    });
+
+    syncEditorValue();
+    checkTableContext();
+  };
+
+  const handleTableDeleteTable = () => {
+    const ctx = getContextTableElements();
+    if (!ctx || !ctx.table) return;
+    const wrapper = ctx.table.closest(".table-responsive");
+    if (wrapper) {
+      wrapper.remove();
+    } else {
+      ctx.table.remove();
+    }
+    setActiveTableContext({ inTable: false });
+    lastActiveCellRef.current = null;
+    syncEditorValue();
   };
 
   const handleInsertCallout = () => {
@@ -1527,42 +1886,39 @@ export function RichTextEditor({
 
       <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
         {/* Top Professional Formatting Ribbon */}
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 border-b border-border bg-muted/40">
-          <div className="flex flex-wrap items-center gap-1">
-            <button
-              type="button"
-              onClick={() => exec("formatBlock", "H1")}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-foreground text-xs font-bold inline-flex items-center gap-1"
-              title="ចំណងជើងធំ (Heading 1)"
-            >
-              <Heading1 className="w-3.5 h-3.5" />
-              <span className="text-[11px]">H1</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("formatBlock", "H2")}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-foreground text-xs font-bold inline-flex items-center gap-1"
-              title="ចំណងជើងរង (Heading 2)"
-            >
-              <Heading2 className="w-3.5 h-3.5" />
-              <span className="text-[11px]">H2</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("formatBlock", "H3")}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-foreground text-xs font-bold inline-flex items-center gap-1"
-              title="ចំណងជើងតូច (Heading 3)"
-            >
-              <Heading3 className="w-3.5 h-3.5" />
-              <span className="text-[11px]">H3</span>
-            </button>
-
-            <div className="inline-flex items-center px-1">
-              <Type className="w-3.5 h-3.5 text-muted-foreground mr-1" />
+        <div className="flex flex-wrap items-center justify-between gap-1.5 p-2 border-b border-border bg-muted/40">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {/* Group 1: Headings & Font Size */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => exec("formatBlock", "H1")}
+                className="px-2 py-1 rounded hover:bg-muted text-xs font-black text-foreground transition-colors"
+                title="ចំណងជើងធំ (Heading 1)"
+              >
+                H1
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("formatBlock", "H2")}
+                className="px-2 py-1 rounded hover:bg-muted text-xs font-bold text-foreground transition-colors"
+                title="ចំណងជើងរង (Heading 2)"
+              >
+                H2
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("formatBlock", "H3")}
+                className="px-2 py-1 rounded hover:bg-muted text-xs font-semibold text-foreground transition-colors"
+                title="ចំណងជើងតូច (Heading 3)"
+              >
+                H3
+              </button>
+              <div className="h-4 w-px bg-border mx-1" />
               <select
                 defaultValue="3"
                 onChange={(e) => handleFontSize(e.target.value)}
-                className="h-7 px-1.5 rounded-md border border-border bg-background text-[11px] text-foreground focus:outline-none"
+                className="h-6 px-1.5 rounded bg-transparent text-[11px] text-foreground focus:outline-none cursor-pointer"
                 title="ទំហំអក្សរ (Font Size)"
               >
                 <option value="2">តូច (Small)</option>
@@ -1573,289 +1929,298 @@ export function RichTextEditor({
               </select>
             </div>
 
-            <span className="w-px h-4 bg-border mx-1" />
+            {/* Group 2: Inline Formatting & Colors */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => exec("bold")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="អក្សរដិត (Bold)"
+              >
+                <Bold className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("italic")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="អក្សរទ្រេត (Italic)"
+              >
+                <Italic className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("underline")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="គូសបន្ទាត់ពីក្រោម (Underline)"
+              >
+                <Underline className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("strikeThrough")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="គូសឆូត (Strikethrough)"
+              >
+                <Strikethrough className="w-3.5 h-3.5" />
+              </button>
+              <div className="h-4 w-px bg-border mx-0.5" />
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "color" ? null : "color"))}
+                className={`p-1.5 rounded transition-colors ${
+                  activePanel === "color"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-foreground"
+                }`}
+                title="ពណ៌អក្សរ (Text Color)"
+              >
+                <Palette className="w-3.5 h-3.5 text-primary" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "highlight" ? null : "highlight"))}
+                className={`p-1.5 rounded transition-colors ${
+                  activePanel === "highlight"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-foreground"
+                }`}
+                title="ពណ៌ផ្ទៃអក្សរ (Highlight Color)"
+              >
+                <Highlighter className="w-3.5 h-3.5 text-amber-500" />
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => exec("bold")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="អក្សរដិត (Bold)"
-            >
-              <Bold className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("italic")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="អក្សរទ្រេត (Italic)"
-            >
-              <Italic className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("underline")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="គូសបន្ទាត់ពីក្រោម (Underline)"
-            >
-              <Underline className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("strikeThrough")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="គូសឆូត (Strikethrough)"
-            >
-              <Strikethrough className="w-3.5 h-3.5" />
-            </button>
+            {/* Group 3: Text Alignment */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => exec("justifyLeft")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="តម្រឹមឆ្វេង (Align Left)"
+              >
+                <AlignLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("justifyCenter")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="តម្រឹមកណ្តាល (Align Center)"
+              >
+                <AlignCenter className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("justifyRight")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="តម្រឹមស្តាំ (Align Right)"
+              >
+                <AlignRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("justifyFull")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="តម្រឹមពេញ (Justify)"
+              >
+                <AlignJustify className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "color" ? null : "color"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1 ${
-                activePanel === "color"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-foreground"
-              }`}
-              title="ពណ៌អក្សរ (Text Color)"
-            >
-              <Palette className="w-3.5 h-3.5 text-primary" />
-              <span className="hidden md:inline text-[11px]">ពណ៌អក្សរ</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "highlight" ? null : "highlight"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1 ${
-                activePanel === "highlight"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-foreground"
-              }`}
-              title="ពណ៌ផ្ទៃអក្សរ (Highlight Color)"
-            >
-              <Highlighter className="w-3.5 h-3.5 text-amber-500" />
-              <span className="hidden md:inline text-[11px]">Highlight</span>
-            </button>
+            {/* Group 4: Lists & Tasks */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => exec("insertUnorderedList")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="បញ្ជីចំណុច (Bullet List)"
+              >
+                <List className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("insertOrderedList")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="បញ្ជីលេខរៀង (Numbered List)"
+              >
+                <ListOrdered className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleInsertChecklist}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="បញ្ជីធីក (Checklist)"
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-            <span className="w-px h-4 bg-border mx-1" />
+            {/* Group 5: Blocks & Structures (Table Studio, Callout, Quote, Divider, Link) */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "table" ? null : "table"))}
+                className={`px-2 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1.5 transition-all ${
+                  activePanel === "table" || activeTableContext.inTable
+                    ? "bg-primary text-primary-foreground shadow-2xs font-bold"
+                    : "hover:bg-muted text-foreground"
+                }`}
+                title="ឧបករណ៍តារាង (Table Studio • គាំទ្រតារាង ២ ជួរឈរ 50%/50% ស្អាតល្អ)"
+              >
+                <Table className="w-3.5 h-3.5 text-blue-400" />
+                <span className="text-[11px]">តារាង</span>
+                {activeTableContext.inTable && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                )}
+              </button>
 
-            <button
-              type="button"
-              onClick={() => exec("justifyLeft")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="តម្រឹមឆ្វេង (Align Left)"
-            >
-              <AlignLeft className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("justifyCenter")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="តម្រឹមកណ្តាល (Align Center)"
-            >
-              <AlignCenter className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("justifyRight")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="តម្រឹមស្តាំ (Align Right)"
-            >
-              <AlignRight className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("justifyFull")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="តម្រឹមពេញ (Justify)"
-            >
-              <AlignJustify className="w-3.5 h-3.5" />
-            </button>
+              <button
+                type="button"
+                onClick={handleInsertCallout}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="បញ្ចូលប្រអប់ចំណាំសំខាន់ (Callout Box)"
+              >
+                <Info className="w-3.5 h-3.5 text-blue-400" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("formatBlock", "BLOCKQUOTE")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="សម្រង់សម្តី (Quote)"
+              >
+                <Quote className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("insertHorizontalRule")}
+                className="p-1.5 rounded hover:bg-muted text-foreground transition-colors"
+                title="បន្ទាត់ខណ្ឌចែក (Divider)"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "link" ? null : "link"))}
+                className={`p-1.5 rounded transition-colors ${
+                  activePanel === "link"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-foreground"
+                }`}
+                title="បញ្ចូលតំណភ្ជាប់ (Insert Link)"
+              >
+                <LinkIcon className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-            <span className="w-px h-4 bg-border mx-1" />
+            {/* Group 6: Pro Developer & STEM Media */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "code" ? null : "code"))}
+                className={`px-2 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1 transition-colors ${
+                  activePanel === "code"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-cyan-400"
+                }`}
+                title="បញ្ចូលកូដពណ៌ដូច VS Code (VS Code Syntax)"
+              >
+                <Code className="w-3.5 h-3.5" />
+                <span className="text-[11px]">VS Code</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => exec("insertUnorderedList")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="បញ្ជីចំណុច (Bullet List)"
-            >
-              <List className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("insertOrderedList")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="បញ្ជីលេខរៀង (Numbered List)"
-            >
-              <ListOrdered className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleInsertChecklist}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="បញ្ជីធីក (Checklist)"
-            >
-              <CheckSquare className="w-3.5 h-3.5" />
-            </button>
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "math" ? null : "math"))}
+                className={`px-2 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1 transition-colors ${
+                  activePanel === "math"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-purple-400"
+                }`}
+                title="បញ្ចូលរូបមន្តគណិតវិទ្យា រូបវិទ្យា និង LaTeX (Math / Physics / LaTeX)"
+              >
+                <Sigma className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Math / LaTeX</span>
+              </button>
 
-            <span className="w-px h-4 bg-border mx-1" />
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "image" ? null : "image"))}
+                className={`px-2 py-1.5 rounded text-xs font-medium inline-flex items-center gap-1 transition-colors ${
+                  activePanel === "image"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-emerald-500"
+                }`}
+                title="បញ្ចូលរូបភាព ឬបង្ហោះទៅ R2 (Insert Image)"
+              >
+                <ImageIcon className="w-3.5 h-3.5" />
+                <span className="text-[11px]">រូបភាព</span>
+              </button>
 
-            {/* Media, VS Code, LaTeX Math/Physics & R2 Tools */}
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "code" ? null : "code"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1 ${
-                activePanel === "code"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-cyan-400"
-              }`}
-              title="បញ្ចូលកូដពណ៌ដូច VS Code (VS Code Syntax Block)"
-            >
-              <Code className="w-3.5 h-3.5" />
-              <span className="text-[11px]">VS Code</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setActivePanel((p) => (p === "iframe" ? null : "iframe"))}
+                className={`px-2 py-1.5 rounded text-xs font-medium inline-flex items-center gap-1 transition-colors ${
+                  activePanel === "iframe"
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted text-red-500"
+                }`}
+                title="បញ្ចូលវីដេអូ YouTube ឬ Iframe (Embed Video)"
+              >
+                <Video className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Video</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "math" ? null : "math"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-semibold inline-flex items-center gap-1 ${
-                activePanel === "math"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-purple-400"
-              }`}
-              title="បញ្ចូលរូបមន្តគណិតវិទ្យា រូបវិទ្យា និង LaTeX (Math / Physics / LaTeX)"
-            >
-              <Sigma className="w-3.5 h-3.5" />
-              <span className="text-[11px]">Math / LaTeX</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => inlineFileDropInputRef.current?.click()}
+                disabled={editorUploading}
+                className="px-2 py-1.5 rounded hover:bg-primary/10 text-primary text-xs font-semibold inline-flex items-center gap-1 border border-primary/30 transition-colors"
+                title="បង្ហោះឯកសារ PDF/Video/Image ទៅ Cloudflare R2"
+              >
+                <UploadCloud className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Drop File</span>
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "image" ? null : "image"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1 ${
-                activePanel === "image"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-emerald-500"
-              }`}
-              title="បញ្ចូលរូបភាព ឬបង្ហោះទៅ Cloudflare R2 (Insert / Upload Image)"
-            >
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span className="text-[11px]">រូបភាព</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "iframe" ? null : "iframe"))}
-              className={`px-2 py-1.5 rounded-lg text-xs font-medium inline-flex items-center gap-1 ${
-                activePanel === "iframe"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-red-500"
-              }`}
-              title="បញ្ចូលវីដេអូ YouTube ឬកូដ Iframe (Embed Video / Iframe)"
-            >
-              <Video className="w-3.5 h-3.5" />
-              <span className="text-[11px]">Iframe / YouTube</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => inlineFileDropInputRef.current?.click()}
-              disabled={editorUploading}
-              className="px-2 py-1.5 rounded-lg hover:bg-primary/10 text-primary text-xs font-semibold inline-flex items-center gap-1 border border-primary/30"
-              title="បង្ហោះឯកសារ PDF/Video/Image ទៅ Cloudflare R2 រួចដាក់ចូលមេរៀនភ្លាម (Upload to R2 & Insert)"
-            >
-              <UploadCloud className="w-3.5 h-3.5" />
-              <span className="text-[11px]">Drop File (R2)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActivePanel((p) => (p === "link" ? null : "link"))}
-              className={`p-1.5 rounded-lg ${
-                activePanel === "link"
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted text-foreground"
-              }`}
-              title="បញ្ចូលតំណភ្ជាប់ (Insert Link)"
-            >
-              <LinkIcon className="w-3.5 h-3.5" />
-            </button>
-
-            <span className="w-px h-4 bg-border mx-1" />
-
-            <button
-              type="button"
-              onClick={handleInsertCallout}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-primary text-xs font-medium inline-flex items-center gap-1"
-              title="បញ្ចូលប្រអប់ចំណាំសំខាន់ (Callout Box)"
-            >
-              <Info className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">ប្រអប់ចំណាំ</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleInsertTable}
-              className="px-2 py-1.5 rounded-lg hover:bg-muted text-foreground text-xs font-medium inline-flex items-center gap-1"
-              title="បញ្ចូលតារាង (Insert Table)"
-            >
-              <Table className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">តារាង</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("formatBlock", "BLOCKQUOTE")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="សម្រង់សម្តី (Quote)"
-            >
-              <Quote className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("insertHorizontalRule")}
-              className="p-1.5 rounded-lg hover:bg-muted text-foreground"
-              title="បន្ទាត់ខណ្ឌចែក (Divider)"
-            >
-              <Minus className="w-3.5 h-3.5" />
-            </button>
-
-            <span className="w-px h-4 bg-border mx-1" />
-
-            <button
-              type="button"
-              onClick={() => exec("undo")}
-              className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground"
-              title="ត្រឡប់ក្រោយ (Undo)"
-            >
-              <Undo2 className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => exec("redo")}
-              className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground"
-              title="ទៅមុខវិញ (Redo)"
-            >
-              <Redo2 className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                exec("removeFormat");
-                exec("formatBlock", "P");
-              }}
-              className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground"
-              title="សម្អាតទម្រង់អក្សរ (Clear Formatting)"
-            >
-              <Eraser className="w-3.5 h-3.5" />
-            </button>
+            {/* Group 7: History & Reset */}
+            <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border/80 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => exec("undo")}
+                className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="ត្រឡប់ក្រោយ (Undo)"
+              >
+                <Undo2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => exec("redo")}
+                className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="ទៅមុខវិញ (Redo)"
+              >
+                <Redo2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  exec("removeFormat");
+                  exec("formatBlock", "P");
+                }}
+                className="p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="សម្អាតទម្រង់អក្សរ (Clear Formatting)"
+              >
+                <Eraser className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           {/* Mode Switcher: Visual Write | HTML Source | Live Preview */}
-          <div className="flex items-center rounded-lg border border-border bg-background p-0.5">
+          <div className="flex items-center rounded-lg border border-border bg-background p-0.5 shrink-0">
             <button
               type="button"
               onClick={() => setMode("write")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-medium inline-flex items-center gap-1 transition-colors ${
                 mode === "write"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -1867,7 +2232,7 @@ export function RichTextEditor({
               onClick={() => setMode("html")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-medium inline-flex items-center gap-1 transition-colors ${
                 mode === "html"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
               title="កែប្រែកូដ HTML / Iframe ផ្ទាល់"
@@ -1880,7 +2245,7 @@ export function RichTextEditor({
               onClick={() => setMode("preview")}
               className={`px-2.5 py-1 rounded-md text-[11px] font-medium inline-flex items-center gap-1 transition-colors ${
                 mode === "preview"
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -1889,6 +2254,300 @@ export function RichTextEditor({
             </button>
           </div>
         </div>
+
+        {/* Table Studio Panel */}
+        {activePanel === "table" && (
+          <div className="p-4 border-b border-border bg-muted/40 space-y-3.5 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border/70">
+              <div className="flex items-center gap-2">
+                <div className="p-1 rounded-md bg-blue-500/10 text-blue-500">
+                  <Table2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-foreground text-xs flex items-center gap-2">
+                    <span>ឧបករណ៍គ្រប់គ្រងតារាង (Table Studio)</span>
+                    <Badge variant="outline" className="text-[10px] text-primary border-primary/40">
+                      គាំទ្រ 2 Columns ពេញលេញ
+                    </Badge>
+                  </h4>
+                  <p className="text-[11px] text-muted-foreground">
+                    បង្កើត និងកែសម្រួលតារាង ២ ជួរឈរ (50%/50%) ឬច្រើនជួរ មិនខូចទម្រង់ពេលវាយអក្សរឡើយ
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActivePanel(null)}
+                className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Dynamic Table Actions (When Cursor is inside a table) */}
+            <div
+              className={`p-2.5 rounded-xl border transition-all ${
+                activeTableContext.inTable
+                  ? "border-primary/40 bg-primary/5"
+                  : "border-border/60 bg-background/50"
+              }`}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <div className="flex items-center gap-1.5 text-[11px]">
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      activeTableContext.inTable
+                        ? "bg-emerald-500 animate-pulse"
+                        : "bg-muted-foreground/40"
+                    }`}
+                  />
+                  <span className="font-semibold text-foreground">
+                    {activeTableContext.inTable
+                      ? `កំពុងជ្រើសរើសតារាង (${activeTableContext.cols} ជួរឈរ x ${activeTableContext.rows} ជួរដេក)៖`
+                      : "ប្រតិបត្តិការកែប្រែតារាង (ចុចក្នុងតារាងដើម្បីប្រើ)៖"}
+                  </span>
+                </div>
+                {activeTableContext.isTwoCol && (
+                  <span className="text-[10px] text-emerald-500 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                    ✓ តារាង ២ ជួរឈរ (2-Column Table Active)
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleTableAddRow(true)}
+                  className="px-2.5 py-1.5 rounded-lg border border-border bg-background hover:bg-muted hover:border-primary/50 text-[11px] font-medium inline-flex items-center gap-1 text-foreground transition-all shadow-2xs"
+                  title="បន្ថែមជួរដេកថ្មីខាងក្រោម (Add Row Below)"
+                >
+                  <Plus className="w-3 h-3 text-emerald-500" />
+                  <span>ថែមជួរដេក</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTableDeleteRow}
+                  className="px-2.5 py-1.5 rounded-lg border border-border bg-background hover:bg-destructive/10 hover:border-destructive/40 text-[11px] font-medium inline-flex items-center gap-1 text-foreground transition-all shadow-2xs"
+                  title="លុបជួរដេកបច្ចុប្បន្ន (Delete Current Row)"
+                >
+                  <Minus className="w-3 h-3 text-red-500" />
+                  <span>លុបជួរដេក</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTableAddCol}
+                  className="px-2.5 py-1.5 rounded-lg border border-border bg-background hover:bg-muted hover:border-primary/50 text-[11px] font-medium inline-flex items-center gap-1 text-foreground transition-all shadow-2xs"
+                  title="បន្ថែមជួរឈរថ្មីខាងស្តាំ (Add Column Right)"
+                >
+                  <Plus className="w-3 h-3 text-blue-500" />
+                  <span>ថែមជួរឈរ</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTableDeleteCol}
+                  className="px-2.5 py-1.5 rounded-lg border border-border bg-background hover:bg-destructive/10 hover:border-destructive/40 text-[11px] font-medium inline-flex items-center gap-1 text-foreground transition-all shadow-2xs"
+                  title="លុបជួរឈរបច្ចុប្បន្ន (Delete Current Column)"
+                >
+                  <Minus className="w-3 h-3 text-red-500" />
+                  <span>លុបជួរឈរ</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleEqualizeTwoCols}
+                  className="px-2.5 py-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 hover:bg-blue-500/20 text-[11px] font-semibold inline-flex items-center gap-1 text-blue-500 transition-all shadow-2xs"
+                  title="កែសម្រួលទទឹង ២ ជួរឈរឱ្យស្មើគ្នា 50% / 50% ស្វ័យប្រវត្តិ"
+                >
+                  <Columns2 className="w-3 h-3" />
+                  <span>តម្រឹម ២ ជួរស្មើ (50% / 50%)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleTableDeleteTable}
+                  className="px-2.5 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-[11px] font-medium inline-flex items-center gap-1 text-red-500 transition-all shadow-2xs ml-auto"
+                  title="លុបតារាងទាំងមូលចេញពីអត្ថបទ (Delete Table)"
+                >
+                  <Trash2 className="w-3 h-3" />
+                  <span>លុបតារាង</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Table Presets & Templates */}
+            <div>
+              <span className="block text-[11px] font-bold text-foreground mb-2">
+                ជ្រើសរើសគំរូតារាងថ្មី (Insert Table Templates)៖
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                {/* Preset 1: 2-Col Equal 50/50 */}
+                <button
+                  type="button"
+                  onClick={handleInsertTwoColEqualTable}
+                  className="p-3 rounded-xl border border-primary/40 bg-primary/5 hover:bg-primary/10 hover:border-primary text-left transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-foreground text-xs flex items-center gap-1.5">
+                        <Columns2 className="w-4 h-4 text-primary" />
+                        <span>២ ជួរឈរ (50% / 50%)</span>
+                      </span>
+                      <span className="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-bold">
+                        ពេញនិយម
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug">
+                      ចែកជា ២ ផ្នែកស្មើគ្នា ល្អសម្រាប់ប្រៀបធៀបគំនិត ឬកំណត់ចំណាំសងខាង
+                    </p>
+                  </div>
+                  <div className="mt-2.5 grid grid-cols-2 gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="h-4 rounded bg-primary/20 border border-primary/30 text-[9px] flex items-center justify-center font-mono">
+                      50%
+                    </div>
+                    <div className="h-4 rounded bg-primary/20 border border-primary/30 text-[9px] flex items-center justify-center font-mono">
+                      50%
+                    </div>
+                  </div>
+                </button>
+
+                {/* Preset 2: 2-Col Key/Value */}
+                <button
+                  type="button"
+                  onClick={handleInsertTwoColKeyValueTable}
+                  className="p-3 rounded-xl border border-border bg-background hover:bg-muted/70 hover:border-border/80 text-left transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-foreground text-xs flex items-center gap-1.5">
+                        <Columns2 className="w-4 h-4 text-emerald-500" />
+                        <span>២ ជួរ (Key / Value)</span>
+                      </span>
+                      <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+                        35% : 65%
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug">
+                      ពាក្យគន្លឹះ និយមន័យ រូបមន្ត ឬព័ត៌មានលម្អិតបច្ចេកទេស
+                    </p>
+                  </div>
+                  <div className="mt-2.5 grid grid-cols-3 gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="h-4 rounded bg-emerald-500/20 border border-emerald-500/30 text-[9px] flex items-center justify-center font-mono col-span-1">
+                      Key
+                    </div>
+                    <div className="h-4 rounded bg-emerald-500/20 border border-emerald-500/30 text-[9px] flex items-center justify-center font-mono col-span-2">
+                      Value
+                    </div>
+                  </div>
+                </button>
+
+                {/* Preset 3: 2-Col Q&A */}
+                <button
+                  type="button"
+                  onClick={handleInsertTwoColQATable}
+                  className="p-3 rounded-xl border border-border bg-background hover:bg-muted/70 hover:border-border/80 text-left transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-foreground text-xs flex items-center gap-1.5">
+                        <Columns2 className="w-4 h-4 text-purple-500" />
+                        <span>២ ជួរ (សំណួរ & ចម្លើយ)</span>
+                      </span>
+                      <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+                        40% : 60%
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug">
+                      សំណួរ ឬលំហាត់វិញ្ញាសា និងចម្លើយពន្យល់ដំណោះស្រាយ
+                    </p>
+                  </div>
+                  <div className="mt-2.5 grid grid-cols-5 gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="h-4 rounded bg-purple-500/20 border border-purple-500/30 text-[9px] flex items-center justify-center font-mono col-span-2">
+                      Q
+                    </div>
+                    <div className="h-4 rounded bg-purple-500/20 border border-purple-500/30 text-[9px] flex items-center justify-center font-mono col-span-3">
+                      Ans
+                    </div>
+                  </div>
+                </button>
+
+                {/* Preset 4: 3-Col Standard */}
+                <button
+                  type="button"
+                  onClick={handleInsertThreeColTable}
+                  className="p-3 rounded-xl border border-border bg-background hover:bg-muted/70 hover:border-border/80 text-left transition-all group flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="font-bold text-foreground text-xs flex items-center gap-1.5">
+                        <Columns3 className="w-4 h-4 text-cyan-500" />
+                        <span>៣ ជួរឈរ (ស្ដង់ដារ)</span>
+                      </span>
+                      <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">
+                        3 Cols
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-snug">
+                      លេខរៀង, ប្រធានបទ និងខ្លឹមសារបរិយាយ
+                    </p>
+                  </div>
+                  <div className="mt-2.5 grid grid-cols-3 gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="h-4 rounded bg-cyan-500/20 border border-cyan-500/30 text-[9px] flex items-center justify-center font-mono">
+                      1
+                    </div>
+                    <div className="h-4 rounded bg-cyan-500/20 border border-cyan-500/30 text-[9px] flex items-center justify-center font-mono">
+                      2
+                    </div>
+                    <div className="h-4 rounded bg-cyan-500/20 border border-cyan-500/30 text-[9px] flex items-center justify-center font-mono">
+                      3
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Custom Grid Builder & Helper Tips */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-border/60">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] text-muted-foreground">តារាងតាមបំណង៖</span>
+                <div className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-lg border border-input">
+                  <span className="text-[11px] text-muted-foreground">ជួរឈរ:</span>
+                  <input
+                    type="number"
+                    min={2}
+                    max={8}
+                    value={customTableCols}
+                    onChange={(e) => setCustomTableCols(Number(e.target.value))}
+                    className="w-10 bg-transparent text-center font-bold text-foreground text-xs focus:outline-none"
+                  />
+                </div>
+                <div className="inline-flex items-center gap-1 bg-background px-2 py-1 rounded-lg border border-input">
+                  <span className="text-[11px] text-muted-foreground">ជួរដេក:</span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={20}
+                    value={customTableRows}
+                    onChange={(e) => setCustomTableRows(Number(e.target.value))}
+                    className="w-10 bg-transparent text-center font-bold text-foreground text-xs focus:outline-none"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={handleInsertCustomTable}
+                  className="h-7 text-xs"
+                >
+                  បង្កើតតារាង
+                </Button>
+              </div>
+
+              <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                <span className="text-amber-500 font-bold">💡 ព័ត៌មានជំនួយ៖</span>
+                <span>
+                  ចុចប៊ូតុង <strong>Tab</strong> នៅលើក្តារចុចដើម្បីផ្លាស់ទីក្រឡា ឬបង្កើតជួរដេកថ្មីស្វ័យប្រវត្តិ!
+                </span>
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Inline Action Panels */}
         {activePanel === "color" && (
@@ -2381,11 +3040,89 @@ export function RichTextEditor({
               ref={editorRef}
               contentEditable
               suppressContentEditableWarning
-              onInput={syncEditorValue}
-              onBlur={syncEditorValue}
+              onInput={() => {
+                syncEditorValue();
+                checkTableContext();
+              }}
+              onBlur={() => {
+                syncEditorValue();
+                checkTableContext();
+              }}
               onPaste={handleEditorPaste}
+              onKeyUp={checkTableContext}
+              onMouseUp={checkTableContext}
+              onKeyDown={(e) => {
+                if (e.key === "Tab") {
+                  const sel = window.getSelection();
+                  let node = sel?.anchorNode;
+                  let targetCell: HTMLTableCellElement | null = null;
+                  while (node && node !== editorRef.current) {
+                    if (node.nodeName === "TD" || node.nodeName === "TH") {
+                      targetCell = node as HTMLTableCellElement;
+                      break;
+                    }
+                    node = node.parentNode;
+                  }
+                  if (targetCell) {
+                    e.preventDefault();
+                    const table = targetCell.closest("table");
+                    const row = targetCell.closest("tr");
+                    if (!table || !row) return;
+
+                    const cells = Array.from(table.querySelectorAll("th, td")) as HTMLElement[];
+                    const idx = cells.indexOf(targetCell);
+
+                    if (e.shiftKey) {
+                      if (idx > 0) {
+                        cells[idx - 1].focus();
+                        const r = document.createRange();
+                        r.selectNodeContents(cells[idx - 1]);
+                        r.collapse(false);
+                        sel?.removeAllRanges();
+                        sel?.addRange(r);
+                      }
+                    } else {
+                      if (idx < cells.length - 1) {
+                        cells[idx + 1].focus();
+                        const r = document.createRange();
+                        r.selectNodeContents(cells[idx + 1]);
+                        r.collapse(false);
+                        sel?.removeAllRanges();
+                        sel?.addRange(r);
+                      } else {
+                        // On last cell -> auto insert a new row!
+                        const colsCount = row.children.length;
+                        const isTwoCol = colsCount === 2;
+                        const newRow = document.createElement("tr");
+                        for (let i = 0; i < colsCount; i++) {
+                          const td = document.createElement("td");
+                          td.style.border = "1px solid rgba(148,163,184,0.3)";
+                          td.style.padding = "10px 14px";
+                          td.style.verticalAlign = "top";
+                          td.style.wordBreak = "break-word";
+                          if (isTwoCol) td.style.width = "50%";
+                          td.innerHTML = "<br/>";
+                          newRow.appendChild(td);
+                        }
+                        const tbody = table.querySelector("tbody") || table;
+                        tbody.appendChild(newRow);
+                        syncEditorValue();
+                        checkTableContext();
+
+                        const firstCell = newRow.children[0] as HTMLElement;
+                        firstCell.focus();
+                        const r = document.createRange();
+                        r.selectNodeContents(firstCell);
+                        r.collapse(true);
+                        sel?.removeAllRanges();
+                        sel?.addRange(r);
+                      }
+                    }
+                  }
+                }
+              }}
               data-placeholder={placeholder}
-              className={`${minHeightClass} p-5 text-sm text-foreground leading-relaxed focus:outline-none prose prose-sm dark:prose-invert max-w-none empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground [&_h1]:text-xl [&_h1]:font-extrabold [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mt-2.5 [&_h2]:mb-1.5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:my-2 [&_pre]:bg-[#1e1e1e] [&_pre]:text-[#d4d4d4] [&_pre]:p-3.5 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:text-xs [&_pre]:my-2 [&_a]:text-primary [&_a]:underline [&_hr]:my-4 [&_hr]:border-border [&_img]:rounded-xl [&_img]:my-2 [&_iframe]:w-full [&_iframe]:rounded-xl`}
+              className={`${minHeightClass} p-5 text-sm text-foreground leading-relaxed focus:outline-none prose prose-sm dark:prose-invert max-w-none empty:before:content-[attr(data-placeholder)] empty:before:text-muted-foreground [&_h1]:text-xl [&_h1]:font-extrabold [&_h1]:mt-3 [&_h1]:mb-2 [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mt-2.5 [&_h2]:mb-1.5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:my-2 [&_pre]:bg-[#1e1e1e] [&_pre]:text-[#d4d4d4] [&_pre]:p-3.5 [&_pre]:rounded-xl [&_pre]:font-mono [&_pre]:text-xs [&_pre]:my-2 [&_a]:text-primary [&_a]:underline [&_hr]:my-4 [&_hr]:border-border [&_img]:rounded-xl [&_img]:my-2 [&_iframe]:w-full [&_iframe]:rounded-xl [&_table]:w-full [&_table]:border-collapse [&_table]:my-3.5 [&_table]:border [&_table]:border-border [&_table]:rounded-xl [&_table]:overflow-hidden [&_thead]:bg-primary/10 [&_thead_th]:font-bold [&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:text-left [&_th]:text-foreground [&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:align-top [&_td]:break-words [&_td]:text-foreground [&_tr:hover]:bg-muted/20 [&_.table-responsive]:w-full [&_.table-responsive]:overflow-x-auto [&_.table-responsive]:my-3.5`}
             />
           </div>
         )}
@@ -2447,7 +3184,7 @@ export function RichContentViewer({
     <div className="space-y-3 mt-2">
       {hasRich ? (
         <div
-          className="text-xs sm:text-sm text-foreground/90 leading-relaxed space-y-2 [&_h1]:text-lg [&_h1]:font-extrabold [&_h1]:text-foreground [&_h1]:mt-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:text-foreground [&_a]:text-primary [&_a]:underline [&_hr]:my-3 [&_hr]:border-border [&_img]:rounded-xl [&_img]:max-w-full [&_iframe]:w-full [&_iframe]:rounded-xl"
+          className="text-xs sm:text-sm text-foreground/90 leading-relaxed space-y-2 [&_h1]:text-lg [&_h1]:font-extrabold [&_h1]:text-foreground [&_h1]:mt-3 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-foreground [&_h2]:mt-2 [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:bg-primary/5 [&_blockquote]:p-3 [&_blockquote]:rounded-r-xl [&_blockquote]:text-foreground [&_a]:text-primary [&_a]:underline [&_hr]:my-3 [&_hr]:border-border [&_img]:rounded-xl [&_img]:max-w-full [&_iframe]:w-full [&_iframe]:rounded-xl [&_table]:w-full [&_table]:border-collapse [&_table]:my-3.5 [&_table]:border [&_table]:border-border [&_table]:rounded-xl [&_table]:overflow-hidden [&_thead]:bg-primary/10 [&_thead_th]:font-bold [&_th]:border [&_th]:border-border [&_th]:p-3 [&_th]:text-left [&_th]:text-foreground [&_td]:border [&_td]:border-border [&_td]:p-3 [&_td]:align-top [&_td]:break-words [&_td]:text-foreground [&_tr:hover]:bg-muted/20 [&_.table-responsive]:w-full [&_.table-responsive]:overflow-x-auto [&_.table-responsive]:my-3.5"
           dangerouslySetInnerHTML={{ __html: normalizedRich }}
         />
       ) : hasNotes ? (
