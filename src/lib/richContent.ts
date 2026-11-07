@@ -170,6 +170,7 @@ export function extractPlainTextSnippet(
     .replace(/&lt;/gi, "<")
     .replace(/&gt;/gi, ">")
     .replace(/&quot;/gi, '"')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "")
     .replace(/\s+/g, " ")
     .replace(/(\s*•\s*)+/g, " • ")
     .replace(/^(\s*•\s*)+|(\s*•\s*)+$/g, "")

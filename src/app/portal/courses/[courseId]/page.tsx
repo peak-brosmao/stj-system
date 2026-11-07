@@ -216,20 +216,12 @@ export default function CourseDetailPage() {
               </button>
 
               <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleToggleVisibility(
-                      activeLesson,
-                      activeLesson.visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC"
-                    )
-                  }
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border ${
                     activeLesson.visibility === "PUBLIC"
-                      ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/25"
-                      : "bg-amber-500/15 text-amber-500 border-amber-500/30 hover:bg-amber-500/25"
+                      ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30"
+                      : "bg-amber-500/15 text-amber-500 border-amber-500/30"
                   }`}
-                  title="ចុចដើម្បីប្តូរ Public (សិស្សប្អូនមើលបាន) ឬ Private (សម្រាប់តែសមាជិកក្នុងក្រុម)"
                 >
                   {activeLesson.visibility === "PUBLIC" ? (
                     <>
@@ -242,7 +234,7 @@ export default function CourseDetailPage() {
                       <span>ឯកជន (Private ក្នុងក្រុម STJ)</span>
                     </>
                   )}
-                </button>
+                </span>
 
                 <Button
                   type="button"
@@ -266,7 +258,6 @@ export default function CourseDetailPage() {
                     : `/blog/${activeLesson.id}`
                 }
                 visibility={activeLesson.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE"}
-                onVisibilityChange={(vis) => handleToggleVisibility(activeLesson, vis)}
               />
             )}
 

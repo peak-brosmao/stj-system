@@ -4,20 +4,33 @@ import { backendFetch } from "@/lib/backendProxy";
 import { resolveLeaderScope } from "@/lib/leaderScope";
 import {
   BLOG_MARKER_ROOM,
-  decodeRichNotes,
   encodeRichNotes,
   getDefaultCourseThumbnail,
 } from "@/lib/richContent";
 import {
   BlogOrLessonItem,
   getAllBlogAndLessonItems,
-  normalizeSessionToBlogOrLesson,
   removeBlogCacheItem,
   syncSessionsToBlogCache,
   upsertBlogCacheItem,
 } from "@/lib/blogStore";
 
 export const dynamic = "force-dynamic";
+
+function isExactBlogAuthor(item: BlogOrLessonItem, session: any): boolean {
+  if (!session?.id) return false;
+  if (item.authorId && String(item.authorId) === String(session.id)) {
+    return true;
+  }
+  if (
+    item.authorStudentId &&
+    session.studentId &&
+    String(item.authorStudentId).toLowerCase() === String(session.studentId).toLowerCase()
+  ) {
+    return true;
+  }
+  return false;
+}
 
 export async function GET(req: NextRequest) {
   const session = await getSession();
@@ -59,31 +72,47 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (found.visibility === "PRIVATE" && !isAuthenticated) {
-      return NextResponse.json(
-        {
-          error: "មេរៀន ឬអត្ថបទនេះត្រូវបានកំណត់ជាឯកជន (Private សម្រាប់តែសមាជិកក្នុងក្រុម STJ)",
-          requiresAuth: true,
-          visibility: "PRIVATE",
-          title: found.title,
-          courseTitleKh: found.courseTitleKh,
-          courseCode: found.courseCode,
-        },
-        { status: 403 }
-      );
+    const isOwner = isExactBlogAuthor(found, session);
+    let canEdit = isOwner;
+
+    if (!canEdit && found.kind === "LESSON" && isAuthenticated) {
+      const scope = await resolveLeaderScope();
+      if (scope.isCourseLeader && scope.matchesCourse(found.courseCode)) {
+        canEdit = true;
+      }
     }
 
-    const canEdit =
-      isAuthenticated &&
-      Boolean(
-        session?.roles?.some((r: string) =>
-          ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "COURSE_LEADER"].includes(r)
-        ) ||
-          (found.authorId && found.authorId === session?.id) ||
-          (found.authorStudentId &&
-            session?.studentId &&
-            found.authorStudentId.toLowerCase() === session.studentId.toLowerCase())
-      );
+    // Strict privacy check:
+    // - A PRIVATE Blog post can ONLY be viewed by its author (isOwner)
+    // - A PRIVATE Lesson can ONLY be viewed by authenticated STJ members
+    if (found.visibility === "PRIVATE") {
+      if (found.kind === "BLOG" && !isOwner) {
+        return NextResponse.json(
+          {
+            error: "អត្ថបទនេះត្រូវបានកំណត់ជាឯកជន (Private) ដោយម្ចាស់អត្ថបទ។",
+            requiresAuth: !isAuthenticated,
+            visibility: "PRIVATE",
+            title: found.title,
+            courseTitleKh: found.courseTitleKh,
+            courseCode: found.courseCode,
+          },
+          { status: 403 }
+        );
+      }
+      if (found.kind === "LESSON" && !isAuthenticated) {
+        return NextResponse.json(
+          {
+            error: "មេរៀននេះត្រូវបានកំណត់ជាឯកជន (Private សម្រាប់តែសមាជិកក្នុងក្រុម STJ)។",
+            requiresAuth: true,
+            visibility: "PRIVATE",
+            title: found.title,
+            courseTitleKh: found.courseTitleKh,
+            courseCode: found.courseCode,
+          },
+          { status: 403 }
+        );
+      }
+    }
 
     return NextResponse.json({
       success: true,
@@ -94,35 +123,24 @@ export async function GET(req: NextRequest) {
   }
 
   // Filter list
-  let filtered = allItems.filter((item) => {
-    // Only include BLOG posts OR lessons that have rich content / notes / attachments / public visibility
-    const hasContent =
-      item.kind === "BLOG" ||
-      Boolean(item.richContent && item.richContent.trim().length > 0) ||
-      item.attachments.length > 0 ||
-      item.visibility === "PUBLIC";
-
-    if (!hasContent) return false;
-
+  const filtered = allItems.filter((item) => {
     if (courseFilter && courseFilter !== "ALL") {
       if (item.courseCode.toUpperCase() !== courseFilter) return false;
     }
 
-    if (scopeParam === "mine" && isAuthenticated) {
-      const matchId = item.authorId && item.authorId === session?.id;
-      const matchSid =
-        item.authorStudentId &&
-        session?.studentId &&
-        item.authorStudentId.toLowerCase() === session.studentId.toLowerCase();
-      return Boolean(matchId || matchSid);
+    // In /portal/blog ("mine" or "portal"): strictly return ONLY the logged-in user's own Blog posts!
+    if (scopeParam === "mine" || scopeParam === "portal") {
+      if (!isAuthenticated) return false;
+      return item.kind === "BLOG" && isExactBlogAuthor(item, session);
     }
 
-    if (scopeParam === "portal" && isAuthenticated) {
-      return true; // Both PUBLIC and PRIVATE items visible to logged-in STJ members
-    }
+    // Public scope (/blog and Home page): return items explicitly marked PUBLIC that have content
+    const hasContent =
+      item.kind === "BLOG" ||
+      Boolean(item.richContent && item.richContent.trim().length > 0) ||
+      item.attachments.length > 0;
 
-    // Default: public scope
-    return item.visibility === "PUBLIC";
+    return item.visibility === "PUBLIC" && hasContent;
   });
 
   return NextResponse.json({
@@ -151,12 +169,11 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body || !String(body.title || "").trim()) {
     return NextResponse.json(
-      { error: "សូមបញ្ចូលចំណងជើងអត្ថបទ ឬមេរៀន (Title is required)" },
+      { error: "សូមបញ្ចូលចំណងជើងអត្ថបទ (Title is required)" },
       { status: 400 }
     );
   }
 
-  // Resolve a valid courseId from backend sessions if needed
   let targetCourseId = String(body.courseId || "").trim();
   let targetCourseCode = String(body.courseCode || "PROG101").trim().toUpperCase();
   let targetCourseTitle = String(body.courseTitle || "Programming");
@@ -191,16 +208,22 @@ export async function POST(req: NextRequest) {
     body.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE";
   const thumbnailUrl =
     String(body.thumbnailUrl || "").trim() || getDefaultCourseThumbnail(targetCourseCode);
-  const category = String(body.category || targetCourseTitleKh || "អត្ថបទសិក្សា (Study Blog)").trim();
+  const category = String(
+    body.category || targetCourseTitleKh || "អត្ថបទសិក្សា (Study Blog)"
+  ).trim();
   const roles = Array.isArray(session.roles) ? session.roles : [];
-  const authorRole = roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT")
-    ? "គណៈកម្មការ STJ"
-    : roles.includes("COURSE_LEADER")
-    ? "ប្រធានមុខវិជ្ជា (Course Leader)"
-    : "សមាជិក STJ (Senior Mentor)";
+  const authorRole =
+    roles.includes("SUPER_ADMIN") || roles.includes("STJ_PRESIDENT")
+      ? "គណៈកម្មការ STJ"
+      : roles.includes("COURSE_LEADER")
+      ? "ប្រធានមុខវិជ្ជា"
+      : "សមាជិក STJ";
 
   const nowIso = new Date().toISOString();
   const todayDate = body.date ? String(body.date).slice(0, 10) : nowIso.slice(0, 10);
+
+  const authorNameKh = session.fullNameKh || session.fullNameEn || "សមាជិក STJ";
+  const authorNameEn = session.fullNameEn || session.fullNameKh || "STJ Member";
 
   const encodedNotes = encodeRichNotes({
     notes: String(body.summary || body.notes || "").trim(),
@@ -209,10 +232,10 @@ export async function POST(req: NextRequest) {
     visibility,
     thumbnailUrl,
     category,
-    authorId: session.id,
-    authorStudentId: session.studentId || "",
-    authorNameKh: session.fullNameKh || session.fullNameEn || "សមាជិក STJ",
-    authorNameEn: session.fullNameEn || session.fullNameKh || "STJ Member",
+    authorId: String(session.id),
+    authorStudentId: String(session.studentId || ""),
+    authorNameKh,
+    authorNameEn,
     authorRole,
     updatedAt: nowIso,
   });
@@ -249,7 +272,7 @@ export async function POST(req: NextRequest) {
     title: String(body.title).trim(),
     summary:
       String(body.summary || body.notes || "").trim() ||
-      "អត្ថបទ និងមេរៀនចែករំលែកដោយរៀមច្បង STJ សម្រាប់សិស្សប្អូន។",
+      "អត្ថបទ និងមេរៀនចែករំលែកដោយសមាជិក STJ សម្រាប់សិស្សប្អូន។",
     richContent: String(body.richContent || "").trim(),
     attachments: Array.isArray(body.attachments) ? body.attachments : [],
     visibility,
@@ -264,10 +287,10 @@ export async function POST(req: NextRequest) {
     endTime: "10:00",
     room: BLOG_MARKER_ROOM,
     status: "COMPLETED",
-    authorId: session.id,
-    authorStudentId: session.studentId || "",
-    authorNameKh: session.fullNameKh || session.fullNameEn || "សមាជិក STJ",
-    authorNameEn: session.fullNameEn || session.fullNameKh || "STJ Member",
+    authorId: String(session.id),
+    authorStudentId: String(session.studentId || ""),
+    authorNameKh,
+    authorNameEn,
     authorRole,
     updatedAt: nowIso,
   };
@@ -295,19 +318,34 @@ export async function PUT(req: NextRequest) {
   const allItems = await getAllBlogAndLessonItems();
   const existing = allItems.find((i) => i.id === id);
 
-  const scope = await resolveLeaderScope();
-  const isAuthor =
-    existing &&
-    ((existing.authorId && existing.authorId === session.id) ||
-      (existing.authorStudentId &&
-        session.studentId &&
-        existing.authorStudentId.toLowerCase() === session.studentId.toLowerCase()));
+  if (!existing) {
+    return NextResponse.json({ error: "រកមិនឃើញអត្ថបទនេះទេ" }, { status: 404 });
+  }
 
-  if (!scope.isSystemAdmin && !scope.isCourseLeader && !isAuthor) {
-    return NextResponse.json(
-      { error: "អ្នកអាចកែប្រែបានតែអត្ថបទរបស់អ្នកប៉ុណ្ណោះ" },
-      { status: 403 }
-    );
+  const isOwner = isExactBlogAuthor(existing, session);
+
+  // Strict rule: For BLOG posts, ONLY the exact author who posted it can edit or toggle Private/Public!
+  if (existing.kind === "BLOG") {
+    if (!isOwner) {
+      return NextResponse.json(
+        {
+          error:
+            "គ្មានអ្នកណាម្នាក់អាចកែប្រែ ឬប្តូរ Private/Public លើអត្ថបទ Blog របស់អ្នកដទៃបានឡើយ។",
+        },
+        { status: 403 }
+      );
+    }
+  } else {
+    // For LESSON items, only the author or the assigned Course Leader of that course can update
+    const scope = await resolveLeaderScope();
+    const canManageLesson =
+      isOwner || (scope.isCourseLeader && scope.matchesCourse(existing.courseCode));
+    if (!canManageLesson) {
+      return NextResponse.json(
+        { error: "អ្នកអាចកែប្រែបានតែមេរៀនក្នុងមុខវិជ្ជារបស់អ្នកប៉ុណ្ណោះ។" },
+        { status: 403 }
+      );
+    }
   }
 
   const nextVisibility: "PRIVATE" | "PUBLIC" =
@@ -315,35 +353,46 @@ export async function PUT(req: NextRequest) {
       ? "PUBLIC"
       : body.visibility === "PRIVATE"
       ? "PRIVATE"
-      : existing?.visibility || "PRIVATE";
+      : existing.visibility || "PRIVATE";
 
   const nextThumbnail =
     body.thumbnailUrl !== undefined
       ? String(body.thumbnailUrl || "").trim() ||
-        getDefaultCourseThumbnail(existing?.courseCode || body.courseCode)
-      : existing?.thumbnailUrl || getDefaultCourseThumbnail(body.courseCode);
+        getDefaultCourseThumbnail(existing.courseCode || body.courseCode)
+      : existing.thumbnailUrl || getDefaultCourseThumbnail(body.courseCode);
 
   const nextTitle =
-    body.title !== undefined ? String(body.title).trim() : existing?.title || "មេរៀន STJ";
+    body.title !== undefined ? String(body.title).trim() : existing.title || "មេរៀន STJ";
   const nextSummary =
     body.summary !== undefined
       ? String(body.summary).trim()
       : body.notes !== undefined
       ? String(body.notes).trim()
-      : existing?.summary || "";
+      : existing.summary || "";
   const nextRichContent =
     body.richContent !== undefined
       ? String(body.richContent).trim()
-      : existing?.richContent || "";
+      : existing.richContent || "";
   const nextAttachments = Array.isArray(body.attachments)
     ? body.attachments
-    : existing?.attachments || [];
+    : existing.attachments || [];
   const nextCategory =
     body.category !== undefined
       ? String(body.category).trim()
-      : existing?.category || "អត្ថបទសិក្សា (Blog)";
+      : existing.category || "អត្ថបទសិក្សា (Blog)";
 
   const nowIso = new Date().toISOString();
+
+  const authorId = existing.authorId || String(session.id);
+  const authorStudentId = existing.authorStudentId || String(session.studentId || "");
+  const authorNameKh =
+    existing.authorNameKh && existing.authorNameKh !== "សមាជិក STJ"
+      ? existing.authorNameKh
+      : session.fullNameKh || session.fullNameEn || "សមាជិក STJ";
+  const authorNameEn =
+    existing.authorNameEn && existing.authorNameEn !== "STJ Member"
+      ? existing.authorNameEn
+      : session.fullNameEn || session.fullNameKh || "STJ Member";
 
   const encodedNotes = encodeRichNotes({
     notes: nextSummary,
@@ -352,17 +401,14 @@ export async function PUT(req: NextRequest) {
     visibility: nextVisibility,
     thumbnailUrl: nextThumbnail,
     category: nextCategory,
-    authorId: existing?.authorId || session.id,
-    authorStudentId: existing?.authorStudentId || session.studentId || "",
-    authorNameKh:
-      existing?.authorNameKh || session.fullNameKh || session.fullNameEn || "រៀមច្បង STJ",
-    authorNameEn:
-      existing?.authorNameEn || session.fullNameEn || session.fullNameKh || "STJ Senior Mentor",
-    authorRole: existing?.authorRole || "សមាជិក STJ",
+    authorId,
+    authorStudentId,
+    authorNameKh,
+    authorNameEn,
+    authorRole: existing.authorRole || "សមាជិក STJ",
     updatedAt: nowIso,
   });
 
-  // Update backend session if it's a real DB session
   try {
     await backendFetch(`sessions/${encodeURIComponent(id)}`, {
       method: "PUT",
@@ -376,24 +422,7 @@ export async function PUT(req: NextRequest) {
   }
 
   const updatedItem: BlogOrLessonItem = {
-    ...(existing || {
-      id,
-      kind: "BLOG",
-      courseId: String(body.courseId || ""),
-      courseCode: String(body.courseCode || "PROG101"),
-      courseTitle: "Programming",
-      courseTitleKh: "កូដកម្មវិធី",
-      date: nowIso.slice(0, 10),
-      startTime: "08:00",
-      endTime: "10:00",
-      room: BLOG_MARKER_ROOM,
-      status: "COMPLETED",
-      authorId: session.id,
-      authorStudentId: session.studentId || "",
-      authorNameKh: session.fullNameKh || "សមាជិក STJ",
-      authorNameEn: session.fullNameEn || "STJ Member",
-      authorRole: "សមាជិក STJ",
-    }),
+    ...existing,
     title: nextTitle,
     summary: nextSummary,
     richContent: nextRichContent,
@@ -401,6 +430,10 @@ export async function PUT(req: NextRequest) {
     visibility: nextVisibility,
     thumbnailUrl: nextThumbnail,
     category: nextCategory,
+    authorId,
+    authorStudentId,
+    authorNameKh,
+    authorNameEn,
     updatedAt: nowIso,
   };
 
@@ -425,16 +458,16 @@ export async function DELETE(req: NextRequest) {
 
   const allItems = await getAllBlogAndLessonItems();
   const existing = allItems.find((i) => i.id === id);
-  const scope = await resolveLeaderScope();
-  const isAuthor =
-    existing &&
-    ((existing.authorId && existing.authorId === session.id) ||
-      (existing.authorStudentId &&
-        session.studentId &&
-        existing.authorStudentId.toLowerCase() === session.studentId.toLowerCase()));
+  if (!existing) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
-  if (!scope.isSystemAdmin && !scope.isCourseLeader && !isAuthor) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const isOwner = isExactBlogAuthor(existing, session);
+  if (!isOwner) {
+    return NextResponse.json(
+      { error: "អ្នកអាចលុបបានតែអត្ថបទដែលអ្នកជាអ្នកបង្កើតផ្ទាល់ប៉ុណ្ណោះ។" },
+      { status: 403 }
+    );
   }
 
   try {

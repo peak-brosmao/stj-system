@@ -55,7 +55,7 @@ interface BlogPostItem {
 export default function PortalBlogPage() {
   const [items, setItems] = useState<BlogPostItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"all" | "mine">("all");
+  const [visibilityFilter, setVisibilityFilter] = useState<"ALL" | "PUBLIC" | "PRIVATE">("ALL");
   const [courseFilter, setCourseFilter] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -64,7 +64,7 @@ export default function PortalBlogPage() {
   const loadPosts = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/blog?scope=${tab === "mine" ? "mine" : "portal"}`);
+      const res = await fetch("/api/blog?scope=mine");
       const data = await res.json().catch(() => null);
       if (Array.isArray(data?.items)) {
         setItems(data.items);
@@ -75,32 +75,11 @@ export default function PortalBlogPage() {
     } finally {
       setLoading(false);
     }
-  }, [tab]);
+  }, []);
 
   useEffect(() => {
     loadPosts();
   }, [loadPosts]);
-
-  const canManageItem = (item: BlogPostItem): boolean => {
-    if (!currentUser) return false;
-    const roles: string[] = Array.isArray(currentUser.roles) ? currentUser.roles : [];
-    if (
-      roles.some((r) =>
-        ["SUPER_ADMIN", "STJ_PRESIDENT", "STJ_ADMIN", "COURSE_LEADER"].includes(r)
-      )
-    ) {
-      return true;
-    }
-    if (item.authorId && item.authorId === currentUser.id) return true;
-    if (
-      item.authorStudentId &&
-      currentUser.studentId &&
-      item.authorStudentId.toLowerCase() === String(currentUser.studentId).toLowerCase()
-    ) {
-      return true;
-    }
-    return false;
-  };
 
   const handleToggleVisibility = async (
     item: BlogPostItem,
@@ -113,7 +92,7 @@ export default function PortalBlogPage() {
       prev && prev.id === item.id ? { ...prev, visibility: nextVisibility } : prev
     );
     try {
-      await fetch("/api/blog", {
+      const res = await fetch("/api/blog", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -121,8 +100,11 @@ export default function PortalBlogPage() {
           visibility: nextVisibility,
         }),
       });
+      if (!res.ok) {
+        await loadPosts();
+      }
     } catch {
-      // ignore
+      await loadPosts();
     }
   };
 
@@ -137,6 +119,9 @@ export default function PortalBlogPage() {
   };
 
   const filteredItems = items.filter((item) => {
+    if (visibilityFilter !== "ALL" && item.visibility !== visibilityFilter) {
+      return false;
+    }
     if (courseFilter !== "ALL" && item.courseCode.toUpperCase() !== courseFilter) {
       return false;
     }
@@ -145,8 +130,6 @@ export default function PortalBlogPage() {
       return (
         item.title.toLowerCase().includes(q) ||
         item.summary.toLowerCase().includes(q) ||
-        item.authorNameKh.toLowerCase().includes(q) ||
-        item.authorNameEn.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q)
       );
     }
@@ -161,15 +144,19 @@ export default function PortalBlogPage() {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary mb-1">
               <PenTool className="w-4 h-4" />
-              <span>STJ Member Blog &amp; Study Articles</span>
+              <span>
+                {currentUser?.fullNameKh
+                  ? `អត្ថបទផ្ទាល់ខ្លួនរបស់៖ ${currentUser.fullNameKh}`
+                  : "My Personal Study Blog"}
+              </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">
-              អត្ថបទចែករំលែក និងមេរៀនសមាជិក (STJ Blog &amp; Senior Notes)
+              អត្ថបទរបស់ខ្ញុំ (My Blog &amp; Study Articles)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              សមាជិក STJ ទាំងអស់អាចសរសេរអត្ថបទចែករំលែកមេរៀន កូដគំរូ រូបមន្តគណិត-រូបវិទ្យា (LaTeX) និងកំណត់ជា{" "}
-              <strong className="text-emerald-500">Public</strong> (បង្ហាញលើ Home Page សម្រាប់សិស្សប្អូន) ឬ{" "}
-              <strong className="text-amber-500">Private</strong> (សម្រាប់តែសមាជិកក្នុងក្រុម)។
+              ទំព័រនេះបង្ហាញតែអត្ថបទដែលអ្នកជាអ្នកបង្កើតផ្ទាល់ប៉ុណ្ណោះ។ មានតែអ្នកម្នាក់គត់ដែលអាចកែប្រែ លុប ឬកំណត់{" "}
+              <strong className="text-emerald-500">សាធារណៈ (Public)</strong> /{" "}
+              <strong className="text-amber-500">ឯកជន (Private)</strong> សម្រាប់អត្ថបទរបស់អ្នក។
             </p>
           </div>
 
@@ -192,28 +179,26 @@ export default function PortalBlogPage() {
         {/* Filter Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setTab("all")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                tab === "all"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              អត្ថបទ និងមេរៀនទាំងអស់ (All Group Posts)
-            </button>
-            <button
-              type="button"
-              onClick={() => setTab("mine")}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                tab === "mine"
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              អត្ថបទរបស់ខ្ញុំ (My Articles)
-            </button>
+            {(
+              [
+                { key: "ALL", label: "ទាំងអស់ (All My Posts)" },
+                { key: "PUBLIC", label: "សាធារណៈ (Public)" },
+                { key: "PRIVATE", label: "ឯកជន (Private)" },
+              ] as const
+            ).map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                onClick={() => setVisibilityFilter(t.key)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  visibilityFilter === t.key
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
 
             <div className="h-4 w-px bg-border mx-1 hidden sm:block" />
 
@@ -239,7 +224,7 @@ export default function PortalBlogPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ស្វែងរកចំណងជើង ឬអ្នកនិពន្ធ..."
+              placeholder="ស្វែងរកអត្ថបទរបស់ខ្ញុំ..."
               className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-input bg-card text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
@@ -248,7 +233,7 @@ export default function PortalBlogPage() {
         {/* Posts Grid */}
         {loading ? (
           <div className="py-16 text-center text-xs text-muted-foreground">
-            កំពុងទាញយកអត្ថបទ និងមេរៀនចែករំលែក...
+            កំពុងទាញយកអត្ថបទរបស់អ្នក...
           </div>
         ) : filteredItems.length === 0 ? (
           <Card className="border-dashed">
@@ -256,16 +241,16 @@ export default function PortalBlogPage() {
               <PenTool className="w-8 h-8 text-primary mx-auto opacity-80" />
               <div className="space-y-1">
                 <h3 className="text-sm font-bold text-foreground">
-                  មិនទាន់មានអត្ថបទនៅក្នុងផ្នែកនេះនៅឡើយទេ
+                  អ្នកមិនទាន់បានសរសេរអត្ថបទនៅឡើយទេ
                 </h3>
                 <p className="text-xs text-muted-foreground max-w-md mx-auto">
-                  ចាប់ផ្តើមសរសេរអត្ថបទ ឬមេរៀនសង្ខេបដំបូងរបស់អ្នក ដើម្បីចែករំលែកចំណេះដឹងដល់សមាជិកក្នុងក្រុម ឬបើកជា Public សម្រាប់សិស្សប្អូន ITC!
+                  ចុចប៊ូតុងខាងក្រោមដើម្បីសរសេរអត្ថបទ ឬមេរៀនសង្ខេបផ្ទាល់ខ្លួនរបស់អ្នក ហើយអ្នកអាចកំណត់ជា Private សម្រាប់ទុកមើលខ្លួនឯង ឬ Public សម្រាប់ចែករំលែកដល់សិស្សប្អូននៅលើ Home Page។
                 </p>
               </div>
               <Link href="/portal/blog/editor" className="inline-block pt-1">
                 <Button size="sm" className="text-xs space-x-1.5">
                   <Plus className="w-3.5 h-3.5" />
-                  <span>សរសេរអត្ថបទថ្មីឥឡូវនេះ</span>
+                  <span>សរសេរអត្ថបទដំបូងរបស់ខ្ញុំ</span>
                 </Button>
               </Link>
             </CardContent>
@@ -276,7 +261,6 @@ export default function PortalBlogPage() {
               const snippet = extractPlainTextSnippet(item.richContent, item.summary, 140);
               const thumb =
                 item.thumbnailUrl || getDefaultCourseThumbnail(item.courseCode);
-              const editable = canManageItem(item);
 
               return (
                 <Card
@@ -310,12 +294,12 @@ export default function PortalBlogPage() {
                           {item.visibility === "PUBLIC" ? (
                             <>
                               <Globe className="w-3 h-3" />
-                              <span>Public</span>
+                              <span>សាធារណៈ (Public)</span>
                             </>
                           ) : (
                             <>
                               <Lock className="w-3 h-3" />
-                              <span>Private</span>
+                              <span>ឯកជន (Private)</span>
                             </>
                           )}
                         </button>
@@ -324,7 +308,9 @@ export default function PortalBlogPage() {
                       <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] text-slate-200">
                         <span className="inline-flex items-center gap-1 font-medium truncate">
                           <User className="w-3 h-3 text-sky-400 shrink-0" />
-                          <span className="truncate">{item.authorNameKh}</span>
+                          <span className="truncate">
+                            {item.authorNameKh || currentUser?.fullNameKh}
+                          </span>
                         </span>
                         <span className="inline-flex items-center gap-1 text-slate-300 shrink-0">
                           <CalendarDays className="w-3 h-3 text-sky-400" />
@@ -336,9 +322,7 @@ export default function PortalBlogPage() {
                     {/* Content */}
                     <CardContent className="p-4 space-y-2">
                       <div className="flex items-center gap-1.5">
-                        <Badge variant={item.kind === "BLOG" ? "info" : "success"}>
-                          {item.kind === "BLOG" ? "អត្ថបទ Blog" : "មេរៀនបង្រៀន"}
-                        </Badge>
+                        <Badge variant="info">អត្ថបទរបស់ខ្ញុំ (My Blog)</Badge>
                         {item.attachments?.length > 0 && (
                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500">
                             {item.attachments.length} ឯកសារ R2
@@ -373,37 +357,27 @@ export default function PortalBlogPage() {
                         <span>Link &amp; QR</span>
                       </Button>
 
-                      {editable && (
-                        <>
-                          <Link
-                            href={
-                              item.kind === "BLOG"
-                                ? `/portal/blog/editor?id=${encodeURIComponent(item.id)}`
-                                : `/portal/blog/editor?id=${encodeURIComponent(item.id)}`
-                            }
-                          >
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 text-[11px] px-2"
-                              title="កែប្រែអត្ថបទ"
-                            >
-                              <Edit3 className="w-3.5 h-3.5" />
-                            </Button>
-                          </Link>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(item)}
-                            className="h-7 text-[11px] px-2 text-destructive hover:bg-destructive/10"
-                            title="លុបអត្ថបទ"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </Button>
-                        </>
-                      )}
+                      <Link href={`/portal/blog/editor?id=${encodeURIComponent(item.id)}`}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-[11px] px-2"
+                          title="កែប្រែអត្ថបទរបស់ខ្ញុំ"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </Button>
+                      </Link>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(item)}
+                        className="h-7 text-[11px] px-2 text-destructive hover:bg-destructive/10"
+                        title="លុបអត្ថបទរបស់ខ្ញុំ"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
                     </div>
 
                     <Link href={`/blog/${encodeURIComponent(item.id)}`}>
@@ -449,11 +423,7 @@ export default function PortalBlogPage() {
                     : `/blog/${qrModalItem.id}`
                 }
                 visibility={qrModalItem.visibility}
-                onVisibilityChange={
-                  canManageItem(qrModalItem)
-                    ? (vis) => handleToggleVisibility(qrModalItem, vis)
-                    : undefined
-                }
+                onVisibilityChange={(vis) => handleToggleVisibility(qrModalItem, vis)}
               />
 
               <div className="flex justify-end gap-2 pt-2 border-t border-border">

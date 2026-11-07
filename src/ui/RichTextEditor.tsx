@@ -648,25 +648,25 @@ export function LessonBlogSharePanel({
   };
 
   return (
-    <div className="p-5 rounded-2xl border border-primary/30 bg-card shadow-lg space-y-4">
+    <div className="p-4 sm:p-5 rounded-2xl border border-border bg-card shadow-sm space-y-4">
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
-            <QrCode className="w-4 h-4" />
-            <span>ចែករំលែកមេរៀន / អត្ថបទ និង QR Code (Share Lesson &amp; QR)</span>
+        <div className="space-y-1 min-w-0">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-primary">
+            <QrCode className="w-4 h-4 shrink-0" />
+            <span>តំណភ្ជាប់ និងកូដ QR (Direct Link &amp; QR Code)</span>
           </div>
-          <h3 className="text-sm font-bold text-foreground mt-0.5">{title}</h3>
-          <p className="text-[11px] text-muted-foreground">
+          <h3 className="text-sm font-bold text-foreground truncate">{title}</h3>
+          <p className="text-[11px] text-muted-foreground leading-relaxed">
             {visibility === "PUBLIC"
-              ? "🌍 បើកជាសាធារណៈ (Public)៖ សិស្សប្អូនអាចស្កេន QR Code ឬចុចតំណភ្ជាប់នេះដើម្បីចូលអានមេរៀនដោយមិនបាច់មានគណនី។"
-              : "🔒 ឯកជន (Private)៖ មានតែសមាជិកក្នុងក្រុម STJ ដែលបានចូលគណនីប៉ុណ្ណោះទើបអាចមើលមេរៀននេះបាន។"}
+              ? "សាធារណៈ (Public)៖ សិស្សប្អូនអាចស្កេនកូដ QR ឬចុចតំណភ្ជាប់នេះដើម្បីចូលអានដោយមិនបាច់មានគណនី។"
+              : "ឯកជន (Private)៖ សម្រាប់តែសមាជិកក្នុងក្រុម STJ ដែលបានចូលគណនីប៉ុណ្ណោះ។"}
           </p>
         </div>
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -674,7 +674,7 @@ export function LessonBlogSharePanel({
       </div>
 
       {onVisibilityChange && (
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => onVisibilityChange("PRIVATE")}
@@ -684,8 +684,8 @@ export function LessonBlogSharePanel({
                 : "border-border bg-muted/20 text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Lock className="w-3.5 h-3.5" />
-            <span>🔒 Private (សមាជិកក្រុម)</span>
+            <Lock className="w-3.5 h-3.5 shrink-0" />
+            <span>ឯកជន (Private)</span>
           </button>
           <button
             type="button"
@@ -696,46 +696,46 @@ export function LessonBlogSharePanel({
                 : "border-border bg-muted/20 text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Globe className="w-3.5 h-3.5" />
-            <span>🌍 Public (សិស្សប្អូនមើលបាន)</span>
+            <Globe className="w-3.5 h-3.5 shrink-0" />
+            <span>សាធារណៈ (Public)</span>
           </button>
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row items-center gap-5 pt-2 border-t border-border/60">
-        <div className="p-3 bg-white rounded-2xl border border-border shadow-xs shrink-0">
+      <div className="flex flex-col items-center gap-4 pt-3 border-t border-border/60">
+        <div className="p-3 bg-white rounded-2xl border border-border shadow-xs">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
               effectiveUrl
             )}`}
             alt={`QR Code for ${title}`}
-            className="w-36 h-36"
+            className="w-32 h-32"
           />
         </div>
 
-        <div className="flex-1 w-full space-y-3 text-xs">
+        <div className="w-full space-y-2.5 text-xs">
           <div>
             <label className="block text-[11px] font-semibold text-muted-foreground mb-1">
-              តំណភ្ជាប់សម្រាប់មេរៀននេះតែមួយ (Single-Lesson Direct Link)៖
+              តំណភ្ជាប់ផ្ទាល់ (Direct Link)៖
             </label>
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 readOnly
                 value={effectiveUrl}
-                className="w-full px-3 py-2 rounded-xl border border-input bg-muted/40 font-mono text-xs text-foreground"
+                className="w-full min-w-0 px-3 py-2 rounded-xl border border-input bg-muted/40 font-mono text-xs text-foreground"
               />
               <Button
                 type="button"
                 size="sm"
                 onClick={handleCopy}
-                className="h-9 px-3.5 text-xs space-x-1.5 shrink-0"
+                className="h-9 px-3 text-xs space-x-1.5 shrink-0"
               >
                 {copied ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
-                    <span>បានចម្លង!</span>
+                    <span>បានចម្លង</span>
                   </>
                 ) : (
                   <>
@@ -747,18 +747,18 @@ export function LessonBlogSharePanel({
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
             <a
               href={effectiveUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 font-semibold text-xs"
             >
-              <span>បើកមើលទំព័រមេរៀនផ្ទាល់</span>
+              <span>បើកមើលទំព័រផ្ទាល់</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
             <Badge variant={visibility === "PUBLIC" ? "success" : "warning"}>
-              {visibility === "PUBLIC" ? "🌍 សាធារណៈ (Public)" : "🔒 ឯកជន (Private - សមាជិកក្រុម)"}
+              {visibility === "PUBLIC" ? "សាធារណៈ (Public)" : "ឯកជន (Private)"}
             </Badge>
           </div>
         </div>
@@ -815,127 +815,117 @@ export function ThumbnailAndVisibilityCard({
   };
 
   return (
-    <div className="p-5 rounded-2xl border border-border bg-card space-y-4 shadow-sm">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* Left: Public vs Private Access Control */}
-        <div className="space-y-2.5">
-          <label className="block text-xs font-bold text-foreground">
-            កំណត់សិទ្ធិចូលមើលមេរៀន / អត្ថបទ (Visibility: Public or Private)
-          </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <button
-              type="button"
-              onClick={() => onVisibilityChange("PRIVATE")}
-              className={`p-3 rounded-xl border text-left transition-all space-y-1 ${
-                visibility === "PRIVATE"
-                  ? "border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/20"
-                  : "border-border bg-muted/20 hover:border-border/80"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
-                  <Lock className="w-3.5 h-3.5 text-amber-500" />
-                  <span>ឯកជន (Private)</span>
-                </span>
-                {visibility === "PRIVATE" && <Badge variant="warning">កំពុងជ្រើសរើស</Badge>}
-              </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                សម្រាប់តែសមាជិកក្នុងក្រុម STJ ទើបអាចចូលមើលបាននៅក្នុង Portal។
-              </p>
-            </button>
+    <div className="p-4 sm:p-5 rounded-2xl border border-border bg-card space-y-5 shadow-sm">
+      {/* Section 1: Public vs Private Access Control (Clean Vertical Stack) */}
+      <div className="space-y-2.5">
+        <label className="block text-xs font-bold text-foreground">
+          កំណត់សិទ្ធិចូលមើល (Visibility: Private or Public)
+        </label>
+        <div className="grid grid-cols-2 gap-2.5">
+          <button
+            type="button"
+            onClick={() => onVisibilityChange("PRIVATE")}
+            className={`p-3 rounded-xl border text-left transition-all space-y-1.5 ${
+              visibility === "PRIVATE"
+                ? "border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/30"
+                : "border-border bg-muted/20 hover:border-border/80"
+            }`}
+          >
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <Lock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>ឯកជន (Private)</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              សម្រាប់តែសមាជិកក្នុងក្រុម STJ ទើបមើលបាន។
+            </p>
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onVisibilityChange("PUBLIC")}
-              className={`p-3 rounded-xl border text-left transition-all space-y-1 ${
-                visibility === "PUBLIC"
-                  ? "border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/20"
-                  : "border-border bg-muted/20 hover:border-border/80"
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-foreground">
-                  <Globe className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>សាធារណៈ (Public)</span>
-                </span>
-                {visibility === "PUBLIC" && <Badge variant="success">កំពុងជ្រើសរើស</Badge>}
-              </div>
-              <p className="text-[11px] text-muted-foreground leading-relaxed">
-                មាន Link &amp; QR Code សម្រាប់សិស្សប្អូនចូលមើល និងបង្ហាញលើទំព័រដើម (Blog)។
-              </p>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onVisibilityChange("PUBLIC")}
+            className={`p-3 rounded-xl border text-left transition-all space-y-1.5 ${
+              visibility === "PUBLIC"
+                ? "border-emerald-500 bg-emerald-500/10 ring-1 ring-emerald-500/30"
+                : "border-border bg-muted/20 hover:border-border/80"
+            }`}
+          >
+            <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+              <Globe className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+              <span>សាធារណៈ (Public)</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground leading-snug">
+              បង្ហាញលើទំព័រដើម និងមាន QR សម្រាប់សិស្សប្អូន។
+            </p>
+          </button>
+        </div>
+      </div>
+
+      {/* Section 2: Thumbnail & OpenGraph Image */}
+      <div className="space-y-2.5 pt-4 border-t border-border">
+        <div className="flex items-center justify-between gap-2">
+          <label className="block text-xs font-bold text-foreground">
+            រូបភាពក្របមុខ (Thumbnail &amp; OpenGraph)
+          </label>
+          <input
+            ref={thumbInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleThumbUpload}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            disabled={uploadingThumb}
+            onClick={() => thumbInputRef.current?.click()}
+            className="h-7 text-[11px] space-x-1.5 border-primary/40 text-primary shrink-0"
+          >
+            <UploadCloud className="w-3.5 h-3.5" />
+            <span>{uploadingThumb ? "កំពុងបង្ហោះ..." : "បង្ហោះរូបភាព (R2)"}</span>
+          </Button>
         </div>
 
-        {/* Right: Thumbnail & OpenGraph Image */}
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <label className="block text-xs font-bold text-foreground">
-              រូបភាពក្របមុខ (Thumbnail &amp; OpenGraph Social Preview)
-            </label>
-            <input
-              ref={thumbInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleThumbUpload}
-              className="hidden"
-            />
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={uploadingThumb}
-              onClick={() => thumbInputRef.current?.click()}
-              className="h-7 text-[11px] space-x-1 border-primary/40 text-primary"
-            >
-              <UploadCloud className="w-3.5 h-3.5" />
-              <span>
-                {uploadingThumb ? "កំពុងបង្ហោះទៅ R2..." : "បង្ហោះរូបភាព Thumbnail (R2)"}
-              </span>
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-2.5">
-            <input
-              type="url"
-              value={thumbnailUrl}
-              onChange={(e) => updateThumbnail(e.target.value)}
-              placeholder="បញ្ចូល URL រូបភាព Thumbnail ឬចុចប៊ូតុងបង្ហោះទៅ Cloudflare R2..."
-              className="w-full px-3 py-2 text-xs rounded-xl border border-input bg-background"
-            />
-            {thumbnailUrl && (
-              <button
-                type="button"
-                onClick={() => updateThumbnail("")}
-                className="p-2 rounded-lg text-destructive hover:bg-destructive/10 shrink-0"
-                title="លុបរូបភាព Thumbnail"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {thumbError && <p className="text-[11px] text-destructive">{thumbError}</p>}
-
+        <div className="flex items-center gap-2">
+          <input
+            type="url"
+            value={thumbnailUrl}
+            onChange={(e) => updateThumbnail(e.target.value)}
+            placeholder="ដាក់ URL រូបភាព ឬចុចប៊ូតុងបង្ហោះទៅ R2..."
+            className="w-full min-w-0 px-3 py-2 text-xs rounded-xl border border-input bg-background"
+          />
           {thumbnailUrl && (
-            <div className="flex items-center gap-3 p-2.5 rounded-xl border border-border bg-muted/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={thumbnailUrl}
-                alt={effectiveTitle || "Thumbnail preview"}
-                className="w-24 h-14 object-cover rounded-lg border border-border shrink-0"
-              />
-              <div className="min-w-0 flex-1 text-xs">
-                <p className="font-semibold text-foreground truncate">
-                  {effectiveTitle || "គំរូបង្ហាញ OpenGraph & Blog Card"}
-                </p>
-                <p className="text-[10px] text-muted-foreground truncate">
-                  itcstudent.space • OpenGraph Thumbnail Ready
-                </p>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => updateThumbnail("")}
+              className="p-2 rounded-lg text-destructive hover:bg-destructive/10 shrink-0"
+              title="លុបរូបភាព Thumbnail"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           )}
         </div>
+
+        {thumbError && <p className="text-[11px] text-destructive">{thumbError}</p>}
+
+        {thumbnailUrl && (
+          <div className="rounded-xl border border-border bg-muted/20 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbnailUrl}
+              alt={effectiveTitle || "Thumbnail preview"}
+              className="w-full h-32 object-cover border-b border-border"
+            />
+            <div className="p-2.5 text-xs">
+              <p className="font-semibold text-foreground truncate">
+                {effectiveTitle || "គំរូបង្ហាញ OpenGraph & Blog Card"}
+              </p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                itcstudent.space • OpenGraph Thumbnail Ready
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1433,15 +1423,15 @@ export function RichTextEditor({
 
           if (uploaded.type === "video") {
             insertHtmlSnippet(
-              `<div style="margin:14px 0;"><video src="${uploaded.url}" controls preload="metadata" style="width:100%;max-height:440px;border-radius:12px;background:#000;"></video><p style="font-size:11px;color:#94a3b8;margin-top:4px;">🎬 ${uploaded.name}</p></div><p><br/></p>`
+              `<div style="margin:14px 0;"><video src="${uploaded.url}" controls preload="metadata" style="width:100%;max-height:440px;border-radius:12px;background:#000;"></video><p style="font-size:11px;color:#94a3b8;margin-top:4px;">វីដេអូមេរៀន៖ ${uploaded.name}</p></div><p><br/></p>`
             );
           } else if (uploaded.type === "pdf") {
             insertHtmlSnippet(
-              `<div style="margin:14px 0;padding:12px 16px;border-radius:12px;border:1px solid rgba(59,130,246,0.35);background:rgba(59,130,246,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px;"><span>📄 <strong>${uploaded.name}</strong> (${formatFileSize(uploaded.size)})</span><a href="${uploaded.url}" target="_blank" rel="noopener noreferrer" style="color:#3b82f6;font-weight:700;text-decoration:underline;">បើកមើល / ទាញយក PDF ↗</a></div><p><br/></p>`
+              `<div style="margin:14px 0;padding:12px 16px;border-radius:12px;border:1px solid rgba(59,130,246,0.35);background:rgba(59,130,246,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px;"><span><strong>[PDF] ${uploaded.name}</strong> (${formatFileSize(uploaded.size)})</span><a href="${uploaded.url}" target="_blank" rel="noopener noreferrer" style="color:#3b82f6;font-weight:700;text-decoration:underline;">បើកមើល / ទាញយក PDF</a></div><p><br/></p>`
             );
           } else {
             insertHtmlSnippet(
-              `<div style="margin:14px 0;padding:12px 16px;border-radius:12px;border:1px solid rgba(16,185,129,0.35);background:rgba(16,185,129,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px;"><span>📎 <strong>${uploaded.name}</strong> (${formatFileSize(uploaded.size)})</span><a href="${uploaded.url}" target="_blank" rel="noopener noreferrer" style="color:#10b981;font-weight:700;text-decoration:underline;">ទាញយកឯកសារ ↗</a></div><p><br/></p>`
+              `<div style="margin:14px 0;padding:12px 16px;border-radius:12px;border:1px solid rgba(16,185,129,0.35);background:rgba(16,185,129,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px;"><span><strong>${uploaded.name}</strong> (${formatFileSize(uploaded.size)})</span><a href="${uploaded.url}" target="_blank" rel="noopener noreferrer" style="color:#10b981;font-weight:700;text-decoration:underline;">ទាញយកឯកសារ</a></div><p><br/></p>`
             );
           }
         }
@@ -1526,16 +1516,16 @@ export function RichTextEditor({
 
   const handleInsertCallout = () => {
     insertHtmlSnippet(
-      `<blockquote style="border-left:4px solid #3b82f6;background:rgba(59,130,246,0.08);padding:12px 16px;border-radius:0 12px 12px 0;margin:12px 0;"><strong>💡 ចំណុចសំខាន់ (Key Takeaway)៖</strong> សរសេរសេចក្តីសង្ខេប ឬចំណាំសំខាន់សម្រាប់សមាជិកនៅទីនេះ...</blockquote><p><br/></p>`
+      `<blockquote style="border-left:4px solid #3b82f6;background:rgba(59,130,246,0.08);padding:12px 16px;border-radius:0 12px 12px 0;margin:12px 0;"><strong>ចំណុចសំខាន់ (Key Takeaway)៖</strong> សរសេរសេចក្តីសង្ខេប ឬចំណាំសំខាន់សម្រាប់សមាជិកនៅទីនេះ...</blockquote><p><br/></p>`
     );
   };
 
   const handleInsertChecklist = () => {
     insertHtmlSnippet(
-      `<ul style="list-style:none;padding-left:4px;margin:10px 0;">
-        <li>☑️ គោលបំណងមេរៀនទី ១</li>
-        <li>☑️ គោលបំណងមេរៀនទី ២</li>
-        <li>⬜ លំហាត់អនុវត្តបន្ថែម</li>
+      `<ul style="list-style:disc;padding-left:20px;margin:10px 0;">
+        <li>គោលបំណងមេរៀនទី ១</li>
+        <li>គោលបំណងមេរៀនទី ២</li>
+        <li>លំហាត់អនុវត្តបន្ថែម</li>
       </ul><p><br/></p>`
     );
   };

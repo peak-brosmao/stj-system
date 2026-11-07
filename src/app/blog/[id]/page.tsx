@@ -59,3 +59,4 @@ export default async function BlogDetailPage({ params }: PageProps) {
   const id = decodeURIComponent(resolved?.id || "");
   return <BlogDetailClient id={id} />;
 }
+

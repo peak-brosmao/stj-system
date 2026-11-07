@@ -28,7 +28,7 @@ export function Logo({
   const config = sizeMap[size];
 
   const content = (
-    <div className={`flex items-center space-x-3 group ${className}`}>
+    <div className={`flex items-center space-x-2.5 shrink-0 group ${className}`}>
       {/* ITC Logo Emblem with dark/light mode protection ring */}
       <div
         className={`${config.boxClass} relative rounded-full overflow-hidden bg-white p-0.5 shadow-sm ring-1 ring-border/60 transition-transform duration-200 group-hover:scale-105 flex-shrink-0 flex items-center justify-center`}
@@ -44,9 +44,9 @@ export function Logo({
       </div>
 
       {showText && (
-        <div className="leading-tight">
+        <div className="leading-tight whitespace-nowrap">
           <div className="flex items-center space-x-1.5">
-            <span className={`font-bold tracking-tight text-foreground ${config.textClass}`}>
+            <span className={`font-extrabold tracking-tight text-foreground ${config.textClass}`}>
               STJ
             </span>
             <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-primary/10 text-primary border border-primary/20">
@@ -54,7 +54,7 @@ export function Logo({
             </span>
           </div>
           {subtitle && (
-            <p className={`text-muted-foreground ${config.subClass} font-medium mt-0.5 hidden sm:block`}>
+            <p className={`text-muted-foreground ${config.subClass} font-medium mt-0.5 hidden sm:block whitespace-nowrap`}>
               {subtitle}
             </p>
           )}
@@ -64,7 +64,11 @@ export function Logo({
   );
 
   if (href) {
-    return <Link href={href}>{content}</Link>;
+    return (
+      <Link href={href} className="shrink-0">
+        {content}
+      </Link>
+    );
   }
 
   return content;

@@ -55,7 +55,7 @@ export function Navbar() {
     { href: "/structure", label: t("nav.structure") },
     { href: "/about", label: t("nav.about") },
     { href: "/programs", label: t("nav.programs") },
-    { href: "/blog", label: "អត្ថបទ & មេរៀន (Blog)" },
+    { href: "/blog", label: t("nav.blog") },
     { href: "/activities", label: t("nav.activities") },
     { href: "/news", label: t("nav.news") },
     { href: "/contact", label: t("nav.contact") },
@@ -67,21 +67,21 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 transition-colors duration-300">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85 transition-colors duration-300">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         {/* Brand */}
         <Logo href="/" size="md" />
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center space-x-1">
+        {/* Desktop Nav Links inside a clean pill container */}
+        <nav className="hidden xl:flex items-center gap-0.5 p-1 rounded-2xl bg-muted/35 border border-border/60">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-lg text-xs xl:text-sm font-medium transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
                 isActive(link.href)
-                  ? "bg-primary/10 text-primary font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/70"
               }`}
             >
               {link.label}
@@ -90,31 +90,31 @@ export function Navbar() {
         </nav>
 
         {/* Controls & Unified Sign In / Profile Desk */}
-        <div className="hidden lg:flex items-center space-x-2 shrink-0">
+        <div className="hidden xl:flex items-center space-x-2 shrink-0">
           <LanguageSelector />
           <ThemeToggle />
-          <div className="h-4 w-px bg-border mx-1" />
+          <div className="h-4 w-px bg-border mx-0.5" />
           {auth?.authenticated && auth.user ? (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1.5">
               <Link href={auth.user.dashboardUrl}>
-                <Button size="sm" className="space-x-2 font-bold shadow-sm px-3.5 h-9 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button size="sm" className="space-x-2 font-bold shadow-sm px-3 h-9 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground">
                   <div className="w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs font-bold shrink-0">
                     {auth.user.name.charAt(0)}
                   </div>
-                  <span className="truncate max-w-[130px]">{auth.user.name}</span>
+                  <span className="truncate max-w-[110px] text-xs">{auth.user.name}</span>
                   {auth.user.memberId && (
-                    <span className="text-[10px] bg-white/20 px-1.5 py-0.2 rounded font-mono hidden xl:inline-block">
+                    <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded font-mono">
                       {auth.user.memberId}
                     </span>
                   )}
-                  <LayoutDashboard className="w-3.5 h-3.5 ml-0.5" />
+                  <LayoutDashboard className="w-3.5 h-3.5 ml-0.5 shrink-0" />
                 </Button>
               </Link>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="h-9 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                className="h-9 w-9 p-0 rounded-xl text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
                 title="ចាកចេញ (Sign Out)"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export function Navbar() {
             </div>
           ) : (
             <Link href="/portal/login">
-              <Button size="sm" className="space-x-1.5 font-bold shadow-sm px-4 h-9">
+              <Button size="sm" className="space-x-1.5 font-bold shadow-sm px-4 h-9 rounded-xl">
                 <LogIn className="w-4 h-4" />
                 <span>{t("nav.login")}</span>
               </Button>
@@ -131,7 +131,7 @@ export function Navbar() {
         </div>
 
         {/* Mobile/Tablet controls & hamburger */}
-        <div className="flex items-center space-x-2 lg:hidden">
+        <div className="flex items-center space-x-2 xl:hidden">
           <LanguageSelector />
           <ThemeToggle />
           <button
@@ -146,7 +146,7 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
+        <div className="xl:hidden border-b border-border bg-card px-4 pt-3 pb-5 space-y-3 animate-in fade-in slide-in-from-top-2">
           <nav className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <Link
