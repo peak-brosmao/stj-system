@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Megaphone, Calendar, Globe, RefreshCw } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
 
 interface AnnouncementItem {
   id: string;
@@ -43,13 +43,13 @@ export default function PortalAnnouncementsPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Megaphone className="w-3.5 h-3.5" />
-              <span>សេចក្តីជូនដំណឹងសិក្សា</span>
+              <span>ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ážŸáž·áž€áŸ’ážŸáž¶</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              សេចក្តីជូនដំណឹងផ្លូវការ (Official Announcements)
+              ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Official Announcements)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              សេចក្តីប្រកាសព័ត៌មានពីគណៈគ្រប់គ្រង STJ និងប្រធានមុខវិជ្ជាទទួលបន្ទុក
+              ážŸáŸáž…áž€áŸ’ážáž¸áž”áŸ’ážšáž€áž¶ážŸáž–áŸážáŸŒáž˜áž¶áž“áž–áž¸áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ áž“áž·áž„áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž‘áž½áž›áž”áž“áŸ’áž‘áž»áž€
             </p>
           </div>
           <Button
@@ -60,18 +60,18 @@ export default function PortalAnnouncementsPage() {
             className="text-xs self-start sm:self-auto"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-            ផ្ទុកឡើងវិញ
+            áž•áŸ’áž‘áž»áž€áž¡áž¾áž„ážœáž·áž‰
           </Button>
         </div>
 
         {loading ? (
           <div className="text-center py-12 text-muted-foreground text-xs">
-            កំពុងទាញយកសេចក្តីជូនដំណឹងពី Database...
+            áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž–áž¸ Database...
           </div>
         ) : announcements.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center text-muted-foreground text-xs">
-              ពុំទាន់មានសេចក្តីជូនដំណឹងថ្មីនៅក្នុងប្រព័ន្ធនៅឡើយទេ។
+              áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ážáŸ’áž˜áž¸áž“áŸ…áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áŸ…áž¡áž¾áž™áž‘áŸáŸ”
             </CardContent>
           </Card>
         ) : (

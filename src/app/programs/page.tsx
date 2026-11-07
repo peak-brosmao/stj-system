@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Navbar } from "@/ui/layout/Navbar";
+import { Footer } from "@/ui/layout/Footer";
+import { Card, CardContent } from "@/ui/ui/Card";
 import { Code, Calculator, Atom, FlaskConical, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -10,38 +10,38 @@ export default function ProgramsPage() {
   const programs = [
     {
       slug: "programming",
-      title: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
+      title: "áž€áž¶ážšážŸážšážŸáŸážšáž€áž˜áŸ’áž˜ážœáž·áž’áž¸áž€áž»áŸ†áž–áŸ’áž™áž¼áž‘áŸážš (Programming)",
       code: "PROG101",
       category: "Engineering Foundation",
       icon: Code,
-      desc: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Algorithms, និងការដោះស្រាយបញ្ហាជាក់ស្តែងសម្រាប់វិស្វកម្ម។",
+      desc: "áž–áž„áŸ’ážšáž¹áž„áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“áž‚áŸ’ážšáž¹áŸ‡ C, C++, Data Structures, Algorithms, áž“áž·áž„áž€áž¶ážšážŠáŸ„áŸ‡ážŸáŸ’ážšáž¶áž™áž”áž‰áŸ’áž áž¶áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       topics: ["C/C++ Fundamentals", "Pointers & Memory Allocation", "Data Structures (Stack, Queue, Tree)", "Algorithmic Complexity"],
     },
     {
       slug: "mathematics",
-      title: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+      title: "áž‚ážŽáž·ážážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Mathematics)",
       code: "MATH101",
       category: "Engineering Foundation",
       icon: Calculator,
-      desc: "ស្វែងយល់ស៊ីជម្រៅអំពី Calculus, Linear Algebra, Differential Equations, និងការអនុវត្តជាក់ស្តែងក្នុងវិស្វកម្ម។",
+      desc: "ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹ážŸáŸŠáž¸áž‡áž˜áŸ’ážšáŸ…áž¢áŸ†áž–áž¸ Calculus, Linear Algebra, Differential Equations, áž“áž·áž„áž€áž¶ážšáž¢áž“áž»ážœážáŸ’ážáž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž€áŸ’áž“áž»áž„ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       topics: ["Multivariable Calculus", "Linear Transformations & Matrices", "Ordinary Differential Equations", "Numerical Analysis"],
     },
     {
       slug: "physics",
-      title: "រូបវិទ្យាវិស្វកម្ម (Physics)",
+      title: "ážšáž¼áž”ážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Physics)",
       code: "PHYS101",
       category: "Natural Sciences",
       icon: Atom,
-      desc: "ទ្រឹស្តីមេកានិកបុរាណ ចលនារលក ទែរម៉ូឌីណាមិក និងបាតុភូតរូបវិទ្យាសម្រាប់និស្សិតវិស្វកម្ម។",
+      desc: "áž‘áŸ’ážšáž¹ážŸáŸ’ážáž¸áž˜áŸáž€áž¶áž“áž·áž€áž”áž»ážšáž¶ážŽ áž…áž›áž“áž¶ážšáž›áž€ áž‘áŸ‚ážšáž˜áŸ‰áž¼ážŒáž¸ážŽáž¶áž˜áž·áž€ áž“áž·áž„áž”áž¶ážáž»áž—áž¼ážážšáž¼áž”ážœáž·áž‘áŸ’áž™áž¶ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž“áž·ážŸáŸ’ážŸáž·ážážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       topics: ["Newtonian Mechanics", "Wave Motion & Optics", "Thermodynamics", "Electromagnetism"],
     },
     {
       slug: "chemistry",
-      title: "គីមីវិទ្យាទូទៅ (Chemistry)",
+      title: "áž‚áž¸áž˜áž¸ážœáž·áž‘áŸ’áž™áž¶áž‘áž¼áž‘áŸ… (Chemistry)",
       code: "CHEM101",
       category: "Natural Sciences",
       icon: FlaskConical,
-      desc: "ទម្រង់ម៉ូលេគុល ប្រតិកម្មកាតាលីករ និងទែរម៉ូឌីណាមិកគីមីសម្រាប់ការស្រាវជ្រាវវិស្វកម្មទំនើប។",
+      desc: "áž‘áž˜áŸ’ážšáž„áŸ‹áž˜áŸ‰áž¼áž›áŸáž‚áž»áž› áž”áŸ’ážšážáž·áž€áž˜áŸ’áž˜áž€áž¶ážáž¶áž›áž¸áž€ážš áž“áž·áž„áž‘áŸ‚ážšáž˜áŸ‰áž¼ážŒáž¸ážŽáž¶áž˜áž·áž€áž‚áž¸áž˜áž¸ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž€áž¶ážšážŸáŸ’ážšáž¶ážœáž‡áŸ’ážšáž¶ážœážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áž‘áŸ†áž“áž¾áž”áŸ”",
       topics: ["Chemical Bonding & Structure", "Reaction Kinetics", "Electrochemistry", "Materials Science Basics"],
     },
   ];
@@ -54,10 +54,10 @@ export default function ProgramsPage() {
         <div className="container mx-auto px-4 max-w-5xl space-y-8">
           <div className="text-center space-y-3">
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              កម្មវិធីបណ្តុះបណ្តាលរបស់ STJ
+              áž€áž˜áŸ’áž˜ážœáž·áž’áž¸áž”ážŽáŸ’ážáž»áŸ‡áž”ážŽáŸ’ážáž¶áž›ážšáž”ážŸáŸ‹ STJ
             </h1>
             <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto">
-              មុខវិជ្ជាស្នូលដែលត្រូវបានបង្រៀនដោយនិស្សិតរៀមច្បងសម្រាប់និស្សិតប្អូនឆ្នាំទី១ និងទី២ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា
+              áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáŸ’áž“áž¼áž›ážŠáŸ‚áž›ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž„áŸ’ážšáŸ€áž“ážŠáŸ„áž™áž“áž·ážŸáŸ’ážŸáž·ážážšáŸ€áž˜áž…áŸ’áž”áž„ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž“áž·ážŸáŸ’ážŸáž·ážáž”áŸ’áž¢áž¼áž“áž†áŸ’áž“áž¶áŸ†áž‘áž¸áŸ¡ áž“áž·áž„áž‘áž¸áŸ¢ áž“áŸ…ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶
             </p>
           </div>
 
@@ -83,7 +83,7 @@ export default function ProgramsPage() {
 
                     <div className="space-y-1 pt-1">
                       <p className="text-[11px] font-semibold text-foreground uppercase tracking-wider">
-                        ប្រធានបទសំខាន់ៗ:
+                        áž”áŸ’ážšáž’áž¶áž“áž”áž‘ážŸáŸ†ážáž¶áž“áŸ‹áŸ—:
                       </p>
                       <ul className="text-xs text-muted-foreground list-disc list-inside space-y-0.5">
                         {p.topics.map((t, idx) => (
@@ -97,7 +97,7 @@ export default function ProgramsPage() {
                         href={`/programs/${p.slug}`}
                         className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary hover:underline"
                       >
-                        <span>មើលកាលវិភាគ និងព័ត៌មានលម្អិត</span>
+                        <span>áž˜áž¾áž›áž€áž¶áž›ážœáž·áž—áž¶áž‚ áž“áž·áž„áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>

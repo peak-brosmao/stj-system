@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BookOpen, CalendarCheck, CalendarDays, Clock, MapPin, Percent, Users, Plus } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 interface Overview {
   user: { fullNameKh: string; fullNameEn: string; displayName: string | null; email: string; memberId: string | null; roles?: string[] };
@@ -49,10 +49,10 @@ interface Overview {
 }
 
 const STATUS_BADGE: Record<string, { v: "success" | "warning" | "destructive" | "purple"; t: string }> = {
-  PRESENT: { v: "success", t: "មានវត្តមាន" },
-  LATE: { v: "warning", t: "យឺត" },
-  ABSENT: { v: "destructive", t: "អវត្តមាន" },
-  EXCUSED: { v: "purple", t: "ច្បាប់" },
+  PRESENT: { v: "success", t: "áž˜áž¶áž“ážœážáŸ’ážáž˜áž¶áž“" },
+  LATE: { v: "warning", t: "áž™ážºáž" },
+  ABSENT: { v: "destructive", t: "áž¢ážœážáŸ’ážáž˜áž¶áž“" },
+  EXCUSED: { v: "purple", t: "áž…áŸ’áž”áž¶áž”áŸ‹" },
 };
 
 export default function LeaderDashboardPage() {
@@ -101,7 +101,7 @@ export default function LeaderDashboardPage() {
   return (
     <PortalLayout
       portalType="leader"
-      userRole="ប្រធានក្រុម (Course Leader)"
+      userRole="áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ (Course Leader)"
       userName={data?.user.fullNameKh || ""}
       userMemberId={data?.user.memberId || undefined}
       userEmail={data?.user.email}
@@ -114,7 +114,7 @@ export default function LeaderDashboardPage() {
               <span>STJ Leader Desk</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ផ្ទាំងប្រធានក្រុមបង្រៀន (Course Leader Dashboard)
+              áž•áŸ’áž‘áž¶áŸ†áž„áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜áž”áž„áŸ’ážšáŸ€áž“ (Course Leader Dashboard)
             </h1>
             <p className="text-xs text-muted-foreground mt-1">
               {data?.user.displayName || data?.user.fullNameEn}
@@ -124,13 +124,13 @@ export default function LeaderDashboardPage() {
             <Link href="/leader/sessions">
               <Button size="sm" className="text-xs space-x-1.5">
                 <Plus className="w-3.5 h-3.5" />
-                <span>បង្កើតមេរៀន</span>
+                <span>áž”áž„áŸ’áž€áž¾ážáž˜áŸážšáŸ€áž“</span>
               </Button>
             </Link>
             <Link href="/leader/attendance">
               <Button size="sm" variant="outline" className="text-xs space-x-1.5">
                 <CalendarCheck className="w-3.5 h-3.5" />
-                <span>ស្រង់វត្តមាន</span>
+                <span>ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“</span>
               </Button>
             </Link>
           </div>
@@ -140,10 +140,10 @@ export default function LeaderDashboardPage() {
           <>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
-                { label: "មុខវិជ្ជា (Courses)", value: l.courses.length, icon: BookOpen },
-                { label: "សមាជិកក្នុងក្រុម (Team members)", value: l.totalMembers, icon: Users },
-                { label: "មេរៀនសរុប (Lessons)", value: `${l.completedLessons}/${l.totalLessons}`, icon: CalendarDays },
-                { label: "អត្រាវត្តមានមធ្យម (Avg rate)", value: l.stats.total > 0 ? `${l.stats.rate}%` : "-", icon: Percent },
+                { label: "áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Courses)", value: l.courses.length, icon: BookOpen },
+                { label: "ážŸáž˜áž¶áž‡áž·áž€áž€áŸ’áž“áž»áž„áž€áŸ’ážšáž»áž˜ (Team members)", value: l.totalMembers, icon: Users },
+                { label: "áž˜áŸážšáŸ€áž“ážŸážšáž»áž” (Lessons)", value: `${l.completedLessons}/${l.totalLessons}`, icon: CalendarDays },
+                { label: "áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“áž˜áž’áŸ’áž™áž˜ (Avg rate)", value: l.stats.total > 0 ? `${l.stats.rate}%` : "-", icon: Percent },
               ].map((c) => (
                 <Card key={c.label}>
                   <CardContent className="p-4">
@@ -158,11 +158,11 @@ export default function LeaderDashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">វត្តមានតាមខែ (Monthly attendance)</CardTitle>
+                  <CardTitle className="text-sm font-semibold">ážœážáŸ’ážáž˜áž¶áž“ážáž¶áž˜ážáŸ‚ (Monthly attendance)</CardTitle>
                 </CardHeader>
                 <CardContent className="h-56">
                   {l.monthly.length === 0 ? (
-                    <p className="text-xs text-muted-foreground">មិនទាន់មានវត្តមានត្រូវបានកត់ត្រាទេ។ (No attendance recorded yet.)</p>
+                    <p className="text-xs text-muted-foreground">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážœážáŸ’ážáž˜áž¶áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶áž‘áŸáŸ” (No attendance recorded yet.)</p>
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={l.monthly}>
@@ -181,12 +181,12 @@ export default function LeaderDashboardPage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold">មេរៀនត្រូវបង្រៀន (Upcoming lessons)</CardTitle>
+                  <CardTitle className="text-sm font-semibold">áž˜áŸážšáŸ€áž“ážáŸ’ážšáž¼ážœáž”áž„áŸ’ážšáŸ€áž“ (Upcoming lessons)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {l.upcoming.length === 0 && (
                     <p className="text-xs text-muted-foreground">
-                      មិនទាន់មានមេរៀន។ សូមបង្កើតមេរៀនដើម្បីឱ្យសមាជិកមើលឃើញ។ (No upcoming lessons. Create one so your team can see it.)
+                      áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž˜áŸážšáŸ€áž“áŸ” ážŸáž¼áž˜áž”áž„áŸ’áž€áž¾ážáž˜áŸážšáŸ€áž“ážŠáž¾áž˜áŸ’áž”áž¸áž±áŸ’áž™ážŸáž˜áž¶áž‡áž·áž€áž˜áž¾áž›ážƒáž¾áž‰áŸ” (No upcoming lessons. Create one so your team can see it.)
                     </p>
                   )}
                   {l.upcoming.map((s) => (
@@ -200,7 +200,7 @@ export default function LeaderDashboardPage() {
                         <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{s.room}</span>
                       </div>
                       <Link href={`/leader/attendance?sessionId=${s.id}`} className="text-primary hover:underline font-medium">
-                        ស្រង់វត្តមាន (Mark attendance){s.marked > 0 ? ` - ${s.marked}` : ""}
+                        ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Mark attendance){s.marked > 0 ? ` - ${s.marked}` : ""}
                       </Link>
                     </div>
                   ))}
@@ -210,18 +210,18 @@ export default function LeaderDashboardPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">មុខវិជ្ជារបស់ខ្ញុំ (My courses)</CardTitle>
+                <CardTitle className="text-sm font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážšáž”ážŸáŸ‹ážáŸ’áž‰áž»áŸ† (My courses)</CardTitle>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {l.courses.map((c) => (
                   <Link key={c.id} href="/leader/members" className="p-3 rounded-lg border border-border hover:border-primary/50 transition-colors text-xs">
                     <div className="flex items-center justify-between">
                       <span className="font-mono font-bold text-primary">{c.code}</span>
-                      <span className="text-muted-foreground">{c.memberCount} នាក់</span>
+                      <span className="text-muted-foreground">{c.memberCount} áž“áž¶áž€áŸ‹</span>
                     </div>
                     <p className="font-semibold text-foreground mt-1">{c.titleKh}</p>
                     <p className="text-muted-foreground mt-0.5">
-                      មេរៀន {c.completedCount}/{c.lessonCount} · វត្តមាន {c.rate}%
+                      áž˜áŸážšáŸ€áž“ {c.completedCount}/{c.lessonCount} Â· ážœážáŸ’ážáž˜áž¶áž“ {c.rate}%
                     </p>
                   </Link>
                 ))}
@@ -230,15 +230,15 @@ export default function LeaderDashboardPage() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">កំណត់ត្រាវត្តមានថ្មីៗ (Recent attendance records)</CardTitle>
+                <CardTitle className="text-sm font-semibold">áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážáŸ’áž˜áž¸áŸ— (Recent attendance records)</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {l.recentAttendance.length === 0 && <p className="text-xs text-muted-foreground">មិនទាន់មាន។ (None yet.)</p>}
+                {l.recentAttendance.length === 0 && <p className="text-xs text-muted-foreground">áž˜áž·áž“áž‘áž¶áž“áŸ‹áž˜áž¶áž“áŸ” (None yet.)</p>}
                 {l.recentAttendance.map((r) => (
                   <div key={r.id} className="flex items-center justify-between text-xs p-2 rounded-lg border border-border">
                     <div>
                       <p className="font-medium text-foreground">{r.memberName}</p>
-                      <p className="text-muted-foreground">{r.courseCode} · {r.lesson} · {r.date}</p>
+                      <p className="text-muted-foreground">{r.courseCode} Â· {r.lesson} Â· {r.date}</p>
                     </div>
                     <Badge variant={STATUS_BADGE[r.status]?.v || "info"}>{STATUS_BADGE[r.status]?.t || r.status}</Badge>
                   </div>

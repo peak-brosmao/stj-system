@@ -12,10 +12,10 @@ import {
   AlertCircle,
   Users,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 interface DepartmentItem {
   id: string;
@@ -99,12 +99,12 @@ export default function SystemDepartmentsPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "ការរក្សាទុកមិនជោគជ័យ");
+      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
 
       setSuccessMsg(
         editingDept
-          ? `ដេប៉ាតឺម៉ង់ ${formData.code} ត្រូវបានកែសម្រួលដោយជោគជ័យ`
-          : `ដេប៉ាតឺម៉ង់ ${formData.code} ត្រូវបានបន្ថែមថ្មីដោយជោគជ័យ`
+          ? `ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ ${formData.code} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™`
+          : `ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ ${formData.code} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž“áŸ’ážáŸ‚áž˜ážáŸ’áž˜áž¸ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™`
       );
       setIsModalOpen(false);
       loadDepartments();
@@ -129,12 +129,12 @@ export default function SystemDepartmentsPage() {
   };
 
   const handleDelete = async (dept: DepartmentItem) => {
-    if (!confirm(`តើលោកអ្នកពិតជាចង់លុប ឬផ្អាកដេប៉ាតឺម៉ង់ ${dept.code} (${dept.nameKh}) មែនទេ?`)) return;
+    if (!confirm(`ážáž¾áž›áŸ„áž€áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž›áž»áž” áž¬áž•áŸ’áž¢áž¶áž€ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ ${dept.code} (${dept.nameKh}) áž˜áŸ‚áž“áž‘áŸ?`)) return;
     try {
       const res = await fetch(`/api/system/departments?id=${dept.id}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Delete failed");
-      alert(data.message || "បានអនុវត្តជោគជ័យ");
+      alert(data.message || "áž”áž¶áž“áž¢áž“áž»ážœážáŸ’ážáž‡áŸ„áž‚áž‡áŸáž™");
       loadDepartments();
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Error deleting department");
@@ -142,7 +142,7 @@ export default function SystemDepartmentsPage() {
   };
 
   return (
-    <PortalLayout portalType="system" userRole="STJ President" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="STJ President" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6 max-w-6xl mx-auto">
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border">
@@ -152,10 +152,10 @@ export default function SystemDepartmentsPage() {
               <span>ITC Engineering Faculties & Departments Registry</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ការគ្រប់គ្រងដេប៉ាតឺម៉ង់ (ITC Departments)
+              áž€áž¶ážšáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (ITC Departments)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ប្រធាន STJ អាចបន្ថែម ឬកែសម្រួលដេប៉ាតឺម៉ង់គ្រប់ពេលវេលា ដើម្បីដំណើរការទូទាំងប្រព័ន្ធវេបសាយ
+              áž”áŸ’ážšáž’áž¶áž“ STJ áž¢áž¶áž…áž”áž“áŸ’ážáŸ‚áž˜ áž¬áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹áž‚áŸ’ážšáž”áŸ‹áž–áŸáž›ážœáŸáž›áž¶ ážŠáž¾áž˜áŸ’áž”áž¸ážŠáŸ†ážŽáž¾ážšáž€áž¶ážšáž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ážœáŸáž”ážŸáž¶áž™
             </p>
           </div>
 
@@ -168,11 +168,11 @@ export default function SystemDepartmentsPage() {
               className="text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-              ទាញឡើងវិញ
+              áž‘áž¶áž‰áž¡áž¾áž„ážœáž·áž‰
             </Button>
             <Button size="sm" onClick={openCreateModal} className="space-x-1.5 text-xs">
               <Plus className="w-3.5 h-3.5" />
-              <span>បន្ថែមដេប៉ាតឺម៉ង់ថ្មី</span>
+              <span>áž”áž“áŸ’ážáŸ‚áž˜ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ážáŸ’áž˜áž¸</span>
             </Button>
           </div>
         </div>
@@ -190,25 +190,25 @@ export default function SystemDepartmentsPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">កូដ (Code)</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះជាភាសាខ្មែរ</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះជាភាសាអង់គ្លេស / បារាំង</th>
-                  <th className="py-3 px-4 font-semibold text-center">សមាជិកក្នុងដេប៉ាតឺម៉ង់</th>
-                  <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
-                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠ (Code)</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ / áž”áž¶ážšáž¶áŸ†áž„</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážŸáž˜áž¶áž‡áž·áž€áž€áŸ’áž“áž»áž„ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
+                  <th className="py-3 px-4 font-semibold text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី Backend API...
+                      áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž–áž¸ Backend API...
                     </td>
                   </tr>
                 ) : departments.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
-                      ពុំទាន់មានដេប៉ាតឺម៉ង់ក្នុងប្រព័ន្ធឡើយ។
+                      áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž¡áž¾áž™áŸ”
                     </td>
                   </tr>
                 ) : (
@@ -230,12 +230,12 @@ export default function SystemDepartmentsPage() {
                       <td className="py-3 px-4 text-center">
                         <Badge variant="outline" className="font-mono text-[11px] space-x-1">
                           <Users className="w-3 h-3 text-muted-foreground inline" />
-                          <span>{d.membersCount} នាក់</span>
+                          <span>{d.membersCount} áž“áž¶áž€áŸ‹</span>
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-center">
                         <Badge variant={d.isActive ? "success" : "secondary"} className="text-[10px]">
-                          {d.isActive ? "សកម្ម (Active)" : "ផ្អាក (Inactive)"}
+                          {d.isActive ? "ážŸáž€áž˜áŸ’áž˜ (Active)" : "áž•áŸ’áž¢áž¶áž€ (Inactive)"}
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-right">
@@ -256,7 +256,7 @@ export default function SystemDepartmentsPage() {
                             className="h-7 text-[10px] text-muted-foreground hover:text-foreground"
                             title={d.isActive ? "Deactivate" : "Activate"}
                           >
-                            {d.isActive ? "ផ្អាក" : "បើក"}
+                            {d.isActive ? "áž•áŸ’áž¢áž¶áž€" : "áž”áž¾áž€"}
                           </Button>
                           <Button
                             variant="ghost"
@@ -283,7 +283,7 @@ export default function SystemDepartmentsPage() {
             <div className="bg-card border border-border rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between pb-2 border-b border-border">
                 <h3 className="font-bold text-base text-foreground">
-                  {editingDept ? `កែសម្រួលដេប៉ាតឺម៉ង់ (${editingDept.code})` : "បន្ថែមដេប៉ាតឺម៉ង់ថ្មី"}
+                  {editingDept ? `áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (${editingDept.code})` : "áž”áž“áŸ’ážáŸ‚áž˜ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ážáŸ’áž˜áž¸"}
                 </h3>
                 <button
                   type="button"
@@ -303,11 +303,11 @@ export default function SystemDepartmentsPage() {
 
               <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
                 <div>
-                  <label className="block font-medium mb-1">កូដដេប៉ាតឺម៉ង់ (Department Code) *</label>
+                  <label className="block font-medium mb-1">áž€áž¼ážŠážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (Department Code) *</label>
                   <input
                     type="text"
                     required
-                    placeholder="ឧ. GIC, GIM, GEE..."
+                    placeholder="áž§. GIC, GIM, GEE..."
                     value={formData.code}
                     onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background font-mono uppercase font-bold"
@@ -315,11 +315,11 @@ export default function SystemDepartmentsPage() {
                 </div>
 
                 <div>
-                  <label className="block font-medium mb-1">ឈ្មោះដេប៉ាតឺម៉ង់ជាភាសាខ្មែរ *</label>
+                  <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš *</label>
                   <input
                     type="text"
                     required
-                    placeholder="ឧ. ដេប៉ាតឺម៉ង់ ព័ត៌មានវិទ្យា និងទំនាក់ទំនង"
+                    placeholder="áž§. ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ áž–áŸážáŸŒáž˜áž¶áž“ážœáž·áž‘áŸ’áž™áž¶ áž“áž·áž„áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„"
                     value={formData.nameKh}
                     onChange={(e) => setFormData({ ...formData, nameKh: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
@@ -328,7 +328,7 @@ export default function SystemDepartmentsPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-medium mb-1">ឈ្មោះជាភាសាអង់គ្លេស *</label>
+                    <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ *</label>
                     <input
                       type="text"
                       required
@@ -339,10 +339,10 @@ export default function SystemDepartmentsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block font-medium mb-1">ឈ្មោះជាភាសាបារាំង</label>
+                    <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶áž”áž¶ážšáž¶áŸ†áž„</label>
                     <input
                       type="text"
-                      placeholder="e.g. Génie Informatique et Communication"
+                      placeholder="e.g. GÃ©nie Informatique et Communication"
                       value={formData.nameFr}
                       onChange={(e) => setFormData({ ...formData, nameFr: e.target.value })}
                       className="w-full px-3 py-2 rounded-lg border border-input bg-background"
@@ -351,10 +351,10 @@ export default function SystemDepartmentsPage() {
                 </div>
 
                 <div>
-                  <label className="block font-medium mb-1">ការពិពណ៌នាបន្ថែម (Description)</label>
+                  <label className="block font-medium mb-1">áž€áž¶ážšáž–áž·áž–ážŽáŸŒáž“áž¶áž”áž“áŸ’ážáŸ‚áž˜ (Description)</label>
                   <textarea
                     rows={2}
-                    placeholder="ព័ត៌មានបន្ថែមអំពីដេប៉ាតឺម៉ង់..."
+                    placeholder="áž–áŸážáŸŒáž˜áž¶áž“áž”áž“áŸ’ážáŸ‚áž˜áž¢áŸ†áž–áž¸ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full px-3 py-2 rounded-lg border border-input bg-background"
@@ -368,10 +368,10 @@ export default function SystemDepartmentsPage() {
                     size="sm"
                     onClick={() => setIsModalOpen(false)}
                   >
-                    បោះបង់
+                    áž”áŸ„áŸ‡áž”áž„áŸ‹
                   </Button>
                   <Button type="submit" size="sm" disabled={submitting}>
-                    {submitting ? "កំពុងរក្សាទុក..." : editingDept ? "កែសម្រួល" : "បង្កើតដេប៉ាតឺម៉ង់"}
+                    {submitting ? "áž€áŸ†áž–áž»áž„ážšáž€áŸ’ážŸáž¶áž‘áž»áž€..." : editingDept ? "áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›" : "áž”áž„áŸ’áž€áž¾ážážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹"}
                   </Button>
                 </div>
               </form>

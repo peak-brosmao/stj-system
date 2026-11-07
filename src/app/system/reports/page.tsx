@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { FileBarChart, Download, RefreshCw, BookOpen } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 import * as XLSX from "xlsx";
 
 interface ReportItem {
@@ -119,7 +119,7 @@ export default function SystemReportsPage() {
   };
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -128,10 +128,10 @@ export default function SystemReportsPage() {
               <span>Official Institutional Reports &amp; Export</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              របាយការណ៍ និងស្ថិតិវត្តមានទូទាំងប្រព័ន្ធ
+              ážšáž”áž¶áž™áž€áž¶ážšážŽáŸ áž“áž·áž„ážŸáŸ’ážáž·ážáž·ážœážáŸ’ážáž˜áž¶áž“áž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទិន្នន័យជាក់ស្តែងពី Backend API • ស្រង់តាមវត្តមានជាក់ស្តែងដែលបានកត់ត្រា
+              áž‘áž·áž“áŸ’áž“áž“áŸáž™áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž–áž¸ Backend API â€¢ ážŸáŸ’ážšáž„áŸ‹ážáž¶áž˜ážœážáŸ’ážáž˜áž¶áž“áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„ážŠáŸ‚áž›áž”áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶
             </p>
           </div>
 
@@ -163,13 +163,13 @@ export default function SystemReportsPage() {
         <div className="bg-card border border-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase block mb-1">មុខវិជ្ជា</label>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase block mb-1">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</label>
               <select
                 value={courseFilter}
                 onChange={(e) => setCourseFilter(e.target.value)}
                 className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground font-medium"
               >
-                <option value="ALL">គ្រប់មុខវិជ្ជាទាំង ៤ (All Courses)</option>
+                <option value="ALL">áž‚áŸ’ážšáž”áŸ‹áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž¶áŸ†áž„ áŸ¤ (All Courses)</option>
                 {courses.map((c) => (
                   <option key={c.id} value={c.code}>
                     [{c.code}] {c.titleKh}
@@ -179,13 +179,13 @@ export default function SystemReportsPage() {
             </div>
 
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase block mb-1">ដេប៉ាតឺម៉ង់</label>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase block mb-1">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹</label>
               <select
                 value={deptFilter}
                 onChange={(e) => setDeptFilter(e.target.value)}
                 className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
               >
-                <option value="ALL">គ្រប់ ៩ ដេប៉ាតឺម៉ង់ (All Departments)</option>
+                <option value="ALL">áž‚áŸ’ážšáž”áŸ‹ áŸ© ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (All Departments)</option>
                 <option value="GIC">GIC (Computer Engineering)</option>
                 <option value="GTI">GTI (Information Technology)</option>
                 <option value="AMS">AMS (Applied Mathematics)</option>
@@ -205,8 +205,8 @@ export default function SystemReportsPage() {
               onChange={(e) => setSelectedAcademicYear(e.target.value)}
               className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
             >
-              <option value="2026-2027">ឆ្នាំសិក្សា ២០២៦~២០២៧ (Academic Year)</option>
-              <option value="2025-2026">ឆ្នាំសិក្សា ២០២៥~២០២៦</option>
+              <option value="2026-2027">áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦~áŸ¢áŸ áŸ¢áŸ§ (Academic Year)</option>
+              <option value="2025-2026">áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¥~áŸ¢áŸ áŸ¢áŸ¦</option>
             </select>
             <Button variant="outline" size="sm" onClick={loadData} disabled={loading} className="text-xs">
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
@@ -218,41 +218,41 @@ export default function SystemReportsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-muted-foreground">សមាជិកបង្រៀនស្ម័គ្រចិត្តសរុប</div>
-              <div className="text-2xl font-bold text-foreground mt-1">{summary.totalMembers} នាក់</div>
+              <div className="text-[11px] text-muted-foreground">ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’ážážŸážšáž»áž”</div>
+              <div className="text-2xl font-bold text-foreground mt-1">{summary.totalMembers} áž“áž¶áž€áŸ‹</div>
               <div className="text-[10px] text-muted-foreground mt-0.5">
-                គ្រូបង្រៀនស្ម័គ្រចិត្ត {summary.totalMembers > 2 ? summary.totalMembers - 2 : summary.totalMembers} នាក់ • ថ្នាក់ដឹកនាំ ២ នាក់
+                áž‚áŸ’ážšáž¼áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž {summary.totalMembers > 2 ? summary.totalMembers - 2 : summary.totalMembers} áž“áž¶áž€áŸ‹ â€¢ ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ† áŸ¢ áž“áž¶áž€áŸ‹
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-primary font-medium">អត្រាវត្តមានមធ្យមជាក់ស្តែង</div>
+              <div className="text-[11px] text-primary font-medium">áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“áž˜áž’áŸ’áž™áž˜áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„</div>
               <div className="text-2xl font-bold text-primary mt-1">{summary.averageRate}%</div>
               <div className="text-[10px] text-muted-foreground mt-0.5">
-                គិតលើ {summary.membersWithSessionsCount} នាក់ដែលមានវត្តមានកត់ត្រា
+                áž‚áž·ážáž›áž¾ {summary.membersWithSessionsCount} áž“áž¶áž€áŸ‹ážŠáŸ‚áž›áž˜áž¶áž“ážœážáŸ’ážáž˜áž¶áž“áž€ážáŸ‹ážáŸ’ážšáž¶
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-emerald-600 dark:text-emerald-400">អត្រាអនុវត្តល្អ (90%+)</div>
+              <div className="text-[11px] text-emerald-600 dark:text-emerald-400">áž¢ážáŸ’ážšáž¶áž¢áž“áž»ážœážáŸ’ážáž›áŸ’áž¢ (90%+)</div>
               <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
-                {summary.highPerformers} នាក់
+                {summary.highPerformers} áž“áž¶áž€áŸ‹
               </div>
               <div className="text-[10px] text-muted-foreground mt-0.5">
-                គណនាពីទិន្នន័យស្រង់ជាក់ស្តែង
+                áž‚ážŽáž“áž¶áž–áž¸áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáŸ’ážšáž„áŸ‹áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„
               </div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-amber-600 dark:text-amber-400">ចំនួនមេរៀនសរុបក្នុងប្រព័ន្ធ</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400">áž…áŸ†áž“áž½áž“áž˜áŸážšáŸ€áž“ážŸážšáž»áž”áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’</div>
               <div className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1">
-                {summary.totalSessions} មេរៀន
+                {summary.totalSessions} áž˜áŸážšáŸ€áž“
               </div>
               <div className="text-[10px] text-muted-foreground mt-0.5 font-mono">
-                ប្រព័ន្ធទិន្នន័យ SQLite
+                áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž‘áž·áž“áŸ’áž“áž“áŸáž™ SQLite
               </div>
             </CardContent>
           </Card>
@@ -264,31 +264,31 @@ export default function SystemReportsPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">ល.រ</th>
-                  <th className="py-3 px-4 font-semibold">កូដ STJ</th>
-                  <th className="py-3 px-4 font-semibold">អត្តលេខនិស្សិត</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះពេញ (Kh / En)</th>
-                  <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់</th>
-                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
-                  <th className="py-3 px-4 font-semibold text-center">វត្តមាន</th>
-                  <th className="py-3 px-4 font-semibold text-center">យឺត</th>
-                  <th className="py-3 px-4 font-semibold text-center">អវត្តមាន</th>
-                  <th className="py-3 px-4 font-semibold text-center">ច្បាប់</th>
-                  <th className="py-3 px-4 font-semibold text-center">សរុបមេរៀន</th>
-                  <th className="py-3 px-4 font-semibold text-center">ភាគរយវត្តមាន</th>
+                  <th className="py-3 px-4 font-semibold">áž›.ážš</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠ STJ</th>
+                  <th className="py-3 px-4 font-semibold">áž¢ážáŸ’ážáž›áŸážáž“áž·ážŸáŸ’ážŸáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰ (Kh / En)</th>
+                  <th className="py-3 px-4 font-semibold">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹</th>
+                  <th className="py-3 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž‘áž½áž›ážáž»ážŸážáŸ’ážšáž¼ážœ</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážœážáŸ’ážáž˜áž¶áž“</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž™ážºáž</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž¢ážœážáŸ’ážáž˜áž¶áž“</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž…áŸ’áž”áž¶áž”áŸ‹</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážŸážšáž»áž”áž˜áŸážšáŸ€áž“</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž—áž¶áž‚ážšáž™ážœážáŸ’ážáž˜áž¶áž“</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
                     <td colSpan={12} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យរបាយការណ៍ជាក់ស្តែងពី Database...
+                      áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™ážšáž”áž¶áž™áž€áž¶ážšážŽáŸáž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž–áž¸ Database...
                     </td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
                     <td colSpan={12} className="py-8 text-center text-muted-foreground text-xs">
-                      ពុំមានទិន្នន័យត្រូវបង្ហាញឡើយ
+                      áž–áž»áŸ†áž˜áž¶áž“áž‘áž·áž“áŸ’áž“áž“áŸáž™ážáŸ’ážšáž¼ážœáž”áž„áŸ’áž áž¶áž‰áž¡áž¾áž™
                     </td>
                   </tr>
                 ) : (
@@ -341,11 +341,11 @@ export default function SystemReportsPage() {
                       <td className="py-3 px-4 text-center">
                         {r.isExecutive ? (
                           <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20 font-medium">
-                            ថ្នាក់ដឹកនាំ
+                            ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ†
                           </Badge>
                         ) : r.total === 0 ? (
                           <Badge variant="outline" className="text-[10px] text-muted-foreground font-normal">
-                            មិនទាន់បង្រៀន
+                            áž˜áž·áž“áž‘áž¶áž“áŸ‹áž”áž„áŸ’ážšáŸ€áž“
                           </Badge>
                         ) : (
                           <Badge

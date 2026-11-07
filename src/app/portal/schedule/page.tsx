@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { CalendarDays, Clock, MapPin } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Badge } from "@/ui/ui/Badge";
 
 interface Lesson {
   id: string;
@@ -62,24 +62,24 @@ export default function SchedulePage() {
             <CalendarDays className="w-4 h-4" />
             <span>STJ Schedule</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground">កាលវិភាគមេរៀន (Lesson Schedule)</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">áž€áž¶áž›ážœáž·áž—áž¶áž‚áž˜áŸážšáŸ€áž“ (Lesson Schedule)</h1>
           <p className="text-xs text-muted-foreground">
-            បង្ហាញតែមេរៀនដែលប្រធានក្រុមបានរៀបចំ (Shows only lessons created by your Leader Team.)
+            áž”áž„áŸ’áž áž¶áž‰ážáŸ‚áž˜áŸážšáŸ€áž“ážŠáŸ‚áž›áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜áž”áž¶áž“ážšáŸ€áž”áž…áŸ† (Shows only lessons created by your Leader Team.)
           </p>
         </div>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold">មេរៀនខាងមុខ (Upcoming)</CardTitle>
+            <CardTitle className="text-sm font-semibold">áž˜áŸážšáŸ€áž“ážáž¶áž„áž˜áž»áž (Upcoming)</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {upcoming.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                {loading ? "កំពុងដំណើរការ..." : "ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet.)"}
+                {loading ? "áž€áŸ†áž–áž»áž„ážŠáŸ†ážŽáž¾ážšáž€áž¶ážš..." : "áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“áž˜áŸážšáŸ€áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž“áŸ…áž¡áž¾áž™áž‘áŸ (No lessons created yet.)"}
               </p>
             )}
             {upcoming.map((l) => (
-              <LessonRow key={l.id} l={l} tag="មិនទាន់បង្រៀន (Not taught yet)" variant="info" />
+              <LessonRow key={l.id} l={l} tag="áž˜áž·áž“áž‘áž¶áž“áŸ‹áž”áž„áŸ’ážšáŸ€áž“ (Not taught yet)" variant="info" />
             ))}
           </CardContent>
         </Card>
@@ -87,11 +87,11 @@ export default function SchedulePage() {
         {pending.length > 0 && (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold">មេរៀនរង់ចាំការស្រង់វត្តមាន (Awaiting attendance)</CardTitle>
+              <CardTitle className="text-sm font-semibold">áž˜áŸážšáŸ€áž“ážšáž„áŸ‹áž…áž¶áŸ†áž€áž¶ážšážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Awaiting attendance)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {pending.map((l) => (
-                <LessonRow key={l.id} l={l} tag="មិនទាន់ស្រង់វត្តមាន (Not marked yet)" variant="warning" />
+                <LessonRow key={l.id} l={l} tag="áž˜áž·áž“áž‘áž¶áž“áŸ‹ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ (Not marked yet)" variant="warning" />
               ))}
             </CardContent>
           </Card>

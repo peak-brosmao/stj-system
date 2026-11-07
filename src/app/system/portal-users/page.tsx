@@ -15,10 +15,10 @@ import {
   UserPlus,
   RefreshCw,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 interface UserItem {
   id: string;
@@ -57,7 +57,7 @@ export default function SystemPortalUsersPage() {
   }, []);
 
   const filtered = usersList.filter((u) => {
-    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("ប្រធាន") || u.notes?.includes("សមាគម");
+    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("áž”áŸ’ážšáž’áž¶áž“") || u.notes?.includes("ážŸáž˜áž¶áž‚áž˜");
     const matchesSearch =
       u.fullNameKh.includes(searchTerm) ||
       u.fullNameEn.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,15 +69,15 @@ export default function SystemPortalUsersPage() {
   });
 
   const handleToggleStatus = (memberId: string) => {
-    alert(`ស្ថានភាពគណនីរបស់សមាជិក ${memberId} ត្រូវបានផ្លាស់ប្តូរ`);
+    alert(`ážŸáŸ’ážáž¶áž“áž—áž¶áž–áž‚ážŽáž“áž¸ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€ ${memberId} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážš`);
   };
 
   const handleResetPassword = (email: string) => {
-    alert(`តំណភ្ជាប់កំណត់លេខកូដសម្ងាត់ឡើងវិញត្រូវបានផ្ញើទៅកាន់ ${email}`);
+    alert(`ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž€áŸ†ážŽážáŸ‹áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹áž¡áž¾áž„ážœáž·áž‰ážáŸ’ážšáž¼ážœáž”áž¶áž“áž•áŸ’áž‰áž¾áž‘áŸ…áž€áž¶áž“áŸ‹ ${email}`);
   };
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -86,22 +86,22 @@ export default function SystemPortalUsersPage() {
               <span>STJ Portal Accounts Management</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              គ្រប់គ្រងគណនីសមាជិក STJ (Portal User Accounts)
+              áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž‚ážŽáž“áž¸ážŸáž˜áž¶áž‡áž·áž€ STJ (Portal User Accounts)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទិន្នន័យជាក់ស្តែងពី Backend API • គណនីផ្លូវការរបស់និស្សិតរៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ សរុប {usersList.length} នាក់
+              áž‘áž·áž“áŸ’áž“áž“áŸáž™áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž–áž¸ Backend API â€¢ áž‚ážŽáž“áž¸áž•áŸ’áž›áž¼ážœáž€áž¶ážšážšáž”ážŸáŸ‹áž“áž·ážŸáŸ’ážŸáž·ážážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ ážŸážšáž»áž” {usersList.length} áž“áž¶áž€áŸ‹
             </p>
           </div>
 
           <div className="flex items-center space-x-2">
             <Button variant="outline" size="sm" onClick={loadUsers} disabled={loading} className="text-xs">
               <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loading ? "animate-spin" : ""}`} />
-              ទាញឡើងវិញ
+              áž‘áž¶áž‰áž¡áž¾áž„ážœáž·áž‰
             </Button>
             <Link href="/system/members">
               <Button size="sm" className="space-x-1.5 text-xs">
                 <UserPlus className="w-3.5 h-3.5" />
-                <span>បន្ថែមសមាជិកថ្មី</span>
+                <span>áž”áž“áŸ’ážáŸ‚áž˜ážŸáž˜áž¶áž‡áž·áž€ážáŸ’áž˜áž¸</span>
               </Button>
             </Link>
           </div>
@@ -113,7 +113,7 @@ export default function SystemPortalUsersPage() {
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              placeholder="ស្វែងរកតាមឈ្មោះ អ៊ីមែល អត្តលេខ..."
+              placeholder="ážŸáŸ’ážœáŸ‚áž„ážšáž€ážáž¶áž˜ážˆáŸ’áž˜áŸ„áŸ‡ áž¢áŸŠáž¸áž˜áŸ‚áž› áž¢ážáŸ’ážáž›áŸáž..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
@@ -126,9 +126,9 @@ export default function SystemPortalUsersPage() {
               onChange={(e) => setRoleFilter(e.target.value)}
               className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
             >
-              <option value="ALL">គ្រប់តួនាទី (All Roles)</option>
-              <option value="LEADER">ថ្នាក់ដឹកនាំ & ប្រធានក្រុម (Leaders)</option>
-              <option value="MEMBER">សមាជិករៀមច្បងបង្រៀន (Tutors)</option>
+              <option value="ALL">áž‚áŸ’ážšáž”áŸ‹ážáž½áž“áž¶áž‘áž¸ (All Roles)</option>
+              <option value="LEADER">ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ† & áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ (Leaders)</option>
+              <option value="MEMBER">ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ (Tutors)</option>
             </select>
           </div>
         </div>
@@ -139,32 +139,32 @@ export default function SystemPortalUsersPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">ល.រ</th>
-                  <th className="py-3 px-4 font-semibold">កូដ STJ</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះពេញ (Kh / En)</th>
-                  <th className="py-3 px-4 font-semibold">អ៊ីមែលផ្លូវការ (ITC)</th>
-                  <th className="py-3 px-4 font-semibold">ជំនាញ & កម្រិត</th>
-                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
-                  <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
-                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
+                  <th className="py-3 px-4 font-semibold">áž›.ážš</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠ STJ</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰ (Kh / En)</th>
+                  <th className="py-3 px-4 font-semibold">áž¢áŸŠáž¸áž˜áŸ‚áž›áž•áŸ’áž›áž¼ážœáž€áž¶ážš (ITC)</th>
+                  <th className="py-3 px-4 font-semibold">áž‡áŸ†áž“áž¶áž‰ & áž€áž˜áŸ’ážšáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž‘áž½áž›ážáž»ážŸážáŸ’ážšáž¼ážœ</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
+                  <th className="py-3 px-4 font-semibold text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី Backend API...
+                      áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž–áž¸ Backend API...
                     </td>
                   </tr>
                 ) : filtered.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      រកមិនឃើញគណនីឡើយ។
+                      ážšáž€áž˜áž·áž“ážƒáž¾áž‰áž‚ážŽáž“áž¸áž¡áž¾áž™áŸ”
                     </td>
                   </tr>
                 ) : (
                   filtered.map((u, idx) => {
-                    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("ប្រធាន") || u.notes?.includes("សមាគម");
+                    const isLeader = u.notes?.includes("Leader") || u.notes?.includes("áž”áŸ’ážšáž’áž¶áž“") || u.notes?.includes("ážŸáž˜áž¶áž‚áž˜");
                     return (
                       <tr key={u.id} className="hover:bg-muted/20 transition-colors">
                         <td className="py-3 px-4 font-mono text-muted-foreground">{idx + 1}</td>
@@ -203,7 +203,7 @@ export default function SystemPortalUsersPage() {
                             size="sm"
                             onClick={() => handleResetPassword(u.email || "")}
                             className="h-7 text-[11px] px-2 text-muted-foreground hover:text-primary"
-                            title="កំណត់លេខសម្ងាត់ឡើងវិញ"
+                            title="áž€áŸ†ážŽážáŸ‹áž›áŸážážŸáž˜áŸ’áž„áž¶ážáŸ‹áž¡áž¾áž„ážœáž·áž‰"
                           >
                             <KeyRound className="w-3.5 h-3.5" />
                           </Button>
@@ -212,7 +212,7 @@ export default function SystemPortalUsersPage() {
                             size="sm"
                             onClick={() => handleToggleStatus(u.memberId)}
                             className="h-7 text-[11px] px-2 text-muted-foreground hover:text-amber-600"
-                            title="ផ្អាកគណនីបណ្តោះអាសន្ន"
+                            title="áž•áŸ’áž¢áž¶áž€áž‚ážŽáž“áž¸áž”ážŽáŸ’ážáŸ„áŸ‡áž¢áž¶ážŸáž“áŸ’áž“"
                           >
                             <Ban className="w-3.5 h-3.5" />
                           </Button>

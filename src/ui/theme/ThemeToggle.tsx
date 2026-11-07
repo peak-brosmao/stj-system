@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useI18n } from "@/components/i18n/I18nProvider";
+import { useI18n } from "@/ui/i18n/I18nProvider";
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();

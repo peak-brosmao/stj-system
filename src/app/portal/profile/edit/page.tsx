@@ -16,10 +16,10 @@ import {
   Shield,
   GraduationCap,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 export default function ProfileEditPage() {
   const router = useRouter();
@@ -93,12 +93,12 @@ export default function ProfileEditPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "ការរក្សាទុកមិនជោគជ័យ");
+      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
 
-      setSuccessMsg("ព័ត៌មានផ្ទាល់ខ្លួនត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ");
+      setSuccessMsg("áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž’áŸ’ážœáž¾áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“áž—áž¶áž–ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™");
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "កំហុសក្នុងការរក្សាទុក";
+      const msg = err instanceof Error ? err.message : "áž€áŸ†áž áž»ážŸáž€áŸ’áž“áž»áž„áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€";
       setErrorMsg(msg);
     } finally {
       setSaving(false);
@@ -122,13 +122,13 @@ export default function ProfileEditPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "ការផ្ទុករូបភាពមិនជោគជ័យ");
+      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšáž•áŸ’áž‘áž»áž€ážšáž¼áž”áž—áž¶áž–áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
 
       setProfileImage(data.url);
-      setSuccessMsg("រូបភាពផ្ទាល់ខ្លួនត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ");
+      setSuccessMsg("ážšáž¼áž”áž—áž¶áž–áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™");
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "កំហុសក្នុងការផ្ទុករូបភាព";
+      const msg = err instanceof Error ? err.message : "áž€áŸ†áž áž»ážŸáž€áŸ’áž“áž»áž„áž€áž¶ážšáž•áŸ’áž‘áž»áž€ážšáž¼áž”áž—áž¶áž–";
       setErrorMsg(msg);
     } finally {
       setUploadingPhoto(false);
@@ -136,12 +136,12 @@ export default function ProfileEditPage() {
   };
 
   const handleRemovePhoto = async () => {
-    if (!confirm("តើអ្នកពិតជាចង់លុបរូបភាពគណនីផ្ទាល់ខ្លួននេះមែនទេ?")) return;
+    if (!confirm("ážáž¾áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž›áž»áž”ážšáž¼áž”áž—áž¶áž–áž‚ážŽáž“áž¸áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“áž“áŸáŸ‡áž˜áŸ‚áž“áž‘áŸ?")) return;
 
     try {
       await fetch("/api/portal/profile/photo", { method: "DELETE" });
       setProfileImage(null);
-      setSuccessMsg("រូបភាពផ្ទាល់ខ្លួនត្រូវបានលុបរួចរាល់");
+      setSuccessMsg("ážšáž¼áž”áž—áž¶áž–áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž›áž»áž”ážšáž½áž…ážšáž¶áž›áŸ‹");
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch {
       // ignore
@@ -175,13 +175,13 @@ export default function ProfileEditPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "ការបញ្ជូនសំណើមិនជោគជ័យ");
+      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšáž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
 
-      setRequestSuccess("សំណើកែតម្រូវទិន្នន័យផ្លូវការត្រូវបានបញ្ជូនទៅគណៈគ្រប់គ្រង STJ ដោយជោគជ័យ");
+      setRequestSuccess("ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœáž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážšážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž‰áŸ’áž‡áž¼áž“áž‘áŸ…áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™");
       setRequestedValue("");
       setCorrectionReason("");
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "កំហុសក្នុងការបញ្ជូនសំណើ");
+      alert(err instanceof Error ? err.message : "áž€áŸ†áž áž»ážŸáž€áŸ’áž“áž»áž„áž€áž¶ážšáž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾");
     } finally {
       setRequestSubmitting(false);
     }
@@ -197,10 +197,10 @@ export default function ProfileEditPage() {
               className="inline-flex items-center space-x-1.5 text-xs text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>ត្រឡប់ទៅកាន់ព័ត៌មានផ្ទាល់ខ្លួន</span>
+              <span>ážáŸ’ážšáž¡áž”áŸ‹áž‘áŸ…áž€áž¶áž“áŸ‹áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“</span>
             </Link>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              កែសម្រួលគណនីផ្ទាល់ខ្លួន (Edit Profile)
+              áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›áž‚ážŽáž“áž¸áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ (Edit Profile)
             </h1>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function ProfileEditPage() {
         {/* Avatar Uploader Section */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold">រូបថតគណនីផ្ទាល់ខ្លួន (Profile Picture)</CardTitle>
+            <CardTitle className="text-sm font-semibold">ážšáž¼áž”ážážáž‚ážŽáž“áž¸áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ (Profile Picture)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
@@ -252,7 +252,7 @@ export default function ProfileEditPage() {
                     className="space-x-1.5 text-xs"
                   >
                     <Upload className="w-3.5 h-3.5" />
-                    <span>{uploadingPhoto ? "កំពុងផ្ទុកឡើង..." : "ប្តូររូបថតថ្មី (Upload)"}</span>
+                    <span>{uploadingPhoto ? "áž€áŸ†áž–áž»áž„áž•áŸ’áž‘áž»áž€áž¡áž¾áž„..." : "áž”áŸ’ážáž¼ážšážšáž¼áž”ážážážáŸ’áž˜áž¸ (Upload)"}</span>
                   </Button>
                   {profileImage && (
                     <Button
@@ -263,12 +263,12 @@ export default function ProfileEditPage() {
                       className="text-xs text-destructive hover:bg-destructive/10 space-x-1"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>លុបរូប</span>
+                      <span>áž›áž»áž”ážšáž¼áž”</span>
                     </Button>
                   )}
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  អនុញ្ញាតតែ JPG, PNG ឬ WebP។ ទំហំអតិបរមា 2MB។ រូបថតត្រូវបានរក្សាទុកដោយសុវត្ថិភាព។
+                  áž¢áž“áž»áž‰áŸ’áž‰áž¶ážážáŸ‚ JPG, PNG áž¬ WebPáŸ” áž‘áŸ†áž áŸ†áž¢ážáž·áž”ážšáž˜áž¶ 2MBáŸ” ážšáž¼áž”ážážážáŸ’ážšáž¼ážœáž”áž¶áž“ážšáž€áŸ’ážŸáž¶áž‘áž»áž€ážŠáŸ„áž™ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–áŸ”
                 </p>
               </div>
             </div>
@@ -279,37 +279,37 @@ export default function ProfileEditPage() {
         <form onSubmit={handleSaveProfile} className="space-y-6">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold">ព័ត៌មានផ្ទាល់ខ្លួន & ទំនាក់ទំនង</CardTitle>
+              <CardTitle className="text-sm font-semibold">áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ & áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    ឈ្មោះបង្ហាញដែលពេញចិត្ត (Preferred Display Name)
+                    ážˆáŸ’áž˜áŸ„áŸ‡áž”áž„áŸ’áž áž¶áž‰ážŠáŸ‚áž›áž–áŸáž‰áž…áž·ážáŸ’áž (Preferred Display Name)
                   </label>
                   <input
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                    placeholder="ឧ. ភ្នំពេញ"
+                    placeholder="áž§. áž—áŸ’áž“áŸ†áž–áŸáž‰"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    ឈ្មោះជាភាសាខ្មែរ (Khmer Name)
+                    ážˆáŸ’áž˜áŸ„áŸ‡áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš (Khmer Name)
                   </label>
                   <input
                     type="text"
                     value={fullNameKh}
                     onChange={(e) => setFullNameKh(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                    placeholder="ឧ. ពៀក ប្រុសម៉ៅ"
+                    placeholder="áž§. áž–áŸ€áž€ áž”áŸ’ážšáž»ážŸáž˜áŸ‰áŸ…"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    លេខទូរស័ព្ទ (Phone Number)
+                    áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘ (Phone Number)
                   </label>
                   <input
                     type="text"
@@ -324,7 +324,7 @@ export default function ProfileEditPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    Telegram Username (ស្រេចចិត្ត)
+                    Telegram Username (ážŸáŸ’ážšáŸáž…áž…áž·ážáŸ’áž)
                   </label>
                   <input
                     type="text"
@@ -336,50 +336,50 @@ export default function ProfileEditPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    ភាសាដែលពេញចិត្តក្នុងប្រព័ន្ធ (Language)
+                    áž—áž¶ážŸáž¶ážŠáŸ‚áž›áž–áŸáž‰áž…áž·ážáŸ’ážáž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ (Language)
                   </label>
                   <select
                     value={preferredLanguage}
                     onChange={(e) => setPreferredLanguage(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
                   >
-                    <option value="km">ភាសាខ្មែរ (Khmer - km)</option>
+                    <option value="km">áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš (Khmer - km)</option>
                     <option value="en">English (en)</option>
-                    <option value="fr">Français (fr)</option>
+                    <option value="fr">FranÃ§ais (fr)</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  អាសយដ្ឋានបច្ចុប្បន្ន (Current Address)
+                  áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Current Address)
                 </label>
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
-                  placeholder="រាជធានីភ្នំពេញ..."
+                  placeholder="ážšáž¶áž‡áž’áž¶áž“áž¸áž—áŸ’áž“áŸ†áž–áŸáž‰..."
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  ជីវប្រវត្តិ និងចំណាប់អារម្មណ៍សិក្សា (Biography)
+                  áž‡áž¸ážœáž”áŸ’ážšážœážáŸ’ážáž· áž“áž·áž„áž…áŸ†ážŽáž¶áž”áŸ‹áž¢áž¶ážšáž˜áŸ’áž˜ážŽáŸážŸáž·áž€áŸ’ážŸáž¶ (Biography)
                 </label>
                 <textarea
                   rows={3}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary leading-relaxed"
-                  placeholder="រៀបរាប់សង្ខេបអំពីគោលបំណងសិក្សា និងជំនាញវិស្វកម្ម..."
+                  placeholder="ážšáŸ€áž”ážšáž¶áž”áŸ‹ážŸáž„áŸ’ážáŸáž”áž¢áŸ†áž–áž¸áž‚áŸ„áž›áž”áŸ†ážŽáž„ážŸáž·áž€áŸ’ážŸáž¶ áž“áž·áž„áž‡áŸ†áž“áž¶áž‰ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜..."
                 />
               </div>
 
               <div className="pt-2 flex justify-end">
                 <Button type="submit" disabled={saving} className="space-x-1.5 text-xs">
                   <Save className="w-3.5 h-3.5" />
-                  <span>{saving ? "កំពុងរក្សាទុក..." : "រក្សាទុកការកែប្រែ"}</span>
+                  <span>{saving ? "áž€áŸ†áž–áž»áž„ážšáž€áŸ’ážŸáž¶áž‘áž»áž€..." : "ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚"}</span>
                 </Button>
               </div>
             </CardContent>
@@ -392,11 +392,11 @@ export default function ProfileEditPage() {
             <div className="flex items-center space-x-2">
               <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               <CardTitle className="text-sm font-semibold text-foreground">
-                ស្នើសុំកែតម្រូវទិន្នន័យផ្លូវការ (Official Data Correction Desk)
+                ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœáž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Official Data Correction Desk)
               </CardTitle>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              ឈ្មោះផ្លូវការ (ខ្មែរ/អង់គ្លេស) លេខអត្តសញ្ញាណនិស្សិត ដេប៉ាតឺម៉ង់ និងកម្រិតសិក្សា ត្រូវបានការពារជាទិន្នន័យផ្លូវការរបស់វិទ្យាស្ថាន។ ការកែប្រែនឹងត្រូវបញ្ជូនទៅគណៈគ្រប់គ្រង STJ ដើម្បីត្រួតពិនិត្យ និងអនុម័ត។
+              ážˆáŸ’áž˜áŸ„áŸ‡áž•áŸ’áž›áž¼ážœáž€áž¶ážš (ážáŸ’áž˜áŸ‚ážš/áž¢áž„áŸ‹áž‚áŸ’áž›áŸážŸ) áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ áž“áž·áž„áž€áž˜áŸ’ážšáž·ážážŸáž·áž€áŸ’ážŸáž¶ ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áž¶ážšáž–áž¶ážšáž‡áž¶áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážšážšáž”ážŸáŸ‹ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áŸ” áž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚áž“áž¹áž„ážáŸ’ážšáž¼ážœáž”áž‰áŸ’áž‡áž¼áž“áž‘áŸ…áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ ážŠáž¾áž˜áŸ’áž”áž¸ážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ áž“áž·áž„áž¢áž“áž»áž˜áŸážáŸ”
             </p>
           </CardHeader>
           <CardContent>
@@ -411,31 +411,31 @@ export default function ProfileEditPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    ទិន្នន័យដែលស្នើសុំកែសម្រួល:
+                    áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŠáŸ‚áž›ážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›:
                   </label>
                   <select
                     value={correctField}
                     onChange={(e) => setCorrectField(e.target.value)}
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
                   >
-                    <option value="studentId">លេខអត្តសញ្ញាណនិស្សិត (Student ID)</option>
-                    <option value="fullNameKh">គោត្តនាម-នាម ខ្មែរ (Khmer Full Name)</option>
+                    <option value="studentId">áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž (Student ID)</option>
+                    <option value="fullNameKh">áž‚áŸ„ážáŸ’ážáž“áž¶áž˜-áž“áž¶áž˜ ážáŸ’áž˜áŸ‚ážš (Khmer Full Name)</option>
                     <option value="fullNameEn">FullName English (English Name)</option>
-                    <option value="department">ដេប៉ាតឺម៉ង់ (Department)</option>
-                    <option value="academicYear">កម្រិតសិក្សា (Academic Year)</option>
+                    <option value="department">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (Department)</option>
+                    <option value="academicYear">áž€áž˜áŸ’ážšáž·ážážŸáž·áž€áŸ’ážŸáž¶ (Academic Year)</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1.5">
-                    តម្លៃត្រឹមត្រូវថ្មី (Requested Value):
+                    ážáž˜áŸ’áž›áŸƒážáŸ’ážšáž¹áž˜ážáŸ’ážšáž¼ážœážáŸ’áž˜áž¸ (Requested Value):
                   </label>
                   <input
                     type="text"
                     required
                     value={requestedValue}
                     onChange={(e) => setRequestedValue(e.target.value)}
-                    placeholder="បញ្ចូលតម្លៃថ្មី..."
+                    placeholder="áž”áž‰áŸ’áž…áž¼áž›ážáž˜áŸ’áž›áŸƒážáŸ’áž˜áž¸..."
                     className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
@@ -443,14 +443,14 @@ export default function ProfileEditPage() {
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  មូលហេតុនៃការស្នើសុំកែប្រែ (Reason):
+                  áž˜áž¼áž›áž áŸážáž»áž“áŸƒáž€áž¶ážšážŸáŸ’áž“áž¾ážŸáž»áŸ†áž€áŸ‚áž”áŸ’ážšáŸ‚ (Reason):
                 </label>
                 <textarea
                   rows={2}
                   required
                   value={correctionReason}
                   onChange={(e) => setCorrectionReason(e.target.value)}
-                  placeholder="បញ្ជាក់ពីមូលហេតុនៃការខុសឆ្គង ឬភ្ជាប់លេខយោង..."
+                  placeholder="áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž–áž¸áž˜áž¼áž›áž áŸážáž»áž“áŸƒáž€áž¶ážšážáž»ážŸáž†áŸ’áž‚áž„ áž¬áž—áŸ’áž‡áž¶áž”áŸ‹áž›áŸážáž™áŸ„áž„..."
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -463,7 +463,7 @@ export default function ProfileEditPage() {
                   className="space-x-1.5 text-xs border-amber-500/40 text-foreground hover:bg-amber-500/10"
                 >
                   <FileText className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                  <span>{requestSubmitting ? "កំពុងបញ្ជូនសំណើ..." : "ដាក់សំណើទៅគណៈគ្រប់គ្រង"}</span>
+                  <span>{requestSubmitting ? "áž€áŸ†áž–áž»áž„áž”áž‰áŸ’áž‡áž¼áž“ážŸáŸ†ážŽáž¾..." : "ážŠáž¶áž€áŸ‹ážŸáŸ†ážŽáž¾áž‘áŸ…áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„"}</span>
                 </Button>
               </div>
             </form>

@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, LogIn, LayoutDashboard, LogOut } from "lucide-react";
-import { useI18n } from "@/components/i18n/I18nProvider";
-import { LanguageSelector } from "@/components/i18n/LanguageSelector";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { Button } from "@/components/ui/Button";
-import { Logo } from "@/components/ui/Logo";
+import { useI18n } from "@/ui/i18n/I18nProvider";
+import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
+import { ThemeToggle } from "@/ui/theme/ThemeToggle";
+import { Button } from "@/ui/ui/Button";
+import { Logo } from "@/ui/ui/Logo";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -114,7 +114,7 @@ export function Navbar() {
                 size="sm"
                 onClick={handleLogout}
                 className="h-9 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                title="ចាកចេញ (Sign Out)"
+                title="áž…áž¶áž€áž…áŸáž‰ (Sign Out)"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </Button>
@@ -185,7 +185,7 @@ export function Navbar() {
                   <Link href={auth.user.dashboardUrl} onClick={() => setMobileMenuOpen(false)}>
                     <Button size="sm" className="w-full justify-center space-x-1.5 font-bold h-9">
                       <LayoutDashboard className="w-3.5 h-3.5" />
-                      <span>ផ្ទាំងគ្រប់គ្រង</span>
+                      <span>áž•áŸ’áž‘áž¶áŸ†áž„áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„</span>
                     </Button>
                   </Link>
                   <Button
@@ -195,7 +195,7 @@ export function Navbar() {
                     className="w-full justify-center space-x-1.5 font-bold h-9 text-destructive hover:bg-destructive/10"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>ចាកចេញ</span>
+                    <span>áž…áž¶áž€áž…áŸáž‰</span>
                   </Button>
                 </div>
               </div>

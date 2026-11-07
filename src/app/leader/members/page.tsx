@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { Users, Search, Filter, ShieldAlert, BookOpen, RefreshCw } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Badge } from "@/ui/ui/Badge";
+import { Button } from "@/ui/ui/Button";
 
 interface MemberItem {
   id: string;
@@ -61,15 +61,15 @@ export default function LeaderMembersPage() {
   const getCourseTitle = (code: string) => {
     switch (code) {
       case "PROG101":
-        return "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming - 9 Tutors)";
+        return "áž€áž¶ážšážŸážšážŸáŸážšáž€áž˜áŸ’áž˜ážœáž·áž’áž¸áž€áž»áŸ†áž–áŸ’áž™áž¼áž‘áŸážš (Programming - 9 Tutors)";
       case "MATH101":
-        return "គណិតវិទ្យាវិស្វកម្ម (Mathematics - 7 Tutors)";
+        return "áž‚ážŽáž·ážážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Mathematics - 7 Tutors)";
       case "PHYS101":
-        return "រូបវិទ្យាវិស្វកម្ម (Physics - 10 Tutors)";
+        return "ážšáž¼áž”ážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Physics - 10 Tutors)";
       case "CHEM101":
-        return "គីមីវិទ្យាទូទៅ (Chemistry - 11 Tutors)";
+        return "áž‚áž¸áž˜áž¸ážœáž·áž‘áŸ’áž™áž¶áž‘áž¼áž‘áŸ… (Chemistry - 11 Tutors)";
       default:
-        return "សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តទាំងអស់ (All 39 Members)";
+        return "ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’ážáž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ (All 39 Members)";
     }
   };
 
@@ -77,7 +77,7 @@ export default function LeaderMembersPage() {
     <PortalLayout
       portalType="leader"
       userRole="Course Leader"
-      userName="លាង ជីងហេង"
+      userName="áž›áž¶áž„ áž‡áž¸áž„áž áŸáž„"
       userEmail="leang.jingheng@itc.edu.kh"
     >
       <div className="space-y-6">
@@ -85,32 +85,32 @@ export default function LeaderMembersPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Users className="w-4 h-4" />
-              <span>{selectedCourse} Enrolled Tutors • STJ Academic Year 2026-2027</span>
+              <span>{selectedCourse} Enrolled Tutors â€¢ STJ Academic Year 2026-2027</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              សមាជិករៀមច្បងក្នុងបន្ទុក (Assigned STJ Tutors)
+              ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž€áŸ’áž“áž»áž„áž”áž“áŸ’áž‘áž»áž€ (Assigned STJ Tutors)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ទិន្នន័យជាក់ស្តែងពី Backend API • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ មិនមែនសម្រាប់សិស្សប្អូនឡើយ
+              áž‘áž·áž“áŸ’áž“áž“áŸáž™áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž–áž¸ Backend API â€¢ ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’ážážáŸ‚áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡ áž˜áž·áž“áž˜áŸ‚áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž·ážŸáŸ’ážŸáž”áŸ’áž¢áž¼áž“áž¡áž¾áž™
             </p>
           </div>
 
           <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs flex items-center space-x-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
-            <span>សិទ្ធិមើលតែប៉ុណ្ណោះ (Read-Only) • គ្មានសិទ្ធិកែប្រែវត្តមាន</span>
+            <span>ážŸáž·áž‘áŸ’áž’áž·áž˜áž¾áž›ážáŸ‚áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡ (Read-Only) â€¢ áž‚áŸ’áž˜áž¶áž“ážŸáž·áž‘áŸ’áž’áž·áž€áŸ‚áž”áŸ’ážšáŸ‚ážœážáŸ’ážáž˜áž¶áž“</span>
           </div>
         </div>
 
         {/* Course and Department Filter Bar */}
         <div className="bg-card border border-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground mr-1">មុខវិជ្ជា៖</span>
+            <span className="text-xs font-semibold text-muted-foreground mr-1">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áŸ–</span>
             {[
-              { code: "PROG101", label: "Programming (៩ នាក់)" },
-              { code: "MATH101", label: "Mathematics (៧ នាក់)" },
-              { code: "PHYS101", label: "Physics (១០ នាក់)" },
-              { code: "CHEM101", label: "Chemistry (១១ នាក់)" },
-              { code: "ALL", label: "ទាំងអស់ (៣៩ នាក់)" },
+              { code: "PROG101", label: "Programming (áŸ© áž“áž¶áž€áŸ‹)" },
+              { code: "MATH101", label: "Mathematics (áŸ§ áž“áž¶áž€áŸ‹)" },
+              { code: "PHYS101", label: "Physics (áŸ¡áŸ  áž“áž¶áž€áŸ‹)" },
+              { code: "CHEM101", label: "Chemistry (áŸ¡áŸ¡ áž“áž¶áž€áŸ‹)" },
+              { code: "ALL", label: "áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ (áŸ£áŸ© áž“áž¶áž€áŸ‹)" },
             ].map((c) => (
               <button
                 key={c.code}
@@ -132,7 +132,7 @@ export default function LeaderMembersPage() {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="ស្វែងរកតាមឈ្មោះ, អត្តលេខ..."
+                placeholder="ážŸáŸ’ážœáŸ‚áž„ážšáž€ážáž¶áž˜ážˆáŸ’áž˜áŸ„áŸ‡, áž¢ážáŸ’ážáž›áŸáž..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
@@ -147,7 +147,7 @@ export default function LeaderMembersPage() {
               className="text-xs shrink-0"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loading ? "animate-spin" : ""}`} />
-              ទាញឡើងវិញ
+              áž‘áž¶áž‰áž¡áž¾áž„ážœáž·áž‰
             </Button>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function LeaderMembersPage() {
         {/* Active Selection Summary */}
         <div className="flex items-center justify-between px-1">
           <div className="text-xs font-medium text-foreground">
-            {getCourseTitle(selectedCourse)} — បង្ហាញ <span className="font-bold text-primary">{filtered.length}</span> នាក់
+            {getCourseTitle(selectedCourse)} â€” áž”áž„áŸ’áž áž¶áž‰ <span className="font-bold text-primary">{filtered.length}</span> áž“áž¶áž€áŸ‹
           </div>
         </div>
 
@@ -165,27 +165,27 @@ export default function LeaderMembersPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">ល.រ</th>
-                  <th className="py-3 px-4 font-semibold">កូដ STJ</th>
-                  <th className="py-3 px-4 font-semibold">អត្តលេខនិស្សិត</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះពេញ (Kh / En)</th>
-                  <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់ & កម្រិត</th>
-                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជាទទួលខុសត្រូវ</th>
-                  <th className="py-3 px-4 font-semibold text-center">អត្រាវត្តមាន</th>
-                  <th className="py-3 px-4 font-semibold text-right">កំណត់ពាក្យសម្ងាត់</th>
+                  <th className="py-3 px-4 font-semibold">áž›.ážš</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠ STJ</th>
+                  <th className="py-3 px-4 font-semibold">áž¢ážáŸ’ážáž›áŸážáž“áž·ážŸáŸ’ážŸáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰ (Kh / En)</th>
+                  <th className="py-3 px-4 font-semibold">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ & áž€áž˜áŸ’ážšáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž‘áž‘áž½áž›ážáž»ážŸážáŸ’ážšáž¼ážœ</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“</th>
+                  <th className="py-3 px-4 font-semibold text-right">áž€áŸ†ážŽážáŸ‹áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយកទិន្នន័យពី Backend API...
+                      áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž–áž¸ Backend API...
                     </td>
                   </tr>
                 ) : filtered.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      រកមិនឃើញទិន្នន័យសមាជិកឡើយ។
+                      ážšáž€áž˜áž·áž“ážƒáž¾áž‰áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáž˜áž¶áž‡áž·áž€áž¡áž¾áž™áŸ”
                     </td>
                   </tr>
                 ) : (
@@ -215,7 +215,7 @@ export default function LeaderMembersPage() {
                           variant="outline"
                           size="sm"
                           onClick={async () => {
-                            if (!confirm(`តើអ្នកពិតជាចង់កំណត់ពាក្យសម្ងាត់ឡើងវិញសម្រាប់សមាជិក ${m.fullNameKh} មែនទេ?`)) return;
+                            if (!confirm(`ážáž¾áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž€áŸ†ážŽážáŸ‹áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹áž¡áž¾áž„ážœáž·áž‰ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž˜áž¶áž‡áž·áž€ ${m.fullNameKh} áž˜áŸ‚áž“áž‘áŸ?`)) return;
                             try {
                               const res = await fetch("/api/system/members/reset-password", {
                                 method: "POST",
@@ -224,7 +224,7 @@ export default function LeaderMembersPage() {
                               });
                               const data = await res.json();
                               if (!res.ok) throw new Error(data.error || "Reset failed");
-                              alert(`ពាក្យសម្ងាត់របស់ ${m.fullNameKh} ត្រូវបានកំណត់ឡើងវិញជោគជ័យ: ${data.defaultPassword}`);
+                              alert(`áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážšáž”ážŸáŸ‹ ${m.fullNameKh} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áŸ†ážŽážáŸ‹áž¡áž¾áž„ážœáž·áž‰áž‡áŸ„áž‚áž‡áŸáž™: ${data.defaultPassword}`);
                             } catch (err: unknown) {
                               alert(err instanceof Error ? err.message : "Error resetting password");
                             }

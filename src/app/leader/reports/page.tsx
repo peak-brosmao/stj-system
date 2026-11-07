@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { FileBarChart, Download, Printer, Filter, RefreshCw, BookOpen } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 import * as XLSX from "xlsx";
 
 interface ReportRecord {
@@ -44,7 +44,7 @@ export default function LeaderReportsPage() {
               dept: m.department?.code || "-",
               yr: m.academicYear?.code || "-",
               status: st,
-              remarks: st === "EXCUSED" ? "សុំច្បាប់បំពេញបេសកកម្ម" : st === "LATE" ? "យឺត ១០ នាទី" : "វត្តមានទាន់ពេលវេលា",
+              remarks: st === "EXCUSED" ? "ážŸáž»áŸ†áž…áŸ’áž”áž¶áž”áŸ‹áž”áŸ†áž–áŸáž‰áž”áŸážŸáž€áž€áž˜áŸ’áž˜" : st === "LATE" ? "áž™ážºáž áŸ¡áŸ  áž“áž¶áž‘áž¸" : "ážœážáŸ’ážáž˜áž¶áž“áž‘áž¶áž“áŸ‹áž–áŸáž›ážœáŸáž›áž¶",
             };
           });
           setRecords(recs);
@@ -90,7 +90,7 @@ export default function LeaderReportsPage() {
     <PortalLayout
       portalType="leader"
       userRole="Course Leader"
-      userName="លាង ជីងហេង"
+      userName="áž›áž¶áž„ áž‡áž¸áž„áž áŸáž„"
       userEmail="leang.jingheng@itc.edu.kh"
     >
       <div className="space-y-6">
@@ -101,10 +101,10 @@ export default function LeaderReportsPage() {
               <span>Official Attendance Analytics & Export</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              របាយការណ៍ និងស្ថិតិវត្តមាន (Leader Reports)
+              ážšáž”áž¶áž™áž€áž¶ážšážŽáŸ áž“áž·áž„ážŸáŸ’ážáž·ážáž·ážœážáŸ’ážáž˜áž¶áž“ (Leader Reports)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ទិន្នន័យជាក់ស្តែងពី Backend API • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ
+              áž‘áž·áž“áŸ’áž“áž“áŸáž™áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž–áž¸ Backend API â€¢ ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’ážážáŸ‚áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡
             </p>
           </div>
 
@@ -135,12 +135,12 @@ export default function LeaderReportsPage() {
         {/* Filter Controls */}
         <div className="bg-card border border-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground mr-1">មុខវិជ្ជា៖</span>
+            <span className="text-xs font-semibold text-muted-foreground mr-1">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áŸ–</span>
             {[
-              { code: "PROG101", label: "Programming (៩ នាក់)" },
-              { code: "MATH101", label: "Mathematics (៧ នាក់)" },
-              { code: "PHYS101", label: "Physics (១០ នាក់)" },
-              { code: "CHEM101", label: "Chemistry (១១ នាក់)" },
+              { code: "PROG101", label: "Programming (áŸ© áž“áž¶áž€áŸ‹)" },
+              { code: "MATH101", label: "Mathematics (áŸ§ áž“áž¶áž€áŸ‹)" },
+              { code: "PHYS101", label: "Physics (áŸ¡áŸ  áž“áž¶áž€áŸ‹)" },
+              { code: "CHEM101", label: "Chemistry (áŸ¡áŸ¡ áž“áž¶áž€áŸ‹)" },
             ].map((c) => (
               <button
                 key={c.code}
@@ -163,8 +163,8 @@ export default function LeaderReportsPage() {
               onChange={(e) => setSelectedAcademicYear(e.target.value)}
               className="px-3 py-1.5 text-xs rounded-lg border border-input bg-background text-foreground"
             >
-              <option value="2026-2027">ឆ្នាំសិក្សា ២០២៦~២០២៧ (Academic Year)</option>
-              <option value="2025-2026">ឆ្នាំសិក្សា ២០២៥~២០២៦</option>
+              <option value="2026-2027">áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦~áŸ¢áŸ áŸ¢áŸ§ (Academic Year)</option>
+              <option value="2025-2026">áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¥~áŸ¢áŸ áŸ¢áŸ¦</option>
             </select>
 
             <Button
@@ -183,31 +183,31 @@ export default function LeaderReportsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-muted-foreground">សមាជិកបង្រៀន (Tutors)</div>
-              <div className="text-xl font-bold text-foreground mt-1">{records.length} នាក់</div>
+              <div className="text-[11px] text-muted-foreground">ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ (Tutors)</div>
+              <div className="text-xl font-bold text-foreground mt-1">{records.length} áž“áž¶áž€áŸ‹</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-emerald-600 dark:text-emerald-400">វត្តមាន (Present)</div>
+              <div className="text-[11px] text-emerald-600 dark:text-emerald-400">ážœážáŸ’ážáž˜áž¶áž“ (Present)</div>
               <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{presentCount}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-amber-600 dark:text-amber-400">យឺត (Late)</div>
+              <div className="text-[11px] text-amber-600 dark:text-amber-400">áž™ážºáž (Late)</div>
               <div className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1">{lateCount}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-blue-600 dark:text-blue-400">ច្បាប់ (Excused)</div>
+              <div className="text-[11px] text-blue-600 dark:text-blue-400">áž…áŸ’áž”áž¶áž”áŸ‹ (Excused)</div>
               <div className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-1">{excusedCount}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
-              <div className="text-[11px] text-primary">អត្រាវត្តមានមធ្យម</div>
+              <div className="text-[11px] text-primary">áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“áž˜áž’áŸ’áž™áž˜</div>
               <div className="text-xl font-bold text-primary mt-1">{attendanceRate}%</div>
             </CardContent>
           </Card>
@@ -219,20 +219,20 @@ export default function LeaderReportsPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">ល.រ</th>
-                  <th className="py-3 px-4 font-semibold">កូដ STJ</th>
-                  <th className="py-3 px-4 font-semibold">អត្តលេខនិស្សិត</th>
-                  <th className="py-3 px-4 font-semibold">ឈ្មោះពេញ (Kh / En)</th>
-                  <th className="py-3 px-4 font-semibold">ដេប៉ាតឺម៉ង់ & កម្រិត</th>
-                  <th className="py-3 px-4 font-semibold">ស្ថានភាពវត្តមាន</th>
-                  <th className="py-3 px-4 font-semibold">សម្គាល់</th>
+                  <th className="py-3 px-4 font-semibold">áž›.ážš</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¼ážŠ STJ</th>
+                  <th className="py-3 px-4 font-semibold">áž¢ážáŸ’ážáž›áŸážáž“áž·ážŸáŸ’ážŸáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž–áŸáž‰ (Kh / En)</th>
+                  <th className="py-3 px-4 font-semibold">ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ & áž€áž˜áŸ’ážšáž·áž</th>
+                  <th className="py-3 px-4 font-semibold">ážŸáŸ’ážáž¶áž“áž—áž¶áž–ážœážáŸ’ážáž˜áž¶áž“</th>
+                  <th className="py-3 px-4 font-semibold">ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {loading ? (
                   <tr>
                     <td colSpan={7} className="py-8 text-center text-muted-foreground text-xs">
-                      កំពុងទាញយករបាយការណ៍ពី Backend API...
+                      áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€ážšáž”áž¶áž™áž€áž¶ážšážŽáŸáž–áž¸ Backend API...
                     </td>
                   </tr>
                 ) : (

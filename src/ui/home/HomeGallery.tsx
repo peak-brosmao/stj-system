@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Camera, Eye, MapPin, Calendar, Sparkles, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
+import { Button } from "@/ui/ui/Button";
 
 interface PhotoItem {
   id: string;
@@ -20,83 +20,83 @@ const GALLERY_PHOTOS: PhotoItem[] = [
   {
     id: "p1",
     src: "/images/gallery/IMG_2845.JPG",
-    titleKh: "វគ្គបណ្តុះបណ្តាល និងចែករំលែកបទពិសោធន៍ផ្ទាល់",
+    titleKh: "ážœáž‚áŸ’áž‚áž”ážŽáŸ’ážáž»áŸ‡áž”ážŽáŸ’ážáž¶áž› áž“áž·áž„áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž”áž‘áž–áž·ážŸáŸ„áž’áž“áŸáž•áŸ’áž‘áž¶áž›áŸ‹",
     titleEn: "Mentorship & Direct Peer Coaching",
     category: "mentorship",
-    location: "បន្ទប់ SF2, ITC",
-    date: "តុលា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF2, ITC",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p2",
     src: "/images/gallery/IMG_2847.JPG",
-    titleKh: "ថ្នាក់រៀនអនុវត្តជាក់ស្តែង Programming & Coding",
+    titleKh: "ážáŸ’áž“áž¶áž€áŸ‹ážšáŸ€áž“áž¢áž“áž»ážœážáŸ’ážáž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„ Programming & Coding",
     titleEn: "Hands-on Programming Classroom Session",
     category: "classroom",
-    location: "បន្ទប់ SF1, ITC",
-    date: "តុលា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF1, ITC",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p3",
     src: "/images/gallery/IMG_2849.JPG",
-    titleKh: "ការពិភាក្សាដោះស្រាយលំហាត់ស្មុគស្មាញជាក្រុម",
+    titleKh: "áž€áž¶ážšáž–áž·áž—áž¶áž€áŸ’ážŸáž¶ážŠáŸ„áŸ‡ážŸáŸ’ážšáž¶áž™áž›áŸ†áž áž¶ážáŸ‹ážŸáŸ’áž˜áž»áž‚ážŸáŸ’áž˜áž¶áž‰áž‡áž¶áž€áŸ’ážšáž»áž˜",
     titleEn: "Interactive Group Problem Solving",
     category: "classroom",
-    location: "បន្ទប់ SF1, ITC",
-    date: "តុលា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF1, ITC",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p4",
     src: "/images/gallery/IMG_2851.JPG",
-    titleKh: "សិក្ខាសាលាពង្រឹងមូលដ្ឋានគ្រឹះវិទ្យាសាស្ត្រពិត",
+    titleKh: "ážŸáž·áž€áŸ’ážáž¶ážŸáž¶áž›áž¶áž–áž„áŸ’ážšáž¹áž„áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“áž‚áŸ’ážšáž¹áŸ‡ážœáž·áž‘áŸ’áž™áž¶ážŸáž¶ážŸáŸ’ážáŸ’ážšáž–áž·áž",
     titleEn: "Science & Engineering Foundations Workshop",
     category: "workshop",
-    location: "បន្ទប់ SF1 & SF2, ITC",
-    date: "កញ្ញា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF1 & SF2, ITC",
+    date: "áž€áž‰áŸ’áž‰áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p5",
     src: "/images/gallery/IMG_2853.JPG",
-    titleKh: "ការប្រជុំត្រួតពិនិត្យវត្តមាន និងផែនការបង្រៀនរបស់ក្រុមដឹកនាំ",
+    titleKh: "áž€áž¶ážšáž”áŸ’ážšáž‡áž»áŸ†ážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž•áŸ‚áž“áž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“ážšáž”ážŸáŸ‹áž€áŸ’ážšáž»áž˜ážŠáž¹áž€áž“áž¶áŸ†",
     titleEn: "STJ Leadership & Academic Coordination Meeting",
     category: "workshop",
-    location: "បន្ទប់ SF1, ITC",
-    date: "តុលា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF1, ITC",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p6",
     src: "/images/gallery/IMG_2905.JPG",
-    titleKh: "បរិយាកាសសិក្សាសកម្ម និងកក់ក្តៅរវាងរៀមច្បង និងប្អូនៗ",
+    titleKh: "áž”ážšáž·áž™áž¶áž€áž¶ážŸážŸáž·áž€áŸ’ážŸáž¶ážŸáž€áž˜áŸ’áž˜ áž“áž·áž„áž€áž€áŸ‹áž€áŸ’ážáŸ…ážšážœáž¶áž„ážšáŸ€áž˜áž…áŸ’áž”áž„ áž“áž·áž„áž”áŸ’áž¢áž¼áž“áŸ—",
     titleEn: "Active & Supportive Peer-Learning Atmosphere",
     category: "mentorship",
-    location: "បន្ទប់ SF2, ITC",
-    date: "តុលា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF2, ITC",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p7",
     src: "/images/gallery/IMG_2908.JPG",
-    titleKh: "ការណែនាំគន្លឹះដោះស្រាយលំហាត់ប្រឡងប្រចាំឆមាស",
+    titleKh: "áž€áž¶ážšážŽáŸ‚áž“áž¶áŸ†áž‚áž“áŸ’áž›áž¹áŸ‡ážŠáŸ„áŸ‡ážŸáŸ’ážšáž¶áž™áž›áŸ†áž áž¶ážáŸ‹áž”áŸ’ážšáž¡áž„áž”áŸ’ážšáž…áž¶áŸ†áž†áž˜áž¶ážŸ",
     titleEn: "Midterm & Final Exam Strategy Coaching",
     category: "classroom",
-    location: "បន្ទប់ SF1, ITC",
-    date: "វិច្ឆិកា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF1, ITC",
+    date: "ážœáž·áž…áŸ’áž†áž·áž€áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p8",
     src: "/images/gallery/IMG_2910.JPG",
-    titleKh: "សាមគ្គីភាព និងការប្តេជ្ញាចិត្តរបស់សមាជិកស្ម័គ្រចិត្ត STJ",
+    titleKh: "ážŸáž¶áž˜áž‚áŸ’áž‚áž¸áž—áž¶áž– áž“áž·áž„áž€áž¶ážšáž”áŸ’ážáŸáž‡áŸ’áž‰áž¶áž…áž·ážáŸ’ážážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ",
     titleEn: "Volunteer Mentors Solidarity & Commitment",
     category: "mentorship",
-    location: "បរិវេណវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា",
-    date: "តុលា ២០២៦",
+    location: "áž”ážšáž·ážœáŸážŽážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶",
+    date: "ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
   {
     id: "p9",
     src: "/images/gallery/IMG_2915.JPG",
-    titleKh: "ការបង្ហាញវិធីសាស្ត្រស្រាវជ្រាវបច្ចេកវិទ្យាទំនើប",
+    titleKh: "áž€áž¶ážšáž”áž„áŸ’áž áž¶áž‰ážœáž·áž’áž¸ážŸáž¶ážŸáŸ’ážáŸ’ážšážŸáŸ’ážšáž¶ážœáž‡áŸ’ážšáž¶ážœáž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž‘áŸ†áž“áž¾áž”",
     titleEn: "Modern Engineering & Tech Research Showcase",
     category: "workshop",
-    location: "បន្ទប់ SF2, ITC",
-    date: "វិច្ឆិកា ២០២៦",
+    location: "áž”áž“áŸ’áž‘áž”áŸ‹ SF2, ITC",
+    date: "ážœáž·áž…áŸ’áž†áž·áž€áž¶ áŸ¢áŸ áŸ¢áŸ¦",
   },
 ];
 
@@ -134,13 +134,13 @@ export function HomeGallery() {
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
               <Camera className="w-3.5 h-3.5" />
-              <span>សកម្មភាពផ្ទាល់នៅបរិវេណ ITC (Authentic Campus Moments)</span>
+              <span>ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–áž•áŸ’áž‘áž¶áž›áŸ‹áž“áŸ…áž”ážšáž·ážœáŸážŽ ITC (Authentic Campus Moments)</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-              រូបភាពសកម្មភាពជាក់ស្តែងនៃកម្មវិធី STJ
+              ážšáž¼áž”áž—áž¶áž–ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž“áŸƒáž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-              ទិដ្ឋភាពថ្នាក់រៀន សិក្ខាសាលា និងការចែករំលែកចំណេះដឹងពីសមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តជូនដល់និស្សិតប្អូនៗនៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា។
+              áž‘áž·ážŠáŸ’áž‹áž—áž¶áž–ážáŸ’áž“áž¶áž€áŸ‹ážšáŸ€áž“ ážŸáž·áž€áŸ’ážáž¶ážŸáž¶áž›áž¶ áž“áž·áž„áž€áž¶ážšáž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž…áŸ†ážŽáŸáŸ‡ážŠáž¹áž„áž–áž¸ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’ážáž‡áž¼áž“ážŠáž›áŸ‹áž“áž·ážŸáŸ’ážŸáž·ážáž”áŸ’áž¢áž¼áž“áŸ—áž“áŸ…ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶áŸ”
             </p>
           </div>
 
@@ -154,7 +154,7 @@ export function HomeGallery() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              ទាំងអស់ ({GALLERY_PHOTOS.length})
+              áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({GALLERY_PHOTOS.length})
             </button>
             <button
               onClick={() => setActiveTab("classroom")}
@@ -164,7 +164,7 @@ export function HomeGallery() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              ថ្នាក់បង្រៀន (Classrooms)
+              ážáŸ’áž“áž¶áž€áŸ‹áž”áž„áŸ’ážšáŸ€áž“ (Classrooms)
             </button>
             <button
               onClick={() => setActiveTab("mentorship")}
@@ -174,7 +174,7 @@ export function HomeGallery() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              ការបង្ហាត់បង្ហាញ (Mentorship)
+              áž€áž¶ážšáž”áž„áŸ’áž áž¶ážáŸ‹áž”áž„áŸ’áž áž¶áž‰ (Mentorship)
             </button>
             <button
               onClick={() => setActiveTab("workshop")}
@@ -184,7 +184,7 @@ export function HomeGallery() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              សិក្ខាសាលា (Workshops)
+              ážŸáž·áž€áŸ’ážáž¶ážŸáž¶áž›áž¶ (Workshops)
             </button>
           </div>
         </div>
@@ -212,7 +212,7 @@ export function HomeGallery() {
                 {/* Badge Overlay */}
                 <div className="absolute top-3 left-3 flex items-center gap-1.5">
                   <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20">
-                    {photo.category === "classroom" ? "ថ្នាក់រៀន" : photo.category === "mentorship" ? "ការបង្ហាត់" : "សិក្ខាសាលា"}
+                    {photo.category === "classroom" ? "ážáŸ’áž“áž¶áž€áŸ‹ážšáŸ€áž“" : photo.category === "mentorship" ? "áž€áž¶ážšáž”áž„áŸ’áž áž¶ážáŸ‹" : "ážŸáž·áž€áŸ’ážáž¶ážŸáž¶áž›áž¶"}
                   </span>
                 </div>
 
@@ -284,7 +284,7 @@ export function HomeGallery() {
               <h3 className="text-base sm:text-lg font-bold">{filteredPhotos[selectedPhotoIndex].titleKh}</h3>
               <p className="text-xs text-white/70 font-sans">{filteredPhotos[selectedPhotoIndex].titleEn}</p>
               <p className="text-[11px] text-primary-foreground/80 font-mono pt-1">
-                {filteredPhotos[selectedPhotoIndex].location} • {filteredPhotos[selectedPhotoIndex].date}
+                {filteredPhotos[selectedPhotoIndex].location} â€¢ {filteredPhotos[selectedPhotoIndex].date}
               </p>
             </div>
           </div>

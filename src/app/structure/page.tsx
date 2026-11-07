@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { OrganizationTree } from "@/components/structure/OrganizationTree";
+import { Navbar } from "@/ui/layout/Navbar";
+import { Footer } from "@/ui/layout/Footer";
+import { OrganizationTree } from "@/ui/structure/OrganizationTree";
 import { Layers, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/ui/ui/Button";
 
 export const metadata = {
-  title: "រចនាសម្ព័ន្ធ និងមែកធាងដឹកនាំ STJ | Senior Teaching Junior",
-  description: "រចនាសម្ព័ន្ធមែកធាងថ្នាក់ដឹកនាំ និងសមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ តាមបណ្តាឆ្នាំសិក្សា នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)",
+  title: "ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’ áž“áž·áž„áž˜áŸ‚áž€áž’áž¶áž„ážŠáž¹áž€áž“áž¶áŸ† STJ | Senior Teaching Junior",
+  description: "ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž˜áŸ‚áž€áž’áž¶áž„ážáŸ’áž“áž¶áž€áŸ‹ážŠáž¹áž€áž“áž¶áŸ† áž“áž·áž„ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ ážáž¶áž˜áž”ážŽáŸ’ážáž¶áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áž“áŸƒážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ (ITC)",
 };
 
 export default function StructurePage() {
@@ -22,15 +22,15 @@ export default function StructurePage() {
           <div className="space-y-4 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
               <Layers className="w-3.5 h-3.5" />
-              <span>រចនាសម្ព័ន្ធដឹកនាំ & សមាជិក (STJ Hierarchy & Member Tree)</span>
+              <span>ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’ážŠáž¹áž€áž“áž¶áŸ† & ážŸáž˜áž¶áž‡áž·áž€ (STJ Hierarchy & Member Tree)</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
-              មែកធាងរចនាសម្ព័ន្ធ STJ តាមអាណត្តិ
+              áž˜áŸ‚áž€áž’áž¶áž„ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’ STJ ážáž¶áž˜áž¢áž¶ážŽážáŸ’ážáž·
             </h1>
 
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              ស្វែងយល់អំពីរចនាសម្ព័ន្ធគ្រប់គ្រងរបស់កម្មវិធី STJ ពីថ្នាក់ប្រធានកណ្តាល រហូតដល់ប្រធានក្រុមតាមមុខវិជ្ជា និងសមាជិកបង្រៀនទាំងអស់។ រាល់ទិន្នន័យត្រូវបានបែងចែកតាមឆ្នាំសិក្សានីមួយៗយ៉ាងច្បាស់លាស់។
+              ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹áž¢áŸ†áž–áž¸ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážšáž”ážŸáŸ‹áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ áž–áž¸ážáŸ’áž“áž¶áž€áŸ‹áž”áŸ’ážšáž’áž¶áž“áž€ážŽáŸ’ážáž¶áž› ážšáž áž¼ážážŠáž›áŸ‹áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ážáž¶áž˜áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ áž“áž·áž„ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹áŸ” ážšáž¶áž›áŸ‹áž‘áž·áž“áŸ’áž“áž“áŸáž™ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áŸ‚áž„áž…áŸ‚áž€ážáž¶áž˜áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž“áž¸áž˜áž½áž™áŸ—áž™áŸ‰áž¶áž„áž…áŸ’áž”áž¶ážŸáŸ‹áž›áž¶ážŸáŸ‹áŸ”
             </p>
           </div>
 
@@ -42,7 +42,7 @@ export default function StructurePage() {
             <Link href="/">
               <Button variant="ghost" size="sm" className="space-x-1.5 text-xs">
                 <ArrowLeft className="w-3.5 h-3.5" />
-                <span>ត្រឡប់ទៅទំព័រដើម (Back to Home)</span>
+                <span>ážáŸ’ážšáž¡áž”áŸ‹áž‘áŸ…áž‘áŸ†áž–áŸážšážŠáž¾áž˜ (Back to Home)</span>
               </Button>
             </Link>
           </div>

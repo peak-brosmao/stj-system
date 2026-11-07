@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Megaphone, Plus, Calendar, Globe, X, RefreshCw, AlertCircle, CheckCircle } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
 
 interface AnnouncementItem {
   id: string;
@@ -61,33 +61,33 @@ export default function SystemAnnouncementsPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "បរាជ័យក្នុងការបង្កើតសេចក្តីជូនដំណឹង");
+        throw new Error(data.error || "áž”ážšáž¶áž‡áŸáž™áž€áŸ’áž“áž»áž„áž€áž¶ážšáž”áž„áŸ’áž€áž¾ážážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„");
       }
-      setSuccess("បានបង្កើតសេចក្តីជូនដំណឹងជោគជ័យ");
+      setSuccess("áž”áž¶áž“áž”áž„áŸ’áž€áž¾ážážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž‡áŸ„áž‚áž‡áŸáž™");
       setForm({ titleKh: "", contentKh: "", scope: "GLOBAL" });
       setIsModalOpen(false);
       loadAnnouncements();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "មានបញ្ហាក្នុងការរក្សាទុក");
+      setError(err instanceof Error ? err.message : "áž˜áž¶áž“áž”áž‰áŸ’áž áž¶áž€áŸ’áž“áž»áž„áž€áž¶ážšážšáž€áŸ’ážŸáž¶áž‘áž»áž€");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Megaphone className="w-4 h-4" />
-              <span>សេចក្តីជូនដំណឹងប្រព័ន្ធ</span>
+              <span>ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              សេចក្តីជូនដំណឹងទូទៅ (Announcements)
+              ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž‘áž¼áž‘áŸ… (Announcements)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ផ្សព្វផ្សាយដំណឹងផ្លូវការចេញពីប្រព័ន្ធទិន្នន័យ (Database) ជូនដល់សមាជិក និងប្រធានមុខវិជ្ជា
+              áž•áŸ’ážŸáž–áŸ’ážœáž•áŸ’ážŸáž¶áž™ážŠáŸ†ážŽáž¹áž„áž•áŸ’áž›áž¼ážœáž€áž¶ážšáž…áŸáž‰áž–áž¸áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž‘áž·áž“áŸ’áž“áž“áŸáž™ (Database) áž‡áž¼áž“ážŠáž›áŸ‹ážŸáž˜áž¶áž‡áž·áž€ áž“áž·áž„áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ export default function SystemAnnouncementsPage() {
               className="text-xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-              ផ្ទុកឡើងវិញ
+              áž•áŸ’áž‘áž»áž€áž¡áž¾áž„ážœáž·áž‰
             </Button>
             <Button
               size="sm"
@@ -107,7 +107,7 @@ export default function SystemAnnouncementsPage() {
               className="text-xs bg-primary text-primary-foreground font-semibold"
             >
               <Plus className="w-4 h-4 mr-1.5" />
-              បង្កើតសេចក្តីជូនដំណឹង
+              áž”áž„áŸ’áž€áž¾ážážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„
             </Button>
           </div>
         </div>
@@ -128,12 +128,12 @@ export default function SystemAnnouncementsPage() {
 
         {loading ? (
           <div className="text-center py-12 text-muted-foreground text-xs">
-            កំពុងទាញយកទិន្នន័យពី Database...
+            áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™áž–áž¸ Database...
           </div>
         ) : announcements.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center text-muted-foreground text-xs">
-              ពុំទាន់មានសេចក្តីជូនដំណឹងក្នុង Database នៅឡើយទេ។ សូមចុច &quot;បង្កើតសេចក្តីជូនដំណឹង&quot; ដើម្បីបញ្ចូល។
+              áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž€áŸ’áž“áž»áž„ Database áž“áŸ…áž¡áž¾áž™áž‘áŸáŸ” ážŸáž¼áž˜áž…áž»áž… &quot;áž”áž„áŸ’áž€áž¾ážážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„&quot; ážŠáž¾áž˜áŸ’áž”áž¸áž”áž‰áŸ’áž…áž¼áž›áŸ”
             </CardContent>
           </Card>
         ) : (
@@ -175,7 +175,7 @@ export default function SystemAnnouncementsPage() {
           <div className="bg-card border border-border rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in duration-200 max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b border-border flex items-center justify-between">
               <h2 className="text-sm font-bold text-foreground">
-                បង្កើតសេចក្តីជូនដំណឹងផ្លូវការ (New Announcement)
+                áž”áž„áŸ’áž€áž¾ážážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž•áŸ’áž›áž¼ážœáž€áž¶ážš (New Announcement)
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -187,43 +187,43 @@ export default function SystemAnnouncementsPage() {
             <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
               <div>
                 <label className="block font-semibold text-foreground mb-1">
-                  ចំណងជើងសេចក្តីជូនដំណឹង (Title)
+                  áž…áŸ†ážŽáž„áž‡áž¾áž„ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ (Title)
                 </label>
                 <input
                   type="text"
                   required
                   value={form.titleKh}
                   onChange={(e) => setForm({ ...form, titleKh: e.target.value })}
-                  placeholder="ឧ. ការស្រង់វត្តមានសប្តាហ៍ទី១..."
+                  placeholder="áž§. áž€áž¶ážšážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ážŸáž”áŸ’ážáž¶áž áŸáž‘áž¸áŸ¡..."
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-xs focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
 
               <div>
                 <label className="block font-semibold text-foreground mb-1">
-                  វិសាលភាព (Scope)
+                  ážœáž·ážŸáž¶áž›áž—áž¶áž– (Scope)
                 </label>
                 <select
                   value={form.scope}
                   onChange={(e) => setForm({ ...form, scope: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-xs focus:ring-1 focus:ring-primary outline-none"
                 >
-                  <option value="GLOBAL">ទូទៅទូទាំងប្រព័ន្ធ (GLOBAL)</option>
-                  <option value="COURSE">តាមមុខវិជ្ជា (COURSE)</option>
-                  <option value="DEPARTMENT">តាមដេប៉ាតឺម៉ង់ (DEPARTMENT)</option>
+                  <option value="GLOBAL">áž‘áž¼áž‘áŸ…áž‘áž¼áž‘áž¶áŸ†áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’ (GLOBAL)</option>
+                  <option value="COURSE">ážáž¶áž˜áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (COURSE)</option>
+                  <option value="DEPARTMENT">ážáž¶áž˜ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (DEPARTMENT)</option>
                 </select>
               </div>
 
               <div>
                 <label className="block font-semibold text-foreground mb-1">
-                  ខ្លឹមសារសេចក្តីជូនដំណឹង (Content)
+                  ážáŸ’áž›áž¹áž˜ážŸáž¶ážšážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ (Content)
                 </label>
                 <textarea
                   required
                   rows={4}
                   value={form.contentKh}
                   onChange={(e) => setForm({ ...form, contentKh: e.target.value })}
-                  placeholder="សរសេរខ្លឹមសារលម្អិត..."
+                  placeholder="ážŸážšážŸáŸážšážáŸ’áž›áž¹áž˜ážŸáž¶ážšáž›áž˜áŸ’áž¢áž·áž..."
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-xs focus:ring-1 focus:ring-primary outline-none"
                 />
               </div>
@@ -237,7 +237,7 @@ export default function SystemAnnouncementsPage() {
                   disabled={submitting}
                   className="text-xs"
                 >
-                  បោះបង់
+                  áž”áŸ„áŸ‡áž”áž„áŸ‹
                 </Button>
                 <Button
                   type="submit"
@@ -245,7 +245,7 @@ export default function SystemAnnouncementsPage() {
                   disabled={submitting}
                   className="text-xs bg-primary text-primary-foreground font-semibold"
                 >
-                  {submitting ? "កំពុងរក្សាទុក..." : "រក្សាទុកចូល Database"}
+                  {submitting ? "áž€áŸ†áž–áž»áž„ážšáž€áŸ’ážŸáž¶áž‘áž»áž€..." : "ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž…áž¼áž› Database"}
                 </Button>
               </div>
             </form>

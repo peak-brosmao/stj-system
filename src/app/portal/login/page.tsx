@@ -12,11 +12,11 @@ import {
   AlertCircle,
   GraduationCap,
 } from "lucide-react";
-import { useI18n } from "@/components/i18n/I18nProvider";
-import { LanguageSelector } from "@/components/i18n/LanguageSelector";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { Button } from "@/components/ui/Button";
-import { Logo } from "@/components/ui/Logo";
+import { useI18n } from "@/ui/i18n/I18nProvider";
+import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
+import { ThemeToggle } from "@/ui/theme/ThemeToggle";
+import { Button } from "@/ui/ui/Button";
+import { Logo } from "@/ui/ui/Logo";
 
 function LoginContent() {
   const router = useRouter();
@@ -85,7 +85,7 @@ function LoginContent() {
           </div>
           <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-semibold mb-2">
             <GraduationCap className="w-3.5 h-3.5" />
-            <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ Portal</span>
+            <span>ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ â€¢ STJ Portal</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {t("auth.portalLoginTitle")}
@@ -116,7 +116,7 @@ function LoginContent() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. e20251455 ឬ e20251455@itc.edu.kh"
+                  placeholder="e.g. e20251455 áž¬ e20251455@itc.edu.kh"
                   className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
                 />
               </div>
@@ -143,13 +143,13 @@ function LoginContent() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full pl-9 pr-10 py-2 text-sm rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((visible) => !visible)}
-                  aria-label={showPassword ? "លាក់លេខសម្ងាត់" : "បង្ហាញលេខសម្ងាត់"}
+                  aria-label={showPassword ? "áž›áž¶áž€áŸ‹áž›áŸážážŸáž˜áŸ’áž„áž¶ážáŸ‹" : "áž”áž„áŸ’áž áž¶áž‰áž›áŸážážŸáž˜áŸ’áž„áž¶ážáŸ‹"}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

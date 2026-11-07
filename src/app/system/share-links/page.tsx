@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Share2, Trash2, ExternalLink, Copy, Check, ShieldAlert, Eye, RefreshCw } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 interface ShareItem {
   id: string;
@@ -41,7 +41,7 @@ export default function SystemShareLinksPage() {
   }, []);
 
   const handleRevoke = async (id: string) => {
-    if (!confirm("តើអ្នកពិតជាចង់លុបចោលតំណភ្ជាប់ចែករំលែកនេះមែនទេ? (Revoke Share Link)")) return;
+    if (!confirm("ážáž¾áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž›áž»áž”áž…áŸ„áž›ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž“áŸáŸ‡áž˜áŸ‚áž“áž‘áŸ? (Revoke Share Link)")) return;
     try {
       await fetch(`/api/system/share-links?id=${id}`, { method: "DELETE" });
       loadLinks();
@@ -58,7 +58,7 @@ export default function SystemShareLinksPage() {
   };
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -67,16 +67,16 @@ export default function SystemShareLinksPage() {
               <span>Public Token Auditor</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ការគ្រប់គ្រងតំណភ្ជាប់ចែករំលែក (Share Links Audit)
+              áž€áž¶ážšáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ (Share Links Audit)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ពិនិត្យ តាមដាន និងលុបចោលតំណភ្ជាប់របាយការណ៍វត្តមានជាសាធារណៈ
+              áž–áž·áž“áž·ážáŸ’áž™ ážáž¶áž˜ážŠáž¶áž“ áž“áž·áž„áž›áž»áž”áž…áŸ„áž›ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹ážšáž”áž¶áž™áž€áž¶ážšážŽáŸážœážáŸ’ážáž˜áž¶áž“áž‡áž¶ážŸáž¶áž’áž¶ážšážŽáŸˆ
             </p>
           </div>
 
           <Button variant="outline" size="sm" onClick={loadLinks} className="text-xs space-x-1.5">
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>ផ្ទុកឡើងវិញ</span>
+            <span>áž•áŸ’áž‘áž»áž€áž¡áž¾áž„ážœáž·áž‰</span>
           </Button>
         </div>
 
@@ -85,12 +85,12 @@ export default function SystemShareLinksPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">ចំណងជើងរបាយការណ៍</th>
-                  <th className="py-3 px-4 font-semibold">មុខវិជ្ជា / វគ្គ</th>
-                  <th className="py-3 px-4 font-semibold">អ្នកបង្កើត</th>
-                  <th className="py-3 px-4 font-semibold text-center">ចូលមើល</th>
-                  <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
-                  <th className="py-3 px-4 font-semibold text-right">សកម្មភាព</th>
+                  <th className="py-3 px-4 font-semibold">áž…áŸ†ážŽáž„áž‡áž¾áž„ážšáž”áž¶áž™áž€áž¶ážšážŽáŸ</th>
+                  <th className="py-3 px-4 font-semibold">áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ / ážœáž‚áŸ’áž‚</th>
+                  <th className="py-3 px-4 font-semibold">áž¢áŸ’áž“áž€áž”áž„áŸ’áž€áž¾áž</th>
+                  <th className="py-3 px-4 font-semibold text-center">áž…áž¼áž›áž˜áž¾áž›</th>
+                  <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
+                  <th className="py-3 px-4 font-semibold text-right">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -105,7 +105,7 @@ export default function SystemShareLinksPage() {
                     <td className="py-3 px-4">
                       <div className="font-mono font-bold text-primary">{link.course.code}</div>
                       <div className="text-[10px] text-muted-foreground truncate max-w-xs">
-                        {link.session?.title || "គ្រប់វគ្គសិក្សា"}
+                        {link.session?.title || "áž‚áŸ’ážšáž”áŸ‹ážœáž‚áŸ’áž‚ážŸáž·áž€áŸ’ážŸáž¶"}
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -117,7 +117,7 @@ export default function SystemShareLinksPage() {
                     </td>
                     <td className="py-3 px-4 text-center">
                       <Badge variant={link.isRevoked ? "destructive" : "success"}>
-                        {link.isRevoked ? "បានលុបចោល" : "សកម្ម"}
+                        {link.isRevoked ? "áž”áž¶áž“áž›áž»áž”áž…áŸ„áž›" : "ážŸáž€áž˜áŸ’áž˜"}
                       </Badge>
                     </td>
                     <td className="py-3 px-4 text-right">
@@ -158,7 +158,7 @@ export default function SystemShareLinksPage() {
                 {links.length === 0 && (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
-                      {loading ? "កំពុងទាញយកទិន្នន័យ..." : "ពុំមានតំណភ្ជាប់ចែករំលែកឡើយ"}
+                      {loading ? "áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™..." : "áž–áž»áŸ†áž˜áž¶áž“ážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž¡áž¾áž™"}
                     </td>
                   </tr>
                 )}

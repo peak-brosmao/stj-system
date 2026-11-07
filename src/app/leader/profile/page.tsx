@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { User, Lock, Mail, Shield, CheckCircle2 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
 
 export default function LeaderProfilePage() {
   const [profile, setProfile] = useState({
-    fullNameKh: "លាង ជីងហេង",
+    fullNameKh: "áž›áž¶áž„ áž‡áž¸áž„áž áŸáž„",
     fullNameEn: "LEANG JINGHENG",
     email: "leang.jingheng@itc.edu.kh",
     phone: "0976355500",
@@ -32,27 +32,27 @@ export default function LeaderProfilePage() {
             <span>Leader Identity</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-            គណនីប្រធានមុខវិជ្ជា (Leader Profile)
+            áž‚ážŽáž“áž¸áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Leader Profile)
           </h1>
           <p className="text-xs text-muted-foreground">
-            ព័ត៌មានផ្ទាល់ខ្លួន និងការកំណត់សុវត្ថិភាព
+            áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“ áž“áž·áž„áž€áž¶ážšáž€áŸ†ážŽážáŸ‹ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–
           </p>
         </div>
 
         {saved && (
           <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4" />
-            <span>ទិន្នន័យត្រូវបានកែប្រែដោយជោគជ័យ។</span>
+            <span>áž‘áž·áž“áŸ’áž“áž“áŸáž™ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áŸ‚áž”áŸ’ážšáŸ‚ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™áŸ”</span>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-foreground">ព័ត៌មានផ្ទាល់ខ្លួន</h3>
+              <h3 className="font-bold text-sm text-foreground">áž–áŸážáŸŒáž˜áž¶áž“áž•áŸ’áž‘áž¶áž›áŸ‹ážáŸ’áž›áž½áž“</h3>
               <form onSubmit={handleSave} className="space-y-3 text-xs">
                 <div>
-                  <label className="block font-medium mb-1">គោត្តនាម-នាម (ខ្មែរ)</label>
+                  <label className="block font-medium mb-1">áž‚áŸ„ážáŸ’ážáž“áž¶áž˜-áž“áž¶áž˜ (ážáŸ’áž˜áŸ‚ážš)</label>
                   <input
                     type="text"
                     value={profile.fullNameKh}
@@ -61,7 +61,7 @@ export default function LeaderProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">ឈ្មោះឡាតាំង</label>
+                  <label className="block font-medium mb-1">ážˆáŸ’áž˜áŸ„áŸ‡áž¡áž¶ážáž¶áŸ†áž„</label>
                   <input
                     type="text"
                     value={profile.fullNameEn}
@@ -70,7 +70,7 @@ export default function LeaderProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">អត្តលេខនិស្សិត ITC</label>
+                  <label className="block font-medium mb-1">áž¢ážáŸ’ážáž›áŸážáž“áž·ážŸáŸ’ážŸáž·áž ITC</label>
                   <input
                     type="text"
                     disabled
@@ -79,7 +79,7 @@ export default function LeaderProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">អ៊ីមែលផ្លូវការ</label>
+                  <label className="block font-medium mb-1">áž¢áŸŠáž¸áž˜áŸ‚áž›áž•áŸ’áž›áž¼ážœáž€áž¶ážš</label>
                   <input
                     type="email"
                     disabled
@@ -88,7 +88,7 @@ export default function LeaderProfilePage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">លេខទូរស័ព្ទ</label>
+                  <label className="block font-medium mb-1">áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘</label>
                   <input
                     type="text"
                     value={profile.phone}
@@ -98,7 +98,7 @@ export default function LeaderProfilePage() {
                 </div>
                 <div className="pt-2">
                   <Button type="submit" size="sm" className="w-full">
-                    រក្សាទុកព័ត៌មាន
+                    ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž–áŸážáŸŒáž˜áž¶áž“
                   </Button>
                 </div>
               </form>
@@ -107,35 +107,35 @@ export default function LeaderProfilePage() {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-sm text-foreground">ប្តូរពាក្យសម្ងាត់</h3>
+              <h3 className="font-bold text-sm text-foreground">áž”áŸ’ážáž¼ážšáž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹</h3>
               <form className="space-y-3 text-xs">
                 <div>
-                  <label className="block font-medium mb-1">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+                  <label className="block font-medium mb-1">áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“</label>
                   <input
                     type="password"
-                    placeholder="••••••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">ពាក្យសម្ងាត់ថ្មី</label>
+                  <label className="block font-medium mb-1">áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’áž˜áž¸</label>
                   <input
                     type="password"
-                    placeholder="••••••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium mb-1">បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
+                  <label className="block font-medium mb-1">áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’áž˜áž¸</label>
                   <input
                     type="password"
-                    placeholder="••••••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     className="w-full p-2 rounded-lg border border-input bg-background"
                   />
                 </div>
                 <div className="pt-2">
                   <Button type="button" variant="outline" size="sm" className="w-full">
-                    ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
+                    áž’áŸ’ážœáž¾áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“áž—áž¶áž–áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹
                   </Button>
                 </div>
               </form>

@@ -1,12 +1,12 @@
 import Image from "next/image";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/ui/layout/Navbar";
+import { Footer } from "@/ui/layout/Footer";
 import { GraduationCap, Target, Users, BookOpen, Shield, HeartHandshake, CheckCircle2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/ui/ui/Card";
 
 export const metadata = {
-  title: "អំពីកម្មវិធី STJ | Senior Teaching Junior",
-  description: "ប្រវត្តិនៃការកកើត ចក្ខុវិស័យ បេសកកម្ម និងទស្សនវិជ្ជានៃការបង្រៀនរបស់កម្មវិធី STJ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា",
+  title: "áž¢áŸ†áž–áž¸áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ | Senior Teaching Junior",
+  description: "áž”áŸ’ážšážœážáŸ’ážáž·áž“áŸƒáž€áž¶ážšáž€áž€áž¾áž áž…áž€áŸ’ážáž»ážœáž·ážŸáŸáž™ áž”áŸážŸáž€áž€áž˜áŸ’áž˜ áž“áž·áž„áž‘ážŸáŸ’ážŸáž“ážœáž·áž‡áŸ’áž‡áž¶áž“áŸƒáž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“ážšáž”ážŸáŸ‹áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ áž“áŸ…ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶",
 };
 
 export default function AboutPage() {
@@ -32,13 +32,13 @@ export default function AboutPage() {
             </div>
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
               <GraduationCap className="w-4 h-4" />
-              <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • Institute of Technology of Cambodia</span>
+              <span>ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ â€¢ Institute of Technology of Cambodia</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
-              អំពីកម្មវិធី STJ (Senior Teaching Junior)
+              áž¢áŸ†áž–áž¸áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ (Senior Teaching Junior)
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              ប្រវត្តិនៃការកកើត ចក្ខុវិស័យ និងរចនាសម្ព័ន្ធគ្រប់គ្រងការសិក្សារបស់ STJ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា
+              áž”áŸ’ážšážœážáŸ’ážáž·áž“áŸƒáž€áž¶ážšáž€áž€áž¾áž áž…áž€áŸ’ážáž»ážœáž·ážŸáŸáž™ áž“áž·áž„ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž€áž¶ážšážŸáž·áž€áŸ’ážŸáž¶ážšáž”ážŸáŸ‹ STJ áž“áŸ…ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶
             </p>
           </div>
 
@@ -55,13 +55,13 @@ export default function AboutPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
             <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6 text-white space-y-1">
               <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-primary text-primary-foreground">
-                សាមគ្គីភាព និងការប្តេជ្ញាចិត្ត
+                ážŸáž¶áž˜áž‚áŸ’áž‚áž¸áž—áž¶áž– áž“áž·áž„áž€áž¶ážšáž”áŸ’ážáŸáž‡áŸ’áž‰áž¶áž…áž·ážáŸ’áž
               </span>
               <h2 className="text-base sm:text-2xl font-bold leading-tight drop-shadow">
-                សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្ត STJ ឆ្នាំសិក្សា ២០២៦-២០២៧
+                ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦-áŸ¢áŸ áŸ¢áŸ§
               </h2>
               <p className="text-xs sm:text-sm text-white/80 font-sans max-w-2xl">
-                ក្រុមការងាររៀមច្បងតំណាងមកពីគ្រប់ដេប៉ាតឺម៉ង់នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា រួមគ្នាផ្ទេរចំណេះដឹងវិស្វកម្ម។
+                áž€áŸ’ážšáž»áž˜áž€áž¶ážšáž„áž¶ážšážšáŸ€áž˜áž…áŸ’áž”áž„ážáŸ†ážŽáž¶áž„áž˜áž€áž–áž¸áž‚áŸ’ážšáž”áŸ‹ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹áž“áŸƒážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ ážšáž½áž˜áž‚áŸ’áž“áž¶áž•áŸ’áž‘áŸážšáž…áŸ†ážŽáŸáŸ‡ážŠáž¹áž„ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”
               </p>
             </div>
           </div>
@@ -73,9 +73,9 @@ export default function AboutPage() {
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <Target className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-base">ចក្ខុវិស័យ (Vision)</h3>
+                <h3 className="font-bold text-base">áž…áž€áŸ’ážáž»ážœáž·ážŸáŸáž™ (Vision)</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  ក្លាយជាសហគមន៍សិក្សាគំរូនៅ ITC ដែលផ្សារភ្ជាប់ទំនាក់ទំនងរវាងនិស្សិតរៀមច្បង និងនិស្សិតប្អូន តាមរយៈការផ្ទេរបទពិសោធន៍ និងបច្ចេកវិទ្យាទំនើប។
+                  áž€áŸ’áž›áž¶áž™áž‡áž¶ážŸáž áž‚áž˜áž“áŸážŸáž·áž€áŸ’ážŸáž¶áž‚áŸ†ážšáž¼áž“áŸ… ITC ážŠáŸ‚áž›áž•áŸ’ážŸáž¶ážšáž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ†áž“áž¶áž€áŸ‹áž‘áŸ†áž“áž„ážšážœáž¶áž„áž“áž·ážŸáŸ’ážŸáž·ážážšáŸ€áž˜áž…áŸ’áž”áž„ áž“áž·áž„áž“áž·ážŸáŸ’ážŸáž·ážáž”áŸ’áž¢áž¼áž“ ážáž¶áž˜ážšáž™áŸˆáž€áž¶ážšáž•áŸ’áž‘áŸážšáž”áž‘áž–áž·ážŸáŸ„áž’áž“áŸ áž“áž·áž„áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž‘áŸ†áž“áž¾áž”áŸ”
                 </p>
               </CardContent>
             </Card>
@@ -85,9 +85,9 @@ export default function AboutPage() {
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-base">បេសកកម្ម (Mission)</h3>
+                <h3 className="font-bold text-base">áž”áŸážŸáž€áž€áž˜áŸ’áž˜ (Mission)</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  រៀបចំថ្នាក់បង្រៀនបន្ថែមដោយឥតគិតថ្លៃលើមុខវិជ្ជាស្នូល ដូចជា Programming, Math, Physics, និង Chemistry ដើម្បីជួយពង្រឹងសមត្ថភាពសិក្សាជាក់ស្តែង។
+                  ážšáŸ€áž”áž…áŸ†ážáŸ’áž“áž¶áž€áŸ‹áž”áž„áŸ’ážšáŸ€áž“áž”áž“áŸ’ážáŸ‚áž˜ážŠáŸ„áž™áž¥ážáž‚áž·ážážáŸ’áž›áŸƒáž›áž¾áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáŸ’áž“áž¼áž› ážŠáž¼áž…áž‡áž¶ Programming, Math, Physics, áž“áž·áž„ Chemistry ážŠáž¾áž˜áŸ’áž”áž¸áž‡áž½áž™áž–áž„áŸ’ážšáž¹áž„ážŸáž˜ážáŸ’ážáž—áž¶áž–ážŸáž·áž€áŸ’ážŸáž¶áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áŸ”
                 </p>
               </CardContent>
             </Card>
@@ -97,9 +97,9 @@ export default function AboutPage() {
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
                   <Shield className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-base">គុណតម្លៃ (Values)</h3>
+                <h3 className="font-bold text-base">áž‚áž»ážŽážáž˜áŸ’áž›áŸƒ (Values)</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  សាមគ្គីភាព ការគោរពវិន័យ ភាពស្មោះត្រង់ក្នុងការស្រង់វត្តមាន និងការលើកកម្ពស់ស្មារតីចែករំលែកដោយឥតអាត្មានិយម។
+                  ážŸáž¶áž˜áž‚áŸ’áž‚áž¸áž—áž¶áž– áž€áž¶ážšáž‚áŸ„ážšáž–ážœáž·áž“áŸáž™ áž—áž¶áž–ážŸáŸ’áž˜áŸ„áŸ‡ážáŸ’ážšáž„áŸ‹áž€áŸ’áž“áž»áž„áž€áž¶ážšážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž€áž¶ážšáž›áž¾áž€áž€áž˜áŸ’áž–ážŸáŸ‹ážŸáŸ’áž˜áž¶ážšážáž¸áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážŠáŸ„áž™áž¥ážáž¢áž¶ážáŸ’áž˜áž¶áž“áž·áž™áž˜áŸ”
                 </p>
               </CardContent>
             </Card>
@@ -110,22 +110,22 @@ export default function AboutPage() {
             <div className="space-y-4">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
                 <HeartHandshake className="w-3.5 h-3.5" />
-                <span>ទស្សនវិជ្ជានៃការបង្រៀន (Teaching Philosophy)</span>
+                <span>áž‘ážŸáŸ’ážŸáž“ážœáž·áž‡áŸ’áž‡áž¶áž“áŸƒáž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“ (Teaching Philosophy)</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold leading-snug">
-                រៀនកាន់តែច្បាស់ តាមរយៈការចែករំលែកទៅកាន់អ្នកដទៃ
+                ážšáŸ€áž“áž€áž¶áž“áŸ‹ážáŸ‚áž…áŸ’áž”áž¶ážŸáŸ‹ ážáž¶áž˜ážšáž™áŸˆáž€áž¶ážšáž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž‘áŸ…áž€áž¶áž“áŸ‹áž¢áŸ’áž“áž€ážŠáž‘áŸƒ
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                នៅ STJ យើងជឿជាក់ថាវិធីសាស្ត្រល្អបំផុតក្នុងការយល់ដឹងស៊ីជម្រៅលើមុខវិជ្ជាវិស្វកម្ម គឺការបង្រៀនទៅកាន់អ្នកដទៃ។ និស្សិតរៀមច្បងដែលទទួលបានពិន្ទុល្អ និងមានជំនាញគរុកោសល្យ ត្រូវបានជ្រើសរើសដើម្បីដឹកនាំក្រុមសិក្សា។ ពួកគេមិនត្រឹមតែបង្រៀនទ្រឹស្តីប៉ុណ្ណោះទេ ប៉ុន្តែថែមទាំងចែករំលែកតិចនិកនៃការប្រឡង និងការដោះស្រាយលំហាត់ស្មុគស្មាញផងដែរ។
+                áž“áŸ… STJ áž™áž¾áž„áž‡áž¿áž‡áž¶áž€áŸ‹ážáž¶ážœáž·áž’áž¸ážŸáž¶ážŸáŸ’ážáŸ’ážšáž›áŸ’áž¢áž”áŸ†áž•áž»ážáž€áŸ’áž“áž»áž„áž€áž¶ážšáž™áž›áŸ‹ážŠáž¹áž„ážŸáŸŠáž¸áž‡áž˜áŸ’ážšáŸ…áž›áž¾áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ áž‚ážºáž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“áž‘áŸ…áž€áž¶áž“áŸ‹áž¢áŸ’áž“áž€ážŠáž‘áŸƒáŸ” áž“áž·ážŸáŸ’ážŸáž·ážážšáŸ€áž˜áž…áŸ’áž”áž„ážŠáŸ‚áž›áž‘áž‘áž½áž›áž”áž¶áž“áž–áž·áž“áŸ’áž‘áž»áž›áŸ’áž¢ áž“áž·áž„áž˜áž¶áž“áž‡áŸ†áž“áž¶áž‰áž‚ážšáž»áž€áŸ„ážŸáž›áŸ’áž™ ážáŸ’ážšáž¼ážœáž”áž¶áž“áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸážŠáž¾áž˜áŸ’áž”áž¸ážŠáž¹áž€áž“áž¶áŸ†áž€áŸ’ážšáž»áž˜ážŸáž·áž€áŸ’ážŸáž¶áŸ” áž–áž½áž€áž‚áŸáž˜áž·áž“ážáŸ’ážšáž¹áž˜ážáŸ‚áž”áž„áŸ’ážšáŸ€áž“áž‘áŸ’ážšáž¹ážŸáŸ’ážáž¸áž”áŸ‰áž»ážŽáŸ’ážŽáŸ„áŸ‡áž‘áŸ áž”áŸ‰áž»áž“áŸ’ážáŸ‚ážáŸ‚áž˜áž‘áž¶áŸ†áž„áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážáž·áž…áž“áž·áž€áž“áŸƒáž€áž¶ážšáž”áŸ’ážšáž¡áž„ áž“áž·áž„áž€áž¶ážšážŠáŸ„áŸ‡ážŸáŸ’ážšáž¶áž™áž›áŸ†áž áž¶ážáŸ‹ážŸáŸ’áž˜áž»áž‚ážŸáŸ’áž˜áž¶áž‰áž•áž„ážŠáŸ‚ážšáŸ”
               </p>
               <div className="space-y-2 pt-2 text-xs text-foreground font-medium">
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>ការបណ្តុះបណ្តាលអនុវត្តកូដ និងរូបមន្តដោយផ្ទាល់</span>
+                  <span>áž€áž¶ážšáž”ážŽáŸ’ážáž»áŸ‡áž”ážŽáŸ’ážáž¶áž›áž¢áž“áž»ážœážáŸ’ážáž€áž¼ážŠ áž“áž·áž„ážšáž¼áž”áž˜áž“áŸ’ážážŠáŸ„áž™áž•áŸ’áž‘áž¶áž›áŸ‹</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>ការតាមដានវត្តមាន និងវឌ្ឍនភាពសិក្សាប្រកបដោយតម្លាភាព</span>
+                  <span>áž€áž¶ážšážáž¶áž˜ážŠáž¶áž“ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„ážœážŒáŸ’ážáž“áž—áž¶áž–ážŸáž·áž€áŸ’ážŸáž¶áž”áŸ’ážšáž€áž”ážŠáŸ„áž™ážáž˜áŸ’áž›áž¶áž—áž¶áž–</span>
                 </div>
               </div>
             </div>
@@ -140,8 +140,8 @@ export default function AboutPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 text-white text-xs">
-                <p className="font-bold">បរិយាកាសសិក្សាដោយផ្ទាល់</p>
-                <p className="text-[10px] text-white/80 font-sans">អគារ B, បន្ទប់សិក្សា ITC</p>
+                <p className="font-bold">áž”ážšáž·áž™áž¶áž€áž¶ážŸážŸáž·áž€áŸ’ážŸáž¶ážŠáŸ„áž™áž•áŸ’áž‘áž¶áž›áŸ‹</p>
+                <p className="text-[10px] text-white/80 font-sans">áž¢áž‚áž¶ážš B, áž”áž“áŸ’áž‘áž”áŸ‹ážŸáž·áž€áŸ’ážŸáž¶ ITC</p>
               </div>
             </div>
           </div>

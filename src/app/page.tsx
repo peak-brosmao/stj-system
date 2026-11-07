@@ -17,13 +17,13 @@ import {
   Sparkles,
   LayoutDashboard,
 } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Navbar } from "@/ui/layout/Navbar";
+import { Footer } from "@/ui/layout/Footer";
+import { Button } from "@/ui/ui/Button";
+import { Card, CardContent } from "@/ui/ui/Card";
 import { LARAVEL_API_BASE } from "@/lib/laravelApi";
-import { HomeGallery } from "@/components/home/HomeGallery";
-import { HeroAnimatedBackground } from "@/components/home/HeroAnimatedBackground";
+import { HomeGallery } from "@/ui/home/HomeGallery";
+import { HeroAnimatedBackground } from "@/ui/home/HeroAnimatedBackground";
 
 export const dynamic = "force-dynamic";
 
@@ -49,46 +49,46 @@ export default async function HomePage() {
   }
 
   const stats = [
-    { label: "សមាជិករៀមច្បងស្ម័គ្រចិត្ត (Active Members)", value: `${totalMembers}+`, icon: Users },
-    { label: "មុខវិជ្ជាស្នូល (Core Programs)", value: `${totalCourses}`, icon: BookOpen },
-    { label: "ជំនួយការអាវុសោ (Senior Mentors)", value: `${totalLeaders}`, icon: Award },
-    { label: "វគ្គបង្រៀនបានបញ្ចប់ (Completed Sessions)", value: `${completedSessions}+`, icon: Calendar },
+    { label: "ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž (Active Members)", value: `${totalMembers}+`, icon: Users },
+    { label: "áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáŸ’áž“áž¼áž› (Core Programs)", value: `${totalCourses}`, icon: BookOpen },
+    { label: "áž‡áŸ†áž“áž½áž™áž€áž¶ážšáž¢áž¶ážœáž»ážŸáŸ„ (Senior Mentors)", value: `${totalLeaders}`, icon: Award },
+    { label: "ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“áž”áž¶áž“áž”áž‰áŸ’áž…áž”áŸ‹ (Completed Sessions)", value: `${completedSessions}+`, icon: Calendar },
   ];
 
   const programs = [
     {
       slug: "programming",
-      title: "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)",
+      title: "áž€áž¶ážšážŸážšážŸáŸážšáž€áž˜áŸ’áž˜ážœáž·áž’áž¸áž€áž»áŸ†áž–áŸ’áž™áž¼áž‘áŸážš (Programming)",
       code: "PROG101",
       icon: Code,
-      desc: "ពង្រឹងមូលដ្ឋានគ្រឹះ C, C++, Data Structures, Algorithms, និងការដោះស្រាយបញ្ហាជាក់ស្តែងសម្រាប់វិស្វកម្ម។",
+      desc: "áž–áž„áŸ’ážšáž¹áž„áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“áž‚áŸ’ážšáž¹áŸ‡ C, C++, Data Structures, Algorithms, áž“áž·áž„áž€áž¶ážšážŠáŸ„áŸ‡ážŸáŸ’ážšáž¶áž™áž”áž‰áŸ’áž áž¶áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       color: "from-blue-600 to-indigo-600",
       image: "/images/gallery/IMG_2847.JPG",
     },
     {
       slug: "mathematics",
-      title: "គណិតវិទ្យាវិស្វកម្ម (Mathematics)",
+      title: "áž‚ážŽáž·ážážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Mathematics)",
       code: "MATH101",
       icon: Calculator,
-      desc: "ស្វែងយល់ស៊ីជម្រៅអំពី Calculus, Linear Algebra, Differential Equations, និងការអនុវត្តជាក់ស្តែងក្នុងវិស្វកម្ម។",
+      desc: "ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹ážŸáŸŠáž¸áž‡áž˜áŸ’ážšáŸ…áž¢áŸ†áž–áž¸ Calculus, Linear Algebra, Differential Equations, áž“áž·áž„áž€áž¶ážšáž¢áž“áž»ážœážáŸ’ážáž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž€áŸ’áž“áž»áž„ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       color: "from-indigo-600 to-purple-600",
       image: "/images/gallery/IMG_2849.JPG",
     },
     {
       slug: "physics",
-      title: "រូបវិទ្យាវិស្វកម្ម (Physics)",
+      title: "ážšáž¼áž”ážœáž·áž‘áŸ’áž™áž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ (Physics)",
       code: "PHYS101",
       icon: Atom,
-      desc: "ទ្រឹស្តីមេកានិកបុរាណ ចលនារលក ទែរម៉ូឌីណាមិក និងបាតុភូតរូបវិទ្យាសម្រាប់និស្សិតវិស្វកម្ម។",
+      desc: "áž‘áŸ’ážšáž¹ážŸáŸ’ážáž¸áž˜áŸáž€áž¶áž“áž·áž€áž”áž»ážšáž¶ážŽ áž…áž›áž“áž¶ážšáž›áž€ áž‘áŸ‚ážšáž˜áŸ‰áž¼ážŒáž¸ážŽáž¶áž˜áž·áž€ áž“áž·áž„áž”áž¶ážáž»áž—áž¼ážážšáž¼áž”ážœáž·áž‘áŸ’áž™áž¶ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž“áž·ážŸáŸ’ážŸáž·ážážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”",
       color: "from-cyan-600 to-blue-600",
       image: "/images/gallery/IMG_2851.JPG",
     },
     {
       slug: "chemistry",
-      title: "គីមីវិទ្យាទូទៅ (Chemistry)",
+      title: "áž‚áž¸áž˜áž¸ážœáž·áž‘áŸ’áž™áž¶áž‘áž¼áž‘áŸ… (Chemistry)",
       code: "CHEM101",
       icon: FlaskConical,
-      desc: "ទម្រង់ម៉ូលេគុល ប្រតិកម្មកាតាលីករ និងទែរម៉ូឌីណាមិកគីមីសម្រាប់ការស្រាវជ្រាវវិស្វកម្មទំនើប។",
+      desc: "áž‘áž˜áŸ’ážšáž„áŸ‹áž˜áŸ‰áž¼áž›áŸáž‚áž»áž› áž”áŸ’ážšážáž·áž€áž˜áŸ’áž˜áž€áž¶ážáž¶áž›áž¸áž€ážš áž“áž·áž„áž‘áŸ‚ážšáž˜áŸ‰áž¼ážŒáž¸ážŽáž¶áž˜áž·áž€áž‚áž¸áž˜áž¸ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž€áž¶ážšážŸáŸ’ážšáž¶ážœáž‡áŸ’ážšáž¶ážœážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áž‘áŸ†áž“áž¾áž”áŸ”",
       color: "from-emerald-600 to-teal-600",
       image: "/images/gallery/IMG_2854.JPG",
     },
@@ -117,35 +117,35 @@ export default async function HomePage() {
 
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold backdrop-blur-md">
               <GraduationCap className="w-4 h-4 shrink-0" />
-              <span>វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា • STJ ឆ្នាំសិក្សា 2026-2027 • បន្ទប់ SF1 & SF2</span>
+              <span>ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ â€¢ STJ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ 2026-2027 â€¢ áž”áž“áŸ’áž‘áž”áŸ‹ SF1 & SF2</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-tight drop-shadow-sm">
-              កម្មវិធីរៀមច្បងបង្រៀនប្អូន <br />
+              áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“áž”áŸ’áž¢áž¼áž“ <br />
               <span className="text-primary font-bold">Senior Teaching Junior</span>
             </h1>
 
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              ប្រព័ន្ធគ្រប់គ្រងការសិក្សា និងស្រង់វត្តមានផ្លូវការ នៃកម្មវិធី STJ នៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)។ ថ្នាក់រៀន និងការបង្រៀនប្រព្រឹត្តទៅនៅបន្ទប់ SF1 និង SF2 ដើម្បីពង្រឹងគុណភាពអប់រំវិស្វកម្ម។
+              áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž€áž¶ážšážŸáž·áž€áŸ’ážŸáž¶ áž“áž·áž„ážŸáŸ’ážšáž„áŸ‹ážœážáŸ’ážáž˜áž¶áž“áž•áŸ’áž›áž¼ážœáž€áž¶ážš áž“áŸƒáž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ áž“áŸ…ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶ (ITC)áŸ” ážáŸ’áž“áž¶áž€áŸ‹ážšáŸ€áž“ áž“áž·áž„áž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“áž”áŸ’ážšáž–áŸ’ážšáž¹ážáŸ’ážáž‘áŸ…áž“áŸ…áž”áž“áŸ’áž‘áž”áŸ‹ SF1 áž“áž·áž„ SF2 ážŠáž¾áž˜áŸ’áž”áž¸áž–áž„áŸ’ážšáž¹áž„áž‚áž»ážŽáž—áž¶áž–áž¢áž”áŸ‹ážšáŸ†ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜áŸ”
             </p>
 
             {/* ONLY 3 PUBLIC BUTTONS - STRICTLY NO SYSTEM/DASHBOARD LINK */}
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
               <Link href="/programs">
                 <Button size="lg" className="space-x-2 shadow-md">
-                  <span>ស្វែងយល់ពីមុខវិជ្ជាសិក្សា</span>
+                  <span>ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹áž–áž¸áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ážŸáž·áž€áŸ’ážŸáž¶</span>
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link href="/structure">
                 <Button variant="outline" size="lg" className="space-x-2 border-primary/40 hover:bg-primary/5 bg-background/80 backdrop-blur-md">
                   <Layers className="w-4 h-4 text-primary" />
-                  <span>មែកធាងរចនាសម្ព័ន្ធ (Hierarchy Tree)</span>
+                  <span>áž˜áŸ‚áž€áž’áž¶áž„ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’ (Hierarchy Tree)</span>
                 </Button>
               </Link>
               <Link href="/about">
                 <Button variant="ghost" size="lg" className="bg-background/40 hover:bg-background/80 backdrop-blur-md">
-                  អំពីកម្មវិធី STJ
+                  áž¢áŸ†áž–áž¸áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ STJ
                 </Button>
               </Link>
             </div>
@@ -184,10 +184,10 @@ export default async function HomePage() {
                 Academic Programs
               </span>
               <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
-                មុខវិជ្ជាបណ្តុះបណ្តាលស្នូល
+                áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶áž”ážŽáŸ’ážáž»áŸ‡áž”ážŽáŸ’ážáž¶áž›ážŸáŸ’áž“áž¼áž›
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                កម្មវិធីត្រូវបានរៀបចំឡើងយ៉ាងសម្រិតសម្រាំងស្របតាមកម្មវិធីសិក្សាវិស្វកម្ម នៃវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា
+                áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ážáŸ’ážšáž¼ážœáž”áž¶áž“ážšáŸ€áž”áž…áŸ†áž¡áž¾áž„áž™áŸ‰áž¶áž„ážŸáž˜áŸ’ážšáž·ážážŸáž˜áŸ’ážšáž¶áŸ†áž„ážŸáŸ’ážšáž”ážáž¶áž˜áž€áž˜áŸ’áž˜ážœáž·áž’áž¸ážŸáž·áž€áŸ’ážŸáž¶ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ áž“áŸƒážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶
               </p>
             </div>
 
@@ -232,7 +232,7 @@ export default async function HomePage() {
                           href={`/programs/${prog.slug}`}
                           className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary hover:underline"
                         >
-                          <span>ព័ត៌មានលម្អិតមុខវិជ្ជា</span>
+                          <span>áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·ážáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
@@ -256,29 +256,29 @@ export default async function HomePage() {
                   Our Mission & Values
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                  ចក្ខុវិស័យ និងបេសកកម្មអប់រំ STJ
+                  áž…áž€áŸ’ážáž»ážœáž·ážŸáŸáž™ áž“áž·áž„áž”áŸážŸáž€áž€áž˜áŸ’áž˜áž¢áž”áŸ‹ážšáŸ† STJ
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  STJ ត្រូវបានបង្កើតឡើងក្នុងគោលបំណងបង្កើតជាវេទិកាសហការសិក្សា ដែលនិស្សិតរៀមច្បងចែករំលែកបទពិសោធន៍ វិធីសាស្ត្រស្រាវជ្រាវ និងការអនុវត្តលំហាត់ជាក់ស្តែងជូននិស្សិតប្អូនៗ ដើម្បីឆ្លើយតបនឹងស្តង់ដារគុណវុឌ្ឍិវិស្វកម្មរបស់ ITC។
+                  STJ ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž¡áž¾áž„áž€áŸ’áž“áž»áž„áž‚áŸ„áž›áž”áŸ†ážŽáž„áž”áž„áŸ’áž€áž¾ážáž‡áž¶ážœáŸáž‘áž·áž€áž¶ážŸáž áž€áž¶ážšážŸáž·áž€áŸ’ážŸáž¶ ážŠáŸ‚áž›áž“áž·ážŸáŸ’ážŸáž·ážážšáŸ€áž˜áž…áŸ’áž”áž„áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€áž”áž‘áž–áž·ážŸáŸ„áž’áž“áŸ ážœáž·áž’áž¸ážŸáž¶ážŸáŸ’ážáŸ’ážšážŸáŸ’ážšáž¶ážœáž‡áŸ’ážšáž¶ážœ áž“áž·áž„áž€áž¶ážšáž¢áž“áž»ážœážáŸ’ážáž›áŸ†áž áž¶ážáŸ‹áž‡áž¶áž€áŸ‹ážŸáŸ’ážáŸ‚áž„áž‡áž¼áž“áž“áž·ážŸáŸ’ážŸáž·ážáž”áŸ’áž¢áž¼áž“áŸ— ážŠáž¾áž˜áŸ’áž”áž¸áž†áŸ’áž›áž¾áž™ážáž”áž“áž¹áž„ážŸáŸ’ážáž„áŸ‹ážŠáž¶ážšáž‚áž»ážŽážœáž»ážŒáŸ’ážáž·ážœáž·ážŸáŸ’ážœáž€áž˜áŸ’áž˜ážšáž”ážŸáŸ‹ ITCáŸ”
                 </p>
 
                 <div className="space-y-3 pt-2">
                   <div className="flex items-start space-x-3">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                     <span className="text-xs text-foreground font-medium">
-                      ពង្រឹងមូលដ្ឋានគ្រឹះវិទ្យាសាស្ត្រពិត និងបច្ចេកវិទ្យា
+                      áž–áž„áŸ’ážšáž¹áž„áž˜áž¼áž›ážŠáŸ’áž‹áž¶áž“áž‚áŸ’ážšáž¹áŸ‡ážœáž·áž‘áŸ’áž™áž¶ážŸáž¶ážŸáŸ’ážáŸ’ážšáž–áž·áž áž“áž·áž„áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶
                     </span>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                     <span className="text-xs text-foreground font-medium">
-                      គ្រប់គ្រងវត្តមាន និងការចូលរួមយ៉ាងត្រឹមត្រូវ តាមរយៈប្រព័ន្ធឌីជីថលកណ្តាល
+                      áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž€áž¶ážšáž…áž¼áž›ážšáž½áž˜áž™áŸ‰áž¶áž„ážáŸ’ážšáž¹áž˜ážáŸ’ážšáž¼ážœ ážáž¶áž˜ážšáž™áŸˆáž”áŸ’ážšáž–áŸáž“áŸ’áž’ážŒáž¸áž‡áž¸ážáž›áž€ážŽáŸ’ážáž¶áž›
                     </span>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                     <span className="text-xs text-foreground font-medium">
-                      បង្កើតតំណភ្ជាប់ចែករំលែករបាយការណ៍វត្តមានប្រកបដោយសុវត្ថិភាព
+                      áž”áž„áŸ’áž€áž¾ážážáŸ†ážŽáž—áŸ’áž‡áž¶áž”áŸ‹áž…áŸ‚áž€ážšáŸ†áž›áŸ‚áž€ážšáž”áž¶áž™áž€áž¶ážšážŽáŸážœážáŸ’ážáž˜áž¶áž“áž”áŸ’ážšáž€áž”ážŠáŸ„áž™ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–
                     </span>
                   </div>
                 </div>
@@ -286,15 +286,15 @@ export default async function HomePage() {
 
               <div className="p-6 md:p-8 rounded-2xl border border-border bg-card shadow-sm space-y-4">
                 <h3 className="font-bold text-base text-foreground">
-                  ការចូលរួមជាមួយ STJ
+                  áž€áž¶ážšáž…áž¼áž›ážšáž½áž˜áž‡áž¶áž˜áž½áž™ STJ
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  និស្សិត ITC គ្រប់ដេប៉ាតឺម៉ង់ (GIC, AMS, GIM, GCA, GEE) អាចចុះឈ្មោះចូលរៀនក្នុងកម្មវិធីបានតាមរយៈការសម្របសម្រួលរបស់ប្រធានមុខវិជ្ជា និងគណៈគ្រប់គ្រង STJ។
+                  áž“áž·ážŸáŸ’ážŸáž·áž ITC áž‚áŸ’ážšáž”áŸ‹ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ (GIC, AMS, GIM, GCA, GEE) áž¢áž¶áž…áž…áž»áŸ‡ážˆáŸ’áž˜áŸ„áŸ‡áž…áž¼áž›ážšáŸ€áž“áž€áŸ’áž“áž»áž„áž€áž˜áŸ’áž˜ážœáž·áž’áž¸áž”áž¶áž“ážáž¶áž˜ážšáž™áŸˆáž€áž¶ážšážŸáž˜áŸ’ážšáž”ážŸáž˜áŸ’ážšáž½áž›ážšáž”ážŸáŸ‹áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ áž“áž·áž„áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJáŸ”
                 </p>
                 <div className="pt-2">
                   <Link href="/contact">
                     <Button variant="default" size="sm" className="w-full">
-                      ទាក់ទងមកកាន់ពួកយើង
+                      áž‘áž¶áž€áŸ‹áž‘áž„áž˜áž€áž€áž¶áž“áŸ‹áž–áž½áž€áž™áž¾áž„
                     </Button>
                   </Link>
                 </div>
@@ -310,20 +310,20 @@ export default async function HomePage() {
               <div className="space-y-4 max-w-xl">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
                   <Layers className="w-3.5 h-3.5" />
-                  <span>រចនាសម្ព័ន្ធមែកធាងដឹកនាំ (Organizational Tree)</span>
+                  <span>ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž˜áŸ‚áž€áž’áž¶áž„ážŠáž¹áž€áž“áž¶áŸ† (Organizational Tree)</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                  ស្វែងយល់អំពីរចនាសម្ព័ន្ធ និងសមាជិក STJ តាមឆ្នាំសិក្សា
+                  ážŸáŸ’ážœáŸ‚áž„áž™áž›áŸ‹áž¢áŸ†áž–áž¸ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’ áž“áž·áž„ážŸáž˜áž¶áž‡áž·áž€ STJ ážáž¶áž˜áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶
                 </h2>
                 <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  ពិនិត្យមើលរចនាសម្ព័ន្ធមែកធាងដឹកនាំពីប្រធាន STJ កណ្តាល ប្រធានក្រុមតាមមុខវិជ្ជា និងសមាជិករៀមច្បងបង្រៀនទាំងអស់ ជាមួយនឹងមុខងារផ្លាស់ប្តូរឆ្នាំសិក្សាដោយស្វ័យប្រវត្តិ។
+                  áž–áž·áž“áž·ážáŸ’áž™áž˜áž¾áž›ážšáž…áž“áž¶ážŸáž˜áŸ’áž–áŸáž“áŸ’áž’áž˜áŸ‚áž€áž’áž¶áž„ážŠáž¹áž€áž“áž¶áŸ†áž–áž¸áž”áŸ’ážšáž’áž¶áž“ STJ áž€ážŽáŸ’ážáž¶áž› áž”áŸ’ážšáž’áž¶áž“áž€áŸ’ážšáž»áž˜ážáž¶áž˜áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ áž“áž·áž„ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ áž‡áž¶áž˜áž½áž™áž“áž¹áž„áž˜áž»ážáž„áž¶ážšáž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážŠáŸ„áž™ážŸáŸ’ážœáŸáž™áž”áŸ’ážšážœážáŸ’ážáž·áŸ”
                 </p>
               </div>
               <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3">
                 <Link href="/structure">
                   <Button size="lg" className="space-x-2 shadow-md">
                     <Sparkles className="w-4 h-4" />
-                    <span>ពិនិត្យមើលមែកធាងពេញលេញ</span>
+                    <span>áž–áž·áž“áž·ážáŸ’áž™áž˜áž¾áž›áž˜áŸ‚áž€áž’áž¶áž„áž–áŸáž‰áž›áŸáž‰</span>
                   </Button>
                 </Link>
               </div>

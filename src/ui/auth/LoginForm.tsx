@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShieldCheck, UserCheck, Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
-import { useI18n } from "@/components/i18n/I18nProvider";
-import { LanguageSelector } from "@/components/i18n/LanguageSelector";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
-import { Button } from "@/components/ui/Button";
-import { Logo } from "@/components/ui/Logo";
+import { useI18n } from "@/ui/i18n/I18nProvider";
+import { LanguageSelector } from "@/ui/i18n/LanguageSelector";
+import { ThemeToggle } from "@/ui/theme/ThemeToggle";
+import { Button } from "@/ui/ui/Button";
+import { Logo } from "@/ui/ui/Logo";
 
 interface LoginFormProps {
   portalType: "system" | "leader";
@@ -116,7 +116,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="••••••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                 />
               </div>
@@ -138,7 +138,7 @@ export function LoginForm({ portalType }: LoginFormProps) {
           <Link href="/portal/login" className="text-primary hover:underline font-medium">
             STJ Portal Sign In
           </Link>
-          <span className="mx-2">•</span>
+          <span className="mx-2">â€¢</span>
           <Link href="/" className="hover:underline">
             {t("common.back")} {t("nav.home")}
           </Link>

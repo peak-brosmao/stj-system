@@ -14,10 +14,10 @@ import {
   ShieldCheck,
   ArrowRightLeft,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 interface OperationalYear {
   id: string;
@@ -80,7 +80,7 @@ export default function SystemAcademicYearsPage() {
       });
       if (res.ok) {
         setCurrentYearCode(yearCode);
-        setSuccessMessage(`បានកំណត់ឆ្នាំសិក្សា ${yearCode} ជាឆ្នាំសកម្មជោគជ័យ`);
+        setSuccessMessage(`áž”áž¶áž“áž€áŸ†ážŽážáŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ ${yearCode} áž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜áž‡áŸ„áž‚áž‡áŸáž™`);
         loadData();
         setTimeout(() => setSuccessMessage(null), 3000);
       }
@@ -100,7 +100,7 @@ export default function SystemAcademicYearsPage() {
       if (res.ok) {
         setIsAddModalOpen(false);
         setNewYear({ yearCode: "", label: "", startDate: "", endDate: "" });
-        setSuccessMessage("បានបង្កើតឆ្នាំសិក្សាថ្មីជោគជ័យ");
+        setSuccessMessage("áž”áž¶áž“áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸áž‡áŸ„áž‚áž‡áŸáž™");
         loadData();
         setTimeout(() => setSuccessMessage(null), 3000);
       }
@@ -110,20 +110,20 @@ export default function SystemAcademicYearsPage() {
   };
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         {/* Banner with scope explanation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
           <div>
             <div className="inline-flex items-center space-x-2 text-xs font-semibold text-primary mb-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>STJ Institutional Governance • វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា</span>
+              <span>STJ Institutional Governance â€¢ ážœáž·áž‘áŸ’áž™áž¶ážŸáŸ’ážáž¶áž“áž”áž…áŸ’áž…áŸáž€ážœáž·áž‘áŸ’áž™áž¶áž€áž˜áŸ’áž–áž»áž‡áž¶</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ការគ្រប់គ្រងឆ្នាំសិក្សា និងកម្រិតសិក្សា (Academic Cycles & Levels)
+              áž€áž¶ážšáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áž“áž·áž„áž€áž˜áŸ’ážšáž·ážážŸáž·áž€áŸ’ážŸáž¶ (Academic Cycles & Levels)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              រៀបចំ និងកំណត់ឆ្នាំសិក្សាប្រតិបត្តិការ STJ ជារៀងរាល់ឆ្នាំ សម្រាប់គ្រប់គ្រងសមាជិករៀមច្បងបង្រៀន (ប្រព័ន្ធនេះមិនសម្រាប់សិស្សប្អូនឡើយ)
+              ážšáŸ€áž”áž…áŸ† áž“áž·áž„áž€áŸ†ážŽážáŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš STJ áž‡áž¶ážšáŸ€áž„ážšáž¶áž›áŸ‹áž†áŸ’áž“áž¶áŸ† ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„áž”áž„áŸ’ážšáŸ€áž“ (áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áŸáŸ‡áž˜áž·áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážŸáž·ážŸáŸ’ážŸáž”áŸ’áž¢áž¼áž“áž¡áž¾áž™)
             </p>
           </div>
 
@@ -133,7 +133,7 @@ export default function SystemAcademicYearsPage() {
             className="space-x-1.5 text-xs self-start sm:self-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
-            <span>បង្កើតឆ្នាំសិក្សាថ្មី</span>
+            <span>áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸</span>
           </Button>
         </div>
 
@@ -150,10 +150,10 @@ export default function SystemAcademicYearsPage() {
             <div>
               <h2 className="text-base font-bold text-foreground flex items-center space-x-2">
                 <CalendarDays className="w-4 h-4 text-primary" />
-                <span>ឆ្នាំសិក្សាប្រតិបត្តិការ STJ (Operational Academic Cycles)</span>
+                <span>áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš STJ (Operational Academic Cycles)</span>
               </h2>
               <p className="text-xs text-muted-foreground">
-                ឆ្នាំសិក្សានីមួយៗរក្សាទុកទិន្នន័យសមាជិករៀមច្បង មុខវិជ្ជា និងប្រវត្តិនៃការចុះបង្រៀនដាច់ដោយឡែក
+                áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶áž“áž¸áž˜áž½áž™áŸ—ážšáž€áŸ’ážŸáž¶áž‘áž»áž€áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„ áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ áž“áž·áž„áž”áŸ’ážšážœážáŸ’ážáž·áž“áŸƒáž€áž¶ážšáž…áž»áŸ‡áž”áž„áŸ’ážšáŸ€áž“ážŠáž¶áž…áŸ‹ážŠáŸ„áž™áž¡áŸ‚áž€
               </p>
             </div>
           </div>
@@ -177,10 +177,10 @@ export default function SystemAcademicYearsPage() {
                       className="text-[10px]"
                     >
                       {yr.isCurrent
-                        ? "ឆ្នាំសកម្មបច្ចុប្បន្ន (Active)"
+                        ? "áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Active)"
                         : yr.status === "UPCOMING"
-                        ? "គ្រោងទុក (Upcoming)"
-                        : "បណ្ណសារ (Archived)"}
+                        ? "áž‚áŸ’ážšáŸ„áž„áž‘áž»áž€ (Upcoming)"
+                        : "áž”ážŽáŸ’ážŽážŸáž¶ážš (Archived)"}
                     </Badge>
                     <span className="text-xs font-mono font-bold text-muted-foreground">{yr.yearCode}</span>
                   </div>
@@ -188,24 +188,24 @@ export default function SystemAcademicYearsPage() {
                   <div>
                     <h3 className="text-base font-bold text-foreground">{yr.label}</h3>
                     <p className="text-[11px] text-muted-foreground">
-                      {yr.startDate} ដល់ {yr.endDate}
+                      {yr.startDate} ážŠáž›áŸ‹ {yr.endDate}
                     </p>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 pt-2 border-t border-border/60 text-center">
                     <div>
                       <span className="text-xs font-bold text-foreground">{yr.membersCount}</span>
-                      <p className="text-[10px] text-muted-foreground">សមាជិក</p>
+                      <p className="text-[10px] text-muted-foreground">ážŸáž˜áž¶áž‡áž·áž€</p>
                     </div>
                     <div>
                       <span className="text-xs font-bold text-foreground">{yr.sessionsCount}</span>
-                      <p className="text-[10px] text-muted-foreground">វគ្គបង្រៀន</p>
+                      <p className="text-[10px] text-muted-foreground">ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“</p>
                     </div>
                     <div>
                       <span className="text-xs font-bold text-primary">
                         {yr.attendanceRate > 0 ? `${yr.attendanceRate}%` : "N/A"}
                       </span>
-                      <p className="text-[10px] text-muted-foreground">វត្តមាន</p>
+                      <p className="text-[10px] text-muted-foreground">ážœážáŸ’ážáž˜áž¶áž“</p>
                     </div>
                   </div>
 
@@ -213,7 +213,7 @@ export default function SystemAcademicYearsPage() {
                     {yr.isCurrent ? (
                       <Button variant="outline" size="sm" disabled className="w-full text-xs">
                         <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                        <span>កំពុងជ្រើសរើសជាឆ្នាំសកម្ម</span>
+                        <span>áž€áŸ†áž–áž»áž„áž‡áŸ’ážšáž¾ážŸážšáž¾ážŸáž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜</span>
                       </Button>
                     ) : (
                       <Button
@@ -223,7 +223,7 @@ export default function SystemAcademicYearsPage() {
                         className="w-full text-xs"
                       >
                         <RefreshCw className="w-3.5 h-3.5 mr-1" />
-                        <span>កំណត់ជាឆ្នាំសកម្ម</span>
+                        <span>áž€áŸ†ážŽážáŸ‹áž‡áž¶áž†áŸ’áž“áž¶áŸ†ážŸáž€áž˜áŸ’áž˜</span>
                       </Button>
                     )}
                   </div>
@@ -239,14 +239,14 @@ export default function SystemAcademicYearsPage() {
             <div>
               <h2 className="text-base font-bold text-foreground flex items-center space-x-2">
                 <GraduationCap className="w-4 h-4 text-primary" />
-                <span>កម្រិតវិស្វករ នៃសមាជិករៀមច្បង (Engineering Levels I1 - I5)</span>
+                <span>áž€áž˜áŸ’ážšáž·ážážœáž·ážŸáŸ’ážœáž€ážš áž“áŸƒážŸáž˜áž¶áž‡áž·áž€ážšáŸ€áž˜áž…áŸ’áž”áž„ (Engineering Levels I1 - I5)</span>
               </h2>
               <p className="text-xs text-muted-foreground">
-                ការបែងចែកកម្រិតឆ្នាំសិក្សារបស់សមាជិកបង្រៀនស្ម័គ្រចិត្ត STJ ឆ្នាំសិក្សា {currentYearCode}
+                áž€áž¶ážšáž”áŸ‚áž„áž…áŸ‚áž€áž€áž˜áŸ’ážšáž·ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž STJ áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ {currentYearCode}
               </p>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
-              សរុប ៣៩ នាក់ (ទិន្នន័យផ្លូវការ)
+              ážŸážšáž»áž” áŸ£áŸ© áž“áž¶áž€áŸ‹ (áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš)
             </span>
           </div>
 
@@ -255,12 +255,12 @@ export default function SystemAcademicYearsPage() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                   <tr>
-                    <th className="py-3 px-4 font-semibold">កូដកម្រិត</th>
-                    <th className="py-3 px-4 font-semibold">ឈ្មោះកម្រិតវិស្វករ (ITC Engineering Level)</th>
-                    <th className="py-3 px-4 font-semibold text-center">លំដាប់</th>
-                    <th className="py-3 px-4 font-semibold text-center">ចំនួនសមាជិកបង្រៀនស្ម័គ្រចិត្ត</th>
-                    <th className="py-3 px-4 font-semibold text-center">ភាគរយ</th>
-                    <th className="py-3 px-4 font-semibold text-center">ស្ថានភាព</th>
+                    <th className="py-3 px-4 font-semibold">áž€áž¼ážŠáž€áž˜áŸ’ážšáž·áž</th>
+                    <th className="py-3 px-4 font-semibold">ážˆáŸ’áž˜áŸ„áŸ‡áž€áž˜áŸ’ážšáž·ážážœáž·ážŸáŸ’ážœáž€ážš (ITC Engineering Level)</th>
+                    <th className="py-3 px-4 font-semibold text-center">áž›áŸ†ážŠáž¶áž”áŸ‹</th>
+                    <th className="py-3 px-4 font-semibold text-center">áž…áŸ†áž“áž½áž“ážŸáž˜áž¶áž‡áž·áž€áž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž</th>
+                    <th className="py-3 px-4 font-semibold text-center">áž—áž¶áž‚ážšáž™</th>
+                    <th className="py-3 px-4 font-semibold text-center">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -272,7 +272,7 @@ export default function SystemAcademicYearsPage() {
                         <td className="py-3 px-4 font-medium text-foreground">{lvl.label}</td>
                         <td className="py-3 px-4 text-center">{lvl.order}</td>
                         <td className="py-3 px-4 text-center font-bold text-foreground">
-                          {lvl.membersCount} នាក់
+                          {lvl.membersCount} áž“áž¶áž€áŸ‹
                         </td>
                         <td className="py-3 px-4 text-center font-mono text-muted-foreground">
                           {percent}%
@@ -280,11 +280,11 @@ export default function SystemAcademicYearsPage() {
                         <td className="py-3 px-4 text-center">
                           {lvl.membersCount > 0 ? (
                             <Badge variant="success" className="text-[10px]">
-                              មានសមាជិក
+                              áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€
                             </Badge>
                           ) : (
                             <Badge variant="secondary" className="text-[10px]">
-                              គ្មានសមាជិក
+                              áž‚áŸ’áž˜áž¶áž“ážŸáž˜áž¶áž‡áž·áž€
                             </Badge>
                           )}
                         </td>
@@ -304,7 +304,7 @@ export default function SystemAcademicYearsPage() {
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <h3 className="text-base font-bold text-foreground flex items-center space-x-2">
                   <CalendarDays className="w-5 h-5 text-primary" />
-                  <span>បង្កើតឆ្នាំសិក្សាថ្មី</span>
+                  <span>áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ážáŸ’áž˜áž¸</span>
                 </h3>
                 <button
                   onClick={() => setIsAddModalOpen(false)}
@@ -316,24 +316,24 @@ export default function SystemAcademicYearsPage() {
 
               <form onSubmit={handleCreateYear} className="space-y-4">
                 <div>
-                  <label className="text-xs font-semibold text-foreground">កូដឆ្នាំសិក្សា (Year Code) *</label>
+                  <label className="text-xs font-semibold text-foreground">áž€áž¼ážŠáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ (Year Code) *</label>
                   <input
                     type="text"
                     required
-                    placeholder="ឧ. 2027-2028"
+                    placeholder="áž§. 2027-2028"
                     value={newYear.yearCode}
                     onChange={(e) => setNewYear({ ...newYear, yearCode: e.target.value })}
                     className="w-full mt-1 px-3 py-2 text-xs rounded-lg border border-input bg-background text-foreground"
                   />
-                  <p className="text-[10px] text-muted-foreground mt-0.5">ទម្រង់ YYYY-YYYY</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">áž‘áž˜áŸ’ážšáž„áŸ‹ YYYY-YYYY</p>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-foreground">ឈ្មោះបង្ហាញជាភាសាខ្មែរ (Label) *</label>
+                  <label className="text-xs font-semibold text-foreground">ážˆáŸ’áž˜áŸ„áŸ‡áž”áž„áŸ’áž áž¶áž‰áž‡áž¶áž—áž¶ážŸáž¶ážáŸ’áž˜áŸ‚ážš (Label) *</label>
                   <input
                     type="text"
                     required
-                    placeholder="ឧ. ឆ្នាំសិក្សា ២០២៧~២០២៨"
+                    placeholder="áž§. áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ§~áŸ¢áŸ áŸ¢áŸ¨"
                     value={newYear.label}
                     onChange={(e) => setNewYear({ ...newYear, label: e.target.value })}
                     className="w-full mt-1 px-3 py-2 text-xs rounded-lg border border-input bg-background text-foreground"
@@ -342,7 +342,7 @@ export default function SystemAcademicYearsPage() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold text-foreground">កាលបរិច្ឆេទចាប់ផ្តើម</label>
+                    <label className="text-xs font-semibold text-foreground">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘áž…áž¶áž”áŸ‹áž•áŸ’ážáž¾áž˜</label>
                     <input
                       type="date"
                       value={newYear.startDate}
@@ -351,7 +351,7 @@ export default function SystemAcademicYearsPage() {
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-foreground">កាលបរិច្ឆេទទទួលបញ្ចប់</label>
+                    <label className="text-xs font-semibold text-foreground">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘áž‘áž‘áž½áž›áž”áž‰áŸ’áž…áž”áŸ‹</label>
                     <input
                       type="date"
                       value={newYear.endDate}
@@ -368,10 +368,10 @@ export default function SystemAcademicYearsPage() {
                     size="sm"
                     onClick={() => setIsAddModalOpen(false)}
                   >
-                    បោះបង់
+                    áž”áŸ„áŸ‡áž”áž„áŸ‹
                   </Button>
                   <Button type="submit" size="sm">
-                    បង្កើតឆ្នាំសិក្សា
+                    áž”áž„áŸ’áž€áž¾ážáž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶
                   </Button>
                 </div>
               </form>

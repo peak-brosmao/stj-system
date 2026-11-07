@@ -14,35 +14,35 @@ import {
   X,
   AlertCircle,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 export default function SystemProfileRequestsPage() {
   const [requests, setRequests] = useState([
     {
       id: "req-1",
-      memberName: "ពៀក ប្រុសម៉ៅ (PEAK BROSMAO)",
+      memberName: "áž–áŸ€áž€ áž”áŸ’ážšáž»ážŸáž˜áŸ‰áŸ… (PEAK BROSMAO)",
       memberId: "STJ033",
       field: "studentId",
-      fieldLabel: "លេខអត្តសញ្ញាណនិស្សិត (Student ID)",
+      fieldLabel: "áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž (Student ID)",
       oldValue: "e20251455",
       requestedValue: "e20251455",
-      reason: "ផ្ទៀងផ្ទាត់ និងបញ្ជាក់លេខអត្តសញ្ញាណនិស្សិតផ្លូវការសម្រាប់ឆ្នាំសិក្សា ២០២៦~២០២៧ ដេប៉ាតឺម៉ង់ GIC",
-      submittedDate: "៣០ តុលា ២០២៦",
+      reason: "áž•áŸ’áž‘áŸ€áž„áž•áŸ’áž‘áž¶ážáŸ‹ áž“áž·áž„áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž›áŸážáž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·ážáž•áŸ’áž›áž¼ážœáž€áž¶ážšážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž†áŸ’áž“áž¶áŸ†ážŸáž·áž€áŸ’ážŸáž¶ áŸ¢áŸ áŸ¢áŸ¦~áŸ¢áŸ áŸ¢áŸ§ ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ GIC",
+      submittedDate: "áŸ£áŸ  ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
       status: "PENDING",
     },
     {
       id: "req-2",
-      memberName: "គឹម ហ៊ាង (KIM Heang)",
+      memberName: "áž‚áž¹áž˜ áž áŸŠáž¶áž„ (KIM Heang)",
       memberId: "STJ007",
       field: "phone",
-      fieldLabel: "លេខទូរស័ព្ទផ្លូវការ",
+      fieldLabel: "áž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘áž•áŸ’áž›áž¼ážœáž€áž¶ážš",
       oldValue: "012000000",
       requestedValue: "012734562",
-      reason: "ប្តូរលេខទូរស័ព្ទថ្មីសម្រាប់ទាក់ទងការបង្រៀនស្ម័គ្រចិត្ត",
-      submittedDate: "២៨ តុលា ២០២៦",
+      reason: "áž”áŸ’ážáž¼ážšáž›áŸážáž‘áž¼ážšážŸáŸáž–áŸ’áž‘ážáŸ’áž˜áž¸ážŸáž˜áŸ’ážšáž¶áž”áŸ‹áž‘áž¶áž€áŸ‹áž‘áž„áž€áž¶ážšáž”áž„áŸ’ážšáŸ€áž“ážŸáŸ’áž˜áŸáž‚áŸ’ážšáž…áž·ážáŸ’áž",
+      submittedDate: "áŸ¢áŸ¨ ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦",
       status: "APPROVED",
     },
   ]);
@@ -53,16 +53,16 @@ export default function SystemProfileRequestsPage() {
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "APPROVED" } : r))
     );
-    alert("សំណើត្រូវបានអនុម័តដោយជោគជ័យ។ កំណត់ត្រាផ្លូវការត្រូវបានធ្វើបច្ចុប្បន្នភាព។");
+    alert("ážŸáŸ†ážŽáž¾ážáŸ’ážšáž¼ážœáž”áž¶áž“áž¢áž“áž»áž˜áŸážážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™áŸ” áž€áŸ†ážŽážáŸ‹ážáŸ’ážšáž¶áž•áŸ’áž›áž¼ážœáž€áž¶ážšážáŸ’ážšáž¼ážœáž”áž¶áž“áž’áŸ’ážœáž¾áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“áž—áž¶áž–áŸ”");
   };
 
   const handleReject = (id: string) => {
-    const reason = prompt("សូមបញ្ជាក់មូលហេតុនៃការបដិសេធសំណើ៖");
+    const reason = prompt("ážŸáž¼áž˜áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž˜áž¼áž›áž áŸážáž»áž“áŸƒáž€áž¶ážšáž”ážŠáž·ážŸáŸáž’ážŸáŸ†ážŽáž¾áŸ–");
     if (!reason) return;
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: "REJECTED" } : r))
     );
-    alert("សំណើត្រូវបានបដិសេធ។");
+    alert("ážŸáŸ†ážŽáž¾ážáŸ’ážšáž¼ážœáž”áž¶áž“áž”ážŠáž·ážŸáŸáž’áŸ”");
   };
 
   const filtered = requests.filter(
@@ -70,7 +70,7 @@ export default function SystemProfileRequestsPage() {
   );
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6 max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -79,10 +79,10 @@ export default function SystemProfileRequestsPage() {
               <span>Official Academic Records Governance</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              ការពិនិត្យសំណើកែទិន្នន័យផ្លូវការ (Profile Requests)
+              áž€áž¶ážšáž–áž·áž“áž·ážáŸ’áž™ážŸáŸ†ážŽáž¾áž€áŸ‚áž‘áž·áž“áŸ’áž“áž“áŸáž™áž•áŸ’áž›áž¼ážœáž€áž¶ážš (Profile Requests)
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ត្រួតពិនិត្យ និងអនុម័តសំណើកែសម្រួលឈ្មោះ អត្តសញ្ញាណនិស្សិត និងដេប៉ាតឺម៉ង់របស់សមាជិក STJ
+              ážáŸ’ážšáž½ážáž–áž·áž“áž·ážáŸ’áž™ áž“áž·áž„áž¢áž“áž»áž˜áŸážážŸáŸ†ážŽáž¾áž€áŸ‚ážŸáž˜áŸ’ážšáž½áž›ážˆáŸ’áž˜áŸ„áŸ‡ áž¢ážáŸ’ážážŸáž‰áŸ’áž‰áž¶ážŽáž“áž·ážŸáŸ’ážŸáž·áž áž“áž·áž„ážŠáŸáž”áŸ‰áž¶ážážºáž˜áŸ‰áž„áŸ‹ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€ STJ
             </p>
           </div>
 
@@ -93,7 +93,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "ALL" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              ទាំងអស់ ({requests.length})
+              áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({requests.length})
             </button>
             <button
               onClick={() => setFilter("PENDING")}
@@ -101,7 +101,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "PENDING" ? "bg-amber-600 text-white font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              រង់ចាំពិនិត្យ ({requests.filter((r) => r.status === "PENDING").length})
+              ážšáž„áŸ‹áž…áž¶áŸ†áž–áž·áž“áž·ážáŸ’áž™ ({requests.filter((r) => r.status === "PENDING").length})
             </button>
             <button
               onClick={() => setFilter("APPROVED")}
@@ -109,7 +109,7 @@ export default function SystemProfileRequestsPage() {
                 filter === "APPROVED" ? "bg-emerald-600 text-white font-semibold" : "bg-muted text-muted-foreground"
               }`}
             >
-              បានអនុម័ត ({requests.filter((r) => r.status === "APPROVED").length})
+              áž”áž¶áž“áž¢áž“áž»áž˜áŸáž ({requests.filter((r) => r.status === "APPROVED").length})
             </button>
           </div>
         </div>
@@ -127,32 +127,32 @@ export default function SystemProfileRequestsPage() {
                   </div>
                   <div>
                     {req.status === "APPROVED" ? (
-                      <Badge variant="success">បានអនុម័ត (Approved)</Badge>
+                      <Badge variant="success">áž”áž¶áž“áž¢áž“áž»áž˜áŸáž (Approved)</Badge>
                     ) : req.status === "REJECTED" ? (
-                      <Badge variant="destructive">បានបដិសេធ (Rejected)</Badge>
+                      <Badge variant="destructive">áž”áž¶áž“áž”ážŠáž·ážŸáŸáž’ (Rejected)</Badge>
                     ) : (
-                      <Badge variant="warning">រង់ចាំការពិនិត្យ (Pending)</Badge>
+                      <Badge variant="warning">ážšáž„áŸ‹áž…áž¶áŸ†áž€áž¶ážšáž–áž·áž“áž·ážáŸ’áž™ (Pending)</Badge>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <span className="text-muted-foreground text-[11px]">ទិន្នន័យស្នើសុំ៖</span>
+                    <span className="text-muted-foreground text-[11px]">áž‘áž·áž“áŸ’áž“áž“áŸáž™ážŸáŸ’áž“áž¾ážŸáž»áŸ†áŸ–</span>
                     <p className="font-semibold text-foreground mt-0.5">{req.fieldLabel}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">តម្លៃចាស់ក្នុងប្រព័ន្ធ៖</span>
+                    <span className="text-muted-foreground text-[11px]">ážáž˜áŸ’áž›áŸƒáž…áž¶ážŸáŸ‹áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áŸ–</span>
                     <p className="font-mono text-muted-foreground mt-0.5">{req.oldValue || "-"}</p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground text-[11px]">តម្លៃត្រឹមត្រូវថ្មី៖</span>
+                    <span className="text-muted-foreground text-[11px]">ážáž˜áŸ’áž›áŸƒážáŸ’ážšáž¹áž˜ážáŸ’ážšáž¼ážœážáŸ’áž˜áž¸áŸ–</span>
                     <p className="font-mono font-bold text-primary mt-0.5">{req.requestedValue}</p>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-muted-foreground text-[11px]">មូលហេតុ និងការពន្យល់របស់សមាជិក៖</span>
+                  <span className="text-muted-foreground text-[11px]">áž˜áž¼áž›áž áŸážáž» áž“áž·áž„áž€áž¶ážšáž–áž“áŸ’áž™áž›áŸ‹ážšáž”ážŸáŸ‹ážŸáž˜áž¶áž‡áž·áž€áŸ–</span>
                   <p className="text-xs text-foreground mt-1 p-2.5 rounded-lg bg-muted/40">
                     {req.reason}
                   </p>
@@ -167,7 +167,7 @@ export default function SystemProfileRequestsPage() {
                       className="text-xs text-destructive hover:bg-destructive/10 space-x-1"
                     >
                       <X className="w-3.5 h-3.5" />
-                      <span>បដិសេធ</span>
+                      <span>áž”ážŠáž·ážŸáŸáž’</span>
                     </Button>
                     <Button
                       size="sm"
@@ -175,7 +175,7 @@ export default function SystemProfileRequestsPage() {
                       className="text-xs space-x-1"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      <span>អនុម័តសំណើ</span>
+                      <span>áž¢áž“áž»áž˜áŸážážŸáŸ†ážŽáž¾</span>
                     </Button>
                   </div>
                 )}

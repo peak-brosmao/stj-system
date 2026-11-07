@@ -25,11 +25,11 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { useI18n } from "@/components/i18n/I18nProvider";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
+import { useI18n } from "@/ui/i18n/I18nProvider";
 
 interface DashboardData {
   summary: {
@@ -93,7 +93,7 @@ export default function SystemDashboardPage() {
 
   if (error || loading || !data || !summary) {
     return (
-      <PortalLayout portalType="system" userRole={t("system.president")} userName="ផល ដាវីត">
+      <PortalLayout portalType="system" userRole={t("system.president")} userName="áž•áž› ážŠáž¶ážœáž¸áž">
         <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
           {error || t("common.loading")}
         </div>
@@ -102,7 +102,7 @@ export default function SystemDashboardPage() {
   }
 
   return (
-    <PortalLayout portalType="system" userRole={t("system.president")} userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole={t("system.president")} userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         {/* Banner with Academic Year Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">

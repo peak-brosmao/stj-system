@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { History, Shield, Search, Filter } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Badge } from "@/ui/ui/Badge";
 
 export default function SystemAuditLogsPage() {
   const [logs] = useState([
@@ -47,7 +47,7 @@ export default function SystemAuditLogsPage() {
   ]);
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -56,10 +56,10 @@ export default function SystemAuditLogsPage() {
               <span>Tamper-Evident Security Log</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              កំណត់ហេតុសុវត្ថិភាព (Audit Logs)
+              áž€áŸ†ážŽážáŸ‹áž áŸážáž»ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž– (Audit Logs)
             </h1>
             <p className="text-xs text-muted-foreground">
-              កត់ត្រារាល់សកម្មភាពរដ្ឋបាល ការកែប្រែវត្តមាន និងការចូលប្រើប្រព័ន្ធ
+              áž€ážáŸ‹ážáŸ’ážšáž¶ážšáž¶áž›áŸ‹ážŸáž€áž˜áŸ’áž˜áž—áž¶áž–ážšážŠáŸ’áž‹áž”áž¶áž› áž€áž¶ážšáž€áŸ‚áž”áŸ’ážšáŸ‚ážœážáŸ’ážáž˜áž¶áž“ áž“áž·áž„áž€áž¶ážšáž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž–áŸáž“áŸ’áž’
             </p>
           </div>
         </div>
@@ -69,11 +69,11 @@ export default function SystemAuditLogsPage() {
             <table className="w-full text-left text-xs">
               <thead className="bg-muted/60 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
                 <tr>
-                  <th className="py-3 px-4 font-semibold">កាលបរិច្ឆេទ</th>
-                  <th className="py-3 px-4 font-semibold">សកម្មភាព (Action)</th>
-                  <th className="py-3 px-4 font-semibold">អ្នកប្រតិបត្តិ (Actor)</th>
-                  <th className="py-3 px-4 font-semibold">ព័ត៌មានលម្អិត (Details)</th>
-                  <th className="py-3 px-4 font-semibold">អាសយដ្ឋាន IP</th>
+                  <th className="py-3 px-4 font-semibold">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘</th>
+                  <th className="py-3 px-4 font-semibold">ážŸáž€áž˜áŸ’áž˜áž—áž¶áž– (Action)</th>
+                  <th className="py-3 px-4 font-semibold">áž¢áŸ’áž“áž€áž”áŸ’ážšážáž·áž”ážáŸ’ážáž· (Actor)</th>
+                  <th className="py-3 px-4 font-semibold">áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž (Details)</th>
+                  <th className="py-3 px-4 font-semibold">áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“ IP</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">

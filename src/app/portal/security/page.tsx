@@ -15,10 +15,10 @@ import {
   EyeOff,
   History,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 export default function AccountSecurityPage() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -34,22 +34,22 @@ export default function AccountSecurityPage() {
       id: "sess-curr",
       device: "Windows PC (Google Chrome)",
       ipAddress: "119.82.253.14 (Phnom Penh, Cambodia)",
-      lastActive: "ពេលនេះ (Current Session)",
+      lastActive: "áž–áŸáž›áž“áŸáŸ‡ (Current Session)",
       isCurrent: true,
     },
     {
       id: "sess-mob",
       device: "Apple iPhone 14 Pro (Safari)",
       ipAddress: "119.82.253.88",
-      lastActive: "ម្សិលមិញ ម៉ោង ០៨:១២ PM",
+      lastActive: "áž˜áŸ’ážŸáž·áž›áž˜áž·áž‰ áž˜áŸ‰áŸ„áž„ áŸ áŸ¨:áŸ¡áŸ¢ PM",
       isCurrent: false,
     },
   ]);
 
   const loginHistory = [
-    { id: "lh-1", date: "៣០ តុលា ២០២៦, ០៦:១២ PM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
-    { id: "lh-2", date: "២៩ តុលា ២០២៦, ០៨:១២ PM", ip: "119.82.253.88", device: "Safari / iOS", status: "SUCCESS" },
-    { id: "lh-3", date: "២៥ តុលា ២០២៦, ០៩:០០ AM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
+    { id: "lh-1", date: "áŸ£áŸ  ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦, áŸ áŸ¦:áŸ¡áŸ¢ PM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
+    { id: "lh-2", date: "áŸ¢áŸ© ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦, áŸ áŸ¨:áŸ¡áŸ¢ PM", ip: "119.82.253.88", device: "Safari / iOS", status: "SUCCESS" },
+    { id: "lh-3", date: "áŸ¢áŸ¥ ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦, áŸ áŸ©:áŸ áŸ  AM", ip: "119.82.253.14", device: "Chrome / Windows", status: "SUCCESS" },
   ];
 
   const handleChangePassword = async (e: React.FormEvent) => {
@@ -58,12 +58,12 @@ export default function AccountSecurityPage() {
     setErrorMsg(null);
 
     if (newPassword.length < 8) {
-      setErrorMsg("លេខកូដសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច ៨ តួអក្សរ");
+      setErrorMsg("áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’áž˜áž¸ážáŸ’ážšáž¼ážœáž˜áž¶áž“áž™áŸ‰áž¶áž„ážáž·áž… áŸ¨ ážáž½áž¢áž€áŸ’ážŸážš");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setErrorMsg("ការបញ្ជាក់លេខកូដសម្ងាត់មិនត្រូវគ្នាឡើយ");
+      setErrorMsg("áž€áž¶ážšáž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹áž˜áž·áž“ážáŸ’ážšáž¼ážœáž‚áŸ’áž“áž¶áž¡áž¾áž™");
       return;
     }
 
@@ -75,23 +75,23 @@ export default function AccountSecurityPage() {
         body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "ការផ្លាស់ប្តូរលេខកូដសម្ងាត់មិនជោគជ័យ");
+      if (!res.ok) throw new Error(data.error || "áž€áž¶ážšáž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšáž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹áž˜áž·áž“áž‡áŸ„áž‚áž‡áŸáž™");
 
-      setSuccessMsg("លេខកូដសម្ងាត់ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ (Password changed)");
+      setSuccessMsg("áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’ážšáž¼ážœáž”áž¶áž“áž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™ (Password changed)");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : "កំហុសក្នុងការប្តូរពាក្យសម្ងាត់");
+      setErrorMsg(err instanceof Error ? err.message : "áž€áŸ†áž áž»ážŸáž€áŸ’áž“áž»áž„áž€áž¶ážšáž”áŸ’ážáž¼ážšáž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleRevokeOtherSessions = () => {
-    if (!confirm("តើអ្នកពិតជាចង់ចាកចេញពីឧបករណ៍ផ្សេងៗទាំងអស់មែនទេ?")) return;
+    if (!confirm("ážáž¾áž¢áŸ’áž“áž€áž–áž·ážáž‡áž¶áž…áž„áŸ‹áž…áž¶áž€áž…áŸáž‰áž–áž¸áž§áž”áž€ážšážŽáŸáž•áŸ’ážŸáŸáž„áŸ—áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹áž˜áŸ‚áž“áž‘áŸ?")) return;
     setActiveSessions((prev) => prev.filter((s) => s.isCurrent));
-    alert("បានចាកចេញពីឧបករណ៍ផ្សេងទៀតទាំងអស់ដោយជោគជ័យ");
+    alert("áž”áž¶áž“áž…áž¶áž€áž…áŸáž‰áž–áž¸áž§áž”áž€ážšážŽáŸáž•áŸ’ážŸáŸáž„áž‘áŸ€ážáž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™");
   };
 
   return (
@@ -103,10 +103,10 @@ export default function AccountSecurityPage() {
             <span>Account Security & Session Management</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-            សុវត្ថិភាពគណនី (Security Settings)
+            ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–áž‚ážŽáž“áž¸ (Security Settings)
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            គ្រប់គ្រងលេខកូដសម្ងាត់ ការចូលប្រើប្រាស់ និងសម័យកាលសកម្មនៅលើឧបករណ៍ផ្សេងៗ
+            áž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ áž€áž¶ážšáž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹ áž“áž·áž„ážŸáž˜áŸáž™áž€áž¶áž›ážŸáž€áž˜áŸ’áž˜áž“áŸ…áž›áž¾áž§áž”áž€ážšážŽáŸáž•áŸ’ážŸáŸáž„áŸ—
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <KeyRound className="w-4 h-4 text-primary" />
-              <span>ប្តូរលេខកូដសម្ងាត់ (Change Password)</span>
+              <span>áž”áŸ’ážáž¼ážšáž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ (Change Password)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -135,42 +135,42 @@ export default function AccountSecurityPage() {
             <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  លេខកូដសម្ងាត់បច្ចុប្បន្ន (Current Password)
+                  áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹áž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“ (Current Password)
                 </label>
                 <input
                   type="password"
                   required
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  លេខកូដសម្ងាត់ថ្មី (New Password - Min 8 characters)
+                  áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’áž˜áž¸ (New Password - Min 8 characters)
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1.5">
-                  បញ្ជាក់លេខកូដសម្ងាត់ថ្មី (Confirm New Password)
+                  áž”áž‰áŸ’áž‡áž¶áž€áŸ‹áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹ážáŸ’áž˜áž¸ (Confirm New Password)
                 </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   className="w-full px-3 py-2 text-xs rounded-lg border border-input bg-background font-mono focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
@@ -184,13 +184,13 @@ export default function AccountSecurityPage() {
                   className="rounded text-primary focus:ring-primary"
                 />
                 <label htmlFor="showpwd" text-xs className="text-xs text-muted-foreground cursor-pointer">
-                  បង្ហាញលេខកូដសម្ងាត់
+                  áž”áž„áŸ’áž áž¶áž‰áž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹
                 </label>
               </div>
 
               <Button type="submit" disabled={submitting} size="sm" className="space-x-1.5 text-xs">
                 <Lock className="w-3.5 h-3.5" />
-                <span>{submitting ? "កំពុងរក្សាទុក..." : "ផ្លាស់ប្តូរលេខកូដសម្ងាត់"}</span>
+                <span>{submitting ? "áž€áŸ†áž–áž»áž„ážšáž€áŸ’ážŸáž¶áž‘áž»áž€..." : "áž•áŸ’áž›áž¶ážŸáŸ‹áž”áŸ’ážáž¼ážšáž›áŸážáž€áž¼ážŠážŸáž˜áŸ’áž„áž¶ážáŸ‹"}</span>
               </Button>
             </form>
           </CardContent>
@@ -201,7 +201,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <Laptop className="w-4 h-4 text-primary" />
-              <span>សម័យកាលសកម្មលើឧបករណ៍ (Active Sessions)</span>
+              <span>ážŸáž˜áŸáž™áž€áž¶áž›ážŸáž€áž˜áŸ’áž˜áž›áž¾áž§áž”áž€ážšážŽáŸ (Active Sessions)</span>
             </CardTitle>
             {activeSessions.length > 1 && (
               <Button
@@ -211,7 +211,7 @@ export default function AccountSecurityPage() {
                 className="text-xs text-destructive hover:bg-destructive/10 space-x-1"
               >
                 <LogOut className="w-3 h-3" />
-                <span>ចាកចេញពីឧបករណ៍ផ្សេងទៀត</span>
+                <span>áž…áž¶áž€áž…áŸáž‰áž–áž¸áž§áž”áž€ážšážŽáŸáž•áŸ’ážŸáŸáž„áž‘áŸ€áž</span>
               </Button>
             )}
           </CardHeader>
@@ -229,7 +229,7 @@ export default function AccountSecurityPage() {
                     <div className="flex items-center space-x-2">
                       <p className="font-semibold text-foreground">{s.device}</p>
                       {s.isCurrent && (
-                        <Badge variant="success" className="text-[10px]">ឧបករណ៍បច្ចុប្បន្ន</Badge>
+                        <Badge variant="success" className="text-[10px]">áž§áž”áž€ážšážŽáŸáž”áž…áŸ’áž…áž»áž”áŸ’áž”áž“áŸ’áž“</Badge>
                       )}
                     </div>
                     <p className="text-[11px] text-muted-foreground font-mono mt-0.5">{s.ipAddress}</p>
@@ -246,7 +246,7 @@ export default function AccountSecurityPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-semibold flex items-center space-x-2">
               <History className="w-4 h-4 text-primary" />
-              <span>ប្រវត្តិចូលប្រើប្រាស់ចុងក្រោយ (Recent Login History)</span>
+              <span>áž”áŸ’ážšážœážáŸ’ážáž·áž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹áž…áž»áž„áž€áŸ’ážšáŸ„áž™ (Recent Login History)</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -254,10 +254,10 @@ export default function AccountSecurityPage() {
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-border bg-muted/30 text-muted-foreground font-semibold">
-                    <th className="py-2 px-3">កាលបរិច្ឆេទ & ម៉ោង</th>
-                    <th className="py-2 px-3">អាសយដ្ឋាន IP</th>
-                    <th className="py-2 px-3">ឧបករណ៍ & Browser</th>
-                    <th className="py-2 px-3 text-right">ស្ថានភាព</th>
+                    <th className="py-2 px-3">áž€áž¶áž›áž”ážšáž·áž…áŸ’áž†áŸáž‘ & áž˜áŸ‰áŸ„áž„</th>
+                    <th className="py-2 px-3">áž¢áž¶ážŸáž™ážŠáŸ’áž‹áž¶áž“ IP</th>
+                    <th className="py-2 px-3">áž§áž”áž€ážšážŽáŸ & Browser</th>
+                    <th className="py-2 px-3 text-right">ážŸáŸ’ážáž¶áž“áž—áž¶áž–</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -267,7 +267,7 @@ export default function AccountSecurityPage() {
                       <td className="py-2 px-3 font-mono text-muted-foreground">{lh.ip}</td>
                       <td className="py-2 px-3 text-muted-foreground">{lh.device}</td>
                       <td className="py-2 px-3 text-right">
-                        <Badge variant="success" className="text-[10px]">ជោគជ័យ (Success)</Badge>
+                        <Badge variant="success" className="text-[10px]">áž‡áŸ„áž‚áž‡áŸáž™ (Success)</Badge>
                       </td>
                     </tr>
                   ))}

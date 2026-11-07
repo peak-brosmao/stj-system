@@ -19,11 +19,11 @@ import {
   ShieldCheck,
   Award,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { useI18n } from "@/components/i18n/I18nProvider";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
+import { useI18n } from "@/ui/i18n/I18nProvider";
 
 interface CourseOption {
   id: string;
@@ -105,7 +105,7 @@ export default function SystemMembersPage() {
       .then(async (res) => {
         const data = await res.json().catch(() => null);
         if (!res.ok) {
-          throw new Error(data?.error || "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
+          throw new Error(data?.error || "áž˜áž·áž“áž¢áž¶áž…áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ… Backend Database áž”áž¶áž“áž¡áž¾áž™");
         }
         return data;
       })
@@ -132,7 +132,7 @@ export default function SystemMembersPage() {
       })
       .catch((err: unknown) => {
         setMembers([]);
-        setError(err instanceof Error ? err.message : "មិនអាចភ្ជាប់ទៅ Backend Database បានឡើយ");
+        setError(err instanceof Error ? err.message : "áž˜áž·áž“áž¢áž¶áž…áž—áŸ’áž‡áž¶áž”áŸ‹áž‘áŸ… Backend Database áž”áž¶áž“áž¡áž¾áž™");
       })
       .finally(() => setLoading(false));
   };
@@ -316,7 +316,7 @@ export default function SystemMembersPage() {
   });
 
   return (
-    <PortalLayout portalType="system" userRole="ប្រធាន STJ (President)" userName="ផល ដាវីត">
+    <PortalLayout portalType="system" userRole="áž”áŸ’ážšáž’áž¶áž“ STJ (President)" userName="áž•áž› ážŠáž¶ážœáž¸áž">
       <div className="space-y-6">
         {error && (
           <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-sm">
@@ -526,7 +526,7 @@ export default function SystemMembersPage() {
                             size="sm"
                             onClick={() => openEditModal(m)}
                             className="h-7 text-[11px] px-2 text-primary border-primary/30 hover:bg-primary/10 space-x-1"
-                            title="កែប្រែព័ត៌មាន និងប្តូរមុខវិជ្ជា (Edit & Reassign Course)"
+                            title="áž€áŸ‚áž”áŸ’ážšáŸ‚áž–áŸážáŸŒáž˜áž¶áž“ áž“áž·áž„áž”áŸ’ážáž¼ážšáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ (Edit & Reassign Course)"
                           >
                             <Edit2 className="w-3 h-3" />
                             <span>{t("members.editMember")}</span>
@@ -535,7 +535,7 @@ export default function SystemMembersPage() {
                             variant="outline"
                             size="sm"
                             onClick={async () => {
-                              if (!confirm(`តើលោកអ្នកចង់កំណត់ពាក្យសម្ងាត់សមាជិក ${m.fullNameKh} ឡើងវិញមែនទេ?`)) return;
+                              if (!confirm(`ážáž¾áž›áŸ„áž€áž¢áŸ’áž“áž€áž…áž„áŸ‹áž€áŸ†ážŽážáŸ‹áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážŸáž˜áž¶áž‡áž·áž€ ${m.fullNameKh} áž¡áž¾áž„ážœáž·áž‰áž˜áŸ‚áž“áž‘áŸ?`)) return;
                               try {
                                 const res = await fetch("/api/system/members/reset-password", {
                                   method: "POST",
@@ -544,7 +544,7 @@ export default function SystemMembersPage() {
                                 });
                                 const data = await res.json();
                                 if (!res.ok) throw new Error(data.error || "Reset failed");
-                                alert(`ពាក្យសម្ងាត់របស់ ${m.fullNameKh} ត្រូវបានកំណត់ឡើងវិញជោគជ័យ: ${data.defaultPassword}`);
+                                alert(`áž–áž¶áž€áŸ’áž™ážŸáž˜áŸ’áž„áž¶ážáŸ‹ážšáž”ážŸáŸ‹ ${m.fullNameKh} ážáŸ’ážšáž¼ážœáž”áž¶áž“áž€áŸ†ážŽážáŸ‹áž¡áž¾áž„ážœáž·áž‰áž‡áŸ„áž‚áž‡áŸáž™: ${data.defaultPassword}`);
                               } catch (err: unknown) {
                                 alert(err instanceof Error ? err.message : "Error resetting password");
                               }
@@ -590,7 +590,7 @@ export default function SystemMembersPage() {
                       {t("members.editTitle")}
                     </h3>
                     <p className="text-[11px] text-muted-foreground font-mono">
-                      {editingMember.memberId} • {editingMember.studentId}
+                      {editingMember.memberId} â€¢ {editingMember.studentId}
                     </p>
                   </div>
                   <button
@@ -809,7 +809,7 @@ export default function SystemMembersPage() {
                       <input
                         type="text"
                         required
-                        placeholder="ជា វិសិដ្ឋ"
+                        placeholder="áž‡áž¶ ážœáž·ážŸáž·ážŠáŸ’áž‹"
                         value={newMember.fullNameKh}
                         onChange={(e) => setNewMember({ ...newMember, fullNameKh: e.target.value })}
                         className="w-full px-2.5 py-1.5 rounded-lg border border-input bg-background"

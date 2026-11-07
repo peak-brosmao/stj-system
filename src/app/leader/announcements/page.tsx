@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { Megaphone, Calendar, Globe, RefreshCw } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
 
 interface AnnouncementItem {
   id: string;
@@ -40,7 +40,7 @@ export default function LeaderAnnouncementsPage() {
     <PortalLayout
       portalType="leader"
       userRole="Course Leader"
-      userName="លាង ជីងហេង"
+      userName="áž›áž¶áž„ áž‡áž¸áž„áž áŸáž„"
       userEmail="leang.jingheng@itc.edu.kh"
     >
       <div className="space-y-6 max-w-4xl mx-auto">
@@ -48,13 +48,13 @@ export default function LeaderAnnouncementsPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Megaphone className="w-4 h-4" />
-              <span>សេចក្តីជូនដំណឹងមុខវិជ្ជា</span>
+              <span>ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              សេចក្តីជូនដំណឹង (Course Announcements)
+              ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ (Course Announcements)
             </h1>
             <p className="text-xs text-muted-foreground">
-              សេចក្តីប្រកាសព័ត៌មានពីគណៈគ្រប់គ្រង STJ ជូនដល់ប្រធានមុខវិជ្ជា
+              ážŸáŸáž…áž€áŸ’ážáž¸áž”áŸ’ážšáž€áž¶ážŸáž–áŸážáŸŒáž˜áž¶áž“áž–áž¸áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„ STJ áž‡áž¼áž“ážŠáž›áŸ‹áž”áŸ’ážšáž’áž¶áž“áž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶
             </p>
           </div>
           <Button
@@ -65,18 +65,18 @@ export default function LeaderAnnouncementsPage() {
             className="text-xs self-start sm:self-auto"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
-            ផ្ទុកឡើងវិញ
+            áž•áŸ’áž‘áž»áž€áž¡áž¾áž„ážœáž·áž‰
           </Button>
         </div>
 
         {loading ? (
           <div className="text-center py-12 text-muted-foreground text-xs">
-            កំពុងទាញយកសេចក្តីជូនដំណឹងពី Database...
+            áž€áŸ†áž–áž»áž„áž‘áž¶áž‰áž™áž€ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„áž–áž¸ Database...
           </div>
         ) : announcements.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center text-muted-foreground text-xs">
-              ពុំទាន់មានសេចក្តីជូនដំណឹងថ្មីនៅក្នុងប្រព័ន្ធនៅឡើយទេ។
+              áž–áž»áŸ†áž‘áž¶áž“áŸ‹áž˜áž¶áž“ážŸáŸáž…áž€áŸ’ážáž¸áž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ážáŸ’áž˜áž¸áž“áŸ…áž€áŸ’áž“áž»áž„áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž“áŸ…áž¡áž¾áž™áž‘áŸáŸ”
             </CardContent>
           </Card>
         ) : (

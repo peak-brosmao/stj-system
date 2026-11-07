@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { I18nProvider } from "@/components/i18n/I18nProvider";
+import { ThemeProvider } from "@/ui/theme/ThemeProvider";
+import { I18nProvider } from "@/ui/i18n/I18nProvider";
 
 export const metadata: Metadata = {
   title: "STJ Management System | Institute of Technology of Cambodia",

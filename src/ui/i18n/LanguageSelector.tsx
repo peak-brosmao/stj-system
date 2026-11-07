@@ -2,14 +2,14 @@
 
 import React from "react";
 import { Globe } from "lucide-react";
-import { useI18n } from "@/components/i18n/I18nProvider";
+import { useI18n } from "@/ui/i18n/I18nProvider";
 import { Locale } from "@/types";
 
 export function LanguageSelector() {
   const { locale, setLocale } = useI18n();
 
   const options: Array<{ code: Locale; label: string }> = [
-    { code: "km", label: "ខ្មែរ" },
+    { code: "km", label: "ážáŸ’áž˜áŸ‚ážš" },
     { code: "en", label: "EN" },
     { code: "fr", label: "FR" },
   ];

@@ -12,37 +12,37 @@ import {
   Filter,
   Check,
 } from "lucide-react";
-import { PortalLayout } from "@/components/layout/PortalLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import { PortalLayout } from "@/ui/layout/PortalLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/ui/Card";
+import { Button } from "@/ui/ui/Button";
+import { Badge } from "@/ui/ui/Badge";
 
 export default function PortalNotificationsPage() {
   const [notifications, setNotifications] = useState([
     {
       id: "n-1",
       category: "CORRECTION",
-      title: "សំណើកែតម្រូវវត្តមានត្រូវបានអនុម័ត",
-      message: "សំណើកែតម្រូវវត្តមានសម្រាប់វគ្គទី១ នៃមុខវិជ្ជា MATH101 ត្រូវបានគណៈគ្រប់គ្រងអនុម័តរួចរាល់។ អត្រាវត្តមានរបស់អ្នកឡើងដល់ 100%។",
-      date: "១៤ តុលា ២០២៦ • 10:30 AM",
+      title: "ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“ážáŸ’ážšáž¼ážœáž”áž¶áž“áž¢áž“áž»áž˜áŸáž",
+      message: "ážŸáŸ†ážŽáž¾áž€áŸ‚ážáž˜áŸ’ážšáž¼ážœážœážáŸ’ážáž˜áž¶áž“ážŸáž˜áŸ’ážšáž¶áž”áŸ‹ážœáž‚áŸ’áž‚áž‘áž¸áŸ¡ áž“áŸƒáž˜áž»ážážœáž·áž‡áŸ’áž‡áž¶ MATH101 ážáŸ’ážšáž¼ážœáž”áž¶áž“áž‚ážŽáŸˆáž‚áŸ’ážšáž”áŸ‹áž‚áŸ’ážšáž„áž¢áž“áž»áž˜áŸážážšáž½áž…ážšáž¶áž›áŸ‹áŸ” áž¢ážáŸ’ážšáž¶ážœážáŸ’ážáž˜áž¶áž“ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€áž¡áž¾áž„ážŠáž›áŸ‹ 100%áŸ”",
+      date: "áŸ¡áŸ¤ ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦ â€¢ 10:30 AM",
       link: "/portal/attendance",
       isRead: false,
     },
     {
       id: "n-2",
       category: "SESSION",
-      title: "កាលវិភាគវគ្គបង្រៀនបន្ទាប់ (PROG101)",
-      message: "វគ្គទី៤ ស្តីពី Binary Search Trees & Recursion នឹងប្រព្រឹត្តទៅនៅថ្ងៃសៅរ៍ ០៧ វិច្ឆិកា វេលាម៉ោង ០៨:០០ ព្រឹក នៅបន្ទប់ SF1។",
-      date: "២៨ តុលា ២០២៦ • 09:15 AM",
+      title: "áž€áž¶áž›ážœáž·áž—áž¶áž‚ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“áž”áž“áŸ’áž‘áž¶áž”áŸ‹ (PROG101)",
+      message: "ážœáž‚áŸ’áž‚áž‘áž¸áŸ¤ ážŸáŸ’ážáž¸áž–áž¸ Binary Search Trees & Recursion áž“áž¹áž„áž”áŸ’ážšáž–áŸ’ážšáž¹ážáŸ’ážáž‘áŸ…áž“áŸ…ážáŸ’áž„áŸƒážŸáŸ…ážšáŸ áŸ áŸ§ ážœáž·áž…áŸ’áž†áž·áž€áž¶ ážœáŸáž›áž¶áž˜áŸ‰áŸ„áž„ áŸ áŸ¨:áŸ áŸ  áž–áŸ’ážšáž¹áž€ áž“áŸ…áž”áž“áŸ’áž‘áž”áŸ‹ SF1áŸ”",
+      date: "áŸ¢áŸ¨ ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦ â€¢ 09:15 AM",
       link: "/portal/schedule",
       isRead: false,
     },
     {
       id: "n-3",
       category: "SECURITY",
-      title: "ការចូលប្រើប្រាស់គណនីពីឧបករណ៍ថ្មី",
-      message: "គណនីរបស់អ្នកត្រូវបានចូលប្រើប្រាស់ដោយជោគជ័យតាមរយៈ Google Chrome លើប្រព័ន្ធប្រតិបត្តិការ Windows។",
-      date: "៣០ តុលា ២០២៦ • 06:12 PM",
+      title: "áž€áž¶ážšáž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹áž‚ážŽáž“áž¸áž–áž¸áž§áž”áž€ážšážŽáŸážáŸ’áž˜áž¸",
+      message: "áž‚ážŽáž“áž¸ážšáž”ážŸáŸ‹áž¢áŸ’áž“áž€ážáŸ’ážšáž¼ážœáž”áž¶áž“áž…áž¼áž›áž”áŸ’ážšáž¾áž”áŸ’ážšáž¶ážŸáŸ‹ážŠáŸ„áž™áž‡áŸ„áž‚áž‡áŸáž™ážáž¶áž˜ážšáž™áŸˆ Google Chrome áž›áž¾áž”áŸ’ážšáž–áŸáž“áŸ’áž’áž”áŸ’ážšážáž·áž”ážáŸ’ážáž·áž€áž¶ážš WindowsáŸ”",
+      date: "áŸ£áŸ  ážáž»áž›áž¶ áŸ¢áŸ áŸ¢áŸ¦ â€¢ 06:12 PM",
       link: "/portal/security",
       isRead: true,
     },
@@ -79,11 +79,11 @@ export default function PortalNotificationsPage() {
             </div>
             <div className="flex items-center space-x-2">
               <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                ការជូនដំណឹង (Notifications)
+                áž€áž¶ážšáž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„ (Notifications)
               </h1>
               {unreadCount > 0 && (
                 <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-primary text-primary-foreground">
-                  {unreadCount} ថ្មី
+                  {unreadCount} ážáŸ’áž˜áž¸
                 </span>
               )}
             </div>
@@ -98,12 +98,12 @@ export default function PortalNotificationsPage() {
                 className="space-x-1.5 text-xs"
               >
                 <Check className="w-3.5 h-3.5" />
-                <span>សម្គាល់ទាំងអស់ថាបានអាន</span>
+                <span>ážŸáž˜áŸ’áž‚áž¶áž›áŸ‹áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ážáž¶áž”áž¶áž“áž¢áž¶áž“</span>
               </Button>
             )}
             <Link href="/portal/settings">
               <Button variant="ghost" size="sm" className="text-xs">
-                កំណត់ការជូនដំណឹង
+                áž€áŸ†ážŽážáŸ‹áž€áž¶ážšáž‡áž¼áž“ážŠáŸ†ážŽáž¹áž„
               </Button>
             </Link>
           </div>
@@ -117,7 +117,7 @@ export default function PortalNotificationsPage() {
               filter === "ALL" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            ទាំងអស់ ({notifications.length})
+            áž‘áž¶áŸ†áž„áž¢ážŸáŸ‹ ({notifications.length})
           </button>
           <button
             onClick={() => setFilter("UNREAD")}
@@ -125,7 +125,7 @@ export default function PortalNotificationsPage() {
               filter === "UNREAD" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            មិនទាន់អាន ({unreadCount})
+            áž˜áž·áž“áž‘áž¶áž“áŸ‹áž¢áž¶áž“ ({unreadCount})
           </button>
           <button
             onClick={() => setFilter("CORRECTION")}
@@ -133,7 +133,7 @@ export default function PortalNotificationsPage() {
               filter === "CORRECTION" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            លទ្ធផលកែវត្តមាន
+            áž›áž‘áŸ’áž’áž•áž›áž€áŸ‚ážœážáŸ’ážáž˜áž¶áž“
           </button>
           <button
             onClick={() => setFilter("SESSION")}
@@ -141,7 +141,7 @@ export default function PortalNotificationsPage() {
               filter === "SESSION" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            វគ្គបង្រៀន
+            ážœáž‚áŸ’áž‚áž”áž„áŸ’ážšáŸ€áž“
           </button>
           <button
             onClick={() => setFilter("SECURITY")}
@@ -149,7 +149,7 @@ export default function PortalNotificationsPage() {
               filter === "SECURITY" ? "bg-primary text-primary-foreground font-semibold" : "bg-muted text-muted-foreground hover:text-foreground"
             }`}
           >
-            សុវត្ថិភាព
+            ážŸáž»ážœážáŸ’ážáž·áž—áž¶áž–
           </button>
         </div>
 
@@ -185,7 +185,7 @@ export default function PortalNotificationsPage() {
                       onClick={() => markAsRead(item.id)}
                       className="inline-flex items-center space-x-1 text-xs font-semibold text-primary hover:underline"
                     >
-                      <span>ពិនិត្យព័ត៌មានលម្អិត</span>
+                      <span>áž–áž·áž“áž·ážáŸ’áž™áž–áŸážáŸŒáž˜áž¶áž“áž›áž˜áŸ’áž¢áž·áž</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
@@ -198,7 +198,7 @@ export default function PortalNotificationsPage() {
                     onClick={() => markAsRead(item.id)}
                     className="text-[11px] text-muted-foreground hover:text-foreground shrink-0"
                   >
-                    អានរួច
+                    áž¢áž¶áž“ážšáž½áž…
                   </Button>
                 )}
               </CardContent>
