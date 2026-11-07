@@ -39,7 +39,8 @@ interface SessionOption {
 
 export default function LeaderReportsPage() {
   const [selectedAcademicYear, setSelectedAcademicYear] = useState("2026-2027");
-  const [selectedCourse, setSelectedCourse] = useState("PROG101");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [assignedCourses, setAssignedCourses] = useState<Array<{ id: string; code: string; titleKh: string }>>([]);
   const [selectedSessionId, setSelectedSessionId] = useState<string>("LATEST");
   const [sessions, setSessions] = useState<SessionOption[]>([]);
   const [courseCounts, setCourseCounts] = useState<Record<string, number>>({});
@@ -60,16 +61,21 @@ export default function LeaderReportsPage() {
             email: d.user.email || "",
           });
         }
-        const firstCourseCode = d?.leader?.courses?.[0]?.code || d?.member?.courses?.[0]?.code;
+        const leaderCourses = Array.isArray(d?.leader?.courses) ? d.leader.courses : [];
+        setAssignedCourses(leaderCourses);
+        const firstCourseCode = leaderCourses[0]?.code || "";
         if (firstCourseCode) {
           setSelectedCourse(firstCourseCode);
+        } else {
+          setLoading(false);
         }
       })
-      .catch(() => {});
+      .catch(() => setLoading(false));
   }, []);
 
   const loadReportData = useCallback(
     async (courseCode: string, sessionIdChoice: string) => {
+      if (!courseCode) return;
       setLoading(true);
       try {
         const [reportsRes, sessionsRes, membersRes] = await Promise.all([
@@ -352,13 +358,8 @@ export default function LeaderReportsPage() {
         {/* Filter Controls */}
         <div className="bg-card border border-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground mr-1">មុខវិជ្ជា៖</span>
-            {[
-              { code: "PROG101", name: "Programming" },
-              { code: "MATH101", name: "Mathematics" },
-              { code: "PHYS101", name: "Physics" },
-              { code: "CHEM101", name: "Chemistry" },
-            ].map((c) => {
+            <span className="text-xs font-semibold text-muted-foreground mr-1">មុខវិជ្ជាក្នុងបន្ទុក៖</span>
+            {assignedCourses.map((c) => {
               const count = courseCounts[c.code];
               return (
                 <button
@@ -374,7 +375,7 @@ export default function LeaderReportsPage() {
                       : "bg-muted text-muted-foreground hover:bg-muted/80"
                   }`}
                 >
-                  {c.name} {typeof count === "number" && count > 0 ? `(${count} នាក់)` : ""}
+                  [{c.code}] {c.titleKh} {typeof count === "number" && count > 0 ? `(${count} នាក់)` : ""}
                 </button>
               );
             })}

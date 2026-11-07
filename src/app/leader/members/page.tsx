@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Users, Search, ShieldAlert, RefreshCw } from "lucide-react";
+import Link from "next/link";
+import { Users, Search, RefreshCw, CalendarCheck, BookOpen } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Badge } from "@/ui/Badge";
 import { Button } from "@/ui/Button";
@@ -21,12 +22,19 @@ interface MemberItem {
   totalSessions?: number;
 }
 
+interface AssignedCourse {
+  id: string;
+  code: string;
+  titleKh: string;
+  memberCount?: number;
+}
+
 export default function LeaderMembersPage() {
   const [members, setMembers] = useState<MemberItem[]>([]);
-  const [courseCounts, setCourseCounts] = useState<Record<string, number>>({});
+  const [assignedCourses, setAssignedCourses] = useState<AssignedCourse[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("PROG101");
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [deptFilter] = useState("ALL");
   const [userInfo, setUserInfo] = useState<{ name: string; email: string }>({
     name: "",
@@ -43,20 +51,24 @@ export default function LeaderMembersPage() {
             email: d.user.email || "",
           });
         }
-        const firstCourseCode = d?.leader?.courses?.[0]?.code || d?.member?.courses?.[0]?.code;
+        const leaderCourses: AssignedCourse[] = Array.isArray(d?.leader?.courses)
+          ? d.leader.courses
+          : [];
+        setAssignedCourses(leaderCourses);
+        const firstCourseCode = leaderCourses[0]?.code || "";
         if (firstCourseCode) {
           setSelectedCourse(firstCourseCode);
+        } else {
+          setLoading(false);
         }
       })
-      .catch(() => {});
+      .catch(() => setLoading(false));
   }, []);
 
   const loadMembers = (courseCode: string) => {
+    if (!courseCode) return;
     setLoading(true);
-    const url =
-      courseCode === "ALL"
-        ? "/api/system/members"
-        : `/api/system/members?course=${courseCode}`;
+    const url = `/api/system/members?course=${encodeURIComponent(courseCode)}`;
 
     Promise.all([
       fetch(url).then((res) => (res.ok ? res.json() : null)),
@@ -67,29 +79,11 @@ export default function LeaderMembersPage() {
           ? reportsData.members
           : [];
         const reportMap = new Map<string, any>();
-        const counts: Record<string, number> = {
-          PROG101: 0,
-          MATH101: 0,
-          PHYS101: 0,
-          CHEM101: 0,
-          ALL: reportMembers.length,
-        };
 
         for (const rm of reportMembers) {
           if (rm.memberId) reportMap.set(String(rm.memberId), rm);
           if (rm.id) reportMap.set(String(rm.id), rm);
-          if (!rm.isExecutive) {
-            const mCourses: string[] = Array.isArray(rm.courses)
-              ? rm.courses
-              : rm.course
-              ? [rm.course]
-              : [];
-            for (const c of mCourses) {
-              if (counts[c] !== undefined) counts[c]++;
-            }
-          }
         }
-        setCourseCounts(counts);
 
         if (data?.members) {
           const merged = data.members.map((m: MemberItem) => {
@@ -108,7 +102,9 @@ export default function LeaderMembersPage() {
   };
 
   useEffect(() => {
-    loadMembers(selectedCourse);
+    if (selectedCourse) {
+      loadMembers(selectedCourse);
+    }
   }, [selectedCourse]);
 
   const filtered = members.filter((m) => {
@@ -121,20 +117,7 @@ export default function LeaderMembersPage() {
     return matchesSearch && matchesDept;
   });
 
-  const getCourseTitle = (code: string) => {
-    switch (code) {
-      case "PROG101":
-        return "ការសរសេរកម្មវិធីកុំព្យូទ័រ (Programming)";
-      case "MATH101":
-        return "គណិតវិទ្យាវិស្វកម្ម (Mathematics)";
-      case "PHYS101":
-        return "រូបវិទ្យាវិស្វកម្ម (Physics)";
-      case "CHEM101":
-        return "គីមីវិទ្យាទូទៅ (Chemistry)";
-      default:
-        return "សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តទាំងអស់ (All Members)";
-    }
-  };
+  const activeCourseObj = assignedCourses.find((c) => c.code === selectedCourse);
 
   return (
     <PortalLayout
@@ -148,49 +131,54 @@ export default function LeaderMembersPage() {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <Users className="w-4 h-4" />
-              <span>{selectedCourse} Enrolled Tutors • STJ Academic Year 2026-2027</span>
+              <span>
+                {selectedCourse || "STJ"} Enrolled Tutors • STJ Academic Year 2026-2027
+              </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              សមាជិករៀមច្បងក្នុងបន្ទុក (Assigned STJ Tutors)
+              សមាជិករៀមច្បងក្នុងបន្ទុក (My Course Team Members)
             </h1>
             <p className="text-xs text-muted-foreground">
-              ទិន្នន័យជាក់ស្តែងពី Backend API • សម្រាប់សមាជិករៀមច្បងបង្រៀនស្ម័គ្រចិត្តតែប៉ុណ្ណោះ មិនមែនសម្រាប់សិស្សប្អូនឡើយ
+              គ្រប់គ្រងសមាជិក កំណត់ពាក្យសម្ងាត់ឡើងវិញ (Reset Password) និងតាមដានវត្តមានសម្រាប់តែសមាជិកក្នុងមុខវិជ្ជារបស់អ្នកប៉ុណ្ណោះ។
             </p>
           </div>
 
-          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs flex items-center space-x-2">
-            <ShieldAlert className="w-4 h-4 shrink-0" />
-            <span>សិទ្ធិមើលតែប៉ុណ្ណោះ (Read-Only) • គ្មានសិទ្ធិកែប្រែវត្តមាន</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/leader/sessions">
+              <Button variant="outline" size="sm" className="text-xs space-x-1.5">
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>មាតិកាមុខវិជ្ជា &amp; មេរៀន</span>
+              </Button>
+            </Link>
+            <Link href="/leader/attendance">
+              <Button size="sm" className="text-xs space-x-1.5">
+                <CalendarCheck className="w-3.5 h-3.5" />
+                <span>ស្រង់វត្តមានកូនក្រុម</span>
+              </Button>
+            </Link>
           </div>
         </div>
 
-        {/* Course and Department Filter Bar */}
+        {/* Course and Search Bar (Strictly scoped to leader's assigned courses) */}
         <div className="bg-card border border-border p-4 rounded-xl flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-muted-foreground mr-1">មុខវិជ្ជា៖</span>
-            {[
-              { code: "PROG101", name: "Programming" },
-              { code: "MATH101", name: "Mathematics" },
-              { code: "PHYS101", name: "Physics" },
-              { code: "CHEM101", name: "Chemistry" },
-              { code: "ALL", name: "ទាំងអស់" },
-            ].map((c) => {
-              const count = courseCounts[c.code];
-              return (
-                <button
-                  key={c.code}
-                  type="button"
-                  onClick={() => setSelectedCourse(c.code)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                    selectedCourse === c.code
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
-                >
-                  {c.name} {typeof count === "number" && count > 0 ? `(${count} នាក់)` : ""}
-                </button>
-              );
-            })}
+            <span className="text-xs font-semibold text-muted-foreground mr-1">
+              មុខវិជ្ជាក្នុងបន្ទុក៖
+            </span>
+            {assignedCourses.map((c) => (
+              <button
+                key={c.code}
+                type="button"
+                onClick={() => setSelectedCourse(c.code)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                  selectedCourse === c.code
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                }`}
+              >
+                [{c.code}] {c.titleKh}
+              </button>
+            ))}
           </div>
 
           <div className="flex items-center space-x-2 w-full sm:w-auto">
@@ -209,7 +197,7 @@ export default function LeaderMembersPage() {
               variant="outline"
               size="sm"
               onClick={() => loadMembers(selectedCourse)}
-              disabled={loading}
+              disabled={loading || !selectedCourse}
               className="text-xs shrink-0"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loading ? "animate-spin" : ""}`} />
@@ -221,7 +209,10 @@ export default function LeaderMembersPage() {
         {/* Active Selection Summary */}
         <div className="flex items-center justify-between px-1">
           <div className="text-xs font-medium text-foreground">
-            {getCourseTitle(selectedCourse)} — បង្ហាញ <span className="font-bold text-primary">{filtered.length}</span> នាក់
+            {activeCourseObj
+              ? `[${activeCourseObj.code}] ${activeCourseObj.titleKh}`
+              : selectedCourse}{" "}
+            — បង្ហាញ <span className="font-bold text-primary">{filtered.length}</span> នាក់
           </div>
         </div>
 
@@ -251,7 +242,7 @@ export default function LeaderMembersPage() {
                 ) : filtered.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="py-8 text-center text-muted-foreground text-xs">
-                      រកមិនឃើញទិន្នន័យសមាជិកឡើយ។
+                      រកមិនឃើញទិន្នន័យសមាជិកក្នុងមុខវិជ្ជារបស់អ្នកឡើយ។
                     </td>
                   </tr>
                 ) : (
@@ -259,19 +250,21 @@ export default function LeaderMembersPage() {
                     <tr key={m.id} className="hover:bg-muted/20 transition-colors">
                       <td className="py-3 px-4 font-mono text-muted-foreground">{idx + 1}</td>
                       <td className="py-3 px-4 font-mono font-bold text-primary">{m.memberId}</td>
-                      <td className="py-3 px-4 font-mono text-muted-foreground">{m.studentId || "-"}</td>
+                      <td className="py-3 px-4 font-mono text-muted-foreground">
+                        {m.studentId || "-"}
+                      </td>
                       <td className="py-3 px-4">
                         <div className="font-semibold text-foreground">{m.fullNameKh}</div>
                         <div className="text-[10px] text-muted-foreground">{m.fullNameEn}</div>
                       </td>
                       <td className="py-3 px-4">
                         <span className="font-semibold text-foreground">{m.department?.code}</span>
-                        <span className="text-muted-foreground ml-1">({m.academicYear?.code})</span>
+                        <span className="text-muted-foreground ml-1">
+                          ({m.academicYear?.code})
+                        </span>
                       </td>
                       <td className="py-3 px-4 text-muted-foreground text-[11px]">
-                        {m.notes ||
-                          (m.enrollments && m.enrollments.map((e) => e.course.code).join(", ")) ||
-                          selectedCourse}
+                        {selectedCourse}
                       </td>
                       <td className="py-3 px-4 text-center">
                         {m.totalSessions && m.totalSessions > 0 ? (

@@ -3,10 +3,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, BookOpen, Clock, MapPin, UserCheck, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, Clock, FileText, MapPin, UserCheck, Users } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Badge } from "@/ui/Badge";
+import { RichContentViewer } from "@/ui/RichTextEditor";
+import type { CourseAttachment } from "@/lib/richContent";
 
 interface CourseDetail {
   code: string;
@@ -25,7 +27,22 @@ interface CourseDetail {
     department?: string;
     year?: string;
   }>;
-  sessions: Array<{ id: string; title: string; date: string; time: string; room: string; status: string }>;
+  syllabus?: {
+    notes?: string;
+    richContent?: string;
+    attachments?: CourseAttachment[];
+  };
+  sessions: Array<{
+    id: string;
+    title: string;
+    date: string;
+    time: string;
+    room: string;
+    status: string;
+    notes?: string;
+    richContent?: string;
+    attachments?: CourseAttachment[];
+  }>;
   enrolledMembers: Array<{
     memberId?: string;
     member_id?: string;
@@ -60,10 +77,20 @@ export default function CourseDetailPage() {
       .finally(() => setLoading(false));
   }, [slug]);
 
+  const hasSyllabus = Boolean(
+    course?.syllabus &&
+      (course.syllabus.richContent ||
+        course.syllabus.notes ||
+        (course.syllabus.attachments && course.syllabus.attachments.length > 0))
+  );
+
   return (
     <PortalLayout portalType="portal">
       <div className="space-y-6 max-w-4xl mx-auto">
-        <Link href="/portal/courses" className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
+        <Link
+          href="/portal/courses"
+          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+        >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>ថយក្រោយ (Back)</span>
         </Link>
@@ -93,43 +120,91 @@ export default function CourseDetailPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-xs">
-                {course.leaders.length === 0 && <p className="text-muted-foreground">ពុំទាន់បានចាត់តាំង (Not assigned yet.)</p>}
+                {course.leaders.length === 0 && (
+                  <p className="text-muted-foreground">ពុំទាន់បានចាត់តាំង (Not assigned yet.)</p>
+                )}
                 {course.leaders.map((l, idx) => {
                   const nameKh = l.fullNameKh || l.full_name_kh || "ប្រធានក្រុម";
                   const nameEn = l.fullNameEn || l.full_name_en || "";
                   const meta = [l.phone, l.email].filter(Boolean).join(" • ");
                   return (
-                    <div key={l.email || idx} className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-muted/30 border border-border/60">
+                    <div
+                      key={l.email || idx}
+                      className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-muted/30 border border-border/60"
+                    >
                       <div className="font-semibold text-foreground">
-                        {nameKh} {nameEn ? <span className="text-muted-foreground font-normal">({nameEn})</span> : null}
+                        {nameKh}{" "}
+                        {nameEn ? (
+                          <span className="text-muted-foreground font-normal">({nameEn})</span>
+                        ) : null}
                       </div>
-                      {meta && <span className="text-muted-foreground font-mono text-[11px]">{meta}</span>}
+                      {meta && (
+                        <span className="text-muted-foreground font-mono text-[11px]">{meta}</span>
+                      )}
                     </div>
                   );
                 })}
               </CardContent>
             </Card>
 
+            {/* Course Overview, Syllabus & Cloudflare R2 Materials */}
+            {hasSyllabus && (
+              <Card className="border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold flex items-center gap-1.5">
+                    <FileText className="w-4 h-4 text-primary" />
+                    មាតិកាមុខវិជ្ជា និងឯកសារមេរៀនរួម (Course Overview &amp; PDF/Video Materials)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <RichContentViewer
+                    richContent={course.syllabus?.richContent}
+                    notes={course.syllabus?.notes}
+                    attachments={course.syllabus?.attachments}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">មេរៀន (Lessons)</CardTitle>
+                <CardTitle className="text-sm font-semibold">
+                  មេរៀន និងឯកសារបង្រៀន (Lessons &amp; Study Materials)
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="space-y-3">
                 {course.sessions.length === 0 && (
                   <p className="text-xs text-muted-foreground">
                     ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet.)
                   </p>
                 )}
                 {course.sessions.map((s) => (
-                  <div key={s.id} className="p-3 rounded-lg border border-border bg-muted/30 text-xs space-y-1">
+                  <div
+                    key={s.id}
+                    className="p-3.5 rounded-xl border border-border bg-muted/30 text-xs space-y-2"
+                  >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-foreground">{s.title}</span>
-                      <Badge variant={STATUS[s.status]?.v || "info"}>{STATUS[s.status]?.t || s.status}</Badge>
+                      <span className="font-semibold text-sm text-foreground">{s.title}</span>
+                      <Badge variant={STATUS[s.status]?.v || "info"}>
+                        {STATUS[s.status]?.t || s.status}
+                      </Badge>
                     </div>
                     <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                      <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{s.date} {s.time}</span>
-                      <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{s.room}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {s.date} {s.time}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        {s.room}
+                      </span>
                     </div>
+
+                    <RichContentViewer
+                      richContent={s.richContent}
+                      notes={s.notes}
+                      attachments={s.attachments}
+                    />
                   </div>
                 ))}
               </CardContent>
@@ -154,9 +229,13 @@ export default function CourseDetailPage() {
                       className="flex items-center justify-between gap-2 p-2.5 rounded-lg border border-border/60 bg-muted/20"
                     >
                       <div className="min-w-0 truncate">
-                        <span className="font-mono text-[11px] font-bold text-primary mr-2">{memberId}</span>
+                        <span className="font-mono text-[11px] font-bold text-primary mr-2">
+                          {memberId}
+                        </span>
                         <span className="font-semibold text-foreground">{nameKh}</span>
-                        {nameEn && <span className="text-muted-foreground ml-1">({nameEn})</span>}
+                        {nameEn && (
+                          <span className="text-muted-foreground ml-1">({nameEn})</span>
+                        )}
                       </div>
                       {deptBadge && (
                         <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-muted text-muted-foreground shrink-0">

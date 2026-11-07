@@ -7,82 +7,55 @@ import {
   Plus,
   Clock,
   MapPin,
-  CalendarCheck,
-  X,
-  Pencil,
   Trash2,
-  Ban,
+  Edit3,
+  X,
+  CalendarCheck,
   Share2,
-  Copy,
   Check,
-  ExternalLink,
+  BookOpen,
+  FileText,
 } from "lucide-react";
 import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
+import { RichTextEditor, RichContentViewer } from "@/ui/RichTextEditor";
+import type { CourseAttachment } from "@/lib/richContent";
 
 interface CourseOption {
   id: string;
   code: string;
   titleKh: string;
-  titleEn: string;
 }
 
 interface SessionItem {
   id: string;
+  title: string;
   courseId: string;
   courseCode?: string;
-  title: string;
+  courseTitleKh?: string;
   sessionDate: string;
   startTime: string;
   endTime: string;
-  room: string;
+  room?: string | null;
   status: string;
-  notes: string | null;
-  course: { id?: string; code: string; titleKh: string };
-  _count?: { attendance: number };
+  notes?: string | null;
+  richContent?: string;
+  attachments?: CourseAttachment[];
+  course: { id: string; code: string; titleKh: string };
+  _count: { attendance: number };
   shareToken?: string | null;
-  markedCount?: number;
-  totalAttendance?: number;
 }
 
-interface FormState {
-  id?: string;
+interface SyllabusData {
+  sessionId?: string;
   courseId: string;
-  title: string;
-  sessionDate: string;
-  startTime: string;
-  endTime: string;
-  room: string;
+  courseCode: string;
   notes: string;
-  status: string;
+  richContent: string;
+  attachments: CourseAttachment[];
 }
-
-const STATUS_LABEL: Record<string, string> = {
-  SCHEDULED: "បានកំណត់ពេល (Scheduled)",
-  IN_PROGRESS: "កំពុងបង្រៀន (In progress)",
-  COMPLETED: "បានបង្រៀនរួច (Completed)",
-  CANCELLED: "បានលុបចោល (Cancelled)",
-};
-
-const STATUS_VARIANT: Record<string, "success" | "info" | "warning" | "destructive"> = {
-  SCHEDULED: "info",
-  IN_PROGRESS: "warning",
-  COMPLETED: "success",
-  CANCELLED: "destructive",
-};
-
-const emptyForm = (courseId: string): FormState => ({
-  courseId,
-  title: "",
-  sessionDate: new Date().toISOString().split("T")[0],
-  startTime: "11:30",
-  endTime: "13:00",
-  room: "",
-  notes: "",
-  status: "SCHEDULED",
-});
 
 interface Props {
   portalType: "system" | "leader";
@@ -90,170 +63,278 @@ interface Props {
   userName: string;
 }
 
-/**
- * Lesson (teaching session) manager shared by the Leader portal and the System
- * portal. Both talk to /api/system/sessions, so they use the same database and
- * the same permission rules (a Course Leader only sees and edits own course).
- */
 export function SessionManager({ portalType, userRole, userName }: Props) {
   const [sessions, setSessions] = useState<SessionItem[]>([]);
   const [courses, setCourses] = useState<CourseOption[]>([]);
-  const [courseFilter, setCourseFilter] = useState("ALL");
+  const [syllabuses, setSyllabuses] = useState<Record<string, SyllabusData>>({});
   const [loading, setLoading] = useState(true);
-  const [form, setForm] = useState<FormState | null>(null);
+  const [courseFilter, setCourseFilter] = useState("ALL");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState<SessionItem | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [sharingId, setSharingId] = useState<string | null>(null);
 
-  const [shareSession, setShareSession] = useState<SessionItem | null>(null);
-  const [shareToken, setShareToken] = useState<string | null>(null);
-  const [shareLoading, setShareLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  // Course Syllabus / Overview Editor Modal state
+  const [syllabusModalOpen, setSyllabusModalOpen] = useState(false);
+  const [syllabusCourseId, setSyllabusCourseId] = useState("");
+  const [syllabusRichContent, setSyllabusRichContent] = useState("");
+  const [syllabusAttachments, setSyllabusAttachments] = useState<CourseAttachment[]>([]);
+  const [savingSyllabus, setSavingSyllabus] = useState(false);
 
-  const openShareModal = async (s: SessionItem) => {
-    setShareSession(s);
-    setCopied(false);
-    if (s.shareToken) {
-      setShareToken(s.shareToken);
-      return;
-    }
-    setShareLoading(true);
-    try {
-      const courseCode = s.course?.code || s.courseCode || "";
-      const courseId = s.courseId || s.course?.id || courseCode;
-      const res = await fetch("/api/system/share-links", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseId,
-          sessionId: s.id,
-          title: `របាយការណ៍មេរៀន ${s.title || ""}${courseCode ? ` (${courseCode})` : ""}`,
-          showStats: true,
-        }),
-      });
-      const data = await res.json();
-      const tok = data.token || data.shareLink?.token || (data.shareUrl ? data.shareUrl.replace("/share/", "") : null);
-      if (tok) {
-        setShareToken(tok);
-        s.shareToken = tok;
-      }
-    } catch (err) {
-      console.error("Failed to generate share link", err);
-    } finally {
-      setShareLoading(false);
-    }
-  };
+  const [form, setForm] = useState({
+    courseId: "",
+    title: "",
+    sessionDate: "2026-11-02",
+    startTime: "11:30",
+    endTime: "13:00",
+    room: "SF1 & SF2",
+    status: "SCHEDULED",
+    notes: "",
+    richContent: "",
+    attachments: [] as CourseAttachment[],
+  });
+
+  const attendanceHref = portalType === "leader" ? "/leader/attendance" : "/system/attendance";
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/system/sessions");
-      const data = await res.json();
-      if (res.ok) {
-        setSessions(data.sessions || []);
-        setCourses(data.courses || []);
-      } else {
-        setError(data.error || "Failed to load");
+      const [res, ovRes] = await Promise.all([
+        fetch("/api/system/sessions"),
+        portalType === "leader" ? fetch("/api/portal/overview") : Promise.resolve(null),
+      ]);
+      const d = await res.json().catch(() => null);
+      const ov = ovRes && ovRes.ok ? await ovRes.json().catch(() => null) : null;
+
+      let list: SessionItem[] = Array.isArray(d?.sessions) ? d.sessions : [];
+      let cs: CourseOption[] = Array.isArray(d?.courses) ? d.courses : [];
+      const sylMap: Record<string, SyllabusData> = d?.courseSyllabuses || {};
+
+      // Extra client-side safeguard for Leader portal: strictly scope to leader's assigned courses
+      if (portalType === "leader" && ov?.leader?.courses) {
+        const leaderCourses: any[] = Array.isArray(ov.leader.courses) ? ov.leader.courses : [];
+        if (leaderCourses.length > 0) {
+          const allowedCodes = new Set(
+            leaderCourses.map((c) => String(c.code || "").toUpperCase())
+          );
+          const allowedIds = new Set(leaderCourses.map((c) => String(c.id || "")));
+
+          cs = cs.filter(
+            (c) =>
+              allowedCodes.has(String(c.code || "").toUpperCase()) ||
+              allowedIds.has(String(c.id || ""))
+          );
+          if (cs.length === 0) {
+            cs = leaderCourses.map((c) => ({
+              id: c.id,
+              code: c.code,
+              titleKh: c.titleKh,
+            }));
+          }
+
+          list = list.filter(
+            (s) =>
+              allowedCodes.has(String(s.course?.code || s.courseCode || "").toUpperCase()) ||
+              allowedIds.has(String(s.courseId || s.course?.id || ""))
+          );
+        }
+      }
+
+      setSessions(list);
+      setCourses(cs);
+      setSyllabuses(sylMap);
+
+      if (cs.length === 1) {
+        setCourseFilter(cs[0].code);
+      }
+      if (cs[0]) {
+        setForm((f) => ({ ...f, courseId: f.courseId || cs[0].id }));
+        setSyllabusCourseId((prev) => prev || cs[0].id);
       }
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [portalType]);
 
   useEffect(() => {
     load();
   }, [load]);
 
+  const activeCourseObj =
+    courses.find((c) => c.code === courseFilter || c.id === courseFilter) || courses[0];
+
+  const activeSyllabus: SyllabusData | null = activeCourseObj
+    ? syllabuses[activeCourseObj.code] || syllabuses[activeCourseObj.id] || null
+    : null;
+
+  const openSyllabusEditor = (course?: CourseOption) => {
+    const target = course || activeCourseObj || courses[0];
+    if (!target) return;
+    const existing = syllabuses[target.code] || syllabuses[target.id];
+    setSyllabusCourseId(target.id);
+    setSyllabusRichContent(existing?.richContent || existing?.notes || "");
+    setSyllabusAttachments(Array.isArray(existing?.attachments) ? existing.attachments : []);
+    setError(null);
+    setSyllabusModalOpen(true);
+  };
+
+  const handleSaveSyllabus = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!syllabusCourseId) return;
+    setSavingSyllabus(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/system/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isSyllabus: true,
+          courseId: syllabusCourseId,
+          richContent: syllabusRichContent,
+          notes: syllabusRichContent.replace(/<[^>]+>/g, " ").trim().slice(0, 300),
+          attachments: syllabusAttachments,
+        }),
+      });
+      const d = await res.json().catch(() => null);
+      if (!res.ok) {
+        setError(d?.error || "មិនអាចរក្សាទុកមាតិកាមុខវិជ្ជាបានទេ");
+        return;
+      }
+      setSyllabusModalOpen(false);
+      await load();
+    } finally {
+      setSavingSyllabus(false);
+    }
+  };
+
   const openCreate = () => {
-    setError("");
-    // If a specific course is filtered, default to that course.
-    // Otherwise, do NOT auto-select courses[0] (wrong course bug) —
-    // leave the form courseId empty so the user must explicitly pick.
-    const defaultCourse =
-      courseFilter !== "ALL"
-        ? courses.find((c) => c.code === courseFilter || c.id === courseFilter)?.id || ""
-        : "";
-    setForm(emptyForm(defaultCourse));
+    setEditing(null);
+    setError(null);
+    const defaultCourseId = activeCourseObj?.id || courses[0]?.id || "";
+    setForm({
+      courseId: defaultCourseId,
+      title: "",
+      sessionDate: new Date().toISOString().split("T")[0],
+      startTime: "11:30",
+      endTime: "13:00",
+      room: "SF1 & SF2",
+      status: "SCHEDULED",
+      notes: "",
+      richContent: "",
+      attachments: [],
+    });
+    setModalOpen(true);
   };
 
   const openEdit = (s: SessionItem) => {
-    setError("");
+    setEditing(s);
+    setError(null);
     setForm({
-      id: s.id,
       courseId: s.courseId,
       title: s.title,
       sessionDate: new Date(s.sessionDate).toISOString().split("T")[0],
       startTime: s.startTime,
       endTime: s.endTime,
-      room: s.room,
-      notes: s.notes || "",
+      room: s.room || "",
       status: s.status,
+      notes: s.notes || "",
+      richContent: s.richContent || (s.notes ? `<p>${s.notes}</p>` : ""),
+      attachments: Array.isArray(s.attachments) ? s.attachments : [],
     });
+    setModalOpen(true);
   };
 
-  const submit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form) return;
-    // Guard: course MUST be explicitly selected (never fall through to a wrong default)
-    if (!form.courseId) {
-      setError("សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវមុនសិន (Please select a course before saving)");
-      return;
-    }
     setSaving(true);
-    setError("");
+    setError(null);
     try {
-      const isEdit = !!form.id;
+      const plainSummary =
+        form.richContent.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() || form.notes;
+      const payload = {
+        ...form,
+        notes: plainSummary,
+      };
+
       const res = await fetch("/api/system/sessions", {
-        method: isEdit ? "PATCH" : "POST",
+        method: editing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(editing ? { id: editing.id, ...payload } : payload),
       });
-      const data = await res.json();
+      const d = await res.json();
       if (!res.ok) {
-        setError(data.error || "Save failed");
+        setError(d.error || "រក្សាទុកមិនបាន");
         return;
       }
-      setForm(null);
+      setModalOpen(false);
       await load();
     } finally {
       setSaving(false);
     }
   };
 
-  const cancelLesson = async (s: SessionItem) => {
-    if (!confirm("តើអ្នកចង់លុបចោលមេរៀននេះឬទេ? (Cancel this lesson?)")) return;
-    await fetch("/api/system/sessions", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: s.id, status: "CANCELLED" }),
+  const handleDelete = async (s: SessionItem) => {
+    if (!confirm(`លុបមេរៀន "${s.title}" មែនទេ?`)) return;
+    const res = await fetch(`/api/system/sessions?id=${encodeURIComponent(s.id)}`, {
+      method: "DELETE",
     });
-    load();
+    const d = await res.json();
+    if (!res.ok) {
+      alert(d.error || "លុបមិនបាន");
+      return;
+    }
+    await load();
   };
 
-  const remove = async (s: SessionItem) => {
-    if (!confirm("តើអ្នកចង់លុបមេរៀននេះជាស្ថាពរឬទេ? (Delete this lesson permanently?)")) return;
-    const res = await fetch(`/api/system/sessions?id=${encodeURIComponent(s.id)}`, { method: "DELETE" });
-    const data = await res.json();
-    if (!res.ok) alert(data.error || "Delete failed");
-    load();
+  const handleShareSession = async (s: SessionItem) => {
+    setSharingId(s.id);
+    try {
+      let token = s.shareToken;
+      if (!token) {
+        const res = await fetch("/api/system/share-links", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: `${s.course?.code || s.courseCode || "STJ"} - ${s.title}`,
+            courseId: s.courseId || s.course?.id || s.course?.code,
+            sessionId: s.id,
+          }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data?.link?.token) {
+          alert(data?.error || "មិនអាចបង្កើតតំណភ្ជាប់ចែករំលែកបានទេ");
+          return;
+        }
+        token = data.link.token;
+        setSessions((prev) =>
+          prev.map((item) => (item.id === s.id ? { ...item, shareToken: token } : item))
+        );
+      }
+
+      const shareUrl = `${window.location.origin}/share/${token}`;
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedId(s.id);
+      setTimeout(() => setCopiedId(null), 2500);
+    } catch {
+      alert("មានបញ្ហាក្នុងការចម្លងតំណភ្ជាប់ចែករំលែក");
+    } finally {
+      setSharingId(null);
+    }
   };
 
-  const visible = sessions.filter((s) => {
-    if (courseFilter === "ALL") return true;
-    const selected = courses.find((c) => c.id === courseFilter || c.code === courseFilter);
-    const targetCode = selected ? selected.code : courseFilter;
-    const targetId = selected ? selected.id : courseFilter;
-    return (
-      s.courseId === targetId ||
-      s.courseId === courseFilter ||
-      s.course?.id === targetId ||
-      s.course?.id === courseFilter ||
-      s.courseCode === targetCode ||
-      s.course?.code === targetCode ||
-      s.courseCode === courseFilter ||
-      s.course?.code === courseFilter
-    );
-  });
-  const attendanceHref = (id: string) => `/${portalType}/attendance?sessionId=${id}`;
+  const filtered = sessions.filter(
+    (s) =>
+      courseFilter === "ALL" ||
+      s.course?.code === courseFilter ||
+      s.courseCode === courseFilter
+  );
+
+  const selectedFormCourseCode =
+    courses.find((c) => c.id === form.courseId || c.code === form.courseId)?.code ||
+    activeCourseObj?.code ||
+    "STJ";
 
   return (
     <PortalLayout portalType={portalType} userRole={userRole} userName={userName}>
@@ -262,176 +343,278 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
           <div>
             <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-primary mb-1">
               <CalendarDays className="w-4 h-4" />
-              <span>STJ Lessons</span>
+              <span>
+                {portalType === "leader" && activeCourseObj
+                  ? `${activeCourseObj.code} • ${activeCourseObj.titleKh}`
+                  : "STJ Lessons & Course Content"}
+              </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-              គ្រប់គ្រងមេរៀន និងកាលវិភាគ (Lessons &amp; Schedule)
+              គ្រប់គ្រងមេរៀន មាតិកាបង្រៀន និងកាលវិភាគ (Lessons &amp; Rich Course Materials)
             </h1>
             <p className="text-xs text-muted-foreground">
-              មេរៀនដែលបង្កើតនៅទីនេះ នឹងបង្ហាញដល់សមាជិកក្នុងក្រុមរបស់មុខវិជ្ជានោះតែប៉ុណ្ណោះ។
-              (Lessons created here become visible to that course team only.)
+              សរសេរមាតិកាមុខវិជ្ជា (Rich Text Editor) បង្ហោះឯកសារ PDF/Video ទៅលើ Cloudflare R2 និងគ្រប់គ្រងមេរៀនសម្រាប់សមាជិកក្នុងក្រុមរបស់អ្នក។
             </p>
           </div>
-          <Button size="sm" onClick={openCreate} disabled={courses.length === 0} className="text-xs space-x-1.5">
-            <Plus className="w-3.5 h-3.5" />
-            <span>បង្កើតមេរៀនថ្មី (New lesson)</span>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            {courses.length > 0 && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => openSyllabusEditor()}
+                className="text-xs space-x-1.5 border-primary/40 text-primary hover:bg-primary/10"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>សរសេរអំពីមុខវិជ្ជា &amp; ដាក់ PDF (Course Content)</span>
+              </Button>
+            )}
+            <Button
+              size="sm"
+              onClick={openCreate}
+              disabled={courses.length === 0}
+              className="text-xs space-x-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>បង្កើតមេរៀនថ្មី (New lesson)</span>
+            </Button>
+          </div>
         </div>
 
+        {/* Course Filter Tabs: Only show multiple tabs if user manages > 1 course */}
         {courses.length > 1 && (
           <div className="flex flex-wrap gap-2">
-            {[{ id: "ALL", code: "ALL" }, ...courses].map((c) => {
-              const code = c.code === "ALL" ? "ALL" : c.code;
-              const isSelected = courseFilter === code || courseFilter === c.id;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => setCourseFilter(code)}
-                  className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
-                    isSelected
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  }`}
+            {portalType === "system" && (
+              <button
+                onClick={() => setCourseFilter("ALL")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
+                  courseFilter === "ALL"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card border border-border text-muted-foreground"
+                }`}
+              >
+                ទាំងអស់ (All)
+              </button>
+            )}
+            {courses.map((c) => (
+              <button
+                key={c.id}
+                onClick={() => setCourseFilter(c.code)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
+                  courseFilter === c.code
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-card border border-border text-muted-foreground"
+                }`}
+              >
+                {c.code} • {c.titleKh}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Course Overview / Syllabus & R2 Materials Card */}
+        {activeCourseObj && (
+          <Card className="border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card">
+            <CardContent className="p-5 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <div>
+                    <h2 className="text-sm font-bold text-foreground">
+                      មាតិកាមុខវិជ្ជា និងឯកសារមេរៀនរួម — [{activeCourseObj.code}] {activeCourseObj.titleKh}
+                    </h2>
+                    <p className="text-[11px] text-muted-foreground">
+                      សមាជិកក្នុងមុខវិជ្ជានេះអាចចូលមើលសេចក្តីពន្យល់មុខវិជ្ជា និងទាញយកឯកសារ PDF / Video ពី Cloudflare R2 នៅក្នុងទំព័រមុខវិជ្ជារបស់ពួកគេ។
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => openSyllabusEditor(activeCourseObj)}
+                  className="h-8 text-xs space-x-1.5 shrink-0"
                 >
-                  {code === "ALL" ? "ទាំងអស់ (All)" : code}
-                </button>
-              );
-            })}
-          </div>
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>កែប្រែមាតិកាមុខវិជ្ជា &amp; ឯកសារ R2</span>
+                </Button>
+              </div>
+
+              {activeSyllabus &&
+              (activeSyllabus.richContent ||
+                activeSyllabus.notes ||
+                (activeSyllabus.attachments && activeSyllabus.attachments.length > 0)) ? (
+                <div className="pt-2 border-t border-border/60">
+                  <RichContentViewer
+                    richContent={activeSyllabus.richContent}
+                    notes={activeSyllabus.notes}
+                    attachments={activeSyllabus.attachments}
+                  />
+                </div>
+              ) : (
+                <div className="p-3 rounded-xl border border-dashed border-border text-xs text-muted-foreground">
+                  មិនទាន់មានការសរសេរមាតិកាមុខវិជ្ជា ឬឯកសារ PDF/Video ភ្ជាប់នៅឡើយទេ។ ចុចប៊ូតុង{" "}
+                  <strong>&ldquo;កែប្រែមាតិកាមុខវិជ្ជា &amp; ឯកសារ R2&rdquo;</strong> ដើម្បីសរសេរ (Rich Text Editor) និងបង្ហោះឯកសារ។
+                </div>
+              )}
+            </CardContent>
+          </Card>
         )}
 
-        {error && !form && (
-          <div className="px-4 py-2 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs">
-            {error}
-          </div>
-        )}
-
+        {/* Lessons Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {visible.map((s) => (
-            <Card key={s.id} className="hover:border-primary/50 transition-all">
-              <CardContent className="p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
-                    {s.course.code}
-                  </span>
-                  <Badge variant={STATUS_VARIANT[s.status] || "info"}>{STATUS_LABEL[s.status] || s.status}</Badge>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-sm text-foreground">{s.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">{s.course.titleKh}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground pt-1 border-t border-border">
-                  <div className="flex items-center space-x-1.5">
-                    <Clock className="w-3.5 h-3.5 text-primary" />
-                    <span>
-                      {new Date(s.sessionDate).toISOString().split("T")[0]} ({s.startTime} - {s.endTime})
+          {filtered.map((s) => {
+            const marked = s._count?.attendance ?? 0;
+            const courseCode = s.course?.code || s.courseCode || "STJ";
+            const courseTitleKh = s.course?.titleKh || s.courseTitleKh || "មុខវិជ្ជា STJ";
+            const isCopied = copiedId === s.id;
+            return (
+              <Card key={s.id} className="hover:border-primary/40 transition-colors">
+                <CardContent className="p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
+                      {courseCode}
                     </span>
+                    <Badge variant={s.status === "COMPLETED" ? "success" : "info"}>
+                      {s.status === "COMPLETED"
+                        ? "បានបង្រៀនរួច (Completed)"
+                        : "បានកំណត់ពេល (Scheduled)"}
+                    </Badge>
                   </div>
-                  <div className="flex items-center space-x-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-primary" />
-                    <span className="truncate">{s.room}</span>
+                  <div>
+                    <h3 className="text-sm font-bold text-foreground">{s.title}</h3>
+                    <p className="text-xs text-muted-foreground">{courseTitleKh}</p>
                   </div>
-                </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground pt-2 border-t border-border">
+                    <div className="flex items-center space-x-1.5">
+                      <Clock className="w-3.5 h-3.5 text-primary" />
+                      <span>
+                        {new Date(s.sessionDate).toISOString().split("T")[0]} ({s.startTime} -{" "}
+                        {s.endTime})
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-primary" />
+                      <span>{s.room || "ITC"}</span>
+                    </div>
+                  </div>
 
-                <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
-                  <span className="text-[11px] text-muted-foreground">
-                    វត្តមានកត់ត្រារួច៖{" "}
-                    <strong className="text-foreground font-semibold">
-                      {s._count?.attendance ?? (s as any).totalAttendance ?? (s as any).markedCount ?? 0}
-                    </strong>
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openShareModal(s)}
-                      className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
-                      title="ចែករំលែកតំណភ្ជាប់វត្តមានដល់សមាជិក (Share attendance link with members)"
-                    >
-                      <Share2 className="w-3 h-3 text-primary" />
-                      <span>តំណភ្ជាប់ (Share)</span>
-                    </Button>
-                    <Link href={attendanceHref(s.id)}>
-                      <Button variant="outline" size="sm" className="h-7 text-xs space-x-1">
-                        <CalendarCheck className="w-3 h-3 text-primary" />
-                        <span>ស្រង់វត្តមាន</span>
+                  {/* Render Rich Content & Cloudflare R2 Attachments for this lesson */}
+                  <RichContentViewer
+                    richContent={s.richContent}
+                    notes={s.notes || undefined}
+                    attachments={s.attachments}
+                  />
+
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border">
+                    <span className="text-[11px] text-muted-foreground">
+                      វត្តមានកត់ត្រា៖ <strong className="text-foreground">{marked}</strong>
+                    </span>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={sharingId === s.id}
+                        onClick={() => handleShareSession(s)}
+                        className="h-7 text-xs space-x-1 border-primary/30 text-primary hover:bg-primary/10"
+                        title="ចម្លងតំណភ្ជាប់សាធារណៈសម្រាប់មើលវត្តមាន (Public Share Link)"
+                      >
+                        {isCopied ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-500" />
+                            <span className="text-emerald-500">បានចម្លង Link!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Share2 className="w-3 h-3" />
+                            <span>
+                              {sharingId === s.id ? "កំពុងបង្កើត..." : "តំណភ្ជាប់ (Share)"}
+                            </span>
+                          </>
+                        )}
                       </Button>
-                    </Link>
-                    <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => openEdit(s)} title="Edit">
-                      <Pencil className="w-3 h-3" />
-                    </Button>
-                    {s.status !== "CANCELLED" && (s._count?.attendance || 0) > 0 && (
-                      <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => cancelLesson(s)} title="Cancel lesson">
-                        <Ban className="w-3 h-3" />
+
+                      <Link href={`${attendanceHref}?sessionId=${s.id}`}>
+                        <Button variant="outline" size="sm" className="h-7 text-xs space-x-1">
+                          <CalendarCheck className="w-3 h-3" />
+                          <span>ស្រង់វត្តមាន</span>
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => openEdit(s)}
+                        className="h-7 text-xs"
+                        title="កែប្រែមេរៀន និងមាតិកា"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
                       </Button>
-                    )}
-                    {(s._count?.attendance || 0) === 0 && (
-                      <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => remove(s)} title="Delete">
-                        <Trash2 className="w-3 h-3" />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDelete(s)}
+                        disabled={marked > 0}
+                        title={
+                          marked > 0
+                            ? "មិនអាចលុបមេរៀនដែលមានវត្តមានរួចហើយទេ"
+                            : "លុបមេរៀន"
+                        }
+                        className="h-7 text-xs text-destructive hover:bg-destructive/10 disabled:opacity-40"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
                       </Button>
-                    )}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-          {visible.length === 0 && (
-            <div className="col-span-full text-center py-12 text-muted-foreground text-xs">
+                </CardContent>
+              </Card>
+            );
+          })}
+          {filtered.length === 0 && (
+            <div className="col-span-full py-12 text-center text-muted-foreground text-xs">
               {loading
                 ? "កំពុងទាញយកទិន្នន័យ..."
-                : "មិនទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយ។ សូមចុច \"បង្កើតមេរៀនថ្មី\"។ (No lessons yet. Create the first one.)"}
+                : "មិនទាន់មានមេរៀនត្រូវបានបង្កើតទេ។ (No lessons yet.)"}
             </div>
           )}
         </div>
 
-        {form && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <Card className="max-w-md w-full max-h-[90vh] overflow-y-auto">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <h3 className="font-bold text-sm">
-                    {form.id ? "កែប្រែមេរៀន (Edit lesson)" : "បង្កើតមេរៀនថ្មី (New lesson)"}
-                  </h3>
-                  <button onClick={() => setForm(null)} aria-label="Close">
-                    <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
-                  </button>
+        {/* Modal 1: Create / Edit Lesson with Rich Text Editor & Cloudflare R2 */}
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+            <div className="bg-card border border-border rounded-2xl max-w-3xl w-full p-6 space-y-4 my-8 max-h-[92vh] overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <h3 className="text-base font-bold text-foreground">
+                  {editing
+                    ? "កែប្រែមេរៀន និងមាតិកាបង្រៀន (Edit Lesson & Rich Content)"
+                    : "បង្កើតមេរៀនថ្មី និងមាតិកាបង្រៀន (New Lesson & Rich Content)"}
+                </h3>
+                <button
+                  onClick={() => setModalOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              {error && (
+                <div className="p-2.5 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs">
+                  {error}
                 </div>
-
-                <form onSubmit={submit} className="space-y-3 text-xs">
+              )}
+              <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block font-medium mb-1">
-                      មុខវិជ្ជា (Course) <span className="text-destructive">*</span>
-                    </label>
+                    <label className="block font-medium mb-1">មុខវិជ្ជា (Course)</label>
                     <select
                       value={form.courseId}
-                      required
+                      disabled={Boolean(editing) || courses.length === 1}
                       onChange={(e) => setForm({ ...form, courseId: e.target.value })}
-                      className={`w-full p-2 rounded-lg border bg-background ${
-                        !form.courseId ? "border-destructive/60 text-muted-foreground" : "border-input"
-                      }`}
-                      disabled={courses.length === 1}
+                      className="w-full p-2 rounded-lg border border-input bg-background disabled:opacity-60"
                     >
-                      {/* Placeholder option: forces user to actively pick a course */}
-                      {!form.courseId && (
-                        <option value="" disabled>
-                          — សូមជ្រើសរើសមុខវិជ្ជាដែលត្រឹមត្រូវ —
-                        </option>
-                      )}
                       {courses.map((c) => (
                         <option key={c.id} value={c.id}>
                           [{c.code}] {c.titleKh}
                         </option>
                       ))}
                     </select>
-                    {!form.courseId && (
-                      <p className="text-[10px] text-destructive mt-1">
-                        ⚠️ ត្រូវតែជ្រើសរើសមុខវិជ្ជាមុនពេលបង្កើតមេរៀន
-                      </p>
-                    )}
                   </div>
-
                   <div>
                     <label className="block font-medium mb-1">ចំណងជើងមេរៀន (Lesson title)</label>
                     <input
@@ -439,10 +622,13 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       required
                       value={form.title}
                       onChange={(e) => setForm({ ...form, title: e.target.value })}
+                      placeholder="ឧ. ជំពូកទី ១៖ Pointer និងការគ្រប់គ្រង Memory"
                       className="w-full p-2 rounded-lg border border-input bg-background"
                     />
                   </div>
+                </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
                   <div>
                     <label className="block font-medium mb-1">កាលបរិច្ឆេទ (Date)</label>
                     <input
@@ -453,30 +639,26 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       className="w-full p-2 rounded-lg border border-input bg-background"
                     />
                   </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block font-medium mb-1">ម៉ោងចាប់ផ្តើម (Start)</label>
-                      <input
-                        type="time"
-                        required
-                        value={form.startTime}
-                        onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                        className="w-full p-2 rounded-lg border border-input bg-background"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-medium mb-1">ម៉ោងបញ្ចប់ (End)</label>
-                      <input
-                        type="time"
-                        required
-                        value={form.endTime}
-                        onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                        className="w-full p-2 rounded-lg border border-input bg-background"
-                      />
-                    </div>
+                  <div>
+                    <label className="block font-medium mb-1">ម៉ោងចាប់ផ្តើម</label>
+                    <input
+                      type="time"
+                      required
+                      value={form.startTime}
+                      onChange={(e) => setForm({ ...form, startTime: e.target.value })}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    />
                   </div>
-
+                  <div>
+                    <label className="block font-medium mb-1">ម៉ោងបញ្ចប់</label>
+                    <input
+                      type="time"
+                      required
+                      value={form.endTime}
+                      onChange={(e) => setForm({ ...form, endTime: e.target.value })}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    />
+                  </div>
                   <div>
                     <label className="block font-medium mb-1">បន្ទប់ (Room)</label>
                     <input
@@ -487,150 +669,142 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                       className="w-full p-2 rounded-lg border border-input bg-background"
                     />
                   </div>
-
-                  {form.id && (
-                    <div>
-                      <label className="block font-medium mb-1">ស្ថានភាព (Status)</label>
-                      <select
-                        value={form.status}
-                        onChange={(e) => setForm({ ...form, status: e.target.value })}
-                        className="w-full p-2 rounded-lg border border-input bg-background"
-                      >
-                        {Object.entries(STATUS_LABEL).map(([value, label]) => (
-                          <option key={value} value={value}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block font-medium mb-1">កំណត់ចំណាំ (Notes)</label>
-                    <textarea
-                      rows={2}
-                      value={form.notes}
-                      onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                      className="w-full p-2 rounded-lg border border-input bg-background"
-                    />
-                  </div>
-
-                  {error && <p className="text-destructive">{error}</p>}
-
-                  <div className="pt-2 flex justify-end space-x-2">
-                    <Button type="button" variant="outline" size="sm" onClick={() => setForm(null)}>
-                      បោះបង់
-                    </Button>
-                    <Button type="submit" size="sm" disabled={saving || !form.courseId}>
-                      {saving ? "កំពុងរក្សាទុក..." : "រក្សាទុក (Save)"}
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
-        {/* Share Attendance Link Modal */}
-        {shareSession && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <Card className="max-w-md w-full shadow-2xl border-primary/30">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <div className="flex items-center space-x-2">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                      <Share2 className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-sm text-foreground">
-                        តំណភ្ជាប់ចែករំលែកវត្តមាន (Share Attendance Link)
-                      </h3>
-                      <p className="text-[11px] text-muted-foreground">
-                        {shareSession.course.code} • {shareSession.title}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setShareSession(null);
-                      setShareToken(null);
-                    }}
-                    className="p-1 rounded text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
                 </div>
 
-                {shareLoading ? (
-                  <div className="py-8 text-center text-xs text-muted-foreground space-y-2">
-                    <div className="inline-block animate-spin rounded-full h-5 w-5 border-2 border-primary border-t-transparent"></div>
-                    <p>កំពុងបង្កើតតំណភ្ជាប់ចែករំលែក...</p>
-                  </div>
-                ) : shareToken ? (
-                  <div className="space-y-3 pt-1">
-                    <div className="p-3 rounded-xl bg-muted/40 border border-border space-y-2">
-                      <label className="block text-[11px] font-semibold text-foreground">
-                        តំណភ្ជាប់សាធារណៈសម្រាប់សមាជិក (Public Attendance URL)
-                      </label>
-                      <div className="flex items-center space-x-1.5">
-                        <input
-                          type="text"
-                          readOnly
-                          value={typeof window !== "undefined" ? `${window.location.origin}/share/${shareToken}` : `/share/${shareToken}`}
-                          className="w-full text-xs font-mono px-2.5 py-1.5 rounded-lg border border-input bg-background select-all"
-                        />
-                        <Button
-                          size="sm"
-                          variant={copied ? "default" : "outline"}
-                          onClick={() => {
-                            const url = `${window.location.origin}/share/${shareToken}`;
-                            navigator.clipboard.writeText(url);
-                            setCopied(true);
-                            setTimeout(() => setCopied(false), 2500);
-                          }}
-                          className="h-8 text-xs shrink-0 space-x-1"
-                        >
-                          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copied ? "បានចម្លង!" : "ចម្លង"}</span>
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs pt-1">
-                      <span className="text-[11px] text-muted-foreground">
-                        សមាជិកអាចបើកមើលបានភ្លាមៗដោយមិនបាច់ Login
-                      </span>
-                      <a
-                        href={`/share/${shareToken}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center space-x-1 text-primary hover:underline font-semibold text-xs"
-                      >
-                        <span>បើកមើលផ្ទាល់</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="py-6 text-center text-xs text-destructive">
-                    មិនអាចទាញយកតំណភ្ជាប់បានឡើយ។ សូមសាកល្បងម្តងទៀត។
+                {editing && (
+                  <div>
+                    <label className="block font-medium mb-1">ស្ថានភាព (Status)</label>
+                    <select
+                      value={form.status}
+                      onChange={(e) => setForm({ ...form, status: e.target.value })}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    >
+                      <option value="SCHEDULED">បានកំណត់ពេល (Scheduled)</option>
+                      <option value="COMPLETED">បានបង្រៀនរួច (Completed)</option>
+                      <option value="CANCELLED">បានលុបចោល (Cancelled)</option>
+                    </select>
                   </div>
                 )}
 
-                <div className="pt-3 border-t border-border flex justify-end">
+                <div>
+                  <label className="block font-semibold mb-1.5 text-foreground">
+                    មាតិកាមេរៀន សេចក្តីពន្យល់ និងឯកសារ PDF/Video (Rich Text Editor &amp; Cloudflare R2)
+                  </label>
+                  <RichTextEditor
+                    value={form.richContent}
+                    onChange={(html) => setForm((prev) => ({ ...prev, richContent: html }))}
+                    attachments={form.attachments}
+                    onAttachmentsChange={(items) =>
+                      setForm((prev) => ({ ...prev, attachments: items }))
+                    }
+                    courseCode={selectedFormCourseCode}
+                    placeholder="សរសេរខ្លឹមសារមេរៀន ចំណុចសំខាន់ៗ លំហាត់ ឬកូដគំរូសម្រាប់ឱ្យសមាជិកអាចចូលមើលបាន..."
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-3 border-t border-border">
                   <Button
+                    type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => {
-                      setShareSession(null);
-                      setShareToken(null);
-                    }}
+                    onClick={() => setModalOpen(false)}
                   >
-                    បិទ
+                    បោះបង់
+                  </Button>
+                  <Button type="submit" size="sm" disabled={saving}>
+                    {saving ? "កំពុងរក្សាទុក..." : "រក្សាទុកមេរៀន & ឯកសារ"}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal 2: Course Overview / Syllabus Rich Text Editor & Cloudflare R2 */}
+        {syllabusModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+            <div className="bg-card border border-border rounded-2xl max-w-3xl w-full p-6 space-y-4 my-8 max-h-[92vh] overflow-y-auto">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div>
+                  <h3 className="text-base font-bold text-foreground">
+                    សរសេរអំពីមុខវិជ្ជាត្រូវបង្រៀន និងឯកសារ PDF/Video (Course Overview &amp; R2 Materials)
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    មាតិកានេះនឹងបង្ហាញដល់សមាជិកទាំងអស់ដែលស្ថិតក្នុងមុខវិជ្ជារបស់អ្នកនៅទំព័រមុខវិជ្ជា (/portal/courses)។
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSyllabusModalOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {error && (
+                <div className="p-2.5 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs">
+                  {error}
+                </div>
+              )}
+
+              <form onSubmit={handleSaveSyllabus} className="space-y-4 text-xs">
+                {courses.length > 1 && (
+                  <div>
+                    <label className="block font-medium mb-1">ជ្រើសរើសមុខវិជ្ជា (Course)</label>
+                    <select
+                      value={syllabusCourseId}
+                      onChange={(e) => {
+                        const cid = e.target.value;
+                        setSyllabusCourseId(cid);
+                        const cObj = courses.find((c) => c.id === cid || c.code === cid);
+                        const ex = cObj ? syllabuses[cObj.code] || syllabuses[cObj.id] : null;
+                        setSyllabusRichContent(ex?.richContent || ex?.notes || "");
+                        setSyllabusAttachments(Array.isArray(ex?.attachments) ? ex.attachments : []);
+                      }}
+                      className="w-full p-2 rounded-lg border border-input bg-background"
+                    >
+                      {courses.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          [{c.code}] {c.titleKh}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
+                <div>
+                  <label className="block font-semibold mb-1.5 text-foreground">
+                    សេចក្តីពន្យល់អំពីមុខវិជ្ជា គោលការណ៍បង្រៀន និងឯកសារភ្ជាប់ (Rich Text Editor)
+                  </label>
+                  <RichTextEditor
+                    value={syllabusRichContent}
+                    onChange={setSyllabusRichContent}
+                    attachments={syllabusAttachments}
+                    onAttachmentsChange={setSyllabusAttachments}
+                    courseCode={
+                      courses.find((c) => c.id === syllabusCourseId)?.code ||
+                      activeCourseObj?.code ||
+                      "STJ"
+                    }
+                    placeholder="សរសេរអំពីមុខវិជ្ជាដែលត្រូវបង្រៀន មាតិកាមេរៀនប្រចាំឆមាស និងបង្ហោះឯកសារ PDF / Video ទៅកាន់ Cloudflare R2..."
+                  />
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-3 border-t border-border">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSyllabusModalOpen(false)}
+                  >
+                    បោះបង់
+                  </Button>
+                  <Button type="submit" size="sm" disabled={savingSyllabus}>
+                    {savingSyllabus ? "កំពុងរក្សាទុក..." : "រក្សាទុកមាតិកាមុខវិជ្ជា"}
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </div>

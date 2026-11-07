@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
 import { fetchLiveMembersLookup, LiveMembersLookup } from "@/lib/memberSync";
+import { decodeRichNotes, isSyllabusSession } from "@/lib/richContent";
 
 export const dynamic = "force-dynamic";
 
-function normalizeCourse(raw: Record<string, any>, membersLookup: LiveMembersLookup) {
+function normalizeCourse(
+  raw: Record<string, any>,
+  membersLookup: LiveMembersLookup,
+  allBackendSessions: Record<string, any>[]
+) {
+  const courseCode = String(raw.code || "").toUpperCase();
+  const courseId = String(raw.id || "");
+
   const rawLeaders = Array.isArray(raw.leaders) ? raw.leaders : [];
   const leaders = rawLeaders.map((l: Record<string, any>) => {
     const rawKh = l.fullNameKh || l.full_name_kh || "";
@@ -64,27 +72,90 @@ function normalizeCourse(raw: Record<string, any>, membersLookup: LiveMembersLoo
     raw.leaderName ||
     "មិនទាន់ចាត់តាំង";
 
+  // Match backend sessions for this course to enrich with Rich Text & R2 attachments
+  const matchingBackendSessions = allBackendSessions.filter((bs) => {
+    const bCode = String(bs.courseCode || bs.course?.code || "").toUpperCase();
+    const bId = String(bs.courseId || bs.course?.id || "");
+    return (courseCode && bCode === courseCode) || (courseId && bId === courseId);
+  });
+
+  const sessionMap = new Map<string, Record<string, any>>();
+  let syllabusData: {
+    notes: string;
+    richContent: string;
+    attachments: any[];
+  } | null = null;
+
+  for (const bs of matchingBackendSessions) {
+    const decoded = decodeRichNotes(bs.notes);
+    if (isSyllabusSession(bs)) {
+      syllabusData = decoded;
+      continue;
+    }
+    sessionMap.set(String(bs.id), {
+      ...bs,
+      notes: decoded.notes,
+      richContent: decoded.richContent,
+      attachments: decoded.attachments,
+    });
+  }
+
+  const rawSessions = Array.isArray(raw.sessions) ? raw.sessions : [];
+  const sessions = rawSessions
+    .filter((s: Record<string, any>) => !isSyllabusSession(s))
+    .map((s: Record<string, any>) => {
+      const enriched = sessionMap.get(String(s.id));
+      const decoded = enriched
+        ? {
+            notes: enriched.notes,
+            richContent: enriched.richContent,
+            attachments: enriched.attachments,
+          }
+        : decodeRichNotes(s.notes);
+
+      return {
+        ...s,
+        notes: decoded.notes,
+        richContent: decoded.richContent,
+        attachments: decoded.attachments,
+      };
+    });
+
   return {
     ...raw,
     leaderName,
     leaders,
     enrolledMembers,
     enrolledMembersCount: Number(raw.enrolledMembersCount ?? enrolledMembers.length),
+    sessions,
+    totalLessons: sessions.length,
+    syllabus: syllabusData || { notes: "", richContent: "", attachments: [] },
   };
 }
 
 export async function GET(req: NextRequest) {
   try {
     const query = req.nextUrl.search;
-    const [res, membersLookup] = await Promise.all([
+    const [res, membersLookup, sessionsRes] = await Promise.all([
       backendFetch(`portal/courses${query}`),
       fetchLiveMembersLookup(),
+      backendFetch("sessions").catch(() => null),
     ]);
     const data = await res.json().catch(() => null);
+    const sessionsData =
+      sessionsRes && sessionsRes.ok ? await sessionsRes.json().catch(() => null) : null;
+    const allBackendSessions: Record<string, any>[] = Array.isArray(sessionsData?.sessions)
+      ? sessionsData.sessions
+      : [];
 
     if (!res.ok || !data) {
       return NextResponse.json(
-        { success: false, courses: [], course: null, error: data?.error || "Failed to load courses" },
+        {
+          success: false,
+          courses: [],
+          course: null,
+          error: data?.error || "Failed to load courses",
+        },
         { status: res.status || 500 }
       );
     }
@@ -93,12 +164,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         ...data,
         success: true,
-        course: normalizeCourse(data.course, membersLookup),
+        course: normalizeCourse(data.course, membersLookup, allBackendSessions),
       });
     }
 
     const courses = Array.isArray(data.courses)
-      ? data.courses.map((c: Record<string, any>) => normalizeCourse(c, membersLookup))
+      ? data.courses.map((c: Record<string, any>) =>
+          normalizeCourse(c, membersLookup, allBackendSessions)
+        )
       : [];
     return NextResponse.json({
       ...data,
