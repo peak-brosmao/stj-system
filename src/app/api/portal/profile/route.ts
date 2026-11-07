@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { backendFetch, proxyToBackend } from "@/lib/backendProxy";
 import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+import { fetchLiveMembersLookup } from "@/lib/memberSync";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const res = await backendFetch("portal/profile");
+    const [res, membersLookup] = await Promise.all([
+      backendFetch("portal/profile"),
+      fetchLiveMembersLookup(),
+    ]);
     const data = await res.json().catch(() => null);
     if (!res.ok || !data || !data.profile) {
       return NextResponse.json(
@@ -20,6 +24,14 @@ export async function GET() {
     const memberId = String(p.member?.memberId || "").toLowerCase();
     const email = String(p.email || "").toLowerCase();
 
+    const liveMatch = membersLookup.find({
+      memberId,
+      studentId,
+      email,
+      nameKh: p.fullNameKh,
+      nameEn: p.fullNameEn,
+    });
+
     const rosterMatch = OFFICIAL_STJ_ROSTER.find(
       (r) =>
         (studentId && r.studentId.toLowerCase() === studentId) ||
@@ -27,12 +39,20 @@ export async function GET() {
         (email && r.email.toLowerCase() === email)
     );
 
-    const deptCode = p.member?.department?.code || rosterMatch?.dept || "ITC";
-    const yearCode = p.member?.academicYear?.label || p.member?.academicYear?.code || rosterMatch?.year || "I3";
-    const phone = p.phone || rosterMatch?.phone || "";
-    const gender = p.gender || rosterMatch?.gender || "M";
+    const fullNameKh = liveMatch?.fullNameKh || p.fullNameKh || rosterMatch?.nameKh || "";
+    const fullNameEn = liveMatch?.fullNameEn || p.fullNameEn || rosterMatch?.nameEn || "";
+    const deptCode = liveMatch?.department?.code || p.member?.department?.code || rosterMatch?.dept || "ITC";
+    const yearCode =
+      liveMatch?.academicYear?.label ||
+      liveMatch?.academicYear?.code ||
+      p.member?.academicYear?.label ||
+      p.member?.academicYear?.code ||
+      rosterMatch?.year ||
+      "I3";
+    const phone = liveMatch?.phone || p.phone || rosterMatch?.phone || "";
+    const gender = liveMatch?.gender || p.gender || rosterMatch?.gender || "M";
 
-    const fields = [p.fullNameKh, p.fullNameEn, p.email, phone, p.telegram, p.bio, p.address];
+    const fields = [fullNameKh, fullNameEn, p.email, phone, p.telegram, p.bio, p.address];
     const filled = fields.filter((v) => typeof v === "string" && v.trim().length > 0).length;
     const completeness = p.completeness || Math.min(100, Math.round((filled / fields.length) * 100));
 
@@ -42,23 +62,27 @@ export async function GET() {
       completeness,
       profile: {
         ...p,
+        fullNameKh,
+        fullNameEn,
+        displayName: fullNameEn || p.displayName,
         phone,
         gender,
-        member: p.member
+        member: p.member || liveMatch
           ? {
-              ...p.member,
-              memberId: rosterMatch?.memberId || p.member.memberId,
-              studentId: rosterMatch?.studentId || p.member.studentId || p.studentId,
-              department: p.member.department || {
+              ...(p.member || {}),
+              memberId: liveMatch?.memberId || rosterMatch?.memberId || p.member?.memberId,
+              studentId: liveMatch?.studentId || rosterMatch?.studentId || p.member?.studentId || p.studentId,
+              department: liveMatch?.department || p.member?.department || {
                 code: deptCode,
                 nameKh: deptCode,
               },
-              academicYear: p.member.academicYear || {
+              academicYear: liveMatch?.academicYear || p.member?.academicYear || {
                 code: yearCode,
                 label: yearCode,
               },
               enrollments:
-                p.member.enrollments ||
+                liveMatch?.enrollments ||
+                p.member?.enrollments ||
                 (rosterMatch?.assignedCourse
                   ? [
                       {

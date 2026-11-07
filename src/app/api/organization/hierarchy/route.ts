@@ -1,30 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import { LARAVEL_API_BASE } from "@/lib/laravelApi";
+import { backendFetch } from "@/lib/backendProxy";
 import { OFFICIAL_STJ_ROSTER } from "@/lib/officialRoster";
+import { fetchLiveMembersLookup, LiveMembersLookup } from "@/lib/memberSync";
 
 export const dynamic = "force-dynamic";
 
-function buildCanonicalHierarchy(selectedYear = "2026-2027") {
-  const david =
+function buildLiveHierarchy(
+  selectedYear: string,
+  membersLookup: LiveMembersLookup,
+  liveCourses: Array<Record<string, any>>
+) {
+  const davidRoster =
     OFFICIAL_STJ_ROSTER.find((m) => m.studentId === "e20221334") || OFFICIAL_STJ_ROSTER[1];
+  const davidLive = membersLookup.find({
+    memberId: "STJ002",
+    studentId: "e20221334",
+  });
 
   const president = {
-    nameKh: david.nameKh,
-    nameEn: david.nameEn,
+    nameKh: davidLive?.fullNameKh || davidRoster.nameKh,
+    nameEn: davidLive?.fullNameEn || davidRoster.nameEn,
     roleKh: "ប្រធាន STJ កណ្តាល (STJ President)",
     roleEn: "Overall STJ President & Central Administrator",
-    studentId: david.studentId,
-    memberId: david.memberId,
-    department: david.dept,
-    generation: david.year,
-    email: david.email,
-    phone: david.phone,
+    studentId: davidLive?.studentId || davidRoster.studentId,
+    memberId: davidLive?.memberId || davidRoster.memberId,
+    department: davidLive?.department?.code || davidRoster.dept,
+    generation: davidLive?.academicYear?.code || davidRoster.year,
+    email: davidLive?.email || davidRoster.email,
+    phone: davidLive?.phone || davidRoster.phone,
     avatar: null,
     status: "ACTIVE",
     academicYear: selectedYear,
   };
 
-  const courseDefs = [
+  const defaultCourseDefs = [
     {
       code: "PROG101",
       titleKh: "ការសរសេរកម្មវិធីកុំព្យូទ័រ និងក្បួនដោះស្រាយ (Programming)",
@@ -51,41 +60,86 @@ function buildCanonicalHierarchy(selectedYear = "2026-2027") {
     },
   ];
 
-  const courses = courseDefs.map((c) => {
-    const leaderMember =
-      OFFICIAL_STJ_ROSTER.find((m) => m.studentId === c.leaderStudentId) || OFFICIAL_STJ_ROSTER[0];
-    const members = OFFICIAL_STJ_ROSTER.filter((m) => m.assignedCourse === c.code);
+  const courses = defaultCourseDefs.map((def) => {
+    const liveCourse = liveCourses.find((c) => c.code === def.code);
+    const leaderStudentId = liveCourse?.leaderStudentId || def.leaderStudentId;
+    const leaderMemberId = liveCourse?.leaderMemberId;
+
+    const liveLeader = membersLookup.find({
+      id: leaderMemberId,
+      memberId: leaderMemberId,
+      studentId: leaderStudentId,
+      nameKh: liveCourse?.leaders,
+    });
+    const rosterLeader =
+      OFFICIAL_STJ_ROSTER.find(
+        (m) => m.studentId.toLowerCase() === String(leaderStudentId).toLowerCase()
+      ) || OFFICIAL_STJ_ROSTER[0];
+
+    const liveEnrolled = membersLookup.list.filter((m) => {
+      if (m.memberId === "STJ001" || m.memberId === "STJ002" || m.status !== "ACTIVE") {
+        return false;
+      }
+      const codes = [
+        ...(m.courseCodes || []),
+        ...(m.courses?.map((c) => c.code) || []),
+        ...(m.enrollments?.map((e) => e.course?.code) || []),
+        ...(m.courseCode ? [m.courseCode] : []),
+      ];
+      return codes.includes(def.code);
+    });
+
+    const members =
+      liveEnrolled.length > 0
+        ? liveEnrolled.map((m) => ({
+            id: `member-${m.memberId.toLowerCase()}`,
+            memberId: m.memberId,
+            studentId: m.studentId,
+            nameKh: m.fullNameKh,
+            nameEn: m.fullNameEn,
+            gender: m.gender || "M",
+            department: m.department?.code || "GIC",
+            generation: m.academicYear?.code || "I3",
+            email: m.email || `${m.studentId}@itc.edu.kh`,
+            phone: m.phone || "",
+            avatar: null,
+            roleKh: "សមាជិកបង្រៀន (Senior Tutor)",
+          }))
+        : OFFICIAL_STJ_ROSTER.filter((m) => m.assignedCourse === def.code).map((m) => {
+            const liveM = membersLookup.find({ memberId: m.memberId, studentId: m.studentId });
+            return {
+              id: `member-${m.memberId.toLowerCase()}`,
+              memberId: liveM?.memberId || m.memberId,
+              studentId: liveM?.studentId || m.studentId,
+              nameKh: liveM?.fullNameKh || m.nameKh,
+              nameEn: liveM?.fullNameEn || m.nameEn,
+              gender: liveM?.gender || m.gender,
+              department: liveM?.department?.code || m.dept,
+              generation: liveM?.academicYear?.code || m.year,
+              email: liveM?.email || m.email,
+              phone: liveM?.phone || m.phone,
+              avatar: null,
+              roleKh: "សមាជិកបង្រៀន (Senior Tutor)",
+            };
+          });
 
     return {
-      id: `course-${c.code.toLowerCase()}`,
-      code: c.code,
-      nameKh: c.titleKh,
-      nameEn: c.titleEn,
+      id: liveCourse?.id || `course-${def.code.toLowerCase()}`,
+      code: def.code,
+      nameKh: liveCourse?.titleKh || def.titleKh,
+      nameEn: liveCourse?.titleEn || def.titleEn,
       leader: {
-        nameKh: leaderMember.nameKh,
-        nameEn: leaderMember.nameEn,
-        roleKh: `ប្រធានក្រុម ${c.code} (Course Leader)`,
-        roleEn: `${c.titleEn} Team Leader`,
-        studentId: leaderMember.studentId,
-        department: leaderMember.dept,
-        email: leaderMember.email,
+        nameKh: liveLeader?.fullNameKh || rosterLeader.nameKh,
+        nameEn: liveLeader?.fullNameEn || rosterLeader.nameEn,
+        roleKh: `ប្រធានក្រុម ${def.code} (Course Leader)`,
+        roleEn: `${liveCourse?.titleEn || def.titleEn} Team Leader`,
+        studentId: liveLeader?.studentId || rosterLeader.studentId,
+        department: liveLeader?.department?.code || rosterLeader.dept,
+        email: liveLeader?.email || rosterLeader.email,
         avatar: null,
       },
       memberCount: members.length,
-      members: members.map((m) => ({
-        id: `member-${m.memberId.toLowerCase()}`,
-        memberId: m.memberId,
-        studentId: m.studentId,
-        nameKh: m.nameKh,
-        nameEn: m.nameEn,
-        gender: m.gender,
-        department: m.dept,
-        generation: m.year,
-        email: m.email,
-        phone: m.phone,
-        avatar: null,
-        roleKh: "សមាជិកបង្រៀន (Senior Tutor)",
-      })),
+      members,
     };
   });
 
@@ -98,7 +152,7 @@ function buildCanonicalHierarchy(selectedYear = "2026-2027") {
       {
         academicYear: "2026-2027",
         themeKh: "អាណត្តិ STJ 2026-2027",
-        presidentName: david.nameKh,
+        presidentName: president.nameKh,
         status: "ACTIVE",
         isCurrent: true,
         isLocked: false,
@@ -116,24 +170,15 @@ function buildCanonicalHierarchy(selectedYear = "2026-2027") {
 export async function GET(req: NextRequest) {
   const requestedYear = req.nextUrl.searchParams.get("year") || "2026-2027";
   try {
-    const query = req.nextUrl.search;
-    const res = await fetch(`${LARAVEL_API_BASE}/organization/hierarchy${query}`, {
-      headers: { Accept: "application/json" },
-      cache: "no-store",
-    });
-
-    if (res.ok) {
-      const data = await res.json().catch(() => null);
-      const totalTutors = Number(data?.hierarchy?.totalTutors ?? 0);
-      const presidentStudentId = String(data?.hierarchy?.president?.studentId ?? "").toLowerCase();
-      // Only use backend response if it returned the complete operational roster (not filtered by I5 only)
-      if (data?.success && totalTutors >= 10 && presidentStudentId === "e20221334") {
-        return NextResponse.json(data);
-      }
-    }
+    const [membersLookup, coursesRes] = await Promise.all([
+      fetchLiveMembersLookup(),
+      backendFetch("courses").catch(() => null),
+    ]);
+    const coursesData = coursesRes && coursesRes.ok ? await coursesRes.json().catch(() => null) : null;
+    const liveCourses = Array.isArray(coursesData?.courses) ? coursesData.courses : [];
+    return NextResponse.json(buildLiveHierarchy(requestedYear, membersLookup, liveCourses));
   } catch {
-    // Fall back to canonical hierarchy
+    const emptyLookup = await fetchLiveMembersLookup();
+    return NextResponse.json(buildLiveHierarchy(requestedYear, emptyLookup, []));
   }
-
-  return NextResponse.json(buildCanonicalHierarchy(requestedYear));
 }
