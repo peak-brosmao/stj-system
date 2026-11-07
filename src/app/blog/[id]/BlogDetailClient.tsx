@@ -104,7 +104,7 @@ export function BlogDetailClient({ id }: { id: string }) {
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>ត្រឡប់ទៅបណ្ណាល័យអត្ថបទ &amp; មេរៀន (Back to STJ Blog)</span>
+              <span>ត្រឡប់ក្រោយ</span>
             </Link>
 
             {item && (
@@ -127,26 +127,22 @@ export function BlogDetailClient({ id }: { id: string }) {
                       {item.visibility === "PUBLIC" ? (
                         <>
                           <Globe className="w-3.5 h-3.5" />
-                          <span>Public (សិស្សប្អូនមើលបាន)</span>
+                          <span>សាធារណៈ</span>
                         </>
                       ) : (
                         <>
                           <Lock className="w-3.5 h-3.5" />
-                          <span>Private (សម្រាប់សមាជិក STJ)</span>
+                          <span>ឯកជន</span>
                         </>
                       )}
                     </button>
 
                     <Link
-                      href={
-                        item.kind === "BLOG"
-                          ? `/portal/blog/editor?id=${encodeURIComponent(item.id)}`
-                          : `/portal/blog/editor?id=${encodeURIComponent(item.id)}`
-                      }
+                      href={`/portal/blog/editor?id=${encodeURIComponent(item.id)}`}
                     >
                       <Button variant="outline" size="sm" className="h-8 text-xs space-x-1">
                         <Edit3 className="w-3.5 h-3.5" />
-                        <span>កែប្រែអត្ថបទ</span>
+                        <span>កែសម្រួល</span>
                       </Button>
                     </Link>
                   </>
@@ -160,7 +156,7 @@ export function BlogDetailClient({ id }: { id: string }) {
                   className="h-8 text-xs space-x-1.5"
                 >
                   <QrCode className="w-3.5 h-3.5" />
-                  <span>តំណមេរៀន &amp; QR Code</span>
+                  <span>តំណ &amp; QR</span>
                 </Button>
               </div>
             )}
@@ -168,7 +164,7 @@ export function BlogDetailClient({ id }: { id: string }) {
 
           {loading && (
             <div className="py-20 text-center text-xs text-muted-foreground">
-              កំពុងទាញយកមាតិកាមេរៀន និងអត្ថបទ...
+              កំពុងផ្ទុកអត្ថបទ...
             </div>
           )}
 
@@ -181,26 +177,26 @@ export function BlogDetailClient({ id }: { id: string }) {
                 </div>
                 <div className="space-y-1.5 max-w-lg mx-auto">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-amber-500">
-                    មាតិកាឯកជនក្នុងក្រុម (Private STJ Content)
+                    មាតិកាឯកជន
                   </span>
                   <h1 className="text-lg sm:text-xl font-bold text-foreground">
                     {privateTitle}
                   </h1>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    មេរៀន ឬអត្ថបទនេះត្រូវបានកំណត់ជាលក្ខណៈឯកជន (<strong>Private</strong>) សម្រាប់តែសមាជិកក្នុងក្រុម STJ ប៉ុណ្ណោះ។ សូមចូលគណនីសមាជិក STJ ដើម្បីអាន ឬទាក់ទងប្រធានមុខវិជ្ជាដើម្បីបើកជាសាធារណៈ (Public)។
+                    មាតិកានេះត្រូវបានកំណត់ជាឯកជន។ សូមចូលគណនីសមាជិក STJ ដើម្បីអាន។
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                   <Link href="/login">
                     <Button className="text-xs space-x-1.5 px-5">
                       <LogIn className="w-3.5 h-3.5" />
-                      <span>ចូលគណនីសមាជិក STJ (Member Login)</span>
+                      <span>ចូលគណនី</span>
                     </Button>
                   </Link>
                   <Link href="/blog">
                     <Button variant="outline" className="text-xs space-x-1.5">
                       <BookOpen className="w-3.5 h-3.5" />
-                      <span>មើលមេរៀនសាធារណៈផ្សេងទៀត</span>
+                      <span>មើលមេរៀនផ្សេងទៀត</span>
                     </Button>
                   </Link>
                 </div>
@@ -212,11 +208,11 @@ export function BlogDetailClient({ id }: { id: string }) {
             <Card>
               <CardContent className="p-10 text-center space-y-3">
                 <p className="text-sm font-bold text-foreground">
-                  រកមិនឃើញមេរៀន ឬអត្ថបទនេះឡើយ (Article or Lesson not found)
+                  រកមិនឃើញអត្ថបទនេះឡើយ
                 </p>
                 <Link href="/blog">
                   <Button variant="outline" size="sm" className="text-xs">
-                    ត្រឡប់ទៅបណ្ណាល័យអត្ថបទ STJ
+                    ត្រឡប់ក្រោយ
                   </Button>
                 </Link>
               </CardContent>
@@ -241,7 +237,7 @@ export function BlogDetailClient({ id }: { id: string }) {
 
               <Card className="overflow-hidden border-primary/30 shadow-xl">
                 {/* Cover Thumbnail Banner */}
-                <div className="relative h-56 sm:h-72 w-full bg-slate-950 overflow-hidden border-b border-border">
+                <div className="relative h-52 sm:h-64 w-full bg-slate-950 overflow-hidden border-b border-border">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.thumbnailUrl || getDefaultCourseThumbnail(item.courseCode)}
@@ -249,13 +245,13 @@ export function BlogDetailClient({ id }: { id: string }) {
                     className="w-full h-full object-cover opacity-80"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-                  <div className="absolute bottom-5 left-5 right-5 sm:left-8 sm:right-8 space-y-2.5">
+                  <div className="absolute bottom-5 left-5 right-5 sm:left-8 sm:right-8 space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="px-2.5 py-0.5 rounded-md bg-primary text-primary-foreground font-mono text-xs font-bold">
-                        {item.courseCode} • {item.category}
+                        {item.courseCode}
                       </span>
                       <Badge variant={item.kind === "BLOG" ? "info" : "success"}>
-                        {item.kind === "BLOG" ? "អត្ថបទចែករំលែក (Blog)" : "មេរៀនបង្រៀន (Lesson)"}
+                        {item.kind === "BLOG" ? "អត្ថបទ" : "មេរៀន"}
                       </Badge>
                       <span
                         className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold ${
@@ -267,27 +263,25 @@ export function BlogDetailClient({ id }: { id: string }) {
                         {item.visibility === "PUBLIC" ? (
                           <>
                             <Globe className="w-3 h-3" />
-                            <span>សាធារណៈ (Public សម្រាប់សិស្សប្អូន)</span>
+                            <span>សាធារណៈ</span>
                           </>
                         ) : (
                           <>
                             <Lock className="w-3 h-3" />
-                            <span>ឯកជន (Private ក្នុងក្រុម STJ)</span>
+                            <span>ឯកជន</span>
                           </>
                         )}
                       </span>
                     </div>
 
-                    <h1 className="text-xl sm:text-3xl font-extrabold text-white leading-snug">
+                    <h1 className="text-xl sm:text-2xl font-extrabold text-white leading-snug">
                       {item.title}
                     </h1>
 
                     <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
-                      <span className="inline-flex items-center gap-1.5 font-medium text-white">
+                      <span className="inline-flex items-center gap-1.5 font-semibold text-white">
                         <User className="w-3.5 h-3.5 text-sky-400" />
-                        <span>
-                          {item.authorNameKh} ({item.authorRole})
-                        </span>
+                        <span>{item.authorNameKh}</span>
                       </span>
                       <span className="inline-flex items-center gap-1.5">
                         <CalendarDays className="w-3.5 h-3.5 text-sky-400" />
@@ -304,7 +298,7 @@ export function BlogDetailClient({ id }: { id: string }) {
                           {item.room && (
                             <span className="inline-flex items-center gap-1.5">
                               <MapPin className="w-3.5 h-3.5 text-sky-400" />
-                              <span>បន្ទប់ {item.room}</span>
+                              <span>{item.room}</span>
                             </span>
                           )}
                         </>

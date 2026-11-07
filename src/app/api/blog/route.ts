@@ -5,12 +5,15 @@ import { resolveLeaderScope } from "@/lib/leaderScope";
 import {
   BLOG_MARKER_ROOM,
   encodeRichNotes,
+  extractPlainTextSnippet,
   getDefaultCourseThumbnail,
 } from "@/lib/richContent";
 import {
   BlogOrLessonItem,
+  GENERIC_AUTHOR_NAMES,
   getAllBlogAndLessonItems,
   removeBlogCacheItem,
+  resolveAuthorFields,
   syncSessionsToBlogCache,
   upsertBlogCacheItem,
 } from "@/lib/blogStore";
@@ -222,21 +225,35 @@ export async function POST(req: NextRequest) {
   const nowIso = new Date().toISOString();
   const todayDate = body.date ? String(body.date).slice(0, 10) : nowIso.slice(0, 10);
 
-  const authorNameKh = session.fullNameKh || session.fullNameEn || "សមាជិក STJ";
-  const authorNameEn = session.fullNameEn || session.fullNameKh || "STJ Member";
+  const resolvedAuthor = resolveAuthorFields({
+    authorId: String(session.id),
+    authorStudentId: String(session.studentId || ""),
+    authorNameKh: session.fullNameKh,
+    authorNameEn: session.fullNameEn,
+    authorRole,
+    courseCode: targetCourseCode,
+  });
+
+  const authorNameKh = resolvedAuthor.authorNameKh;
+  const authorNameEn = resolvedAuthor.authorNameEn;
+  const richContentText = String(body.richContent || "").trim();
+  const autoSummary =
+    String(body.summary || body.notes || "").trim() ||
+    extractPlainTextSnippet(richContentText, "", 200) ||
+    String(body.title).trim();
 
   const encodedNotes = encodeRichNotes({
-    notes: String(body.summary || body.notes || "").trim(),
-    richContent: String(body.richContent || "").trim(),
+    notes: autoSummary,
+    richContent: richContentText,
     attachments: Array.isArray(body.attachments) ? body.attachments : [],
     visibility,
     thumbnailUrl,
     category,
-    authorId: String(session.id),
-    authorStudentId: String(session.studentId || ""),
+    authorId: resolvedAuthor.authorId,
+    authorStudentId: resolvedAuthor.authorStudentId,
     authorNameKh,
     authorNameEn,
-    authorRole,
+    authorRole: resolvedAuthor.authorRole,
     updatedAt: nowIso,
   });
 
@@ -270,10 +287,8 @@ export async function POST(req: NextRequest) {
     id: createdId,
     kind: "BLOG",
     title: String(body.title).trim(),
-    summary:
-      String(body.summary || body.notes || "").trim() ||
-      "អត្ថបទ និងមេរៀនចែករំលែកដោយសមាជិក STJ សម្រាប់សិស្សប្អូន។",
-    richContent: String(body.richContent || "").trim(),
+    summary: autoSummary,
+    richContent: richContentText,
     attachments: Array.isArray(body.attachments) ? body.attachments : [],
     visibility,
     thumbnailUrl,
@@ -287,11 +302,11 @@ export async function POST(req: NextRequest) {
     endTime: "10:00",
     room: BLOG_MARKER_ROOM,
     status: "COMPLETED",
-    authorId: String(session.id),
-    authorStudentId: String(session.studentId || ""),
+    authorId: resolvedAuthor.authorId,
+    authorStudentId: resolvedAuthor.authorStudentId,
     authorNameKh,
     authorNameEn,
-    authorRole,
+    authorRole: resolvedAuthor.authorRole,
     updatedAt: nowIso,
   };
 
@@ -363,36 +378,44 @@ export async function PUT(req: NextRequest) {
 
   const nextTitle =
     body.title !== undefined ? String(body.title).trim() : existing.title || "មេរៀន STJ";
-  const nextSummary =
-    body.summary !== undefined
-      ? String(body.summary).trim()
-      : body.notes !== undefined
-      ? String(body.notes).trim()
-      : existing.summary || "";
   const nextRichContent =
     body.richContent !== undefined
       ? String(body.richContent).trim()
       : existing.richContent || "";
+  const nextSummary =
+    body.summary !== undefined && String(body.summary).trim()
+      ? String(body.summary).trim()
+      : body.notes !== undefined && String(body.notes).trim()
+      ? String(body.notes).trim()
+      : extractPlainTextSnippet(nextRichContent, "", 200) || existing.summary || nextTitle;
   const nextAttachments = Array.isArray(body.attachments)
     ? body.attachments
     : existing.attachments || [];
   const nextCategory =
     body.category !== undefined
       ? String(body.category).trim()
-      : existing.category || "អត្ថបទសិក្សា (Blog)";
+      : existing.category || "អត្ថបទសិក្សា";
 
   const nowIso = new Date().toISOString();
 
-  const authorId = existing.authorId || String(session.id);
-  const authorStudentId = existing.authorStudentId || String(session.studentId || "");
-  const authorNameKh =
-    existing.authorNameKh && existing.authorNameKh !== "សមាជិក STJ"
-      ? existing.authorNameKh
-      : session.fullNameKh || session.fullNameEn || "សមាជិក STJ";
-  const authorNameEn =
-    existing.authorNameEn && existing.authorNameEn !== "STJ Member"
-      ? existing.authorNameEn
-      : session.fullNameEn || session.fullNameKh || "STJ Member";
+  const hasValidExistingAuthor =
+    existing.authorNameKh && !GENERIC_AUTHOR_NAMES.has(existing.authorNameKh.trim());
+
+  const resolvedAuthor = resolveAuthorFields({
+    authorId: hasValidExistingAuthor ? existing.authorId || String(session.id) : String(session.id),
+    authorStudentId: hasValidExistingAuthor
+      ? existing.authorStudentId || String(session.studentId || "")
+      : String(session.studentId || ""),
+    authorNameKh: hasValidExistingAuthor ? existing.authorNameKh : session.fullNameKh,
+    authorNameEn: hasValidExistingAuthor ? existing.authorNameEn : session.fullNameEn,
+    authorRole: existing.authorRole,
+    courseCode: existing.courseCode || body.courseCode,
+  });
+
+  const authorId = resolvedAuthor.authorId;
+  const authorStudentId = resolvedAuthor.authorStudentId;
+  const authorNameKh = resolvedAuthor.authorNameKh;
+  const authorNameEn = resolvedAuthor.authorNameEn;
 
   const encodedNotes = encodeRichNotes({
     notes: nextSummary,
@@ -405,7 +428,7 @@ export async function PUT(req: NextRequest) {
     authorStudentId,
     authorNameKh,
     authorNameEn,
-    authorRole: existing.authorRole || "សមាជិក STJ",
+    authorRole: resolvedAuthor.authorRole,
     updatedAt: nowIso,
   });
 

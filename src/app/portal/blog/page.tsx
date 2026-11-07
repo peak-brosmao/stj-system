@@ -140,23 +140,15 @@ export default function PortalBlogPage() {
     <PortalLayout portalType="portal">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary mb-1">
-              <PenTool className="w-4 h-4" />
-              <span>
-                {currentUser?.fullNameKh
-                  ? `អត្ថបទផ្ទាល់ខ្លួនរបស់៖ ${currentUser.fullNameKh}`
-                  : "My Personal Study Blog"}
-              </span>
-            </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">
-              អត្ថបទរបស់ខ្ញុំ (My Blog &amp; Study Articles)
+              អត្ថបទរបស់ខ្ញុំ
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ទំព័រនេះបង្ហាញតែអត្ថបទដែលអ្នកជាអ្នកបង្កើតផ្ទាល់ប៉ុណ្ណោះ។ មានតែអ្នកម្នាក់គត់ដែលអាចកែប្រែ លុប ឬកំណត់{" "}
-              <strong className="text-emerald-500">សាធារណៈ (Public)</strong> /{" "}
-              <strong className="text-amber-500">ឯកជន (Private)</strong> សម្រាប់អត្ថបទរបស់អ្នក។
+              {currentUser?.fullNameKh
+                ? `អ្នកសរសេរ៖ ${currentUser.fullNameKh}`
+                : "គ្រប់គ្រងអត្ថបទផ្ទាល់ខ្លួនរបស់អ្នក"}
             </p>
           </div>
 
@@ -164,13 +156,13 @@ export default function PortalBlogPage() {
             <Link href="/blog" target="_blank">
               <Button variant="outline" size="sm" className="text-xs space-x-1.5">
                 <ExternalLink className="w-3.5 h-3.5" />
-                <span>មើលទំព័រ Blog សាធារណៈ</span>
+                <span>ទំព័រ Blog</span>
               </Button>
             </Link>
             <Link href="/portal/blog/editor">
               <Button size="sm" className="text-xs space-x-1.5">
                 <Plus className="w-3.5 h-3.5" />
-                <span>សរសេរអត្ថបទថ្មី (Write Blog)</span>
+                <span>សរសេរអត្ថបទថ្មី</span>
               </Button>
             </Link>
           </div>
@@ -181,9 +173,9 @@ export default function PortalBlogPage() {
           <div className="flex flex-wrap items-center gap-2">
             {(
               [
-                { key: "ALL", label: "ទាំងអស់ (All My Posts)" },
-                { key: "PUBLIC", label: "សាធារណៈ (Public)" },
-                { key: "PRIVATE", label: "ឯកជន (Private)" },
+                { key: "ALL", label: "ទាំងអស់" },
+                { key: "PUBLIC", label: "សាធារណៈ" },
+                { key: "PRIVATE", label: "ឯកជន" },
               ] as const
             ).map((t) => (
               <button
@@ -322,7 +314,7 @@ export default function PortalBlogPage() {
                     {/* Content */}
                     <CardContent className="p-4 space-y-2">
                       <div className="flex items-center gap-1.5">
-                        <Badge variant="info">អត្ថបទរបស់ខ្ញុំ (My Blog)</Badge>
+                        <Badge variant="info">អត្ថបទ</Badge>
                         {item.attachments?.length > 0 && (
                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500">
                             {item.attachments.length} ឯកសារ R2

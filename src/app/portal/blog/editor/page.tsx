@@ -16,18 +16,17 @@ import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import {
-  CloudflareR2AttachmentManager,
   LessonBlogSharePanel,
   RichTextEditor,
   ThumbnailAndVisibilityCard,
 } from "@/ui/RichTextEditor";
-import type { CourseAttachment } from "@/lib/richContent";
+import { extractPlainTextSnippet, type CourseAttachment } from "@/lib/richContent";
 
 const COURSE_CATEGORIES = [
-  { code: "PROG101", category: "Programming (C/C++)", titleKh: "កូដកម្មវិធី (Programming)" },
-  { code: "MATH101", category: "គណិតវិទ្យា (Mathematics)", titleKh: "គណិតវិទ្យា (Mathematics)" },
-  { code: "PHYS101", category: "រូបវិទ្យា (Physics)", titleKh: "រូបវិទ្យា (Physics)" },
-  { code: "CHEM101", category: "គីមីវិទ្យា (Chemistry)", titleKh: "គីមីវិទ្យា (Chemistry)" },
+  { code: "PROG101", category: "Programming", titleKh: "កូដកម្មវិធី" },
+  { code: "MATH101", category: "Mathematics", titleKh: "គណិតវិទ្យា" },
+  { code: "PHYS101", category: "Physics", titleKh: "រូបវិទ្យា" },
+  { code: "CHEM101", category: "Chemistry", titleKh: "គីមីវិទ្យា" },
 ];
 
 function BlogEditorInner() {
@@ -42,9 +41,8 @@ function BlogEditorInner() {
 
   const [form, setForm] = useState({
     title: "",
-    summary: "",
     courseCode: "PROG101",
-    category: "Programming (C/C++)",
+    category: "Programming",
     visibility: "PUBLIC" as "PRIVATE" | "PUBLIC",
     thumbnailUrl: "",
     richContent: "",
@@ -60,9 +58,8 @@ function BlogEditorInner() {
         if (d?.item) {
           setForm({
             title: d.item.title || "",
-            summary: d.item.summary || "",
             courseCode: d.item.courseCode || "PROG101",
-            category: d.item.category || "Programming (C/C++)",
+            category: d.item.category || "Programming",
             visibility: d.item.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
             thumbnailUrl: d.item.thumbnailUrl || "",
             richContent: d.item.richContent || "",
@@ -76,7 +73,7 @@ function BlogEditorInner() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim()) {
-      setError("សូមបញ្ចូលចំណងជើងអត្ថបទ ឬមេរៀន (Title is required)");
+      setError("សូមបញ្ចូលចំណងជើងអត្ថបទ");
       return;
     }
 
@@ -86,12 +83,7 @@ function BlogEditorInner() {
 
     try {
       const autoSummary =
-        form.summary.trim() ||
-        form.richContent
-          .replace(/<[^>]+>/g, " ")
-          .replace(/\s+/g, " ")
-          .trim()
-          .slice(0, 240);
+        extractPlainTextSnippet(form.richContent, "", 200) || form.title.trim();
 
       const matchedCat =
         COURSE_CATEGORIES.find((c) => c.code === form.courseCode) || COURSE_CATEGORIES[0];
@@ -121,12 +113,12 @@ function BlogEditorInner() {
 
       setSuccessMsg(
         form.visibility === "PUBLIC"
-          ? "បានរក្សាទុក និងផ្សព្វផ្សាយអត្ថបទជាសាធារណៈ (Public) លើ Home Page & Blog ដោយជោគជ័យ!"
-          : "បានរក្សាទុកអត្ថបទជាលក្ខណៈឯកជន (Private សម្រាប់សមាជិក STJ) ដោយជោគជ័យ!"
+          ? "បានរក្សាទុក និងផ្សព្វផ្សាយជាសាធារណៈដោយជោគជ័យ"
+          : "បានរក្សាទុកជាលក្ខណៈឯកជនដោយជោគជ័យ"
       );
       setTimeout(() => {
         router.push("/portal/blog");
-      }, 900);
+      }, 800);
     } finally {
       setSaving(false);
     }
@@ -134,34 +126,27 @@ function BlogEditorInner() {
 
   return (
     <PortalLayout portalType="portal">
-      <form onSubmit={handleSave} className="space-y-6 max-w-7xl mx-auto">
+      <form onSubmit={handleSave} className="space-y-5 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
           <div className="space-y-1">
             <Link
               href="/portal/blog"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>ត្រឡប់ទៅបញ្ជីអត្ថបទចែករំលែក (Back to STJ Blog)</span>
+              <span>ត្រឡប់ក្រោយ</span>
             </Link>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-foreground flex items-center gap-2">
-              <PenTool className="w-5 h-5 text-primary" />
-              <span>
-                {postId
-                  ? "កែសម្រួលអត្ថបទ និងមេរៀនចែករំលែក (Edit Blog / Study Article)"
-                  : "សរសេរអត្ថបទ និងមេរៀនចែករំលែកថ្មី (Write STJ Blog & Lesson)"}
-              </span>
+            <h1 className="text-lg sm:text-xl font-extrabold text-foreground flex items-center gap-2">
+              <PenTool className="w-4 h-4 text-primary" />
+              <span>{postId ? "កែសម្រួលអត្ថបទ" : "សរសេរអត្ថបទថ្មី"}</span>
             </h1>
-            <p className="text-xs text-muted-foreground">
-              អាចសរសេរកូដពណ៌ដូច VS Code, សមីការគណិត-រូបវិទ្យា (LaTeX), ដាក់វីដេអូ YouTube, បង្ហោះឯកសារ R2 និងកំណត់ Thumbnail សម្រាប់ OpenGraph &amp; Home Page។
-            </p>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
             <Link href="/portal/blog">
               <Button type="button" variant="outline" size="sm" className="text-xs">
-                បោះបង់ (Cancel)
+                បោះបង់
               </Button>
             </Link>
             <Button
@@ -171,26 +156,20 @@ function BlogEditorInner() {
               className="text-xs space-x-1.5 px-4"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>
-                {saving
-                  ? "កំពុងរក្សាទុក..."
-                  : form.visibility === "PUBLIC"
-                  ? "រក្សាទុក & ផ្សាយជាសាធារណៈ (Publish Public)"
-                  : "រក្សាទុកជាឯកជន (Save Private)"}
-              </span>
+              <span>{saving ? "កំពុងរក្សាទុក..." : "រក្សាទុក"}</span>
             </Button>
           </div>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -198,49 +177,32 @@ function BlogEditorInner() {
 
         {loading ? (
           <div className="py-16 text-center text-xs text-muted-foreground">
-            កំពុងរៀបចំផ្ទាំងសរសេរអត្ថបទ...
+            កំពុងផ្ទុកអត្ថបទ...
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left 8 Columns: Title, Summary & Rich Text Studio */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            {/* Left 8 Columns: Title & Rich Text Studio */}
             <div className="lg:col-span-8 space-y-4">
               <Card>
-                <CardContent className="p-5 space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-                      ចំណងជើងអត្ថបទ ឬមេរៀន (Article / Lesson Title) *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={form.title}
-                      onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      placeholder="ឧ. មេរៀនសង្ខេប៖ ការប្រើប្រាស់ Pointer និង Struct ក្នុងភាសា C សម្រាប់សិស្សប្អូនឆ្នាំទី១"
-                      className="w-full px-3.5 py-2.5 text-base sm:text-lg font-bold rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1.5">
-                      សេចក្តីសង្ខេបខ្លី (Short Summary សម្រាប់បង្ហាញខាងក្រៅ &amp; OpenGraph Preview)
-                    </label>
-                    <textarea
-                      rows={2}
-                      value={form.summary}
-                      onChange={(e) => setForm({ ...form, summary: e.target.value })}
-                      placeholder="សរសេរសេចក្តីសង្ខេប ១-២ បន្ទាត់ អំពីអត្ថបទនេះ (ប្រសិនបើទុកទទេ ប្រព័ន្ធនឹងទាញចេញពីអត្ថបទដោយស្វ័យប្រវត្តិ)..."
-                      className="w-full px-3.5 py-2 text-xs rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    />
-                  </div>
+                <CardContent className="p-4">
+                  <label className="block text-xs font-bold text-muted-foreground mb-1.5">
+                    ចំណងជើងអត្ថបទ *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="បញ្ចូលចំណងជើងអត្ថបទ..."
+                    className="w-full px-3.5 py-2.5 text-base font-bold rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  />
                 </CardContent>
               </Card>
 
               <div className="space-y-2">
                 <label className="text-xs font-bold text-foreground flex items-center gap-1.5 px-1">
                   <FileText className="w-4 h-4 text-primary" />
-                  <span>
-                    ខ្លឹមសារអត្ថបទ កូដគំរូ (VS Code) និងរូបមន្តគណិត-រូបវិទ្យា (Math / LaTeX)
-                  </span>
+                  <span>ខ្លឹមសារអត្ថបទ</span>
                 </label>
 
                 <RichTextEditor
@@ -251,26 +213,26 @@ function BlogEditorInner() {
                     setForm((prev) => ({ ...prev, attachments: items }))
                   }
                   courseCode={form.courseCode}
-                  minHeightClass="min-h-[480px]"
+                  minHeightClass="min-h-[500px]"
                   hideInlineAttachments={true}
-                  placeholder="សរសេរអត្ថបទពន្យល់មេរៀន ចុចប៊ូតុង 'VS Code' ដើម្បីដាក់កូដមានពណ៌ ឬចុច 'Math / LaTeX' ដើម្បីសរសេររូបមន្តគណិតវិទ្យា និងរូបវិទ្យា..."
+                  placeholder="សរសេរអត្ថបទ កូដ (VS Code) ឬរូបមន្ត (Math / LaTeX)..."
                 />
               </div>
             </div>
 
-            {/* Right 4 Columns: Subject, Visibility, Thumbnail, QR & R2 Attachments */}
-            <div className="lg:col-span-4 space-y-5">
+            {/* Right 4 Columns: Subject, Visibility, Thumbnail, QR */}
+            <div className="lg:col-span-4 space-y-4">
               <Card>
-                <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-primary" />
-                    <span>មុខវិជ្ជា និងប្រភេទអត្ថបទ (Subject &amp; Category)</span>
+                <CardHeader className="py-3 px-4 border-b border-border">
+                  <CardTitle className="text-xs font-bold flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-primary" />
+                    <span>មុខវិជ្ជា និងប្រភេទអត្ថបទ</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4 space-y-3 text-xs">
                   <div>
                     <label className="block font-semibold text-foreground mb-1">
-                      មុខវិជ្ជាពាក់ព័ន្ធ (Subject)
+                      មុខវិជ្ជា
                     </label>
                     <select
                       value={form.courseCode}
@@ -283,7 +245,7 @@ function BlogEditorInner() {
                           category: matched?.category || form.category,
                         });
                       }}
-                      className="w-full p-2.5 rounded-xl border border-input bg-background font-medium"
+                      className="w-full p-2 rounded-xl border border-input bg-background font-medium"
                     >
                       {COURSE_CATEGORIES.map((c) => (
                         <option key={c.code} value={c.code}>
@@ -295,14 +257,14 @@ function BlogEditorInner() {
 
                   <div>
                     <label className="block font-semibold text-foreground mb-1">
-                      ស្លាកប្រភេទអត្ថបទ (Category Tag)
+                      ប្រភេទអត្ថបទ
                     </label>
                     <input
                       type="text"
                       value={form.category}
                       onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      placeholder="ឧ. Programming (C/C++) ឬ ត្រៀមប្រឡង Final"
-                      className="w-full p-2.5 rounded-xl border border-input bg-background"
+                      placeholder="ឧ. Programming"
+                      className="w-full p-2 rounded-xl border border-input bg-background"
                     />
                   </div>
                 </CardContent>
@@ -329,14 +291,6 @@ function BlogEditorInner() {
                   onVisibilityChange={(vis) => setForm((prev) => ({ ...prev, visibility: vis }))}
                 />
               )}
-
-              <CloudflareR2AttachmentManager
-                attachments={form.attachments}
-                onAttachmentsChange={(items) =>
-                  setForm((prev) => ({ ...prev, attachments: items }))
-                }
-                courseCode={form.courseCode}
-              />
             </div>
           </div>
         )}

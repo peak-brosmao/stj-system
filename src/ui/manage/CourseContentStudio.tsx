@@ -21,11 +21,10 @@ import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
 import {
   RichTextEditor,
-  CloudflareR2AttachmentManager,
   ThumbnailAndVisibilityCard,
   LessonBlogSharePanel,
 } from "@/ui/RichTextEditor";
-import type { CourseAttachment } from "@/lib/richContent";
+import { extractPlainTextSnippet, type CourseAttachment } from "@/lib/richContent";
 
 interface CourseOption {
   id: string;
@@ -166,11 +165,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
     setSuccessMsg(null);
 
     try {
-      const plainSummary = form.richContent
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .slice(0, 500);
+      const plainSummary =
+        extractPlainTextSnippet(form.richContent, "", 240) || form.title.trim();
 
       if (isSyllabusMode) {
         const res = await fetch("/api/system/sessions", {
@@ -191,13 +187,13 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
           setError(d?.error || "មិនអាចរក្សាទុកមាតិកាមុខវិជ្ជាបានទេ");
           return;
         }
-        setSuccessMsg("បានរក្សាទុកមាតិកាមុខវិជ្ជា និងឯកសារ Cloudflare R2 ដោយជោគជ័យ!");
-        setTimeout(() => router.push(backHref), 900);
+        setSuccessMsg("បានរក្សាទុកមាតិកាមុខវិជ្ជាដោយជោគជ័យ");
+        setTimeout(() => router.push(backHref), 800);
         return;
       }
 
       if (!form.title.trim()) {
-        setError("សូមបញ្ចូលចំណងជើងមេរៀន (Lesson title is required)");
+        setError("សូមបញ្ចូលចំណងជើងមេរៀន");
         return;
       }
 
@@ -228,8 +224,8 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
         return;
       }
 
-      setSuccessMsg("បានរក្សាទុកមេរៀន និងមាតិកាបង្រៀនដោយជោគជ័យ!");
-      setTimeout(() => router.push(backHref), 900);
+      setSuccessMsg("បានរក្សាទុកមេរៀនដោយជោគជ័យ");
+      setTimeout(() => router.push(backHref), 800);
     } finally {
       setSaving(false);
     }
@@ -237,24 +233,24 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
 
   return (
     <PortalLayout portalType={portalType} userRole={userRole} userName={userName}>
-      <form onSubmit={handleSave} className="space-y-6 max-w-7xl mx-auto">
+      <form onSubmit={handleSave} className="space-y-5 max-w-7xl mx-auto">
         {/* Top Studio Navigation & Action Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border">
           <div className="space-y-1">
             <Link
               href={backHref}
               className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>ថយក្រោយទៅបញ្ជីមេរៀន (Back to Lessons &amp; Schedule)</span>
+              <span>ត្រឡប់ក្រោយ</span>
             </Link>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-foreground">
+              <h1 className="text-lg sm:text-xl font-extrabold text-foreground">
                 {isSyllabusMode
-                  ? "សរសេរមាតិកាមុខវិជ្ជា និងឯកសារមេរៀនរួម (Course Syllabus Studio)"
+                  ? "មាតិកាមុខវិជ្ជា"
                   : sessionIdParam
-                  ? "កែសម្រួលមេរៀន និងមាតិកាបង្រៀន (Lesson Content Studio)"
-                  : "បង្កើតមេរៀនថ្មី និងសរសេរមាតិកាបង្រៀន (New Lesson Studio)"}
+                  ? "កែសម្រួលមេរៀន"
+                  : "បង្កើតមេរៀនថ្មី"}
               </h1>
               {activeCourse && (
                 <Badge variant="info" className="font-mono text-xs">
@@ -262,15 +258,12 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">
-              សរសេរសេចក្តីពន្យល់មេរៀនពេញលេញ (Rich Text Editor) និងភ្ជាប់ឯកសារ PDF, Video ឬស្លាយបង្រៀននៅលើ Cloudflare R2 សម្រាប់ឱ្យសមាជិកចូលមើល។
-            </p>
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
             <Link href={backHref}>
               <Button type="button" variant="outline" size="sm" className="text-xs">
-                បោះបង់ (Cancel)
+                បោះបង់
               </Button>
             </Link>
             <Button
@@ -280,26 +273,20 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
               className="text-xs space-x-1.5 px-4"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>
-                {saving
-                  ? "កំពុងរក្សាទុក..."
-                  : isSyllabusMode
-                  ? "រក្សាទុកមាតិកាមុខវិជ្ជា (Save Syllabus)"
-                  : "រក្សាទុកមេរៀន & មាតិកា (Save & Publish)"}
-              </span>
+              <span>{saving ? "កំពុងរក្សាទុក..." : "រក្សាទុក"}</span>
             </Button>
           </div>
         </div>
 
         {error && (
-          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{successMsg}</span>
           </div>
@@ -307,25 +294,25 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
 
         {loading ? (
           <div className="py-16 text-center text-xs text-muted-foreground">
-            កំពុងរៀបចំផ្ទាំងសរសេរមាតិកាមេរៀន (Loading Studio)...
+            កំពុងផ្ទុកមេរៀន...
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             {/* Left 8 Columns: Full Document Title & Rich Text Studio */}
             <div className="lg:col-span-8 space-y-4">
               {!isSyllabusMode && (
                 <Card>
-                  <CardContent className="p-5 space-y-2">
-                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                      ចំណងជើងមេរៀន (Lesson Title) *
+                  <CardContent className="p-4">
+                    <label className="block text-xs font-bold text-muted-foreground mb-1.5">
+                      ចំណងជើងមេរៀន *
                     </label>
                     <input
                       type="text"
                       required
                       value={form.title}
                       onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      placeholder="ឧ. ជំពូកទី ១៖ Pointer និងការគ្រប់គ្រង Memory ក្នុងភាសា C"
-                      className="w-full px-3.5 py-2.5 text-base sm:text-lg font-bold rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                      placeholder="ឧ. មេរៀនទី១៖ ការណែនាំអំពីភាសា C"
+                      className="w-full px-3.5 py-2.5 text-base font-bold rounded-xl border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                   </CardContent>
                 </Card>
@@ -335,11 +322,7 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                 <div className="flex items-center justify-between px-1">
                   <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
                     <FileText className="w-4 h-4 text-primary" />
-                    <span>
-                      {isSyllabusMode
-                        ? "ខ្លឹមសារពន្យល់អំពីមុខវិជ្ជា គោលបំណង និងកម្មវិធីសិក្សា (Course Syllabus & Overview)"
-                        : "ខ្លឹមសារមេរៀន សេចក្តីពន្យល់ កូដគំរូ និងលំហាត់ (Lesson Rich Content)"}
-                    </span>
+                    <span>{isSyllabusMode ? "មាតិកាមុខវិជ្ជា" : "ខ្លឹមសារមេរៀន"}</span>
                   </label>
                 </div>
 
@@ -351,41 +334,32 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                     setForm((prev) => ({ ...prev, attachments: items }))
                   }
                   courseCode={activeCourse?.code || "STJ"}
-                  minHeightClass="min-h-[460px]"
+                  minHeightClass="min-h-[480px]"
                   hideInlineAttachments={true}
-                  placeholder={
-                    isSyllabusMode
-                      ? "សរសេរអំពីមុខវិជ្ជាដែលត្រូវបង្រៀន គោលការណ៍វត្តមាន មាតិកាមេរៀនប្រចាំឆមាស និងការណែនាំសម្រាប់សមាជិក..."
-                      : "សរសេរខ្លឹមសារមេរៀន ចំណុចសំខាន់ៗ កូដគំរូ ឬលំហាត់អនុវត្តសម្រាប់ឱ្យសមាជិកអាចចូលអានបាន..."
-                  }
+                  placeholder="សរសេរខ្លឹមសារមេរៀន កូដគំរូ ឬរូបមន្ត..."
                 />
               </div>
             </div>
 
-            {/* Right 4 Columns: Schedule Metadata & Cloudflare R2 Storage Manager */}
-            <div className="lg:col-span-4 space-y-5">
-              {/* Course & Schedule Settings Card */}
+            {/* Right 4 Columns: Schedule Metadata & Visibility */}
+            <div className="lg:col-span-4 space-y-4">
               <Card>
-                <CardHeader className="pb-3 border-b border-border">
-                  <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-foreground">
-                    <Layers className="w-4 h-4 text-primary" />
-                    <span>
-                      {isSyllabusMode
-                        ? "ព័ត៌មានមុខវិជ្ជា (Course Target)"
-                        : "កាលវិភាគ និងបន្ទប់បង្រៀន (Schedule & Room)"}
-                    </span>
+                <CardHeader className="py-3 px-4 border-b border-border">
+                  <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-foreground">
+                    <Layers className="w-3.5 h-3.5 text-primary" />
+                    <span>{isSyllabusMode ? "ព័ត៌មានមុខវិជ្ជា" : "កាលវិភាគបង្រៀន"}</span>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 space-y-3.5 text-xs">
+                <CardContent className="p-4 space-y-3 text-xs">
                   <div>
                     <label className="block font-semibold text-foreground mb-1">
-                      មុខវិជ្ជាទទួលខុសត្រូវ (Course)
+                      មុខវិជ្ជា
                     </label>
                     <select
                       value={form.courseId}
                       disabled={Boolean(sessionIdParam) || courses.length <= 1}
                       onChange={(e) => setForm({ ...form, courseId: e.target.value })}
-                      className="w-full p-2.5 rounded-xl border border-input bg-background font-medium disabled:opacity-70"
+                      className="w-full p-2 rounded-xl border border-input bg-background font-medium disabled:opacity-70"
                     >
                       {courses.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -400,14 +374,14 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                       <div>
                         <label className="block font-semibold text-foreground mb-1 flex items-center gap-1">
                           <CalendarDays className="w-3.5 h-3.5 text-primary" />
-                          <span>កាលបរិច្ឆេទបង្រៀន (Date)</span>
+                          <span>កាលបរិច្ឆេទ</span>
                         </label>
                         <input
                           type="date"
                           required
                           value={form.sessionDate}
                           onChange={(e) => setForm({ ...form, sessionDate: e.target.value })}
-                          className="w-full p-2.5 rounded-xl border border-input bg-background"
+                          className="w-full p-2 rounded-xl border border-input bg-background"
                         />
                       </div>
 
@@ -415,27 +389,27 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                         <div>
                           <label className="block font-semibold text-foreground mb-1 flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5 text-primary" />
-                            <span>ម៉ោងចាប់ផ្តើម</span>
+                            <span>ចាប់ផ្តើម</span>
                           </label>
                           <input
                             type="time"
                             required
                             value={form.startTime}
                             onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-                            className="w-full p-2.5 rounded-xl border border-input bg-background"
+                            className="w-full p-2 rounded-xl border border-input bg-background"
                           />
                         </div>
                         <div>
                           <label className="block font-semibold text-foreground mb-1 flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5 text-primary" />
-                            <span>ម៉ោងបញ្ចប់</span>
+                            <span>បញ្ចប់</span>
                           </label>
                           <input
                             type="time"
                             required
                             value={form.endTime}
                             onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-                            className="w-full p-2.5 rounded-xl border border-input bg-background"
+                            className="w-full p-2 rounded-xl border border-input bg-background"
                           />
                         </div>
                       </div>
@@ -443,7 +417,7 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                       <div>
                         <label className="block font-semibold text-foreground mb-1 flex items-center gap-1">
                           <MapPin className="w-3.5 h-3.5 text-primary" />
-                          <span>បន្ទប់បង្រៀន (Room / Building)</span>
+                          <span>បន្ទប់បង្រៀន</span>
                         </label>
                         <input
                           type="text"
@@ -451,23 +425,23 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                           value={form.room}
                           onChange={(e) => setForm({ ...form, room: e.target.value })}
                           placeholder="ឧ. SF1 & SF2"
-                          className="w-full p-2.5 rounded-xl border border-input bg-background"
+                          className="w-full p-2 rounded-xl border border-input bg-background"
                         />
                       </div>
 
                       <div>
                         <label className="block font-semibold text-foreground mb-1 flex items-center gap-1">
                           <BookOpen className="w-3.5 h-3.5 text-primary" />
-                          <span>ស្ថានភាពមេរៀន (Status)</span>
+                          <span>ស្ថានភាព</span>
                         </label>
                         <select
                           value={form.status}
                           onChange={(e) => setForm({ ...form, status: e.target.value })}
-                          className="w-full p-2.5 rounded-xl border border-input bg-background"
+                          className="w-full p-2 rounded-xl border border-input bg-background"
                         >
-                          <option value="SCHEDULED">បានកំណត់ពេល (Scheduled)</option>
-                          <option value="COMPLETED">បានបង្រៀនរួច (Completed)</option>
-                          <option value="CANCELLED">បានលុបចោល (Cancelled)</option>
+                          <option value="SCHEDULED">តាមកាលវិភាគ</option>
+                          <option value="COMPLETED">បានបង្រៀនរួច</option>
+                          <option value="CANCELLED">បានលុបចោល</option>
                         </select>
                       </div>
                     </>
@@ -475,7 +449,6 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                 </CardContent>
               </Card>
 
-              {/* Thumbnail, OpenGraph & Public/Private Visibility Card */}
               {!isSyllabusMode && (
                 <ThumbnailAndVisibilityCard
                   visibility={form.visibility}
@@ -487,7 +460,6 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                 />
               )}
 
-              {/* Direct Lesson Share Link & QR Code if editing an existing lesson */}
               {!isSyllabusMode && sessionIdParam && (
                 <LessonBlogSharePanel
                   title={form.title || "មេរៀន STJ"}
@@ -500,15 +472,6 @@ function StudioInner({ portalType, userRole, userName = "" }: StudioProps) {
                   onVisibilityChange={(vis) => setForm((prev) => ({ ...prev, visibility: vis }))}
                 />
               )}
-
-              {/* Cloudflare R2 Attachments Manager Card */}
-              <CloudflareR2AttachmentManager
-                attachments={form.attachments}
-                onAttachmentsChange={(items) =>
-                  setForm((prev) => ({ ...prev, attachments: items }))
-                }
-                courseCode={activeCourse?.code || "STJ"}
-              />
             </div>
           </div>
         )}

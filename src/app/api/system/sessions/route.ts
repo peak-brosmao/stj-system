@@ -12,6 +12,7 @@ import {
 import {
   normalizeSessionToBlogOrLesson,
   removeBlogCacheItem,
+  resolveAuthorFields,
   syncSessionsToBlogCache,
   upsertBlogCacheItem,
 } from "@/lib/blogStore";
@@ -132,6 +133,14 @@ export async function POST(req: NextRequest) {
   }
 
   const userSession = await getSession();
+  const resolvedAuthor = resolveAuthorFields({
+    authorId: userSession?.id,
+    authorStudentId: userSession?.studentId || undefined,
+    authorNameKh: userSession?.fullNameKh,
+    authorNameEn: userSession?.fullNameEn,
+    authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា",
+    courseCode: body.courseCode || targetCourseId,
+  });
   const encodedNotes = encodeRichNotes({
     notes: body.notes,
     richContent: body.richContent,
@@ -139,11 +148,11 @@ export async function POST(req: NextRequest) {
     visibility: body.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
     thumbnailUrl: body.thumbnailUrl,
     category: body.category,
-    authorId: userSession?.id,
-    authorStudentId: userSession?.studentId || undefined,
-    authorNameKh: userSession?.fullNameKh || userSession?.fullNameEn || "ប្រធានមុខវិជ្ជា STJ",
-    authorNameEn: userSession?.fullNameEn || userSession?.fullNameKh || "STJ Course Leader",
-    authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា (Course Leader)",
+    authorId: resolvedAuthor.authorId,
+    authorStudentId: resolvedAuthor.authorStudentId,
+    authorNameKh: resolvedAuthor.authorNameKh,
+    authorNameEn: resolvedAuthor.authorNameEn,
+    authorRole: resolvedAuthor.authorRole,
   });
 
   // Handle saving Course Syllabus / Overview
@@ -266,6 +275,14 @@ async function handleUpdateOrDelete(req: NextRequest, method: "PUT" | "PATCH" | 
     "visibility" in updatePayload ||
     "thumbnailUrl" in updatePayload
   ) {
+    const resolvedAuthor = resolveAuthorFields({
+      authorId: userSession?.id,
+      authorStudentId: userSession?.studentId || undefined,
+      authorNameKh: userSession?.fullNameKh,
+      authorNameEn: userSession?.fullNameEn,
+      authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា",
+      courseCode: updatePayload.courseCode || updatePayload.courseId,
+    });
     updatePayload.notes = encodeRichNotes({
       notes: updatePayload.notes,
       richContent: updatePayload.richContent,
@@ -273,11 +290,11 @@ async function handleUpdateOrDelete(req: NextRequest, method: "PUT" | "PATCH" | 
       visibility: updatePayload.visibility === "PUBLIC" ? "PUBLIC" : "PRIVATE",
       thumbnailUrl: updatePayload.thumbnailUrl,
       category: updatePayload.category,
-      authorId: userSession?.id,
-      authorStudentId: userSession?.studentId || undefined,
-      authorNameKh: userSession?.fullNameKh || userSession?.fullNameEn || "ប្រធានមុខវិជ្ជា STJ",
-      authorNameEn: userSession?.fullNameEn || userSession?.fullNameKh || "STJ Course Leader",
-      authorRole: scope.isSystemAdmin ? "គណៈកម្មការ STJ" : "ប្រធានមុខវិជ្ជា (Course Leader)",
+      authorId: resolvedAuthor.authorId,
+      authorStudentId: resolvedAuthor.authorStudentId,
+      authorNameKh: resolvedAuthor.authorNameKh,
+      authorNameEn: resolvedAuthor.authorNameEn,
+      authorRole: resolvedAuthor.authorRole,
     });
   }
 

@@ -88,44 +88,11 @@ export default function PublicBlogCatalogPage() {
 
       <main className="flex-1 py-10 sm:py-14">
         <div className="container mx-auto px-4 max-w-6xl space-y-8">
-          {/* Hero Banner */}
-          <div className="relative rounded-3xl overflow-hidden border border-border bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-3 max-w-2xl">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/15 text-primary text-xs font-bold">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>STJ Knowledge Hub &amp; Senior Mentorship Blog</span>
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
-                  បណ្ណាល័យអត្ថបទ &amp; មេរៀនរៀមច្បង STJ (Senior Blog &amp; Lessons)
-                </h1>
-                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  បណ្ដុំអត្ថបទសិក្សា មេរៀនសង្ខេប កូដគំរូ (C/C++, Python) និងរូបមន្តគណិត-រូបវិទ្យា-គីមីវិទ្យា ដែលរៀបចំដោយនិស្សិតរៀមច្បង STJ ដើម្បីជួយសម្រួលដល់ការសិក្សារបស់សិស្សប្អូននៅវិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា (ITC)។
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0">
-                <Link href="/portal/blog/editor">
-                  <Button className="w-full text-xs space-x-2 px-5 py-2.5">
-                    <PenTool className="w-4 h-4" />
-                    <span>សរសេរអត្ថបទចែករំលែក (សម្រាប់សមាជិក STJ)</span>
-                  </Button>
-                </Link>
-                <Link href="/portal/blog">
-                  <Button variant="outline" className="w-full text-xs space-x-2 px-5 py-2">
-                    <BookOpen className="w-4 h-4" />
-                    <span>គ្រប់គ្រងអត្ថបទរបស់ខ្ញុំ (Member Portal)</span>
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-
           {/* Subject Filter & Search Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               {[
-                { code: "ALL", label: "ទាំងអស់ (All Subjects)" },
+                { code: "ALL", label: "ទាំងអស់" },
                 { code: "PROG101", label: "PROG101 • Programming" },
                 { code: "MATH101", label: "MATH101 • គណិតវិទ្យា" },
                 { code: "PHYS101", label: "PHYS101 • រូបវិទ្យា" },
@@ -135,11 +102,10 @@ export default function PublicBlogCatalogPage() {
                   key={tab.code}
                   type="button"
                   onClick={() => setCourseFilter(tab.code)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    courseFilter === tab.code
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-card border border-border text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${courseFilter === tab.code
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -215,9 +181,7 @@ export default function PublicBlogCatalogPage() {
                       <CardContent className="p-5 space-y-2.5">
                         <div className="flex items-center gap-2">
                           <Badge variant={item.kind === "BLOG" ? "info" : "success"}>
-                            {item.kind === "BLOG"
-                              ? "អត្ថបទចែករំលែក (Blog)"
-                              : "មេរៀនបង្រៀន (Lesson)"}
+                            {item.kind === "BLOG" ? "អត្ថបទ" : "មេរៀន"}
                           </Badge>
                           {item.attachments?.length > 0 && (
                             <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500">
@@ -247,7 +211,7 @@ export default function PublicBlogCatalogPage() {
                         className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary"
                       >
                         <QrCode className="w-3.5 h-3.5 text-primary" />
-                        <span>QR Code សម្រាប់សិស្សប្អូន</span>
+                        <span>QR Code</span>
                       </button>
 
                       <Link
