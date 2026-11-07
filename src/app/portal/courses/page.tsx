@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
-import { RichContentViewer } from "@/ui/RichTextEditor";
+import { extractPlainTextSnippet } from "@/lib/richContent";
 
 export default function MyCoursesPage() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -52,13 +52,22 @@ export default function MyCoursesPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {courses.map((c) => {
-            const hasSyllabus = Boolean(
-              c.syllabus &&
-                (c.syllabus.richContent ||
-                  c.syllabus.notes ||
-                  (Array.isArray(c.syllabus.attachments) && c.syllabus.attachments.length > 0))
-            );
             const lessonList = Array.isArray(c.sessions) ? c.sessions : [];
+            const syllabusSnippet = extractPlainTextSnippet(
+              c.syllabus?.richContent,
+              c.syllabus?.notes,
+              150
+            );
+            const firstLessonSnippet =
+              !syllabusSnippet && lessonList.length > 0
+                ? extractPlainTextSnippet(
+                    lessonList[0]?.richContent,
+                    lessonList[0]?.notes,
+                    150
+                  )
+                : "";
+            const previewSnippet = syllabusSnippet || firstLessonSnippet;
+
             const totalAttachments =
               (Array.isArray(c.syllabus?.attachments) ? c.syllabus.attachments.length : 0) +
               lessonList.reduce(
@@ -88,17 +97,15 @@ export default function MyCoursesPage() {
                     {c.description || c.descriptionKh}
                   </p>
 
-                  {hasSyllabus && (
-                    <div className="p-3.5 rounded-xl border border-primary/25 bg-primary/5 space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-primary">
+                  {previewSnippet && (
+                    <div className="p-3 rounded-xl border border-primary/20 bg-primary/5 space-y-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-primary">
                         <FileText className="w-3.5 h-3.5" />
-                        <span>មាតិកាមុខវិជ្ជា និងឯកសារពីប្រធានក្រុម (Course Content &amp; R2 PDF/Video)</span>
+                        <span>សង្ខេបមាតិកាមេរៀន (ចុចចូលមើលខាងក្នុងដើម្បីអានពេញលេញ)</span>
                       </div>
-                      <RichContentViewer
-                        richContent={c.syllabus?.richContent}
-                        notes={c.syllabus?.notes}
-                        attachments={c.syllabus?.attachments}
-                      />
+                      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {previewSnippet}
+                      </p>
                     </div>
                   )}
 
@@ -128,7 +135,7 @@ export default function MyCoursesPage() {
                     </span>
                     <Link href={`/portal/courses/${c.slug || String(c.code || "").toLowerCase()}`}>
                       <Button size="sm" variant="outline" className="space-x-1.5 text-xs border-primary/40 text-primary hover:bg-primary/10">
-                        <span>មើលមាតិកាមុខវិជ្ជា &amp; មេរៀនត្រូវបង្រៀន</span>
+                        <span>ចូលមើលមាតិកា &amp; មេរៀនពេញលេញ</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </Button>
                     </Link>

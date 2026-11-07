@@ -94,3 +94,28 @@ export function isSyllabusSession(session: Record<string, any> | null | undefine
   );
 }
 
+export function extractPlainTextSnippet(
+  richContent?: string | null,
+  notes?: string | null,
+  maxLength = 150
+): string {
+  const source = (richContent && richContent.trim()) || (notes && notes.trim()) || "";
+  if (!source) return "";
+  const plain = source
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<\/(p|div|h1|h2|h3|h4|li|tr|br)>/gi, " • ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/\s+/g, " ")
+    .replace(/(\s*•\s*)+/g, " • ")
+    .replace(/^(\s*•\s*)+|(\s*•\s*)+$/g, "")
+    .trim();
+  if (plain.length <= maxLength) return plain;
+  return plain.slice(0, maxLength).trim() + "…";
+}
+

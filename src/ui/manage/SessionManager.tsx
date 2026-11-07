@@ -19,8 +19,7 @@ import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
-import { RichContentViewer } from "@/ui/RichTextEditor";
-import type { CourseAttachment } from "@/lib/richContent";
+import { extractPlainTextSnippet, type CourseAttachment } from "@/lib/richContent";
 
 interface CourseOption {
   id: string;
@@ -330,12 +329,17 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
               (activeSyllabus.richContent ||
                 activeSyllabus.notes ||
                 (activeSyllabus.attachments && activeSyllabus.attachments.length > 0)) ? (
-                <div className="pt-2 border-t border-border/60">
-                  <RichContentViewer
-                    richContent={activeSyllabus.richContent}
-                    notes={activeSyllabus.notes}
-                    attachments={activeSyllabus.attachments}
-                  />
+                <div className="pt-2 border-t border-border/60 space-y-2">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    {extractPlainTextSnippet(activeSyllabus.richContent, activeSyllabus.notes, 180)}
+                  </p>
+                  {Array.isArray(activeSyllabus.attachments) &&
+                    activeSyllabus.attachments.length > 0 && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                        <BookOpen className="w-3 h-3" />
+                        <span>{activeSyllabus.attachments.length} ឯកសារ PDF/Video (R2)</span>
+                      </span>
+                    )}
                 </div>
               ) : (
                 <div className="p-3 rounded-xl border border-dashed border-border text-xs text-muted-foreground">
@@ -343,6 +347,8 @@ export function SessionManager({ portalType, userRole, userName }: Props) {
                   <strong>&ldquo;បើកទំព័រកែប្រែមាតិកា &amp; ឯកសារ R2&rdquo;</strong> ដើម្បីចូលទៅកាន់ទំព័រ Rich Text Studio។
                 </div>
               )}
+
+              {/* Also show a short 2-line preview on each lesson card */}
             </CardContent>
           </Card>
         )}

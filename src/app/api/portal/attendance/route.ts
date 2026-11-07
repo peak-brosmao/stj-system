@@ -77,63 +77,76 @@ export async function GET(req: NextRequest) {
       .filter((s: any) => !isSyllabusSession(s))
       .map(enrichLesson);
 
-    // Derive lessons from enrolled courses if backend upcoming is empty
-    if (upcoming.length === 0) {
-      const derivedMap = new Map<string, any>();
-      for (const c of courses) {
-        const sessions = Array.isArray(c.sessions) ? c.sessions : [];
-        for (const s of sessions) {
-          if (isSyllabusSession(s) || s.status === "CANCELLED") continue;
-          const [startTime = "11:30", endTime = "13:00"] = String(s.time || "")
-            .split("-")
-            .map((part) => part.trim());
-          derivedMap.set(
-            String(s.id),
-            enrichLesson({
-              id: s.id,
-              title: s.title,
-              sessionDate: s.date || s.sessionDate || new Date().toISOString().split("T")[0],
-              startTime: s.startTime || startTime,
-              endTime: s.endTime || endTime,
-              room: s.room || "SF1 & SF2",
-              status: s.status,
-              notes: s.notes,
-              course: {
-                code: c.code || "STJ",
-                titleKh: c.titleKh || "មុខវិជ្ជា STJ",
-              },
-            })
-          );
-        }
+    // Collect all non-cancelled lessons for the member's enrolled courses
+    const allLessonsMap = new Map<string, any>();
+    for (const c of courses) {
+      const cSlug = c.slug || String(c.code || "stj").toLowerCase();
+      const sessions = Array.isArray(c.sessions) ? c.sessions : [];
+      for (const s of sessions) {
+        if (isSyllabusSession(s) || s.status === "CANCELLED") continue;
+        const [startTime = "11:30", endTime = "13:00"] = String(s.time || "")
+          .split("-")
+          .map((part) => part.trim());
+        const enriched = enrichLesson({
+          id: s.id,
+          title: s.title,
+          sessionDate: s.date || s.sessionDate || new Date().toISOString().split("T")[0],
+          startTime: s.startTime || startTime,
+          endTime: s.endTime || endTime,
+          room: s.room || "SF1 & SF2",
+          status: s.status || "SCHEDULED",
+          notes: s.notes,
+          course: {
+            code: c.code || "STJ",
+            titleKh: c.titleKh || "មុខវិជ្ជា STJ",
+            slug: cSlug,
+          },
+        });
+        enriched.course.slug = cSlug;
+        allLessonsMap.set(String(s.id), enriched);
       }
-      for (const bs of sessionLookup.values()) {
-        const bCode = String(bs.course?.code || bs.courseCode || "").toUpperCase();
-        if (
-          (enrolledCodes.size === 0 || enrolledCodes.has(bCode)) &&
-          bs.status !== "CANCELLED" &&
-          !derivedMap.has(String(bs.id))
-        ) {
-          derivedMap.set(
-            String(bs.id),
-            enrichLesson({
-              id: bs.id,
-              title: bs.title,
-              sessionDate: bs.sessionDate || new Date().toISOString().split("T")[0],
-              startTime: bs.startTime || "11:30",
-              endTime: bs.endTime || "13:00",
-              room: bs.room || "SF1 & SF2",
-              status: bs.status || "SCHEDULED",
-              notes: bs.notes,
-              course: {
-                code: bCode || "STJ",
-                titleKh: bs.course?.titleKh || bs.courseTitleKh || "មុខវិជ្ជា STJ",
-              },
-            })
-          );
-        }
-      }
-      upcoming = Array.from(derivedMap.values());
     }
+
+    for (const bs of sessionLookup.values()) {
+      const bCode = String(bs.course?.code || bs.courseCode || "").toUpperCase();
+      if (
+        (enrolledCodes.size === 0 || enrolledCodes.has(bCode)) &&
+        bs.status !== "CANCELLED" &&
+        !allLessonsMap.has(String(bs.id))
+      ) {
+        allLessonsMap.set(
+          String(bs.id),
+          enrichLesson({
+            id: bs.id,
+            title: bs.title,
+            sessionDate: bs.sessionDate || new Date().toISOString().split("T")[0],
+            startTime: bs.startTime || "11:30",
+            endTime: bs.endTime || "13:00",
+            room: bs.room || "SF1 & SF2",
+            status: bs.status || "SCHEDULED",
+            notes: bs.notes,
+            course: {
+              code: bCode || "STJ",
+              titleKh: bs.course?.titleKh || bs.courseTitleKh || "មុខវិជ្ជា STJ",
+              slug: String(bCode || "stj").toLowerCase(),
+            },
+          })
+        );
+      }
+    }
+
+    const allLessons = Array.from(allLessonsMap.values());
+    if (upcoming.length === 0) {
+      upcoming = allLessons.filter(
+        (l) => l.status === "SCHEDULED" || l.status === "IN_PROGRESS"
+      );
+    } else {
+      upcoming = upcoming.filter(
+        (l: any) => l.status === "SCHEDULED" || l.status === "IN_PROGRESS"
+      );
+    }
+
+    const completed = allLessons.filter((l) => l.status === "COMPLETED");
 
     const records = (Array.isArray(data.records) ? data.records : []).filter(
       (r: any) => !isSyllabusSession(r.session || {})
@@ -144,6 +157,8 @@ export async function GET(req: NextRequest) {
       success: true,
       records,
       upcoming,
+      completed,
+      allLessons,
       pending,
     });
   } catch {

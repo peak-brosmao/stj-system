@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,8 +8,7 @@ import { PortalLayout } from "@/ui/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/ui/Card";
 import { Button } from "@/ui/Button";
 import { Badge } from "@/ui/Badge";
-import { RichContentViewer } from "@/ui/RichTextEditor";
-import type { CourseAttachment } from "@/lib/richContent";
+import { extractPlainTextSnippet, type CourseAttachment } from "@/lib/richContent";
 
 interface Overview {
   user: {
@@ -174,25 +173,41 @@ export default function MemberDashboardPage() {
                       ប្រធានក្រុមមិនទាន់បង្កើតមេរៀនថ្មីទេ។ (Your Leader has not created upcoming lessons yet.)
                     </p>
                   )}
-                  {m.upcoming.map((l) => (
-                    <div key={l.id} className="p-3 rounded-xl border border-border bg-muted/30 text-xs space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-semibold text-foreground">{l.title}</span>
-                        <Link href={`/portal/courses/${l.courseSlug || String(l.courseCode || "stj").toLowerCase()}`}>
-                          <Badge variant="info">{l.courseCode}</Badge>
-                        </Link>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                        <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3 text-primary" />{l.date} {l.startTime}-{l.endTime}</span>
-                        <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-primary" />{l.room}</span>
-                      </div>
-                      <RichContentViewer
-                        richContent={l.richContent}
-                        notes={l.notes}
-                        attachments={l.attachments}
-                      />
-                    </div>
-                  ))}
+                  {m.upcoming.map((l: any) => {
+                    const snippet = extractPlainTextSnippet(l.richContent, l.notes, 120);
+                    const attCount = Array.isArray(l.attachments) ? l.attachments.length : 0;
+                    const courseSlug = l.courseSlug || String(l.courseCode || "stj").toLowerCase();
+                    const isCompleted = l.status === "COMPLETED";
+                    return (
+                      <Link
+                        key={l.id}
+                        href={`/portal/courses/${courseSlug}?lesson=${encodeURIComponent(l.id)}`}
+                        className="block p-3 rounded-xl border border-border bg-muted/30 hover:border-primary/50 transition-colors text-xs space-y-1.5"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-semibold text-foreground">{l.title}</span>
+                          <div className="flex items-center gap-1.5">
+                            <Badge variant={isCompleted ? "success" : "info"}>
+                              {isCompleted ? "បានបង្រៀនរួច" : "បានកំណត់ពេល"}
+                            </Badge>
+                            <Badge variant="outline">{l.courseCode}</Badge>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                          <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3 text-primary" />{l.date} {l.startTime}-{l.endTime}</span>
+                          <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3 text-primary" />{l.room}</span>
+                          {attCount > 0 && (
+                            <span className="text-emerald-500 font-medium">• {attCount} PDF/Video</span>
+                          )}
+                        </div>
+                        {snippet && (
+                          <p className="text-muted-foreground line-clamp-2 pt-1 border-t border-border/50">
+                            {snippet}
+                          </p>
+                        )}
+                      </Link>
+                    );
+                  })}
                 </CardContent>
               </Card>
             </div>

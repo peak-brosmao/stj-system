@@ -460,18 +460,37 @@ export default function MyAttendancePage() {
             )}
             {upcoming.length > 0 && (
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-foreground">មេរៀនខាងមុខ (Upcoming)</p>
-                {upcoming.map((l: any) => (
-                  <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
-                    <div>
-                      <p className="font-semibold text-foreground">{l.title}</p>
-                      <p className="text-muted-foreground">
-                        {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
-                      </p>
+                <p className="text-xs font-semibold text-foreground">មេរៀនត្រូវបង្រៀនខាងមុខ (Upcoming / Scheduled)</p>
+                {upcoming.map((l: any) => {
+                  const isCompleted = l.status === "COMPLETED";
+                  const isInProgress = l.status === "IN_PROGRESS";
+                  const courseSlug = l.course?.slug || String(l.course?.code || "stj").toLowerCase();
+                  return (
+                    <div key={l.id} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-lg border border-border bg-muted/30 text-xs">
+                      <div>
+                        <p className="font-semibold text-foreground">{l.title}</p>
+                        <p className="text-muted-foreground">
+                          {l.course?.code} • {new Date(l.sessionDate).toISOString().split("T")[0]} • {l.startTime} - {l.endTime} • {l.room}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={isCompleted ? "success" : isInProgress ? "warning" : "info"}>
+                          {isCompleted
+                            ? "បានបង្រៀនរួច (Completed)"
+                            : isInProgress
+                              ? "កំពុងបង្រៀន (In progress)"
+                              : "បានកំណត់ពេល (Scheduled)"}
+                        </Badge>
+                        <Link
+                          href={`/portal/courses/${courseSlug}?lesson=${encodeURIComponent(l.id)}`}
+                          className="text-primary hover:underline font-medium text-[11px]"
+                        >
+                          ចូលមើលមេរៀន →
+                        </Link>
+                      </div>
                     </div>
-                    <Badge variant="info">មិនទាន់បង្រៀន (Not taught yet)</Badge>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
             {pending.length > 0 && (

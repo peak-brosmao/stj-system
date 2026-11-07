@@ -326,7 +326,14 @@ export function PortalLayout({
             <span className="capitalize">{portalType === "system" ? t("system.portal") : portalType === "leader" ? t("nav.leaderPortal") : t("system.member")}</span>
             <ChevronRight className="w-3.5 h-3.5" />
             <span className="font-semibold text-foreground">
-              {pathname.split("/").pop() === "dashboard" ? t("system.dashboardLabel") : t(`nav.${pathname.split("/").pop() || "dashboard"}`)}
+              {(() => {
+                const seg = pathname.split("/").filter(Boolean).pop() || "dashboard";
+                if (seg === "dashboard") return t("system.dashboardLabel");
+                if (seg === "editor") return "Rich Text & R2 Studio";
+                const translated = t(`nav.${seg}`);
+                if (translated.startsWith("nav.")) return seg.toUpperCase();
+                return translated;
+              })()}
             </span>
           </div>
 

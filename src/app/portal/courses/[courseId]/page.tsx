@@ -68,6 +68,14 @@ export default function CourseDetailPage() {
   const slug = (params?.courseId as string) || "";
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedLessonId, setSelectedLessonId] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      setSelectedLessonId(sp.get("lesson") || "");
+    }
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -178,35 +186,43 @@ export default function CourseDetailPage() {
                     ពុំទាន់មានមេរៀនត្រូវបានបង្កើតនៅឡើយទេ (No lessons created yet.)
                   </p>
                 )}
-                {course.sessions.map((s) => (
-                  <div
-                    key={s.id}
-                    className="p-3.5 rounded-xl border border-border bg-muted/30 text-xs space-y-2"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-semibold text-sm text-foreground">{s.title}</span>
-                      <Badge variant={STATUS[s.status]?.v || "info"}>
-                        {STATUS[s.status]?.t || s.status}
-                      </Badge>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {s.date} {s.time}
-                      </span>
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {s.room}
-                      </span>
-                    </div>
+                {course.sessions.map((s) => {
+                  const isHighlighted = selectedLessonId && String(s.id) === String(selectedLessonId);
+                  return (
+                    <div
+                      key={s.id}
+                      id={`lesson-${s.id}`}
+                      className={`p-4 rounded-xl border text-xs space-y-2.5 transition-all ${
+                        isHighlighted
+                          ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                          : "border-border bg-muted/30"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-sm text-foreground">{s.title}</span>
+                        <Badge variant={STATUS[s.status]?.v || "info"}>
+                          {STATUS[s.status]?.t || s.status}
+                        </Badge>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                        <span className="inline-flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-primary" />
+                          {s.date} {s.time}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-primary" />
+                          {s.room}
+                        </span>
+                      </div>
 
-                    <RichContentViewer
-                      richContent={s.richContent}
-                      notes={s.notes}
-                      attachments={s.attachments}
-                    />
-                  </div>
-                ))}
+                      <RichContentViewer
+                        richContent={s.richContent}
+                        notes={s.notes}
+                        attachments={s.attachments}
+                      />
+                    </div>
+                  );
+                })}
               </CardContent>
             </Card>
 

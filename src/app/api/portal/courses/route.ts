@@ -163,11 +163,13 @@ function normalizeCourse(
 
 export async function GET(req: NextRequest) {
   try {
+    const requestedId = (req.nextUrl.searchParams.get("id") || "").trim();
     const query = req.nextUrl.search;
-    const [res, membersLookup, sessionsRes] = await Promise.all([
+    const [res, membersLookup, sessionsRes, allCoursesRes] = await Promise.all([
       backendFetch(`portal/courses${query}`),
       fetchLiveMembersLookup(),
       backendFetch("sessions").catch(() => null),
+      requestedId ? backendFetch("courses").catch(() => null) : Promise.resolve(null),
     ]);
     const data = await res.json().catch(() => null);
     const sessionsData =
@@ -188,11 +190,67 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (data.course && typeof data.course === "object") {
+    if (requestedId) {
+      let targetCourse = data.course && typeof data.course === "object" ? data.course : null;
+
+      if (!targetCourse) {
+        const lowerTarget = requestedId.toLowerCase();
+        // Fallback 1: check portal/courses list without ?id=
+        const listRes = await backendFetch("portal/courses").catch(() => null);
+        const listData = listRes && listRes.ok ? await listRes.json().catch(() => null) : null;
+        const enrolledList: Record<string, any>[] = Array.isArray(listData?.courses)
+          ? listData.courses
+          : [];
+        targetCourse =
+          enrolledList.find(
+            (c) =>
+              String(c.slug || "").toLowerCase() === lowerTarget ||
+              String(c.code || "").toLowerCase() === lowerTarget ||
+              String(c.id || "").toLowerCase() === lowerTarget
+          ) || null;
+      }
+
+      if (!targetCourse && allCoursesRes && allCoursesRes.ok) {
+        const lowerTarget = requestedId.toLowerCase();
+        const sysData = await allCoursesRes.json().catch(() => null);
+        const sysCourses: Record<string, any>[] = Array.isArray(sysData?.courses)
+          ? sysData.courses
+          : [];
+        const matchedSys = sysCourses.find(
+          (c) =>
+            String(c.slug || "").toLowerCase() === lowerTarget ||
+            String(c.code || "").toLowerCase() === lowerTarget ||
+            String(c.id || "").toLowerCase() === lowerTarget
+        );
+        if (matchedSys) {
+          targetCourse = {
+            id: matchedSys.id,
+            code: matchedSys.code,
+            slug: matchedSys.slug || String(matchedSys.code || "").toLowerCase(),
+            titleKh: matchedSys.titleKh || matchedSys.title_kh || matchedSys.name_kh || matchedSys.code,
+            titleEn: matchedSys.titleEn || matchedSys.title_en || matchedSys.name_en || matchedSys.code,
+            description: matchedSys.description || matchedSys.titleEn || matchedSys.title_en || "",
+            descriptionKh: matchedSys.descriptionKh || matchedSys.titleKh || matchedSys.title_kh || "",
+            academicTerm: matchedSys.academicYear || matchedSys.academic_year || "2026-2027",
+            leaders: matchedSys.leaders || [],
+            enrolledMembers: matchedSys.enrolledMembers || matchedSys.members || [],
+            sessions: matchedSys.sessions || [],
+          };
+        }
+      }
+
+      if (targetCourse) {
+        return NextResponse.json({
+          ...data,
+          success: true,
+          course: normalizeCourse(targetCourse, membersLookup, allBackendSessions),
+        });
+      }
+
       return NextResponse.json({
-        ...data,
-        success: true,
-        course: normalizeCourse(data.course, membersLookup, allBackendSessions),
+        success: false,
+        course: null,
+        error: "Course not found",
       });
     }
 
